@@ -24,7 +24,7 @@
 					<c:otherwise>
 						<a class="text-decoration-none me-3 text-muted" href="${pageContext.request.contextPath}/member/logout" title="로그아웃">로그아웃</a>
 						<c:if test="${sessionScope.member.userLevel>50}">
-							<a class="text-decoration-none me-3 text-muted" href="${pageContext.request.contextPath}/admin/main" title="관리자">관리 페이지</a>
+							<a class="text-decoration-none me-3 text-muted" href="${pageContext.request.contextPath}/admin" title="관리자">관리 페이지</a>
 						</c:if>
 						<c:if test="${sessionScope.member.userLevel == 1  }">
 							<a class="text-decoration-none me-3 text-muted" href="#" title="사용자">마이 페이지</a>
