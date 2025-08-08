@@ -10,12 +10,11 @@
 </head>
 <body>
 
-	<!-- 최상단 회사 설명 및 로그인 회원가입 영역 -->
 	<div class="bg-light py-1 border-bottom small" style="font-size: 0.8rem;">
 		<div class="container d-flex justify-content-between align-items-center">
 			<div class="text-muted">지속 가능한 일상을 위한 모든 것</div>
 			<div>
-				<a class="text-decoration-none me-3 text-muted" href="#">고객센터</a>
+				<a class="text-decoration-none me-3 text-muted" href="${pageContext.request.contextPath}/customer/list">고객센터</a>
 				<c:choose>
 					<c:when test="${empty sessionScope.member}">
 						<a class="text-decoration-none me-3 text-muted" href="${pageContext.request.contextPath}/member/login">로그인</a>						
@@ -27,7 +26,7 @@
 							<a class="text-decoration-none me-3 text-muted" href="${pageContext.request.contextPath}/admin" title="관리자">관리 페이지</a>
 						</c:if>
 						<c:if test="${sessionScope.member.userLevel == 1  }">
-							<a class="text-decoration-none me-3 text-muted" href="#" title="사용자">마이 페이지</a>
+							<a class="text-decoration-none me-3 text-muted" href="${pageContext.request.contextPath}/member/myPage" title="사용자">마이 페이지</a>
 						</c:if>
 					</c:otherwise>
 				</c:choose>
@@ -47,16 +46,12 @@
 				id="navbarNav">
 				<ul class="navbar-nav">
 					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/">홈</a></li>
-					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">SHOP</a>
-						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="#">전체 상품</a></li>
-						</ul>
-					</li>
+					<li class="nav-item"><a class="nav-link" href="#">SHOP</a></li>
 					<li class="nav-item"><a class="nav-link" href="#">패키지</a></li>
 					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">이벤트</a>
 						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="#">출석체크</a></li>
-							<li><a class="dropdown-item" href="#">퀴즈</a></li>
+							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/event/attendance">출석체크</a></li>
+							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/event/quiz">퀴즈</a></li>
 						</ul>
 					</li>
 					<li class="nav-item"><a class="nav-link" href="#">워크샵</a></li>
@@ -70,8 +65,8 @@
 					</li>
 					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">커뮤니티</a>
 						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="#">자유게시판</a></li>
-							<li><a class="dropdown-item" href="#">공지사항</a></li>
+							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/free/list">자유게시판</a></li>
+							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/notice/list">공지사항</a></li>
 						</ul>
 					</li>
 				</ul>

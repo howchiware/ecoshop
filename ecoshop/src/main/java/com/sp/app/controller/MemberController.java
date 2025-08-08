@@ -3,17 +3,23 @@ package com.sp.app.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sp.app.model.Member;
 import com.sp.app.model.SessionInfo;
 import com.sp.app.service.MemberService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,11 +77,98 @@ public class MemberController {
 	
 	@GetMapping("logout")
 	public String logout(HttpSession session) {
+		
 		session.removeAttribute("member");
 		
 		session.invalidate();
 		
 		return "redirect:/";
 	}
+	
+	@GetMapping("account")
+	public String memberForm(Model model) {
+		model.addAttribute("mode", "account");
+		
+		return "member/member";
+	}
+	
+	@PostMapping("account")
+	public String memberSubmit(Member dto, final RedirectAttributes reAttr, Model model, HttpServletRequest req) {
+		
+		try {
+			service.insertMember(dto);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append(dto.getName() + "님 회원가입이 완료되었습니다. 환영합니다!<br>");
+			
+			reAttr.addFlashAttribute("message", sb.toString());
+			reAttr.addFlashAttribute("title", "회원가입");
+			
+			return "redirect:/member/complete";
+			
+		} catch (DuplicateKeyException e) {
+			model.addAttribute("mode", "account");
+			model.addAttribute("message", "아이디 중복으로 회원가입이 실패했습니다.");
+		} catch (DataIntegrityViolationException e) {
+			model.addAttribute("mode", "account");
+			model.addAttribute("message", "제약 조건 위반으로 회원가입이 실패했습니다.");
+		} catch (Exception e) {
+			model.addAttribute("mode", "account");
+			model.addAttribute("message", "회원가입이 실패했습니다.");
+		}
 
+		return "member/member";
+	}
+	
+	@GetMapping("complete")
+	public String complete(@ModelAttribute("message") String message) throws Exception {
+
+		if (message == null || message.isBlank()) { 
+			return "redirect:/";
+		}
+
+		return "member/complete";
+	}
+	
+	@ResponseBody
+	@PostMapping("userIdCheck")
+	public Map<String, ?> idCheck(@RequestParam(name = "userId") String userId) throws Exception {
+
+		Map<String, Object> model = new HashMap<>();
+		
+		String p = "false";
+		try {
+			Member dto = service.findById(userId);
+			if (dto == null) {
+				p = "true";
+			}
+		} catch (Exception e) {
+		}
+		
+		model.put("passed", p);
+		
+		return model;
+	}
+	
+	@ResponseBody
+	@PostMapping("nicknameCheck")
+	public Map<String, ?> nicknameCheck(@RequestParam(name = "nickname") String nickname) throws Exception {
+
+		Map<String, Object> model = new HashMap<>();
+		
+		String p = "false";
+		try {
+			Member dto = service.findByNickname(nickname);
+			if (dto == null) {
+				p = "true";
+			}
+		} catch (Exception e) {
+		}
+		
+		model.put("passed", p);
+		
+		return model;
+	}
+	
+	
 }
