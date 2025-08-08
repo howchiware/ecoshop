@@ -209,6 +209,11 @@ body {
 	color: #fff; /* 이미지 오버레이 카드용 텍스트 */
 }
 
+.nav-item.dropdown:hover > .dropdown-menu {
+  display: block;
+  margin-top: 0;
+}
+
 footer {
 	background-color: #2e2e2e;
 	color: #ccc;
@@ -249,7 +254,7 @@ footer {
 						</ul>
 					</li>
 					<li class="nav-item"><a class="nav-link" href="#">패키지</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">이벤트</a>
+					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">이벤트</a>
 						<ul class="dropdown-menu">
 							<li><a class="dropdown-item" href="#">출석체크</a></li>
 							<li><a class="dropdown-item" href="#">퀴즈</a></li>
@@ -257,14 +262,14 @@ footer {
 					</li>
 					<li class="nav-item"><a class="nav-link" href="#">워크샵</a></li>
 					<li class="nav-item"><a class="nav-link" href="#">챌린지</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">콘텐츠</a>
+					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">콘텐츠</a>
 						<ul class="dropdown-menu">
 							<li><a class="dropdown-item" href="#">매거진</a></li>
 							<li><a class="dropdown-item" href="#">제로웨이스트 팁</a></li>
 							<li><a class="dropdown-item" href="#">분리배출 가이드</a></li>
 						</ul>
 					</li>
-					<li class="nav-item"><a class="nav-link" href="#">커뮤니티</a>
+					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">커뮤니티</a>
 						<ul class="dropdown-menu">
 							<li><a class="dropdown-item" href="#">자유게시판</a></li>
 							<li><a class="dropdown-item" href="#">공지사항</a></li>
