@@ -11,6 +11,7 @@
   transition: transform 0.3s ease;
   box-shadow: 2px 0 5px rgba(0,0,0,0.05);
   font-family: 'Segoe UI', sans-serif;
+  z-index: 999; /* 헤더보다 낮게 설정 */
 }
 
 /* 스크롤바 디자인 */

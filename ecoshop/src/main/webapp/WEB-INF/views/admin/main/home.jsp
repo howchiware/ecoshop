@@ -18,16 +18,13 @@
     
 </head>
 <body>
-	<header>
-		<jsp:include page="/WEB-INF/views/admin/layout/header.jsp"/>
-	</header>
-	<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp"/>
-<!-- 메인 콘텐츠 -->
-<div style="margin-left:240px; padding:20px;">
-    <h1>관리자 메인 페이지</h1>
-    <p>여기에 관리자 기능 설명을 넣을 수 있습니다.</p>
+  <header>
+    <jsp:include page="/WEB-INF/views/admin/layout/header.jsp"/>
+  </header>
+  <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp"/>
+  <main style="margin-left: 240px; padding: 20px;">
     
-    
-</div>
+  </main>
+
 </body>
 </html>
