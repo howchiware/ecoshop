@@ -21,6 +21,15 @@
 		<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 	</header>
 	
+	<!-- Hero Section -->
+	<section class="hero">
+		<div class="hero-overlay"></div>
+		<div class="hero-content">
+			<h1>당신의 선택이 변화를 만듭니다.</h1>
+			<p>지속 가능한 삶, 지금 이곳에서 시작하세요.</p>
+		</div>
+	</section>
+	
 	<!-- 베스트 상품 Section -->
 	<section class="section">
 		<div class="container">
@@ -131,10 +140,11 @@
 			</div>
 		</div>
 	</section>
-	<!-- Footer -->
+	
 	<footer>
-		<p>© 2025 ECOBRAND. 지구를 위한 작은 실천, 여기서 시작됩니다.</p>
+		<jsp:include page="/WEB-INF/views/layout/footer.jsp"/>
 	</footer>
+	
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
