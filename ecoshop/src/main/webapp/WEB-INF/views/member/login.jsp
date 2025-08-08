@@ -101,6 +101,9 @@ body {
         <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
       </div>
       <button type="submit" class="btn btn-login w-100 mt-3" onclick="sendLogin();">로그인</button>
+      <div>
+	  	<p class="form-control-plaintext text-center text-danger">${message}</p>
+	  </div>
       <div class="link-group mt-3">
         <a href="#">비밀번호 찾기</a>
         <a href="#">회원가입</a>
