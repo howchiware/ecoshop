@@ -17,10 +17,7 @@
 <body>
 
 <div class="sidebar" id="sidebar">
-  <ul class="sidebar-menu">
-
-    <li><a href="#">🏠 메인페이지</a></li>
-
+  <ul class="sidebar-menu">	
     <li class="menu-title">회원관리</li>
     <li>
       <a href="${pageContext.request.contextPath}/member/logout" title="로그아웃">👤 회원</a>
@@ -135,6 +132,20 @@
 
   </ul>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll(".sidebar-menu > li > a").forEach(function(menu) {
+    menu.addEventListener("click", function(e) {
+      let submenu = this.nextElementSibling;
+      if (submenu && submenu.classList.contains("submenu")) {
+        e.preventDefault();
+        submenu.style.display = submenu.style.display === "block" ? "none" : "block";
+      }
+    });
+  });
+});
+</script>
 
 </body>
 </html>
