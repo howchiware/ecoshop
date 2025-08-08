@@ -16,198 +16,163 @@
 	rel="stylesheet">
 <style>
 body {
-	font-family: 'Noto Sans KR', sans-serif;
-	background-color: #f7f6f3;
-	color: #333;
-	margin: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: #f7f6f3;
+  color: #333;
+  margin: 0;
 }
 
 .navbar {
-	background-color: #ffffff;
-	border-bottom: 1px solid #e2e2e2;
-	padding-top: 10px;
-	padding-bottom: 10px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e2e2;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .navbar-brand {
-	font-weight: 600;
-	font-size: 1.4rem;
-	color: #222 !important;
-	letter-spacing: 0.7px;
+  font-weight: bold; /* bold 유지 */
+  font-size: 1.4rem;
+  color: #315e4e !important; /* 최종 색상 유지 */
+  letter-spacing: 0.7px;
 }
 
 .nav-link {
-	color: #222 !important;
-	font-weight: 400;
-	font-size: 0.9rem;
-	padding: 0.5rem 1rem;
+  color: #3a3a3a !important; /* 최종 색상 유지 */
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  margin-right: 15px;
 }
 
 .nav-link:hover {
-	color: #999 !important;
+  color: #234d3c !important; /* hover 최종 색상 */
 }
 
 .navbar-nav {
-	gap: 5px;
+  gap: 5px;
 }
 
 .dropdown-menu {
-	font-size: 0.9rem;
+  font-size: 0.9rem;
 }
 
 .navbar-toggler {
-	border: none;
+  border: none;
 }
 
 .navbar-toggler-icon {
-	background-image:
-		url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(34, 34, 34, 0.8)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-}
-
-.navbar-brand {
-	font-weight: bold;
-	color: #315e4e;
-}
-
-.nav-link {
-	color: #3a3a3a !important;
-	font-weight: 500;
-	margin-right: 15px;
-}
-
-.nav-link:hover {
-	color: #234d3c !important;
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(34, 34, 34, 0.8)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
 .hero {
-	background-image:
-		url('https://source.unsplash.com/1600x900/?nature,earth');
-	background-size: cover;
-	background-position: center;
-	height: 80vh;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	position: relative;
-	color: white;
-	text-align: center;
+  background-image: url('https://source.unsplash.com/1600x900/?nature,earth');
+  background-size: cover;
+  background-position: center;
+  height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: white;
+  text-align: center;
 }
 
 .hero-overlay {
-	background-color: rgba(0, 0, 0, 0.4);
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	z-index: 1;
+  background-color: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
 }
 
 .hero-content {
-	z-index: 2;
-	padding: 20px;
+  z-index: 2;
+  padding: 20px;
 }
 
 .hero-content h1 {
-	font-size: 3rem;
-	font-weight: 800;
-	margin-bottom: 1rem;
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
 }
 
 .hero-content p {
-	font-size: 1.2rem;
+  font-size: 1.2rem;
 }
 
 .section {
-	padding: 80px 20px;
+  padding: 80px 20px;
 }
 
 .section-title {
-	font-size: 1.8rem;
-	font-weight: 600;
-	margin-bottom: 40px;
-	text-align: left;
-	color: #1f1f1f;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 40px;
+  text-align: left;
+  color: #1f1f1f;
 }
 
 .card-hover {
-	border: 1px solid #ddd;
-	border-radius: 0;
-	overflow: hidden;
-	box-shadow: none;
-	transition: all 0.2s ease-in-out;
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: none;
+  transition: all 0.2s ease-in-out;
 }
 
 .card-hover:hover {
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-	transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
 }
 
-.card-img-top, .card-img, .card-body, .card-img-overlay {
-	border-radius: 0 !important;
-}
-
-.card-img-top, .card-img {
-	border-radius: 0;
+.card-img-top,
+.card-img {
+  border-radius: 0 !important;
 }
 
 .card-body {
-	background-color: #fff;
-	padding: 1.25rem;
+  background-color: #fff;
+  padding: 1.25rem;
 }
 
 .card-title {
-	font-size: 1rem;
-	font-weight: 500;
-	margin-bottom: 0.5rem;
-	color: #222;
+  font-size: 1.2rem; /* 최종 크기 */
+  font-weight: 600;  /* 최종 굵기 */
+  margin-bottom: 0.5rem;
+  color: #222;
 }
 
 .card-img-overlay .card-title {
-	color: #fff !important;
+  color: #fff !important;
 }
 
 .card-text {
-	font-size: 0.875rem;
-	color: #555;
-}
-
-.card-img-overlay {
-	background: rgba(0, 0, 0, 0.3);
-	color: white;
-	padding: 1rem;
-}
-
-.card:hover .card-img-overlay {
-	background: rgba(0, 0, 0, 0.45);
-}
-
-.card-body {
-	background-color: #fff;
-}
-
-.card-img-overlay {
-	background: rgba(0, 0, 0, 0.3);
-	color: white;
-}
-
-.card:hover .card-img-overlay {
-	background: rgba(0, 0, 0, 0.5);
-}
-
-.card-title {
-	font-size: 1.2rem;
-	font-weight: 600;
-	margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: #555;
 }
 
 .card-body .card-text {
-	color: #333; /* 일반 카드용 본문 텍스트 */
+  color: #333;  /* 일반 카드용 본문 텍스트 */
 }
 
 .card-img-overlay .card-text {
-	color: #fff; /* 이미지 오버레이 카드용 텍스트 */
+  color: #fff;  /* 이미지 오버레이 카드용 텍스트 */
 }
+
+.card-img-overlay {
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  padding: 1rem;
+}
+
+.card:hover .card-img-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+    
+.groupbuy-card { transition: all 0.2s ease-in-out; }
+.groupbuy-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); transform: translateY(-2px); }
+
 
 .nav-item.dropdown:hover > .dropdown-menu {
   display: block;
@@ -298,8 +263,7 @@ footer {
 			<div class="row g-4">
 				<div class="col-md-4">
 					<div class="card card-hover border-0 shadow-sm">
-						<img alt="Best 1" class="card-img-top"
-							src="https://source.unsplash.com/600x400/?eco,product1" />
+						<img alt="Best 1" class="card-img-top" src="${pageContext.request.contextPath}/dist/images/Group 308.png" />
 						<div class="card-body">
 							<h5 class="card-title">유기농 핸드타월</h5>
 							<p class="card-text">자극 없이 피부를 감싸는 친환경 핸드타월</p>
@@ -308,8 +272,7 @@ footer {
 				</div>
 				<div class="col-md-4">
 					<div class="card card-hover border-0 shadow-sm">
-						<img alt="Best 2" class="card-img-top"
-							src="https://source.unsplash.com/600x400/?eco,product2" />
+						<img alt="Best 2" class="card-img-top" src="${pageContext.request.contextPath}/dist/images/Group 303.png" />
 						<div class="card-body">
 							<h5 class="card-title">천연 수세미</h5>
 							<p class="card-text">플라스틱 없이 설거지 가능한 식물성 수세미 3종</p>
@@ -318,8 +281,7 @@ footer {
 				</div>
 				<div class="col-md-4">
 					<div class="card card-hover border-0 shadow-sm">
-						<img alt="Best 3" class="card-img-top"
-							src="https://source.unsplash.com/600x400/?eco,product3" />
+						<img alt="Best 3" class="card-img-top" src="${pageContext.request.contextPath}/dist/images/Group 313.png" />
 						<div class="card-body">
 							<h5 class="card-title">생분해 비누망</h5>
 							<p class="card-text">비누 거품을 풍성하게 만드는 생분해 소재망</p>
@@ -332,26 +294,27 @@ footer {
 
 	<!-- 공동구매 Section -->
 	<section class="section py-5">
-		<div class="container">
-			<h2 class="section-title text-start mb-4">함께 사서 더 저렴하게</h2>
-			<div class="card border-0 shadow-sm">
-				<div class="row g-0 align-items-center" style="height: 220px;">
-					<!-- 이미지 -->
-					<div class="col-md-5 h-100">
-						<img src="https://source.unsplash.com/1000x600/?eco,groupbuy"
-							class="img-fluid w-100 h-100" style="object-fit: cover;"
-							alt="공동구매">
-					</div>
-					<!-- 텍스트 -->
-					<div
-						class="col-md-7 p-4 d-flex flex-column justify-content-center h-100">
-						<h5 class="card-title fs-4 fw-bold">제로 웨이스트 패키지</h5>
-						<p class="card-text text-muted mb-0">대나무 칫솔, 천연 밀랍 랩, 리필형
-							주방세제, 휴대용 빨대까지 제로웨이스트 필수 구성</p>
-					</div>
-				</div>
-			</div>
-		</div>
+	  <div class="container">
+	    <h2 class="section-title text-start mb-4">함께 사서 더 저렴하게</h2>
+	    <div class="card border-0 shadow-sm groupbuy-card">
+	      <div class="row g-0 align-items-center" style="height: 220px;">
+	        <!-- 이미지 -->
+	        <div class="col-md-5 h-100">
+	          <img src="https://source.unsplash.com/1000x600/?eco,groupbuy"
+	               class="img-fluid w-100 h-100"
+	               style="object-fit: cover;"
+	               alt="공동구매">
+	        </div>
+	        <!-- 텍스트 -->
+	        <div class="col-md-7 p-4 d-flex flex-column justify-content-center h-100">
+	          <h5 class="card-title fs-4 fw-bold">제로 웨이스트 패키지</h5>
+	          <p class="card-text text-muted mb-0">
+	            대나무 칫솔, 천연 밀랍 랩, 리필형 주방세제, 휴대용 빨대까지 제로웨이스트 필수 구성
+	          </p>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
 	</section>
 
 	<!-- 감성 콘텐츠 카드 Section -->
