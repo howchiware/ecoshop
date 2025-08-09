@@ -1,76 +1,76 @@
 body {
   margin: 0;
   padding: 0;
+  margin-top: 60px; /* 헤더 높이만큼 위쪽 공간 확보 */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* 헤더 스타일 */
 .header {
-  position: fixed;
-  top: 0;
+ top: 0;
   left: 0;
   width: 100vw;
   height: 60px;
-  background-color: #2e7d32;
+  background-color: #4a8f4a; /* 이미지와 비슷한 연두색 계열 */
   color: white;
-  z-index: 1000;
+  box-sizing: border-box;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   padding: 0 20px;
+  z-index: 1000;
+  border-bottom: 1px solid #3e7a3e; /* 약간의 경계선 */
 }
 
 .header-inner {
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* 왼쪽 메뉴(관리자 페이지 텍스트) */
+.left-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   align-items: center;
 }
 
-.menu-toggle {
-  background: none;
-  border: none;
+.left-menu .admin-text {
   color: white;
-  font-size: 22px;
-  cursor: pointer;
-  margin-right: 15px;
-  display: none;
-}
-
-.header-title {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.header-icons {
-  margin-left: auto;
-}
-
-.header-icons ul {
-  list-style: none;
-  display: flex;
-  margin: 0;
-  padding: 0;
-}
-
-.header-icons li {
-  margin-left: 15px;
-}
-
-.header-icons a {
-  color: white;
+  font-weight: 700;
+  font-size: 18px;
   text-decoration: none;
 }
 
-.header-icons a:hover {
-  opacity: 0.85;
+/* 오른쪽 메뉴(아이콘들) */
+.right-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
-/* 모바일 메뉴 토글 */
+.right-menu a {
+  color: white;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.right-menu a:hover {
+  opacity: 0.8;
+}
 @media (max-width: 768px) {
   .menu-toggle {
     display: inline;
   }
-  
-  
 }
