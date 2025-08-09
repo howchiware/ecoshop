@@ -12,15 +12,12 @@
 </head>
 <body>
 
-<!-- 헤더 -->
 <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
 
-<!-- 메인 영역 -->
+
 <main class="main-container">
   <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
-  <div class="row">
-     <a href="${pageContext.request.contextPath}/admin/notice/write"class="admin-text">작성하기</a>
-  </div>
+ 
 </main>
 
 </body>
