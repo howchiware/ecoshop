@@ -5,6 +5,42 @@
 		SELECT notice_seq.NEXTVAL FROM dual
 	</select>
 	
+	<select id="listNoticeTop" resultType="com.sp.app.admin.model.NoticeManage">
+		SELECT n.noticeId, notice, n.memberId, name, subject, hitCount, 
+				TO_CHAR(regDate, 'YYYY-MM-DD') regDate,
+				TO_CHAR(n.updateDate, 'YYYY-MM-DD') updateDate,
+				NVL(fileCount, 0) fileCount
+		FROM notice n
+		JOIN member2 m ON n.memberId = m.memberId
+		LEFT OUTER JOIN (
+			SELECT noticeId, COUNT(*) fileCount
+			FROM noticeFile
+			GROUP BY noticeId
+		) f ON n.noticeId = f.noticeId
+		WHERE notice = 1 AND showNotice = 1
+		ORDER BY updateDate DESC
+	</select>
+	
+	<select id="listNotice" parameterType="map" resultType="com.sp.app.admin.model.NoticeManage">
+		SELECT n.noticeId, notice, n.memberId, name,subject, hitCount, 
+			   regDate, n.updateDate, NVL(fileCount, 0) fileCount
+		FROM notice n
+		JOIN member2 m ON n.memberId = m.memberId
+		LEFT OUTER JOIN (
+			SELECT noticeId, COUNT(*) fileCount
+			FROM noticeFile
+			GROUP BY noticeId
+		) f ON n.noticeId = f.noticeId
+		<where>
+			showNotice = 1
+			<if test="kwd != null and kwd != ''">
+				AND <include refid="where-list"/>
+			</if>
+		</where>
+		ORDER BY updateDate DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
 	<insert id="insertNotice" parameterType="com.sp.app.admin.model.NoticeManage">
 		INSERT INTO notice(noticeId, memberId, subject, content, notice, hitCount, showNotice, regDate, updateDate)
 		VALUES(#{noticeId}, #{memberId}, #{subject}, #{content}, #{notice}, 0, #{showNotice}, SYSDATE, SYSDATE)
@@ -20,9 +56,9 @@
 					)
 				]]>
 			</when>
-			<when test="schType == 'reg_date' ">
-				( INSTR(TO_CHAR(reg_date, 'YYYYMMDD'), #{kwd}) &gt; 0
-					OR TO_CHAR(reg_date, 'YYYY-MM-DD') = #{kwd} )
+			<when test="schType == 'regDate' ">
+				( INSTR(TO_CHAR(regDate, 'YYYYMMDD'), #{kwd}) &gt; 0
+					OR TO_CHAR(regDate, 'YYYY-MM-DD') = #{kwd} )
 			</when>
 			<when test="schType == 'content'">
 				<![CDATA[

@@ -1,5 +1,8 @@
 package com.sp.app.admin.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -70,8 +73,27 @@ public class NoticeManageServiceImpl implements NoticeManageService {
 
 	@Override
 	public List<NoticeManage> listNotice(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		List<NoticeManage> list = null;
+
+		try {
+			list = mapper.listNotice(map);
+		
+			long gap;
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			LocalDateTime today = LocalDateTime.now();
+			for (NoticeManage dto : list) {
+				LocalDateTime dateTime = LocalDateTime.parse(dto.getRegDate(), formatter);
+				gap = dateTime.until(today, ChronoUnit.HOURS);
+				dto.setGap(gap);
+				
+				dto.setRegDate(dto.getRegDate().substring(0, 10));
+			}
+			
+		} catch (Exception e) {
+			log.info("listNotice : ", e);
+		}
+
+		return list;
 	}
 
 	@Override
@@ -81,9 +103,16 @@ public class NoticeManageServiceImpl implements NoticeManageService {
 	}
 
 	@Override
-	public NoticeManage findById(long num) {
-		// TODO Auto-generated method stub
-		return null;
+	public NoticeManage findById(long noticeId) {
+		NoticeManage dto = null;
+
+		try {
+			dto = mapper.findById(noticeId);
+		} catch (Exception e) {
+			log.info("findById : ", e);
+		}
+
+		return dto;
 	}
 
 	@Override

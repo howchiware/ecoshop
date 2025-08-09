@@ -1,6 +1,7 @@
 package com.sp.app.admin.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -63,8 +64,50 @@ public class NoticeManageController {
 			if (dataCount != 0) {
 				total_page = paginateUtil.pageCount(dataCount, size);
 			}
+			
+			// 다른 사람이 자료를 삭제하여 전체 페이지수가 변화 된 경우
+			current_page = Math.min(current_page, total_page);
+
+			// 1페이지인 경우 공지리스트 가져오기
+			List<NoticeManage> noticeList = null;
+			if (current_page == 1) {
+				noticeList = service.listNoticeTop();
+			}
+
+			// 리스트에 출력할 데이터를 가져오기
+			int offset = (current_page - 1) * size;
+			if(offset < 0) offset = 0;
+
+			map.put("offset", offset);
+			map.put("size", size);
+
+			// 글 리스트
+			List<NoticeManage> list = service.listNotice(map);
+
+			String cp = req.getContextPath();
+			String query = "";
+			String listUrl = cp + "/admin/noticeManage/list";
+			if (! kwd.isBlank()) { // if(kwd.length() != 0) {
+				query = "schType=" + schType + "&kwd=" + myUtil.encodeUrl(kwd);
+				
+				listUrl += "?" + query;
+			}
+
+			String paging = paginateUtil.paging(current_page, total_page, listUrl);
+
+			model.addAttribute("noticeList", noticeList);
+			model.addAttribute("list", list);
+			model.addAttribute("page", current_page);
+			model.addAttribute("dataCount", dataCount);
+			model.addAttribute("size", size);
+			model.addAttribute("total_page", total_page);
+			model.addAttribute("paging", paging);
+
+			model.addAttribute("schType", schType);
+			model.addAttribute("kwd", kwd);
+			
 		} catch (Exception e) {
-			// TODO: handle exception
+			log.info("list : ", e);
 		}
 		
 		return "admin/notice/list";
