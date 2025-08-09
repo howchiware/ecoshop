@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.admin.mapper.NoticeManageMapper">
+	<select id="noticeSeq" resultType="Long">
+		SELECT notice_seq.NEXTVAL FROM dual
+	</select>
+	
+	<insert id="insertNotice" parameterType="com.sp.app.admin.model.NoticeManage">
+		INSERT INTO notice(noticeId, memberId, subject, content, notice, hitCount, showNotice, regDate, updateDate)
+		VALUES(#{noticeId}, #{memberId}, #{subject}, #{content}, #{notice}, 0, #{showNotice}, SYSDATE, SYSDATE)
+	</insert>
+	
+	<sql id="where-list">
+		<choose>
+			<when test="schType == 'all' ">
+				<![CDATA[
+					(
+						INSTR(subject, #{kwd}) > 0
+						OR DBMS_LOB.INSTR(REGEXP_REPLACE(content, '<[^>]+>', ''), #{kwd}) > 0
+					)
+				]]>
+			</when>
+			<when test="schType == 'reg_date' ">
+				( INSTR(TO_CHAR(reg_date, 'YYYYMMDD'), #{kwd}) &gt; 0
+					OR TO_CHAR(reg_date, 'YYYY-MM-DD') = #{kwd} )
+			</when>
+			<when test="schType == 'content'">
+				<![CDATA[
+					DBMS_LOB.INSTR(REGEXP_REPLACE(content, '<[^>]+>', ''), #{kwd}) > 0
+				]]>
+			</when>
+			<otherwise>
+			    INSTR(${schType}, #{kwd}) &gt; 0
+			</otherwise>
+		</choose>
+	</sql>
+	
+		<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM notice n
+		JOIN member2 m ON n.memberId = m.memberId
+		<where>
+			<if test="showNotice != null">
+				showNotice = #{showNotice}
+			</if>		
+			<if test="kwd != null and kwd != ''  ">
+				AND <include refid="where-list"/>
+			</if>
+		</where>
+	</select>
+	
+	<insert id="insertNoticeFile" parameterType="com.sp.app.admin.model.NoticeManage">
+		INSERT INTO noticeFile(noticefileId, noticeId , saveFilename, originalFilename, fileSize)
+		VALUES (noticeFile_seq.NEXTVAL, #{noticeId}, #{saveFilename},
+			#{originalFilename}, #{fileSize})
+	</insert>
+</mapper>

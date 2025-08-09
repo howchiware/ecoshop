@@ -17,8 +17,9 @@
 
 <main class="main-container">
   <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
- 
+   <div class="row">
+     <a href="${pageContext.request.contextPath}/admin/notice/write"class="admin-text">작성하기</a>
+  </div>
 </main>
-
 </body>
 </html>
