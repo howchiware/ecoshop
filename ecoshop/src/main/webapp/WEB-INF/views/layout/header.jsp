@@ -72,7 +72,9 @@
 				</ul>
 				<ul class="navbar-nav">
 					<c:if test="${not empty sessionScope.member}">
-						<li class="">${sessionScope.member.nickname}님</li>
+						<li class="nav-item d-flex align-items-center">
+						    <span class="nickname-text">${sessionScope.member.nickname}님</span>
+						</li>
 						<a class="nav-link" href="#"><i class="bi bi-bell" style="font-size: 1.2rem;"></i></a>
 					</c:if>
 					<li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bag" style="font-size: 1.2rem;"></i></a></li>

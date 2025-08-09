@@ -11,5 +11,7 @@ public class Attendance {
 	
 	private Long memberId;
 	private String regDate;
+	
+	private int dayIndex;
 
 }

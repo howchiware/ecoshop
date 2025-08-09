@@ -10,16 +10,10 @@
 <meta content="width=device-width, initial-scale=1" name="viewport" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <style>
 body {
-      font-family: 'Noto Sans KR', sans-serif;
-      background-color: #f7f6f3;
-      color: #333;
-      margin: 0;
-    }
-
     .login-container {
       max-width: 400px;
       margin: 100px auto 0 auto; /* 상단 여백을 줘서 좀 위로 */
@@ -89,27 +83,29 @@ body {
 		<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 	</header>
 	
-	<div class="login-container">
-    <h2 class="login-title">로그인</h2>
-    <form name="loginForm" action="" method="post">
-      <div class="mb-3">
-        <label for="userId" class="form-label">아이디</label>
-        <input type="text" class="form-control" id="userId" name="userId" placeholder="아이디를 입력하세요" required>
-      </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">비밀번호</label>
-        <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
-      </div>
-      <button type="submit" class="btn btn-login w-100 mt-3" onclick="sendLogin();">로그인</button>
-      <div>
-	  	<p class="form-control-plaintext text-center text-danger">${message}</p>
-	  </div>
-      <div class="link-group mt-3">
-        <a href="#">비밀번호 찾기</a>
-        <a href="#">회원가입</a>
-      </div>
-    </form>
-  	</div>
+	<main class="container my-5">
+		<div class="login-container">
+	    <h2 class="login-title">로그인</h2>
+	    <form name="loginForm" action="" method="post">
+	      <div class="mb-3">
+	        <label for="userId" class="form-label">아이디</label>
+	        <input type="text" class="form-control" id="userId" name="userId" placeholder="아이디를 입력하세요" required>
+	      </div>
+	      <div class="mb-3">
+	        <label for="password" class="form-label">비밀번호</label>
+	        <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+	      </div>
+	      <button type="submit" class="btn btn-login w-100 mt-3" onclick="sendLogin();">로그인</button>
+	      <div>
+		  	<p class="form-control-plaintext text-center text-danger">${message}</p>
+		  </div>
+	      <div class="link-group mt-3">
+	        <a href="#">비밀번호 찾기</a>
+	        <a href="#">회원가입</a>
+	      </div>
+	    </form>
+	  	</div>
+  	</main>
 	
 	<script type="text/javascript">
 	function sendLogin() {
