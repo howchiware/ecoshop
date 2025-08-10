@@ -3,10 +3,12 @@ package com.sp.app.admin.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -86,7 +88,7 @@ public class NoticeManageController {
 
 			String cp = req.getContextPath();
 			String query = "";
-			String listUrl = cp + "/admin/noticeManage/list";
+			String listUrl = cp + "/admin/notice/list";
 			if (! kwd.isBlank()) { // if(kwd.length() != 0) {
 				query = "schType=" + schType + "&kwd=" + myUtil.encodeUrl(kwd);
 				
@@ -134,6 +136,58 @@ public class NoticeManageController {
 		}
 
 		return "redirect:/admin/notice/list";
+	}
+	
+	@GetMapping("article/{noticeId}")
+	public String article(@PathVariable(name = "noticeId") long noticeId,
+			@RequestParam(name = "page") String page,
+			@RequestParam(name = "schType", defaultValue = "all") String schType,
+			@RequestParam(name = "kwd", defaultValue = "") String kwd,
+			Model model) throws Exception {
+
+		String query = "page=" + page;
+		try {
+			kwd = myUtil.decodeUrl(kwd);
+
+			if (! kwd.isBlank()) {
+				query += "&schType=" + schType + "&kwd=" + myUtil.encodeUrl(kwd);
+			}
+
+			service.updateHitCount(noticeId);
+
+			NoticeManage dto = Objects.requireNonNull(service.findById(noticeId));
+
+			// 에디터를 사용하므로
+			// dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+
+			// 이전 글, 다음 글
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("schType", schType);
+			map.put("kwd", kwd);
+			map.put("update_date", dto.getUpdateDate());
+
+			NoticeManage prevDto = service.findByPrev(map);
+			NoticeManage nextDto = service.findByNext(map);
+
+			// 파일
+			List<NoticeManage> listFile = service.listNoticeFile(noticeId);
+
+			model.addAttribute("dto", dto);
+			model.addAttribute("prevDto", prevDto);
+			model.addAttribute("nextDto", nextDto);
+			model.addAttribute("listFile", listFile);
+			model.addAttribute("page", page);
+			model.addAttribute("query", query);
+
+			return "admin/notice/article";
+			
+		} catch (NullPointerException e) {
+			log.info("article : ", e);
+		} catch (Exception e) {
+			log.info("article : ", e);
+		}
+		
+		return "redirect:/admin/notice/list?" + query;
 	}
 
 }

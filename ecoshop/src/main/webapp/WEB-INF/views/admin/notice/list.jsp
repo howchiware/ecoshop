@@ -52,7 +52,7 @@
 									<tr> 
 										<td><span class="notice-text">공지</span></td>
 										<td class="left">
-											<c:url var="url" value="/admin/noticeManage/article/${dto.noticeId}">
+											<c:url var="url" value="/admin/notice/article/${dto.noticeId}">
 												<c:param name="page" value="${page}"/>
 												<c:if test="${not empty kwd}">
 													<c:param name="schType" value="${schType}"/>
@@ -77,7 +77,7 @@
 									<tr> 
 										<td>${dataCount - (page-1) * size - status.index}</td>
 										<td class="left">
-											<c:url var="url" value="/admin/noticeManage/article/${dto.noticeId}">
+											<c:url var="url" value="/admin/notice/article/${dto.noticeId}">
 												<c:param name="page" value="${page}"/>
 												<c:if test="${not empty kwd}">
 													<c:param name="schType" value="${schType}"/>

@@ -85,9 +85,54 @@
 		</where>
 	</select>
 	
+	<select id="findById" parameterType="Long" resultType="com.sp.app.admin.model.NoticeManage">
+    SELECT n.noticeId, n.memberId,m.name, n.subject, n.content, TO_CHAR(n.regDate, 'YYYY-MM-DD HH24:MI:SS') regDate,
+           TO_CHAR(n.updateDate, 'YYYY-MM-DD HH24:MI:SS') updateDate, n.hitCount, n.notice, n.showNotice
+		    FROM notice n
+		    JOIN member2 m ON n.memberId = m.memberId
+		    WHERE n.noticeId = #{noticeId}
+		    AND n.showNotice = 1
+	</select>
+
+	
+	<update id="updateHitCount" parameterType="Long">
+		UPDATE notice SET hitCount = hitCount + 1
+		WHERE noticeId = #{noticeId}
+	</update>
+	
 	<insert id="insertNoticeFile" parameterType="com.sp.app.admin.model.NoticeManage">
 		INSERT INTO noticeFile(noticefileId, noticeId , saveFilename, originalFilename, fileSize)
 		VALUES (noticeFile_seq.NEXTVAL, #{noticeId}, #{saveFilename},
 			#{originalFilename}, #{fileSize})
 	</insert>
+	
+	<!-- 이전글 -->
+	<select id="findByPrev" parameterType="map" resultType="com.sp.app.model.Notice">
+		SELECT noticeId, subject
+		FROM notice n
+		<where>
+			showNotice = 1
+			<if test="kwd != null and kwd != '' ">
+				AND <include refid="where-list"/>
+			</if>
+			AND (updateDate &gt; TO_DATE(#{updateDate}, 'YYYY-MM-DD HH24:MI:SS'))
+		</where>
+		ORDER BY updateDate ASC
+		FETCH FIRST 1 ROWS ONLY
+    </select>
+
+    <!-- 다음글 -->
+    <select id="findByNext" parameterType="map" resultType="com.sp.app.model.Notice">
+		SELECT noticeId, subject
+		FROM notice n
+		<where>
+			showNotice = 1
+			<if test="kwd != null and kwd != '' ">
+				AND <include refid="where-list"/>
+			</if>
+			AND (update_date &lt; TO_DATE(#{updateDate}, 'YYYY-MM-DD HH24:MI:SS'))
+		</where>
+		ORDER BY updateDate DESC
+		FETCH FIRST 1 ROWS ONLY
+    </select>
 </mapper>
