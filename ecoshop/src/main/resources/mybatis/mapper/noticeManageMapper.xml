@@ -107,7 +107,7 @@
 	</insert>
 	
 	<!-- 이전글 -->
-	<select id="findByPrev" parameterType="map" resultType="com.sp.app.model.Notice">
+	<select id="findByPrev" parameterType="map" resultType="com.sp.app.admin.model.NoticeManage">
 		SELECT noticeId, subject
 		FROM notice n
 		<where>
@@ -122,7 +122,7 @@
     </select>
 
     <!-- 다음글 -->
-    <select id="findByNext" parameterType="map" resultType="com.sp.app.model.Notice">
+    <select id="findByNext" parameterType="map" resultType="com.sp.app.admin.model.NoticeManage">
 		SELECT noticeId, subject
 		FROM notice n
 		<where>
@@ -130,7 +130,7 @@
 			<if test="kwd != null and kwd != '' ">
 				AND <include refid="where-list"/>
 			</if>
-			AND (update_date &lt; TO_DATE(#{updateDate}, 'YYYY-MM-DD HH24:MI:SS'))
+			AND (updateDate &lt; TO_DATE(#{updateDate}, 'YYYY-MM-DD HH24:MI:SS'))
 		</where>
 		ORDER BY updateDate DESC
 		FETCH FIRST 1 ROWS ONLY

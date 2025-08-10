@@ -157,14 +157,11 @@ public class NoticeManageController {
 
 			NoticeManage dto = Objects.requireNonNull(service.findById(noticeId));
 
-			// 에디터를 사용하므로
-			// dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
-
 			// 이전 글, 다음 글
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("schType", schType);
 			map.put("kwd", kwd);
-			map.put("update_date", dto.getUpdateDate());
+			map.put("updateDate", dto.getUpdateDate());
 
 			NoticeManage prevDto = service.findByPrev(map);
 			NoticeManage nextDto = service.findByNext(map);
