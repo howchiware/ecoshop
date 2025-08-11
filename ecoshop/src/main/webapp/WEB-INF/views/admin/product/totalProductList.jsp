@@ -7,7 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>hShop</title>
+<title>전체상품리스트</title>
 <jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp"/>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
@@ -46,7 +46,12 @@ body {
 	padding: 20px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
-
+/*
+.right-panel {
+margin-left: 250px;
+padding: 30px;
+}
+*/
 .search-area tr {
 font-size: 13px;
 }
@@ -99,14 +104,6 @@ text-align: center;
 	border: none;
 	color: black; 
 }
-
-.dateBtn {
-	background: #fff;
-	border: 1px solid black;
-	color: black;
-	padding: 3px;
-}
-
 </style>
 </head>
 <body>
@@ -120,7 +117,7 @@ text-align: center;
 
 	<div class="right-panel">
 		<div class="title">
-			<h3>주문 취소 관리</h3>
+			<h3>전체 상품 관리</h3>
 		</div>
 		
 		<hr>
@@ -135,28 +132,37 @@ text-align: center;
 									<p class="small-title">기본 검색</p>
 								</div>
 								
-								<form name="orderManageSearch">
+								<form name="productManageSearch">
 									<table class="table search-list">
 										<tr>
 											<td class="select-title-area" width="10%">검색어</td>
 											<td class="select-area">
 												<select name="schType1" id="schType1">
-											        <option value="orderNum">주문번호</option>
-											        <option value="orderName">주문자</option>
-											        <option value="orderDate">주문일시</option>
-	       											<c:if test="${itemId==110}">
-														<option value="invoiceNumber" ${schType=="invoiceNumber"?"selected":""}>송장번호</option>
-													</c:if>
+											        <option value="productName">상품명</option>
+											        <option value="productCode">상품코드</option>
 											    </select>
 											    <input type="text" name="kwd1" id="kwd1">
 											</td>
 										</tr>
 										<tr>
-											<td class="select-title-area" width="10%">기간 검색</td>
+											<td class="select-title-area" width="10%">카테고리</td>
 											<td class="select-area">
 												<select name="schType2" id="schType2">
-											        <option value="orderDate">주문일</option>
-											        <option value="cancelDate">취소일</option>
+											        <option value="food">식품</option>
+											        <option value="bathroom">욕실</option>
+											        <option value="kitchen">주방</option>
+											        <option value="living">리빙</option>
+											        <option value="etc">기타</option>
+											    </select>
+											    <input type="text" name="kwd2" id="kwd2">
+											</td>
+										</tr>
+										<tr>
+											<td class="select-title-area" width="10%">기간 검색</td>
+											<td class="select-area">
+												<select name="schType3" id="schType3">
+											        <option value="insertDate">최초등록일</option>
+											        <option value="recentUpdateDate">최근수정일</option>
 											    </select>
 											    <input type="date" name="startDate" id="startDate"> ~ 
 											    <input type="date" name="endDate" id="endDate">
@@ -169,22 +175,17 @@ text-align: center;
 											</td>
 										</tr>
 										<tr>
-											<td class="select-title-area" width="10%">주문 상태</td>
+											<td class="select-title-area" width="10%">판매가 범위</td>
 											<td class="select-area" width="160">
-											    <input type="radio" id="all" name="orderStatus" value="all" checked/>
-											    <label for="all">전체</label>
-											    <input type="radio" id="sellCancel" name="orderStatus" value="sellCancel" />
-											    <label for="payComplete">판매취소</label>
-											    <input type="radio" id="orderCancelRequest" name="orderStatus" value="orderCancelRequest" />
-											    <label for="send">주문취소요청</label>
-											    <input type="radio" id="orderCancelComplete" name="orderStatus" value="orderCancelComplete" />
-											    <label for="deliver">주문취소확정</label>
-											    <input type="radio" id="returnRequest" name="orderStatus" value="returnRequest" />
-											    <label for="complete">반품요청</label>
-											    <input type="radio" id="returnComplete" name="orderStatus" value="returnComplete" />
-											    <label for="complete">반품요청확정</label>
-											    <input type="radio" id="cannotCancel" name="orderStatus" value="cannotCancel" />
-											    <label for="complete">불가</label>
+											    <input type="date" name="lowestPrice" id="lowestPrice"> 원 이상 ~ 
+											    <input type="date" name="highestPrice" id="highestPrice"> 원 이하
+											</td>
+										</tr>
+										<tr>
+											<td class="select-title-area" width="10%">재고 수량 범위</td>
+											<td class="select-area" width="160">
+											    <input type="date" name="lowestQty" id="lowestQty"> 개 이상 ~ 
+											    <input type="date" name="highesQty" id="highesQty"> 개 이하
 											</td>
 										</tr>
 									</table>
@@ -204,7 +205,6 @@ text-align: center;
 		<hr>
 
 		<div class="outside">
-
 			<div class="section ps-5 pe-5" data-aos="fade-up" data-aos-delay="200" style="padding-top:0px">
 				<div>
 					<div class="row gy-4 m-0">
@@ -215,49 +215,77 @@ text-align: center;
 									<span class="small-title">전체</span> <span class="dataCount">${dataCount}건 조회</span>
 								</div>	
 								<div class="col-md-6 align-self-center text-end">
+									<button type="button" class="addBtn">상품 등록</button>
 								</div>
 							</div>
 							
-							<table class="table board-list table-hover">
+							<form name="productManageForm" method="post">
+							<div style="padding: 5px 0 5px; border-top:1px solid #dee2e6; margin: 0px; background: #fcfcfc">
+								<button type="button" class="btn-default product-deleteCheck" onclick="deleteProductSelect();">선택삭제</button>
+							</div>
+							<table class="table product-list">
 								<thead>
-									<tr>
-										<th>주문번호</th>
-										<th width="100">주문상품</th>
-										<th width="80">옵션</th>
-										<th width="80">주문수량</th>
-										<th width="80">주문자</th>
-										<th width="100">총주문금액</th>
-										<th width="120">주문상태</th>
-										<th width="120">주문일자</th>
-										<th width="120">취소일자</th>
+									<tr class="table-light border-top text-center">
+										<th width="35" rowspan="2">
+											<input type="checkbox" class="form-check-input product-chkAll" name="chkAll">
+										</th>
+										<th rowspan="2" width="70">상품 번호</th>
+										<th rowspan="2" width="140">상품사진</th>
+										<th width="70">카테고리</th>
+										<th rowspan="2" width="100">상품코드</th>
+										<th width="70">최초 등록일</th>
+										<th rowspan="2" width="80">판매가</th>
+										<th rowspan="2" width="55">재고 수량</th>
+										<th rowspan="2" width="55">진열</th>
+										<th rowspan="2" width="55">관리</th>
+									</tr>
+									<tr class="table-light border-top text-center">
+										<th width="70">상품명</th>
+										<th width="70">최근 수정일</th>
 									</tr>
 								</thead>
-								
 								<tbody>
-									<c:forEach var="dto" items="${list}" varStatus="status">
-										<tr class="hover-cursor" 
-												onclick="location.href='${pageContext.request.contextPath}/admin/order/detailManage/${itemId}/${dto.orderDetailNum}?${query}';">
-											<td>${dto.orderNum}</td>
-											<td>나무수저세트</td>
-											<td>
-												<c:choose>
-													<c:when test="${dto.optionCount==0}">&nbsp;</c:when>
-													<c:when test="${dto.optionCount==1}">${dto.optionValue}</c:when>
-													<c:when test="${dto.optionCount==2}">${dto.optionValue} / ${dto.optionValue2}</c:when>
-												</c:choose>
-											<td>4</td>
-											<td>${dto.name}</td>
-											<td><fmt:formatNumber value="${dto.payment}"/></td>
-											<td>${dto.orderStateInfo}</td>
-											<td>${dto.orderDate}</td>
-											<td>2025-03-05 14:23</td>
+								
+										<tr class="text-center" valign="middle">
+											<td rowspan="2">
+												<input type="checkbox" class="form-check-input" name="nums" value="${dto.stockNum}" 
+														data-totalStock="${dto.totalStock}" ${dto.totalStock == 0 ? "disabled":""}>
+											</td>
+											<td rowspan="2">10</td>
+											<td rowspan="2" width="55">
+												<img class="border rounded" width="50" height="50" src="${pageContext.request.contextPath}/uploads/products/${dto.thumbnail}">
+											</td>
+											<td>리빙</td>
+											<td rowspan="2">123456</td>
+											<td>2025-02-05</td>
+											<td rowspan="2">10,000 원</td>
+											<td rowspan="2">3</td>
+											<td rowspan="2">표시</td>
+											<td rowspan="2">
+												<button type="button">재고</button>
+												<button type="button">수정</button>
+											</td>
 										</tr>
-									</c:forEach>
+										<tr>
+											<td>
+												수저세트
+											</td>
+											<td>
+												2025-07-04
+											</td>
+										</tr>
+										<tr>
+											<td colspan="10" style="text-align: right; border-bottom: none;">
+												<button type="button">선택상품삭제</button>
+												<button type="button">전체상품삭제</button>
+											</td>
+										</tr>
 								</tbody>
 							</table>
+						</form>
 							
 							<div class="page-navigation">
-								${dataCount==0 ? "등록된 주문정보가 없습니다." : paging}
+								${dataCount==0 ? "등록된 상품이 없습니다." : paging}
 							</div>
 	
 						</div>
