@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.MemberMapper">
+	
+	<select id="loginMember" parameterType="map" resultType="com.sp.app.model.Member">
+		SELECT m1.memberId, m1.userId, password, name, nickname, email, userLevel 
+		FROM member1 m1
+		LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
+		WHERE m1.userId = #{userId} AND password = #{password}
+	</select>
+	
+	<select id="selectMemberId" resultType="long">
+	    SELECT
+	        (
+	            SELECT r FROM (
+	                SELECT TRUNC(DBMS_RANDOM.VALUE(100000, 999999)) AS r
+	                FROM dual
+	                CONNECT BY LEVEL &lt;= 1000
+	                MINUS
+	                SELECT memberId FROM member1
+	            ) WHERE ROWNUM = 1
+	        ) AS randomId
+	    FROM dual
+	</select>
+
+	<insert id="insertMember1" parameterType="com.sp.app.model.Member">
+	    INSERT INTO member1(memberId, userId, password, userLevel, regDate, regUpdate)
+	    VALUES (#{memberId}, #{userId}, #{password}, 1, SYSDATE, SYSDATE)
+	</insert>
+	
+	<insert id="insertMember2" parameterType="com.sp.app.model.Member">
+	    INSERT INTO member2(memberId, name, nickname, birth, tel, zip, addr1, addr2, email)
+	    VALUES (#{memberId}, #{name}, #{nickname}, TO_DATE(#{birth}, 'YYYY-MM-DD'), #{tel}, #{zip}, #{addr1}, #{addr2}, #{email})
+	</insert>
+	
+	<select id="findById" parameterType="String" resultType="com.sp.app.model.Member">
+		SELECT m1.memberId, userId, password, userLevel, TO_CHAR(regDate, 'YYYY-MM-DD') regDate, TO_CHAR(regUpdate, 'YYYY-MM-DD') regUpdate,
+			name, nickname, TO_CHAR(birth, 'YYYY-MM-DD') birth, tel, zip, addr1, addr2, email
+		FROM member1 m1
+		LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
+		WHERE m1.userId = #{userId}
+	</select>
+	
+	<select id="findByNickname" parameterType="String" resultType="com.sp.app.model.Member">
+		SELECT m1.memberId, userId, password, userLevel, TO_CHAR(regDate, 'YYYY-MM-DD') regDate, TO_CHAR(regUpdate, 'YYYY-MM-DD') regUpdate,
+			name, nickname, TO_CHAR(birth, 'YYYY-MM-DD') birth, tel, zip, addr1, addr2, email
+		FROM member1 m1
+		LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
+		WHERE m2.nickname = #{nickname}
+	</select>
+
+	
+</mapper>
