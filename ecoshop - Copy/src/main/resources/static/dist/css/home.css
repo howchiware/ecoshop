@@ -27,6 +27,12 @@ body {
   margin-right: 15px;
 }
 
+.nickname-text {
+    padding: 0 0.5rem; /* 좌우 여백 */
+    display: inline-flex;
+    align-items: center;
+}
+
 .nav-link:hover {
   color: #234d3c !important; /* hover 최종 색상 */
 }

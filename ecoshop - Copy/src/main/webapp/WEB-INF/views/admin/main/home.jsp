@@ -7,24 +7,19 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-
-<style>
-.main-content {
-  flex: 1;
-  padding: 20px;
-  background-color: #fff;
-}
-</style>
-    
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <jsp:include page="/WEB-INF/views/admin/layout/header.jsp"/>
-  </header>
-  <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp"/>
-  <main style="margin-left: 240px; padding: 20px;">
-    
-  </main>
+
+<!-- 헤더 -->
+<jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
+
+<!-- 메인 영역 -->
+<main class="main-container">
+  <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
+  	관리자 페이지
+</main>
 
 </body>
 </html>

@@ -16,6 +16,8 @@
 
 .right-panel {
 background: #fff;
+margin-left: 250px;
+padding: 30px;
 }
 
 .section {

@@ -20,43 +20,19 @@
   <ul class="sidebar-menu">	
     <li class="menu-title">회원관리</li>
     <li>
-      <a href="${pageContext.request.contextPath}/admin/member/list" title="회원"> 회원</a>
+      <a href="${pageContext.request.contextPath}/admin/member/list"> 회원</a>
     </li>
 
-    <li class="menu-title">온라인샵관리</li>
+	<li class="menu-title">온라인샵</li>
     <li>
-      <a href="#"> 카테고리 관리</a>
+      <a href="#"> 카테고리 관리 > </a>
       <ul class="submenu">
         <li><a href="#"> 카테고리 등록 / 수정 / 삭제</a></li>
         <li><a href="#"> 카테고리 순서</a></li>
       </ul>
     </li>
     <li>
-      <a href="#"> 상품 관리</a>
-      <ul class="submenu">
-        <li>
-          <a href="#"> 전체 상품 관리</a>
-          <ul class="submenu">
-            <li><a href="#">➕ 상품 등록</a></li>
-            <li><a href="#"> 배송 및 교환환불 정책 관리</a></li>
-            <li><a href="#"> 리뷰 및 Q&A 관리</a></li>
-          </ul>
-        </li>
-        <li><a href="#"> 주문 상태 관리</a></li>
-        <li><a href="#"> 주문 취소 관리</a></li>
-      </ul>
-    </li>
-
-    <li class="menu-title">공동구매 관리</li>
-    <li>
-      <a href="#"> 카테고리 관리</a>
-      <ul class="submenu">
-        <li><a href="#"> 카테고리 등록 / 수정 / 삭제</a></li>
-        <li><a href="#"> 카테고리 순서</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#"> 상품 관리</a>
+      <a href="#"> 상품 관리 > </a>
       <ul class="submenu">
         <li><a href="#"> 전체 상품 관리</a></li>
         <li><a href="#"> 상품 등록</a></li>
@@ -64,34 +40,54 @@
         <li><a href="#"> 리뷰 및 Q&A 관리</a></li>
       </ul>
     </li>
-    <li><a href="#"> 주문 상태 관리</a></li>
-    <li><a href="#"> 주문 취소 관리</a></li>
+    <li><a href="/admin/order/orderManage"> 주문 상태 관리</a></li>
+    <li><a href="/admin/order/detailManage"> 주문 취소 관리</a></li>
 
-    <li class="menu-title">챌린지 관리</li>
+    <li class="menu-title">공동구매</li>
     <li>
-      <a href="#"> 챌린지 관리</a>
+      <a href="#"> 카테고리 관리 > </a>
+      <ul class="submenu">
+        <li><a href="#"> 카테고리 등록 / 수정 / 삭제</a></li>
+        <li><a href="#"> 카테고리 순서</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#"> 상품 관리 > </a>
+      <ul class="submenu">
+        <li><a href="#"> 전체 상품 관리</a></li>
+        <li><a href="#"> 상품 등록</a></li>
+        <li><a href="#"> 배송 정책 및 배송비</a></li>
+        <li><a href="#"> 리뷰 및 Q&A 관리</a></li>
+      </ul>
+    </li>
+    <li><a href=""> 주문 상태 관리</a></li>
+    <li><a href=""> 주문 취소 관리</a></li>
+
+    <li class="menu-title">챌린지</li>
+    <li>
+      <a href="#"> 챌린지 관리 ></a>
       <ul class="submenu">
         <li><a href="#"> 챌린지 목록</a></li>
-        <li><a href="#">✏ 챌린지 등록 / 수정 / 삭제</a></li>
+        <li><a href="#"> 챌린지 등록/수정/삭제</a></li>
       </ul>
     </li>
     <li>
-      <a href="#"> 챌린지 인증 관리</a>
+      <a href="#"> 챌린지 인증 관리 > </a>
       <ul class="submenu">
-        <li><a href="#">⭐ 스페셜 챌린지 인증</a></li>
+        <li><a href="#"> 스페셜 챌린지 인증</a></li>
       </ul>
     </li>
 
-    <li class="menu-title">워크숍 관리</li>
+    <li class="menu-title">워크숍</li>
     <li>
-      <a href="#"> 프로그램 관리</a>
+      <a href="#"> 프로그램 관리 ></a>
       <ul class="submenu">
         <li><a href="#"> 프로그램 목록</a></li>
-        <li><a href="#">✏ 프로그램 등록 / 수정</a></li>
+        <li><a href="#"> 프로그램 등록 / 수정</a></li>
       </ul>
     </li>
     <li>
-      <a href="#"> 워크샵 관리</a>
+      <a href="#"> 워크샵 관리 > </a>
       <ul class="submenu">
         <li><a href="#"> 워크샵 목록</a></li>
         <li><a href="#"> 워크샵 등록 / 수정</a></li>
@@ -101,7 +97,7 @@
     </li>
     <li><a href="#"> 담당자 관리</a></li>
     <li>
-      <a href="#">포인트 관리</a>
+      <a href="#">포인트 관리 ></a>
       <ul class="submenu">
         <li><a href="#"> 포인트 지급 내역</a></li>
       </ul>
@@ -109,26 +105,26 @@
 
     <li class="menu-title">광고</li>
     <li>
-      <a href="#"> 광고 관리</a>
+      <a href="#"> 광고 관리 ></a>
       <ul class="submenu">
-        <li><a href="#"> 광고 목록</a></li>
-        <li><a href="#"> 광고 상태 조회</a></li>
+        <li><a href="${pageContext.request.contextPath}/admin/advertisement/list"> 광고 목록</a></li>
+        <li><a href="${pageContext.request.contextPath}/admin/advertisement/status"> 광고 상태 조회</a></li>
       </ul>
     </li>
 
     <li class="menu-title">이벤트</li>
     <li>
-      <a href="#"> 오늘의 퀴즈</a>
+      <a href="${pageContext.request.contextPath}/admin/quiz/list"> 오늘의 퀴즈</a>
     </li>
     <li>
-      <a href="#"> 출석 체크</a>
+      <a href="${pageContext.request.contextPath}/admin/attendance/list"> 출석 체크</a>
     </li>
 
     <li class="menu-title">고객센터</li>
-    <li><a href="#"> 공지사항</a></li>
-    <li><a href="#"> 신고관리</a></li>
-    <li><a href="#"> 자주 묻는 질문</a></li>
-    <li><a href="#"> 1:1 문의</a></li>
+    <li><a href="${pageContext.request.contextPath}/admin/notice/list"> 공지사항</a></li>
+    <li><a href="${pageContext.request.contextPath}/admin/block/list"> 신고관리</a></li>
+    <li><a href="${pageContext.request.contextPath}/admin/faq/list"> 자주 묻는 질문</a></li>
+    <li><a href="${pageContext.request.contextPath}/admin/inquiry/list"> 1:1 문의</a></li>
 
   </ul>
 </div>
