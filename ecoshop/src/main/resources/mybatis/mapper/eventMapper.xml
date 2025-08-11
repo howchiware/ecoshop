@@ -5,12 +5,12 @@
 	
 	<!-- 출석체크 -->
 	<insert id="insertAttendance" parameterType="com.sp.app.model.Attendance">
-	    INSERT INTO attendanceBoard(memberId, regDate)
-	    VALUES (#{memberId}, SYSDATE)
+	    INSERT INTO attendanceBoard(attendanceId, memberId, regDate)
+	    VALUES (attendanceBoard_seq.NEXTVAL, #{memberId}, SYSDATE)
 	</insert>
 	
 	<select id="listAttendance" parameterType="map" resultType="com.sp.app.model.Attendance">
-		SELECT memberId, regDate
+		SELECT attendanceId, memberId, regDate
 		FROM attendanceBoard
 		WHERE memberId = #{memberId} AND regDate &gt;= TRUNC(SYSDATE, 'IW')
 	</select>
