@@ -266,139 +266,75 @@ form button[type=button]:hover {
 
 	<main class="main-container">
 		<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
-		<div class="content">
-			<h2 class="mb-4">출석체크 관리</h2>
-
-			<form name="searchForm" class="row g-3 mb-4" method="get">
-				<div class="col-auto">
-					<label for="start" class="form-label">기간 시작일(월요일)</label> 
-					<input type="date" id="start" name="start" value="${empty start ? '' : start}" class="form-control" required>
-				</div>
-				<div class="col-auto">
-					<label for="end" class="form-label">기간 종료일(일요일)</label>
-					<input type="date" id="end" name="end" value="${empty end ? '' : end}" class="form-control" readonly>
-				</div>
-
-				<div class="col-auto">
-					<label for="schType" class="form-label">검색 조건</label> 
-						<select 	id="schType" name="schType" class="form-select">
-							<option value="name" ${schType=="name"?"selected":""}>이름</option>
-							<option value="memberId" ${schType=="memberId"?"selected":""}>회원번호</option>
-						</select>
-					
-				</div>
-				<div class="col-auto">
-					<label for="keyword" class="form-label">검색어</label> 
-					<input type="text" id="kwd" name="kwd" value="${kwd}" class="form-control">
-				</div>
-
-				<div class="col-auto align-self-end">
-					<button type="submit" class="btn btn-primary" onclick="searchList();">조회</button>
-					<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/attendance/list'">초기화
-				</button>
-				</div>
-				
-				
-			</form>
-
-			<table class="table table-bordered table-hover">
-				<thead class="table-light">
-					<tr class="text-center">
-						<th>회원번호</th>
-						<th>이름</th>
-						<th>기간</th>
-						<th>출석 횟수</th>
-						<th>마지막 출석일</th>
-						<th>포인트 지급 여부</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach var="item" items="${list}">
-						<tr class="text-center">
-							<td>${item.memberId}</td>
-							<td>${item.name}</td>
-							<td>${start}~${end}</td>
+		
+			<h2>오늘의 퀴즈 관리</h2>
+			
+			<div>
+				<table>
+					<thead>
+						<tr>
+							<td>퀴즈 제목</td>
+							<td>${dto.subject}</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>퀴즈 내용</td>
+							<td>${dto.content}</td>
+						</tr>
+						<tr>
+							<td>답</td>
 							<td>
-			                    <c:choose>
-			                        <c:when test="${item.attendanceCount > 0}">
-			                            ${item.attendanceCount}회
-			                        </c:when>
-			                        <c:otherwise>
-			                            없음
-			                        </c:otherwise>
-			                    </c:choose>
-			                </td>
-			                <td><fmt:formatDate value="${item.lastAttendanceDate}" pattern="yyyy-MM-dd" /></td>
-							<td>
-								<c:choose>
-									<c:when test="${item.attendanceCount >= 5}">
-										<span class="badge bg-success">지급완료</span>
-									</c:when>
-									<c:otherwise>
-										<span class="badge bg-secondary">미지급</span>
-									</c:otherwise>
-								</c:choose>
+								<c:if test="${dto.answer eq '1'}">
+								    O
+								</c:if>
+								<c:if test="${dto.answer eq '0'}">
+								    X
+								</c:if>
 							</td>
 						</tr>
-					</c:forEach>
-
-
-					<c:if test="${empty list}">
 						<tr>
-							<td colspan="6" class="text-center">조회하실 정보를 입력해 주세요.</td>
+							<td>해석</td>
+							<td>${dto.commentary}</td>
 						</tr>
-					</c:if>
-				</tbody>
-			</table>
-			
-			<div class="page-navigation">
-				${dataCount == 0 ? "등록된 게시글이 없습니다" : paging}
+						<tr>
+							<td>작성자</td>
+							<td>${dto.name}</td>
+						</tr>
+						<tr>
+							<td>작성일</td>
+							<td>${dto.regDate}</td>
+						</tr>
+						<tr>
+							<td>개시일</td>
+							<td>${dto.openDate}</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
-		</div>
+			
+			<div>
+				<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/quiz/update?quizId=${dto.quizId}&page=${page}';">수정</button>
+				<button type="button" onclick="deleteOk();">삭제</button>
+			</div>
+			
+			<div>
+				<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/quiz/list?${query}';">목록으로 돌아가기</button>
+			</div>
+			
 	</main>
 
-<script>
-window.addEventListener('DOMContentLoaded', () => {
-	const inputEL = document.querySelector('form input[name=kwd]'); 
-	inputEL.addEventListener('keydown', function (evt) {
-		if(evt.key === 'Enter') {
-			evt.preventDefault();
-	    	
-			searchList();
+<c:if test="${sessionScope.member.memberId==dto.memberId||sessionScope.member.userLevel>50}">
+	<script type="text/javascript">
+	function deleteOk() {
+		if(confirm('퀴즈를 삭제하시겠습니까?')) {
+			let params = 'quizId=${dto.quizId}&${query}';
+			let url = '${pageContext.request.contextPath}/admin/quiz/delete?' + params;
+			location.href = url;
 		}
-	});
-});
-
-function searchList() {
-	const f = document.searchForm;
-	if(! f.kwd.value.trim()) {
-		return;
 	}
-	
-	const formData = new FormData(f);
-	let params = new URLSearchParams(formData).toString();
-	
-	let url = '${pageContext.request.contextPath}/admin/attendance/list';
-	location.href = url + '?' + params;
-}
-
-document.getElementById("start").addEventListener("change", function () {
-  let start = new Date(this.value);
-  let day = start.getDay();
-
-  if (day !== 1) {
-    alert("시작일은 월요일로 선택해주세요.");
-    this.value = "";
-    document.getElementById("end").value = "";
-    return;
-  }
-
-  let end = new Date(start);
-  end.setDate(start.getDate() + 6);
-  document.getElementById("end").value = end.toISOString().split("T")[0];
-});
-</script>
-	
+	</script>
+</c:if>
 
 </body>
 </html>

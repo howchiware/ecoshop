@@ -13,6 +13,18 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <style>
+
+* {
+  font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
+  color: #333;
+  margin: 0;
+}
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-style: normal;
+}
 .attendance-icon {
   width: 32px;
   height: 32px;
