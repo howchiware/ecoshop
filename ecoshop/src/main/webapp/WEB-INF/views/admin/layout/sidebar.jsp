@@ -23,7 +23,7 @@
       <a href="${pageContext.request.contextPath}/admin/member/list"> 회원</a>
     </li>
 
-    <li class="menu-title">온라인샵</li>
+	<li class="menu-title">온라인샵</li>
     <li>
       <a href="#"> 카테고리 관리 > </a>
       <ul class="submenu">
@@ -32,20 +32,16 @@
       </ul>
     </li>
     <li>
-      <a href="#"> 상품 관리 ></a>
+      <a href="#"> 상품 관리 > </a>
       <ul class="submenu">
-        <li>
-          <a href="#"> 전체 상품 관리 </a>
-          <ul class="submenu">
-            <li><a href="#"> 상품 등록</a></li>
-            <li><a href="#"> 배송 및 교환환불 정책 관리</a></li>
-            <li><a href="#"> 리뷰 및 Q&A 관리</a></li>
-          </ul>
-        </li>
-        <li><a href="#"> 주문 상태 관리</a></li>
-        <li><a href="#"> 주문 취소 관리</a></li>
+        <li><a href="#"> 전체 상품 관리</a></li>
+        <li><a href="#"> 상품 등록</a></li>
+        <li><a href="#"> 배송 정책 및 배송비</a></li>
+        <li><a href="#"> 리뷰 및 Q&A 관리</a></li>
       </ul>
     </li>
+    <li><a href="/admin/order/orderManage"> 주문 상태 관리</a></li>
+    <li><a href="/admin/order/detailManage"> 주문 취소 관리</a></li>
 
     <li class="menu-title">공동구매</li>
     <li>
@@ -64,8 +60,8 @@
         <li><a href="#"> 리뷰 및 Q&A 관리</a></li>
       </ul>
     </li>
-    <li><a href="#"> 주문 상태 관리</a></li>
-    <li><a href="#"> 주문 취소 관리</a></li>
+    <li><a href=""> 주문 상태 관리</a></li>
+    <li><a href=""> 주문 취소 관리</a></li>
 
     <li class="menu-title">챌린지</li>
     <li>

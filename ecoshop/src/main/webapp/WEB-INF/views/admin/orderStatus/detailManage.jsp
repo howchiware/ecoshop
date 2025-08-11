@@ -83,7 +83,7 @@ text-align: center;
 
 	<div class="right-panel">
 		<div class="title">
-			<h3>주문 상태 관리</h3>
+			<h3>주문 취소 관리</h3>
 		</div>
 		
 		<hr>
@@ -135,14 +135,18 @@ text-align: center;
 										<td class="select-area" width="160">
 										    <input type="radio" id="all" name="orderStatus" value="all" checked/>
 										    <label for="all">전체</label>
-										    <input type="radio" id="payComplete" name="orderStatus" value="payComplete" />
-										    <label for="payComplete">결제완료</label>
-										    <input type="radio" id="send" name="orderStatus" value="send" />
-										    <label for="send">발송처리</label>
-										    <input type="radio" id="deliver" name="orderStatus" value="deliver" />
-										    <label for="deliver">배송중</label>
-										    <input type="radio" id="complete" name="orderStatus" value="complete" />
-										    <label for="complete">배송완료</label>
+										    <input type="radio" id="sellCancel" name="orderStatus" value="sellCancel" />
+										    <label for="payComplete">판매취소</label>
+										    <input type="radio" id="orderCancelRequest" name="orderStatus" value="orderCancelRequest" />
+										    <label for="send">주문취소요청</label>
+										    <input type="radio" id="orderCancelComplete" name="orderStatus" value="orderCancelComplete" />
+										    <label for="deliver">주문취소확정</label>
+										    <input type="radio" id="returnRequest" name="orderStatus" value="returnRequest" />
+										    <label for="complete">반품요청</label>
+										    <input type="radio" id="returnComplete" name="orderStatus" value="returnComplete" />
+										    <label for="complete">반품요청확정</label>
+										    <input type="radio" id="cannotCancel" name="orderStatus" value="cannotCancel" />
+										    <label for="complete">불가</label>
 										</td>
 									</tr>
 								</table>
@@ -168,7 +172,7 @@ text-align: center;
 						
 						<div class="row mb-2">
 							<div class="col-md-6 align-self-center">
-								<span class="small-title">전체</span> <span class="dataCount">${dataCount}건 조회</span><span class="totalOrderMoney"> | 총 주문액: 3000원</span>
+								<span class="small-title">전체</span> <span class="dataCount">${dataCount}건 조회</span>
 							</div>	
 							<div class="col-md-6 align-self-center text-end">
 							</div>
@@ -178,24 +182,35 @@ text-align: center;
 							<thead>
 								<tr>
 									<th>주문번호</th>
-									<th width="130">주문구분</th>
-									<th width="95">주문자</th>
-									<th width="160">${itemId==110 ? "송장번호":"주문수량"}</th>
-									<th width="130">총주문금액</th>
-									<th width="150">주문일자</th>
+									<th width="100">주문상품</th>
+									<th width="80">옵션</th>
+									<th width="80">주문수량</th>
+									<th width="80">주문자</th>
+									<th width="100">총주문금액</th>
+									<th width="120">주문상태</th>
+									<th width="120">주문일자</th>
+									<th width="120">취소일자</th>
 								</tr>
 							</thead>
 							
 							<tbody>
 								<c:forEach var="dto" items="${list}" varStatus="status">
 									<tr class="hover-cursor" 
-											onclick="location.href='${pageContext.request.contextPath}/admin/order/orderManage/${itemId}/${dto.orderNum}?${query}';">
+											onclick="location.href='${pageContext.request.contextPath}/admin/order/detailManage/${itemId}/${dto.orderDetailNum}?${query}';">
 										<td>${dto.orderNum}</td>
-										<td>${dto.orderStateInfo}</td>
+										<td>나무수저세트</td>
+										<td>
+											<c:choose>
+												<c:when test="${dto.optionCount==0}">&nbsp;</c:when>
+												<c:when test="${dto.optionCount==1}">${dto.optionValue}</c:when>
+												<c:when test="${dto.optionCount==2}">${dto.optionValue} / ${dto.optionValue2}</c:when>
+											</c:choose>
+										<td>4</td>
 										<td>${dto.name}</td>
-										<td>${itemId==110 ? dto.invoiceNumber : dto.totalQty}</td>
 										<td><fmt:formatNumber value="${dto.payment}"/></td>
+										<td>${dto.orderStateInfo}</td>
 										<td>${dto.orderDate}</td>
+										<td>2025-03-05 14:23</td>
 									</tr>
 								</c:forEach>
 							</tbody>

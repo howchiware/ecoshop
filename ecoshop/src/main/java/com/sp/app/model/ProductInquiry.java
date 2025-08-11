@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductQuestion {
+public class ProductInquiry {
 	private long inquiryId;
 	private long productCode;
 	private Long memberId;

@@ -48,7 +48,7 @@ public class Product {
 	private int totalStock;
 	
 	// 상품 리뷰
-	private double score;
+	private double rate;
 	private int reviewCount;
 	private int questionCount;
 	
