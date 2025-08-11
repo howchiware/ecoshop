@@ -71,7 +71,7 @@
 		</choose>
 	</sql>
 	
-		<select id="dataCount" parameterType="map" resultType="Integer">
+	<select id="dataCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*), 0)
 		FROM notice n
 		JOIN member2 m ON n.memberId = m.memberId
@@ -84,6 +84,36 @@
 			</if>
 		</where>
 	</select>
+	
+	<!-- 수정 -->
+	<update id="updateNotice" parameterType="com.sp.app.admin.model.NoticeManage">
+		UPDATE notice SET subject = #{subject}, content = #{content}, 
+			notice = #{notice}, showNotice = #{showNotice}, updateDate = SYSDATE
+		WHERE noticeId = #{noticeId}
+	</update>
+    
+	<!-- 삭제 -->
+	<delete id="deleteNotice" parameterType="Long">
+		DELETE FROM notice
+		WHERE noticeId = #{noticeId}
+	</delete>
+	
+	<select id="listNoticeFile" parameterType="Long" resultType="com.sp.app.admin.model.NoticeManage">
+		SELECT noticefileId, noticeId, saveFilename, originalFilename, fileSize
+		FROM noticeFile
+		WHERE noticeId = #{noticeId}    
+	</select>
+	
+	<select id="findByFileId" parameterType="Long" resultType="com.sp.app.admin.model.NoticeManage">
+		SELECT noticefileId, noticeId, saveFilename, originalFilename, fileSize
+		FROM noticeFile
+	    WHERE noticefileId = #{noticefileId}
+	</select>
+	
+	<delete id="deleteNoticeFile" parameterType="map">
+		DELETE FROM noticeFile
+		WHERE ${field} = #{noticeId}
+	</delete>
 	
 	<select id="findById" parameterType="Long" resultType="com.sp.app.admin.model.NoticeManage">
     SELECT n.noticeId, n.memberId,m.name, n.subject, n.content, TO_CHAR(n.regDate, 'YYYY-MM-DD HH24:MI:SS') regDate,
@@ -135,4 +165,5 @@
 		ORDER BY updateDate DESC
 		FETCH FIRST 1 ROWS ONLY
     </select>
+
 </mapper>

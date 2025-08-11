@@ -9,11 +9,13 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 <body>
 
-<jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
-
+<header>
+	<jsp:include page="/WEB-INF/views/admin/layout/header.jsp"/>
+</header>
 
 <main class="main-container">
   <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
@@ -89,7 +91,7 @@
 											<p class="form-control-plaintext">
 												<c:forEach var="vo" items="${listFile}" varStatus="status">
 													<span>
-														<label class="delete-file" data-fileNum="${vo.noticefileId}"><i class="bi bi-trash"></i></label> 
+														<label class="delete-file" noticefileId="${vo.noticefileId}"><i class="bi bi-trash"></i></label> 
 														${vo.originalFilename}&nbsp;|
 													</span>
 												</c:forEach>
@@ -118,6 +120,7 @@
 	</div>
 </main>
 
+
 <script type="text/javascript">
 
 function sendOk() {
@@ -139,5 +142,27 @@ function sendOk() {
     f.submit();
 }
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<c:if test="${mode=='update'}">
+	<script type="text/javascript">
+		$('.delete-file').click(function(){
+			if(! confirm('선택한 파일을 삭제 하시겠습니까 ? ')) {
+				return false;
+			}
+			
+			let $span = $(this).closest('span');
+			let noticefileId = $(this).attr('data-noticefileId');
+			let url = '${pageContext.request.contextPath}/admin/notice/deleteFile';
+			
+			$.ajaxSetup({ beforeSend: function(e) { e.setRequestHeader('AJAX', true); } });
+			$.post(url, {noticefileId:noticefileId}, function(data){
+				$span.remove();
+			}, 'json').fail(function(xhr){
+				console.log(xhr.responseText);
+			});
+		});
+	</script>
+</c:if>
 </body>
 </html>

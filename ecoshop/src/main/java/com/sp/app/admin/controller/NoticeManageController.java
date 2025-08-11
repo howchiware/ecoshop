@@ -1,10 +1,14 @@
 package com.sp.app.admin.controller;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,12 +16,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.app.admin.model.NoticeManage;
 import com.sp.app.admin.service.NoticeManageService;
 import com.sp.app.common.MyUtil;
 import com.sp.app.common.PaginateUtil;
 import com.sp.app.common.StorageService;
+import com.sp.app.exception.StorageException;
 import com.sp.app.model.SessionInfo;
 
 import jakarta.annotation.PostConstruct;
@@ -186,6 +192,156 @@ public class NoticeManageController {
 		
 		return "redirect:/admin/notice/list?" + query;
 	}
+	
+	@GetMapping("update")
+	public String updateForm(@RequestParam(name = "noticeId") long noticeId,
+			@RequestParam(name = "page") String page,
+			Model model,
+			HttpSession session) throws Exception {
+		
+		try {
+			NoticeManage dto = Objects.requireNonNull(service.findById(noticeId));
+
+			List<NoticeManage> listFile = service.listNoticeFile(noticeId);
+
+			model.addAttribute("mode", "update");
+			model.addAttribute("page", page);
+			model.addAttribute("dto", dto);
+			model.addAttribute("listFile", listFile);
+
+			return "admin/notice/write";
+			
+		} catch (NullPointerException e) {
+			log.info("updateForm : ", e);
+		} catch (Exception e) {
+			log.info("updateForm : ", e);
+		}
+		
+		return "redirect:/admin/notice/list?page=" + page;
+	}
+	@PostMapping("update")
+	public String updateSubmit(NoticeManage dto,
+			@RequestParam(name = "page") String page,
+			HttpSession session) throws Exception {
+
+		try {
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			
+			dto.setUpdateId(info.getMemberId());
+			service.updateNotice(dto, uploadPath);
+			
+		} catch (Exception e) {
+			log.info("updateSubmit : ", e);
+		}
+
+		return "redirect:/admin/notice/list?page=" + page;
+	}
+
+	@GetMapping("delete")
+	public String delete(@RequestParam(name = "noticeId") long noticeId,
+			@RequestParam(name = "page") String page,
+			@RequestParam(name = "schType", defaultValue = "all") String schType,
+			@RequestParam(name = "kwd", defaultValue = "") String kwd,
+			HttpSession session) throws Exception {
+
+		String query = "page=" + page;
+		try {
+			kwd = myUtil.decodeUrl(kwd);
+			if (! kwd.isBlank()) {
+				query += "&schType=" + schType + "&kwd=" + myUtil.encodeUrl(kwd);
+			}
+
+			service.deleteNotice(noticeId, uploadPath);
+			
+		} catch (Exception e) {
+			log.info("delete : ", e);
+		}
+
+		return "redirect:/admin/notice/list?" + query;
+	}
+	
+	@GetMapping("download/{noticefileId}")
+	public ResponseEntity<?> download(
+			@PathVariable(name = "noticefileId") long noticefileId) throws Exception {
+		
+		try {
+			NoticeManage dto = Objects.requireNonNull(service.findByFileId(noticefileId));
+
+			return storageService.downloadFile(uploadPath, dto.getSaveFilename(), dto.getOriginalFilename());
+			
+		} catch (NullPointerException | StorageException e) {
+			log.info("download : ", e);
+		} catch (Exception e) {
+			log.info("download : ", e);
+		}
+		
+		String errorMessage = "<script>alert('파일 다운로드가 불가능 합니다 !!!');history.back();</script>";
+
+		return ResponseEntity.status(HttpStatus.NOT_FOUND) // 404 상태 코드 반환
+				.contentType(MediaType.valueOf("text/html;charset=UTF-8"))
+				.body(errorMessage); // 에러 메시지 반환
+	}
+
+	@GetMapping("zipdownload/{noticeId}")
+	public ResponseEntity<?> zipdownload(@PathVariable(name = "noticeId") long noticeId) throws Exception {
+		try {
+			List<NoticeManage> listFile = service.listNoticeFile(noticeId);
+			if (listFile.size() > 0) {
+				String[] sources = new String[listFile.size()];
+				String[] originals = new String[listFile.size()];
+				String fileName = listFile.get(0).getOriginalFilename();
+				String zipFilename = fileName.substring(0, fileName.lastIndexOf(".")) + "_외.zip";
+
+				for (int idx = 0; idx < listFile.size(); idx++) {
+					sources[idx] = uploadPath + File.separator + listFile.get(idx).getSaveFilename();
+					originals[idx] = File.separator + listFile.get(idx).getOriginalFilename();
+				}
+
+				return storageService.downloadZipFile(sources, originals, zipFilename);
+			}
+			
+		} catch (Exception e) {
+			log.info("zipdownload : ", e);
+		}
+		
+		String errorMessage = "<script>alert('파일 다운로드가 불가능 합니다 !!!');history.back();</script>";
+		 
+		return ResponseEntity.status(HttpStatus.NOT_FOUND) // 404 상태 코드 반환
+				.contentType(MediaType.valueOf("text/html;charset=UTF-8")) // HTML 콘텐츠 타입 설정
+				.body(errorMessage); // 에러 메시지 반환
+	}
+
+	@ResponseBody
+	@PostMapping("deleteFile")
+	public Map<String, ?> deleteFile(@RequestParam(name = "noticefileId") long noticefileId, 
+			HttpSession session) throws Exception {
+		Map<String, Object> model = new HashMap<>();
+
+		String state = "false";
+		try {
+			NoticeManage dto = Objects.requireNonNull(service.findByFileId(noticefileId));
+			
+			service.deleteUploadFile(uploadPath, dto.getSaveFilename());
+
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("field", "noticefileId");
+			map.put("noticeId", noticefileId);
+			
+			service.deleteNoticeFile(map);
+			
+			state = "true";
+			
+		} catch (NullPointerException e) {
+			log.info("deleteFile : ", e);
+		} catch (Exception e) {
+			log.info("deleteFile : ", e);
+		}
+
+		// 작업 결과를 json으로 전송
+		model.put("state", state);
+		return model;
+	}
+
 
 }
 

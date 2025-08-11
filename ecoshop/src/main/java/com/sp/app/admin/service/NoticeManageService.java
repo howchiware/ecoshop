@@ -12,16 +12,16 @@ public interface NoticeManageService {
 	public List<NoticeManage> listNoticeTop();
 	public List<NoticeManage> listNotice(Map<String, Object> map);
 	
-	public void updateHitCount(long num) throws Exception;
-	public NoticeManage findById(long num);
+	public void updateHitCount(long noticeId) throws Exception;
+	public NoticeManage findById(long noticeId);
 	public NoticeManage findByPrev(Map<String, Object> map);
 	public NoticeManage findByNext(Map<String, Object> map);
 	
 	public void updateNotice(NoticeManage dto, String uploadPath) throws Exception;
-	public void deleteNotice(long num, String uploadPath) throws Exception;
+	public void deleteNotice(long noticeId, String uploadPath) throws Exception;
 	
-	public List<NoticeManage> listNoticeFile(long num);
-	public NoticeManage findByFileId(long fileNum);
+	public List<NoticeManage> listNoticeFile(long noticeId);
+	public NoticeManage findByFileId(long noticefileId);
 	public void deleteNoticeFile(Map<String, Object> map) throws Exception;
 	
 	public boolean deleteUploadFile(String uploadPath, String filename);
