@@ -162,7 +162,8 @@ footer {
 	<main>
 		<section class="attendance-header">
 		  <h1>출석 체크</h1>
-		  <p>한 주 동안 5일만 출석체크를 완료하면 500포인트를 지급해드립니다.</p>
+		  <p>한 주 동안 출석체크를 5일만 완료하면 500포인트를 드려요!</p>
+		  <p>🌟 열심히 출석해서 포인트 받아가세요! 😊</p>
 		</section>
 		
 		<form name="attendanceForm" method="post" action="${pageContext.request.contextPath}/event/attendance/check">
