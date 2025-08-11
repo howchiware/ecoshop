@@ -11,11 +11,6 @@ public class Quiz {
 	
 	// 퀴즈
 	private int quizId;
-	private String subject;
-	private String content;
-	private String asnwer;
-	private String commentary;
-	private String regDate;
 	
 	// 퀴즈 제출
 	private int quizAnswerId;
