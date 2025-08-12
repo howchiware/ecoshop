@@ -82,8 +82,8 @@
     <li>
       <a href="#"> 프로그램 관리 ></a>
       <ul class="submenu">
-        <li><a href="#"> 프로그램 목록</a></li>
-        <li><a href="#"> 프로그램 등록 / 수정</a></li>
+        <li><a href="/admin/workshop/program/list"> 프로그램 목록</a></li>
+        <li><a href="/admin/workshop/program/write"> 프로그램 등록</a></li>
       </ul>
     </li>
     <li>
