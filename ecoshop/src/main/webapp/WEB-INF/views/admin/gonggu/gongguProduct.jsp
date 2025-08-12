@@ -139,18 +139,6 @@ body {
 	width: 300px;
 }
 
-.photo {
-	width: 100%;
-	height: 150px;
-	border: 1px dashed #ced4da;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	color: #888;
-	margin-top: 10px;
-	cursor: pointer;
-}
-
 .additionalPhotos {
 	display: flex;
 	gap: 15px;
@@ -205,6 +193,21 @@ body {
 .title {
 	padding-bottom: 10px;
 }
+#editor {
+  min-height: 300px;
+  background-color: white;
+}
+
+.image-viewer {
+  display: block;
+  width: 100%;
+  height: 150px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: left;
+}
+
+
 </style>
 </head>
 <body>
@@ -217,12 +220,13 @@ body {
 		<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
 
 		<div class="right-PANEL">
-			<div class="title" data-aos="fade-up" data-aos-delay="200">
-				<h4>상품 등록</h4>
+			<div class="pb-2">
+				<h4 class="title">${mode=='update'?'상품 수정':'상품 등록'}</h4>
 			</div>
 			<hr>
+
 			<div class="outside">
-				<form action="post" name="productForm">
+				<form method="post" name="productForm" enctype="multipart/form-data">
 					<div class="title">카테고리</div>
 					<div class="card-body">
 						<table class="form-table">
@@ -248,22 +252,27 @@ body {
 								<td>
 									<div>상품 대표 이미지</div>
 									<div class="photo">
-										<input type="file" name="gongguThumbnail"
-											style="display: none;"> 사진
+										<label for="thumbnailFile" class="me-2" tabindex="0" title="이미지 업로드"> 
+										<span class="image-viewer"></span> 
+										<input type="file" name="gongguThumbnail" id="thumbnailFile" hidden="" accept="image/png, image/jpeg">
+										</label>
 									</div>
 									<div style="margin-top: 20px;">추가 사진</div>
 									<div class="additionalPhotos">
 										<div class="mb-3">
-											<label for="formFileSm" class="form-label"></label>
-											<input class="form-control form-control-sm" id="formFileSm" type="file">
+											<label for="formFileSm" class="form-label"></label> <input
+												class="form-control form-control-sm" id="formFileSm"
+												type="file">
 										</div>
 										<div class="mb-3">
-											<label for="formFileSm" class="form-label"></label>
-											<input class="form-control form-control-sm" id="formFileSm" type="file">
+											<label for="formFileSm" class="form-label"></label> <input
+												class="form-control form-control-sm" id="formFileSm"
+												type="file">
 										</div>
 										<div class="mb-3">
-											<label for="formFileSm" class="form-label"></label>
-											<input class="form-control form-control-sm" id="formFileSm" type="file">
+											<label for="formFileSm" class="form-label"></label> <input
+												class="form-control form-control-sm" id="formFileSm"
+												type="file">
 										</div>
 									</div>
 								</td>
@@ -289,7 +298,7 @@ body {
 								</td>
 							</tr>
 							<tr>
-								<th>판매가</th>
+								<th>할인율</th>
 								<td>
 									<div class="input-flex">
 										<input type="text" name="gongguPrice"
@@ -320,7 +329,8 @@ body {
 							<tr>
 								<th>상품 상세 내용</th>
 								<td>
-									<div id="editor"></div> <input type="hidden" name="content">
+									<div id="editor">${dto.content}</div> <input type="hidden"
+									name="content">
 								</td>
 							</tr>
 						</table>
@@ -330,7 +340,53 @@ body {
 			</div>
 		</div>
 	</main>
+
 	<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 	<script src="${pageContext.request.contextPath}/dist/js/qeditor.js"></script>
+	<script type="text/javascript">
+	window.addEventListener('DOMContentLoaded', evt => {
+		const imageViewer = document.querySelector('form .image-viewer');
+		const inputEL = document.querySelector('form input[name=gongguThumbnail]');
+		
+		let uploadImage = '${dto.gongguThumbnail}';
+		let img;
+		if( uploadImage ) { // 수정인 경우
+			img = '${pageContext.request.contextPath}/uploads/products/' + uploadImage;
+		} else {
+			img = '${pageContext.request.contextPath}/dist/images/add_photo.png';
+		}
+		imageViewer.textContent = '';
+		imageViewer.style.backgroundImage = 'url(' + img + ')';
+		
+		inputEL.addEventListener('change', ev => {
+			let file = ev.target.files[0];
+			if(! file) {
+				let img;
+				if( uploadImage ) { // 수정인 경우
+					img = '${pageContext.request.contextPath}/uploads/products/' + uploadImage;
+				} else {
+					img = '${pageContext.request.contextPath}/dist/images/add_photo.png';
+				}
+				imageViewer.textContent = '';
+				imageViewer.style.backgroundImage = 'url(' + img + ')';
+				
+				return;
+			}
+			
+			if(! file.type.match('image.*')) {
+				inputEL.focus();
+				return;
+			}
+			
+			const reader = new FileReader();
+			reader.onload = e => {
+				imageViewer.textContent = '';
+				imageViewer.style.backgroundImage = 'url(' + e.target.result + ')';
+			};
+			reader.readAsDataURL(file);
+		});
+	});
+	</script>
+	
 </body>
 </html>
