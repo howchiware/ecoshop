@@ -9,7 +9,7 @@ body {
 .header {
  top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 60px;
   background-color: #4a8f4a; /* 이미지와 비슷한 연두색 계열 */
   color: white;
