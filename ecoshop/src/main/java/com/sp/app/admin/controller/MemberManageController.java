@@ -33,8 +33,7 @@ public class MemberManageController {
 	public String handleHome(@RequestParam(name = "page", defaultValue = "1") int current_page,
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
 			@RequestParam(name = "kwd", defaultValue = "") String kwd, 
-			@RequestParam(name = "role", defaultValue = "1") int  userLevel,
-			@RequestParam(name = "non", defaultValue = "0") int  non,
+			@RequestParam(name = "userLevel", defaultValue = "1") int  userLevel,
 			@RequestParam(name = "enabled", defaultValue = "") String enabled,
 			Model model,
 			HttpServletRequest resp) throws Exception {
@@ -49,7 +48,6 @@ public class MemberManageController {
 			// 전체 페이지 수
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("userLevel", userLevel);
-			map.put("non", non);
 			map.put("enabled", enabled);
 			map.put("schType", schType);
 			map.put("kwd", kwd);
@@ -77,7 +75,6 @@ public class MemberManageController {
 			model.addAttribute("size", size);
 			model.addAttribute("total_page", total_page);
 			model.addAttribute("userLevel", userLevel);
-			model.addAttribute("non", non);
 			model.addAttribute("enabled", enabled);
 			model.addAttribute("paging", paging);
 			model.addAttribute("schType", schType);

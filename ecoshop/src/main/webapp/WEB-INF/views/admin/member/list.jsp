@@ -23,14 +23,22 @@
       <!-- 탭 -->
       <div class="col">
         <div class="section p-5">
-          <ul class="nav nav-tabs" id="myTab">
-            <li class="nav-item"><button class="nav-link active" data-tab="1">회원</button></li>
-            <li class="nav-item"><button class="nav-link" data-tab="2">강사</button></li>
+         <ul class="nav nav-tabs" id="myTab" userLevel="tablist">
+					<li class="nav-item" userLevel="presentation">
+						<button class="nav-link active" id="tab-1" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" userLevel="tab" aria-selected="true" data-tab="1"> <i class="bi bi-person-fill"></i> 회원</button>
+					</li>
+					<li class="nav-item" userLevel="presentation">
+						<button class="nav-link" id="tab-2" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" userLevel="tab" aria-selected="true" data-tab="2"> <i class="bi bi-mortarboard-fill"></i> 강사</button>
+					</li>
+					<li class="nav-item" userLevel="presentation">
+						<button class="nav-link" id="tab-3" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" userLevel="tab" aria-selected="true" data-tab="3"> <i class="bi bi-mortarboard-fill"></i> 관리자</button>
+					</li>
           </ul>
+          
           <form name="memberSearchForm">
-            <input type="hidden" name="schType" value="login_id">
+            <input type="hidden" name="schType">
             <input type="hidden" name="kwd">
-            <input type="hidden" name="role" value="1">
+            <input type="hidden" name="userLevel" value="1">
             <input type="hidden" name="non" value="0">
             <input type="hidden" name="enabled">
           </form>
@@ -89,26 +97,58 @@
     </div>
   </div>
 </main>
-<!-- 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.6.0/echarts.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 
 <script type="text/javascript">
 $(function(){
-    $('#tab-0').addClass('active');
+    $('#tab-1').addClass('active');
 	
     $('button[userLevel="tab"]').on('click', function(e){
     	const tab = $(this).attr('data-tab');
     	
-		if(tab !== '4') {
-			// 회원, 강사, 직원 리스트
+		if(tab !== '3') {
 			resetList();
-		} else {
-			// 연령별 어낼러시스(분석)
-			memberAnalysis();
-		}
+		} 
     });	
 });
- -->
+
+$(function(){
+	listMember(1);
+});
+
+function listMember(page) {
+	let url = '${pageContext.request.contextPath}/admin/member/list';	
+	let params = $('form[name=memberSearchForm]').serialize();
+	params += '&page=' + page;
+	
+	const fn = function(data) {
+		$('#nav-tabContent').html(data);		
+	};
+	
+	ajaxRequest(url, 'get', params, 'text', fn);
+}
+
+function resetList() {
+	// 초기화
+	const $tab = $('button[userLevel="tab"].active');
+	let userLevel = $tab.attr('data-tab');
+
+	const f = document.memberSearchForm;
+	
+	f.kwd.value = '';
+	f.userLevel.value = userLevel;
+	f.enabled.value = '';
+	
+	listMember(1);
+}
+
+
+
 
 
 </script>

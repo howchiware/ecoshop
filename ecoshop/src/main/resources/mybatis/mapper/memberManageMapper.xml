@@ -1,58 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.admin.mapper.MemberManageMapper">
-    <select id="listMember" parameterType="map" resultType="com.sp.app.admin.model.MemberManage">
-        SELECT m1.memberId, m1.userId, m1.userLevel, m1.regUpdate, TO_CHAR(regDate, 'YYYY-MM-DD')regDate,
-            m2.name, m2.nickname, m2.tel
-        FROM member1 m1
-        LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
-        <where>
-        	<if test="kwd != null and kwd !='' ">
-				<include refid="where-list"/>
-			</if>
-			<if test="enabled != '' ">
-				AND enabled = #{enabled}
-			</if>
-		<choose>
-            <when test="role == 3">
-                AND userLevel = 99
+
+    <!-- 공통 WHERE 조건 -->
+    <sql id="where-list">
+        <choose>
+            <when test="schType == 'memberId'">
+                INSTR(m1.memberId, #{kwd}) &gt;= 1
             </when>
-            <when test="role == 2">
-                AND userLevel = 51
+            <when test="schType == 'name'">
+                INSTR(m2.name, #{kwd}) &gt;= 1
             </when>
-            <when test="role == 1">
-                AND userLevel = 1
+            <when test="schType == 'email'">
+                INSTR(m2.email, #{kwd}) &gt;= 1
             </when>
+            <when test="schType == 'tel'">
+                INSTR(m2.tel, #{kwd}) &gt;= 1
+            </when>
+            <!-- 안전하지 않은 ${schType} 직접 사용 제거 -->
+            <otherwise>
+                1 = 1
+            </otherwise>
         </choose>
-        </where>
-        ORDER BY m1.regDate DESC
-        OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
-    </select>
-    
-    <select id="dataCount" parameterType="map" resultType="Integer">
-    SELECT COUNT(*)
+    </sql>
+
+    <!-- 회원 목록 -->
+    <select id="listMember" parameterType="map" resultType="com.sp.app.admin.model.MemberManage">
+    SELECT 
+        m1.memberId, m1.userId, m1.userLevel, m1.regUpdate,
+        TO_CHAR(m1.regDate, 'YYYY-MM-DD') regDate, m2.name, m2.nickname, m2.tel
     FROM member1 m1
     LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
     <where>
-        <if test="kwd != null and kwd != '' ">
+        <if test="kwd != null and kwd != ''">
             <include refid="where-list"/>
         </if>
-        <if test="enabled != ''">
-            AND enabled = #{enabled}
+        
+        <if test="userLevel != null">
+            AND
+            <choose>
+                <when test="userLevel == 3">
+                    m1.userLevel = 99
+                </when>
+                <when test="userLevel == 2">
+                    m1.userLevel = 51
+                </when>
+                <when test="userLevel == 1">
+                    m1.userLevel = 1
+                </when>
+                <otherwise>
+                    1=1
+                </otherwise>
+            </choose>
         </if>
-        <choose>
-            <when test="role == 3">
-                AND userLevel = 99
-            </when>
-            <when test="role == 2">
-                AND userLevel = 51
-            </when>
-            <when test="role == 1">
-                AND userLevel = 1
-            </when>
-        </choose>
     </where>
+    ORDER BY m1.regDate DESC
+    OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 </select>
-    
+
+    <!-- 회원 수 카운트 -->
+    <select id="dataCount" parameterType="map" resultType="Integer">
+        SELECT COUNT(*)
+        FROM member1 m1
+        LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
+        <where>
+            <if test="kwd != null and kwd != ''">
+                <include refid="where-list"/>
+            </if>
+            <choose>
+                <when test="userLevel == 3">
+                    AND m1.userLevel = 99
+                </when>
+                <when test="userLevel == 2">
+                    AND m1.userLevel = 51
+                </when>
+                <when test="userLevel == 1">
+                    AND m1.userLevel = 1
+                </when>
+            </choose>
+        </where>
+    </select>
+
 </mapper>
