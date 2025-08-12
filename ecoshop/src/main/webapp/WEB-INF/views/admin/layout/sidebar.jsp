@@ -42,12 +42,12 @@
     </li>
     <li><a href="/admin/order/orderManage"> 주문 상태 관리</a></li>
     <li><a href="/admin/order/detailManage"> 주문 취소 관리</a></li>
-
+    
     <li class="menu-title">공동구매</li>
     <li>
       <a href="#"> 카테고리 관리 > </a>
       <ul class="submenu">
-        <li><a href="#"> 카테고리 등록 / 수정 / 삭제</a></li>
+        <li><a href="/admin/gonggu/category"> 카테고리 등록 / 수정 / 삭제</a></li>
         <li><a href="#"> 카테고리 순서</a></li>
       </ul>
     </li>
@@ -55,9 +55,9 @@
       <a href="#"> 상품 관리 > </a>
       <ul class="submenu">
         <li><a href="#"> 전체 상품 관리</a></li>
-        <li><a href="#"> 상품 등록</a></li>
+        <li><a href="/admin/gonggu/productForm"> 상품 등록</a></li>
         <li><a href="#"> 배송 정책 및 배송비</a></li>
-        <li><a href="#"> 리뷰 및 Q&A 관리</a></li>
+        <li><a href="/admin/gonggu/productReview"> 리뷰 및 Q&A 관리</a></li>
       </ul>
     </li>
     <li><a href=""> 주문 상태 관리</a></li>
