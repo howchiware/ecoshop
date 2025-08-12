@@ -83,10 +83,10 @@ body {
 			<div class="outside">
 				<div class="row mb-2">
 					<div class="col-md-6 two">
-						<button type="button" class="btn two" a href="#" aria-current="page">상품리뷰</button>
+						<button type="button" class="btn two">상품리뷰</button>
 					</div>
 					<div class="col-md-6 two">
-						<button type="button" class="btn two" a href="#">상품문의</button>
+						<button type="button" class="btn two">상품문의</button>
 					</div>
 				</div>
 				<hr>
@@ -112,23 +112,22 @@ body {
 						<tr class="border-bottom">
 							<th width="140">상품</th>
 							<th>내용</th>
+							<th width="100">평점</th>
 							<th width="100">작성자</th>
 							<th width="140">일시</th>
-							<th width="140">상태</th>
-							<th width="100">관리</th>
+							<th width="100">삭제</th>
 						</tr>
 					</thead>
 					<tbody>
 						
 							<tr class="item-basic-content border-bottom">
 								<td>123456789 BlackJacket</td>
-								<td class="left">너무 좋은거같은데요? 우하하하하</td>
+								<td class="left">왜배송안해주세요?</td>
+								<td>4</td>
 								<td>정**</td>
 								<td>2025-08-11</td>
-								<td>${not empty dto.answer ? '<span class="text-primary">답변완료</span>' : '<span class="text-secondary">답변대기</span>'}
-								</td>
 								<td>
-									<button type="button" class="btn btn-primary">등록</button>
+									<button type="button" class="btn btn-primary">삭제</button>
 								</td>
 							</tr>
 					
