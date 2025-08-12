@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.ChallengeMapper">
+	<select id="challengeSeq" resultType="Long">
+		SELECT challenge_seq.NEXTVAL
+		FROM dual
+	</select>
+	
+	<insert id="insertChallenge" parameterType="com.sp.app.model.Challenge">
+		INSERT INTO challenge (challengeId, title, description, thumbnail, rewardPoints, regDate, challengeType)
+		VALUES (#{challengeId}, #{title}, #{description}, #{thumbnail}, 0, SYSDATE, #{challengeType})
+	</insert>
+	
+	<insert id="insertDailyChallenge" parameterType="com.sp.app.model.Challenge">
+    INSERT INTO dailyChallenge (challengeId, weekday)
+    VALUES (#{challengeId}, #{weekday})
+  	</insert>
+  	
+  	<insert id="insertSpecialChallenge" parameterType="com.sp.app.model.Challenge">
+    INSERT INTO specialChallenge (
+      challengeId, startDate, endDate, requireDays, status
+    ) VALUES (
+      #{challengeId},
+      TO_DATE(#{startDate}, 'YYYY-MM-DD'),
+      TO_DATE(#{endDate},   'YYYY-MM-DD'),
+      NVL(#{requireDays},3),
+      NVL(#{specialStatus},0)
+    )
+  </insert>
+  
+  <select id="findById" parameterType="long" resultType="com.sp.app.model.Challenge">
+    SELECT
+      challengeId, title, description, thumbnail, rewardPoints,
+      TO_CHAR(regDate,'YYYY-MM-DD HH24:MI:SS') AS challengeRegDate,
+      challengeType 
+    FROM challenge
+    WHERE challengeId = #{challengeId}
+  </select>
+  
+  <select id="findDailyById" parameterType="long" resultType="com.sp.app.model.Challenge">
+    SELECT challengeId, weekday
+    FROM dailyChallenge
+    WHERE challengeId = #{challengeId}
+  </select>
+  
+  <select id="findSpecialById" parameterType="long" resultType="com.sp.app.model.Challenge">
+    SELECT
+      challengeId,
+      TO_CHAR(startDate,'YYYY-MM-DD') AS startDate,
+      TO_CHAR(endDate,'YYYY-MM-DD')   AS endDate,
+      requireDays,
+      status  AS specialStatus
+    FROM specialChallenge
+    WHERE challengeId = #{challengeId}
+  </select>
+	
+	<!-- 검색/목록 -->
+	<sql id="where-list">
+    <if test="kwd != null and kwd != ''">
+      ( INSTR(title, #{kwd}) &gt; 0 OR INSTR(description, #{kwd}) &gt; 0 )
+    </if>
+    <if test="challengeType != null and challengeType != ''">
+      AND challengeType = #{challengeType}
+    </if>
+  </sql>
+	
+	<!-- 데이터 개수 -->
+	<select id="dataCount" parameterType="map" resultType="Integer">
+	    SELECT NVL(COUNT(*), 0)
+	    FROM challenge
+     <where>
+      <include refid="where-list"/>
+     </where>
+  	</select>
+  	
+  	
+	<!-- 글 리스트  -->
+	<select id="listChallenge" parameterType="map" resultType="com.sp.app.model.Challenge">
+	    SELECT
+	      challengeId, title, description, thumbnail, rewardPoints,
+	      TO_CHAR(regDate, 'YYYY-MM-DD HH24:MI:SS') AS challengeRegDate,
+	      challengeType
+	    FROM challenge
+	    <where>
+	      <include refid="where-list"/>
+	    </where>
+	    ORDER BY challengeId DESC
+	    OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	 </select>
+	
+	
+	<!-- 수정 -->
+	<update id="updateChallenge" parameterType="com.sp.app.model.Challenge">
+		UPDATE challenge SET title = #{title}, description = #{description},
+			thumbnail = #{thumbnail}, rewardPoints  = #{rewardPoints},
+        	challengeType = #{challengeType} 
+		WHERE challengeId = #{challengeId}
+	</update>
+    
+	<!-- 삭제 -->
+	<delete id="deleteChallenge" parameterType="Long">
+		DELETE FROM challenge
+		WHERE challengeId = #{challengeId}
+	</delete>
+	
+	
+	
+	
+</mapper>
