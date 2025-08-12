@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.admin.mapper.MemberManageMapper">
+    <select id="listMember" parameterType="map" resultType="com.sp.app.admin.model.MemberManage">
+        SELECT m1.memberId, m1.userId, m1.userLevel, m1.regUpdate, TO_CHAR(regDate, 'YYYY-MM-DD')regDate,
+            m2.name, m2.nickname, m2.tel
+        FROM member1 m1
+        LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
+        <where>
+        	<if test="kwd != null and kwd !='' ">
+				<include refid="where-list"/>
+			</if>
+			<if test="enabled != '' ">
+				AND enabled = #{enabled}
+			</if>
+		<choose>
+            <when test="role == 3">
+                AND userLevel = 99
+            </when>
+            <when test="role == 2">
+                AND userLevel = 51
+            </when>
+            <when test="role == 1">
+                AND userLevel = 1
+            </when>
+        </choose>
+        </where>
+        ORDER BY m1.regDate DESC
+        OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+    </select>
+    
+    <select id="dataCount" parameterType="map" resultType="Integer">
+    SELECT COUNT(*)
+    FROM member1 m1
+    LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
+    <where>
+        <if test="kwd != null and kwd != '' ">
+            <include refid="where-list"/>
+        </if>
+        <if test="enabled != ''">
+            AND enabled = #{enabled}
+        </if>
+        <choose>
+            <when test="role == 3">
+                AND userLevel = 99
+            </when>
+            <when test="role == 2">
+                AND userLevel = 51
+            </when>
+            <when test="role == 1">
+                AND userLevel = 1
+            </when>
+        </choose>
+    </where>
+</select>
+    
+</mapper>
