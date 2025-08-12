@@ -80,22 +80,18 @@
 
     <li class="menu-title">워크숍</li>
     <li>
-      <a href="#"> 프로그램 관리 ></a>
-      <ul class="submenu">
-        <li><a href="/admin/workshop/program/list"> 프로그램 목록</a></li>
-        <li><a href="/admin/workshop/program/write"> 프로그램 등록</a></li>
-      </ul>
+      <a href="/admin/workshop/program/list"> 프로그램 관리 </a>
     </li>
     <li>
       <a href="#"> 워크샵 관리 > </a>
       <ul class="submenu">
         <li><a href="#"> 워크샵 목록</a></li>
-        <li><a href="#"> 워크샵 등록 / 수정</a></li>
+        <li><a href="#"> 워크샵 등록</a></li>
         <li><a href="#"> 참여자 관리</a></li>
+        <li><a href="#"> 담당자 관리</a></li>
         <li><a href="#"> FAQ 관리</a></li>
       </ul>
     </li>
-    <li><a href="#"> 담당자 관리</a></li>
     <li>
       <a href="#">포인트 관리 ></a>
       <ul class="submenu">
