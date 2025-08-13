@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.EventMapper">
+	
+	<!-- 출석체크 -->
+	<insert id="insertAttendance" parameterType="com.sp.app.model.Attendance">
+	    INSERT INTO attendanceBoard(attendanceId, memberId, regDate)
+	    VALUES (attendanceBoard_seq.NEXTVAL, #{memberId}, SYSDATE)
+	</insert>
+	
+	<select id="listAttendance" parameterType="map" resultType="com.sp.app.model.Attendance">
+		SELECT attendanceId, memberId, regDate
+		FROM attendanceBoard
+		WHERE memberId = #{memberId} AND regDate &gt;= TRUNC(SYSDATE, 'IW')
+	</select>
+	
+	<select id="countAttendance" parameterType="map" resultType="int">
+	    SELECT COUNT(*) FROM attendanceBoard
+    WHERE memberId = #{memberId} AND TRUNC(regDate) = TRUNC(SYSDATE)
+	</select>
+		
+	<select id="countWeeklyAttendance" parameterType="long" resultType="int">
+	    SELECT COUNT(*) FROM attendanceBoard
+	    WHERE memberId = #{memberId} AND regDate &gt;= TRUNC(SYSDATE, 'IW') AND regDate &lt; TRUNC(SYSDATE, 'IW') + 7
+	</select>
+	
+	<insert id="addPoints" parameterType="com.sp.app.model.Attendance">
+		 
+	</insert>
+
+	
+	
+	<!-- 퀴즈 -->
+
+	
+</mapper>

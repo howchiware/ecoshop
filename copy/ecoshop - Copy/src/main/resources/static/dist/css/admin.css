@@ -1,0 +1,9 @@
+.main-container {
+  position: relative;
+  z-index: 1100; /* 헤더 1000보다 높게 */
+  margin-left: 250px; /* 사이드바 너비만큼 띄우기 */
+  padding: 20px;
+  box-sizing: border-box;
+  min-height: calc(100vh - 60px);
+  background-color: #f9f9f9;
+}
