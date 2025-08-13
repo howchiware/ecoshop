@@ -141,27 +141,54 @@
 	</div>
 	
 	<!-- 상품 문의 탭 Content -->
-	<div class="tab-pane fade" id="tab-pane-3" role="tabpanel" aria-labelledby="tab-3" tabindex="0">
-		<div class="mt-3 pt-3 border-bottom">
-			<p class="fs-4 fw-semibold">상품 문의 사항</p> 
+	<div class="tab-pane fade inquiry-total-area" id="tab-pane-3" role="tabpanel" aria-labelledby="tab-3" tabindex="0">
+		<div class="pt-3 pb-3 inquiry-add-area">
+			<p style="margin: 15px 0px;">구매하시려는 상품에 대해 궁금한 점이 있으면 문의해주세요.</p> 
+			<button type="button" class="inquiry-add-btn">상품 문의</button>
 		</div>
 
-		<div class="mt-3 p-2 text-end">
-			<button type="button" class="btnMyQuestion btn-default" ${empty sessionScope.member ? "disabled":""}> 내 문의 보기  </button>
-			<button type="button" class="btnQuestion btn-accent" ${empty sessionScope.member ? "disabled":""}> 상품 문의 작성 </button>
+		<div class="mt-4 p-2 list-question">
+			<table class="inquiry-table table">
+				<tbody>
+					<tr>
+						<td class="table-header" width="150px">상태</td>
+						<td class="table-header">제목</td>
+						<td class="table-header" width="150px">작성자</td>
+						<td class="table-header" width="230px">등록일</td>
+					</tr>
+					<tr>
+						<td class="inquiryStatus" width="150px">답변완료</td>
+						<td class="inquiryTitle">가격?</td>
+						<td class="inquiryName" width="150px">정**</td>
+						<td class="inquiryDate" width="230px">2025-07-04 13:21</td>
+
+					</tr>
+					<tr>
+						<td class="inquiryStatus" width="150px">답변완료</td>
+						<td class="inquiryTitle secret">비밀글입니다.<i class="bi bi-lock"></i></td>
+						<td class="inquiryName" width="150px">이**</td>
+						<td class="inquiryDate" width="230px">2025-07-01 13:21</td>
+					</tr>
+					<tr>
+						<td class="inquiryStatus" width="150px">답변완료</td>
+						<td class="inquiryTitle secret">비밀글입니다.<i class="bi bi-lock"></i></td>
+						<td class="inquiryName" width="150px">정**</td>
+						<td class="inquiryDate" width="230px">2025-07-04 13:21</td>
+					</tr>
+					<tr>
+						<td class="inquiryStatus" width="150px">답변완료</td>
+						<td class="inquiryTitle">환불하고 싶을 때는 어떻게 하나요?</td>
+						<td class="inquiryName" width="150px">정**</td>
+						<td class="inquiryDate" width="230px">2025-07-04 13:21</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
-		<div class="mt-1 p-2 list-question"></div>
+		<div class="page-navigation">
+			${dataCount==0 ? "등록된 상품이 없습니다." : paging}
+		</div>
 	</div>
 	
-	<!-- 배송 및 환불 정책 탭 Content -->
-	<div class="tab-pane fade" id="tab-pane-4" role="tabpanel" aria-labelledby="tab-4" tabindex="0">
-		<div class="mt-3 pt-3 border-bottom">
-			<p class="fs-4 fw-semibold">배송 및 환불정책</p> 
-		</div>
-		<div class="mt-3">
-			<p> 배송 및 환불 정책 입니다. </p>
-		</div>				
-	</div>
 </div>
 
 <!-- 상품문의 대화상자 -->
