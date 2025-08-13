@@ -20,7 +20,7 @@
   <ul class="sidebar-menu">	
     <li class="menu-title">회원관리</li>
     <li>
-      <a href="${pageContext.request.contextPath}/admin/member/list"> 회원</a>
+      <a href="${pageContext.request.contextPath}/admin/member/main"> 회원</a>
     </li>
 
 	<li class="menu-title">온라인샵</li>
