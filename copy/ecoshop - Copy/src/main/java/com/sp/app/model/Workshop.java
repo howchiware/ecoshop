@@ -1,5 +1,7 @@
 package com.sp.app.model;
 
+import java.util.Date;
+
 public class Workshop {
 	private long categoryId;
 	private String categoryName;
@@ -7,8 +9,8 @@ public class Workshop {
 	private long programId;
 	private String programTitle;
 	private String programContent;
-	private String regDate;
-	private String updDate;
+	private Date regDate;
+	private Date updDate;
 
 	private long managerId;
 	private String name;
@@ -84,19 +86,19 @@ public class Workshop {
 		this.programContent = programContent;
 	}
 
-	public String getRegDate() {
+	public java.util.Date getRegDate() {
 		return regDate;
 	}
 
-	public void setRegDate(String regDate) {
+	public void setRegDate(java.util.Date regDate) {
 		this.regDate = regDate;
 	}
 
-	public String getUpdDate() {
+	public java.util.Date getUpdDate() {
 		return updDate;
 	}
 
-	public void setUpdDate(String updDate) {
+	public void setUpdDate(java.util.Date updDate) {
 		this.updDate = updDate;
 	}
 

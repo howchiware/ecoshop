@@ -3,6 +3,7 @@ package com.sp.app.admin.service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -97,9 +98,14 @@ public class NoticeManageServiceImpl implements NoticeManageService {
 	}
 
 	@Override
-	public void updateHitCount(long num) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void updateHitCount(long noticeId) throws Exception {
+		try {
+			mapper.updateHitCount(noticeId);
+		} catch (Exception e) {
+			log.info("updateHitCount : ", e);
+			
+			throw e;
+		}
 	}
 
 	@Override
@@ -143,38 +149,89 @@ public class NoticeManageServiceImpl implements NoticeManageService {
 
 	@Override
 	public void updateNotice(NoticeManage dto, String uploadPath) throws Exception {
-		// TODO Auto-generated method stub
+		try {
+			mapper.updateNotice(dto);
+
+			if (! dto.getSelectFile().isEmpty()) {
+				insertNoticeFile(dto, uploadPath);
+			}
+
+		} catch (Exception e) {
+			log.info("updateNotice : ", e);
+			
+			throw e;
+		}
 		
 	}
 
 	@Override
-	public void deleteNotice(long num, String uploadPath) throws Exception {
-		// TODO Auto-generated method stub
+	public void deleteNotice(long noticeId, String uploadPath) throws Exception {
+		try {
+			// 파일 지우기
+			List<NoticeManage> listFile = listNoticeFile(noticeId);
+			if (listFile != null) {
+				for (NoticeManage dto : listFile) {
+					deleteUploadFile(uploadPath, dto.getSaveFilename());
+				}
+			}
+
+			// 파일 테이블 내용 지우기
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("field", "noticeId");
+			map.put("noticeId", noticeId);
+			deleteNoticeFile(map);
+
+			// 게시글 지우기
+			mapper.deleteNotice(noticeId);
+		} catch (Exception e) {
+			log.info("deleteNotice : ", e);
+			
+			throw e;
+		}
 		
 	}
 
 	@Override
-	public List<NoticeManage> listNoticeFile(long num) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<NoticeManage> listNoticeFile(long noticeId) {
+		List<NoticeManage> listFile = null;
+
+		try {
+			listFile = mapper.listNoticeFile(noticeId);
+		} catch (Exception e) {
+			log.info("listNoticeFile : ", e);
+		}
+
+		return listFile;
 	}
 
 	@Override
-	public NoticeManage findByFileId(long fileNum) {
-		// TODO Auto-generated method stub
-		return null;
+	public NoticeManage findByFileId(long noticefileId) {
+		NoticeManage dto = null;
+
+		try {
+			dto = mapper.findByFileId(noticefileId);
+		} catch (Exception e) {
+			log.info("findByFileId : ", e);
+		}
+
+		return dto;
 	}
 
 	@Override
 	public void deleteNoticeFile(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
+		try {
+			mapper.deleteNoticeFile(map);
+		} catch (Exception e) {
+			log.info("deleteNoticeFile : ", e);
+			
+			throw e;
+		}
 		
 	}
 
 	@Override
 	public boolean deleteUploadFile(String uploadPath, String filename) {
-		// TODO Auto-generated method stub
-		return false;
+		return storageService.deleteFile(uploadPath, filename);
 	}
 
 	protected void insertNoticeFile(NoticeManage dto, String uploadPath) throws Exception {

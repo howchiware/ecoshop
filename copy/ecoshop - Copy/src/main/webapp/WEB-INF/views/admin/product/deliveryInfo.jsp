@@ -33,7 +33,7 @@ body {
 	display: flex;
 }
 
-.right-panel {
+.right-PANEL {
 	flex-grow: 1;
 	padding: 2rem;
 	overflow-y: auto;
@@ -126,7 +126,7 @@ textarea[name=deliveryInfoContent], textarea[name=refundInfoContent] {
 <main class="main-container">
 	<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp"/>
 
-	<div class="right-panel">
+	<div class="right-PANEL">
 		<div class="title">
 			<h3>배송 정책 및 배송비</h3>
 		</div>

@@ -18,11 +18,28 @@
 <div class="tab-content pt-2" id="myTabContent">
 	<!-- 상품 설명 탭 Content -->
 	<div class="tab-pane fade show active" id="tab-pane-1" role="tabpanel" aria-labelledby="tab-1" tabindex="0">
-		<div class="mt-3 pt-3 border-bottom">
-			<p class="fs-4 fw-semibold">${dto.productName}</p> 
+		<div class="mt-4 mb-5 pb-4 product-content border-bottom">
+			${dto.content}상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보<br>
+			상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보<br>
+			상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보<br>
+			상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보<br>
+			상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보<br>
 		</div>
-		<div class="mt-3 product-content">
-			${dto.content}
+		<div class="mt-4 mb-5 product-deliveryInfo border-bottom">
+			<div class="border-bottom delivery-header">
+				<p>배송 정보</p>
+			</div>
+			<div class="deliveryInfo-div">
+				<p>- 모든 제품의 배송은 Plastic Free 원칙으로 종이재질로 발송됩니다. (종이박스, 종이완충재, 종이테이프)<br>- 수령하신 택배박스는 운송장을 제거한 후 종이로 분리배출 해주세요.<br>- 결제완료 후 제품을 수령하시기까지 약 2~5일 소요됩니다.<br>- 배송이 늦어지거나 일부 제품이 품절인 경우 개별적으로 연락을 드립니다.<br>- 40,000원 이상 주문 건의 경우 무료배송됩니다.</p>
+			</div>
+		</div>
+		<div class="mt-4 mb-5 product-refundInfo border-bottom">
+			<div class="border-bottom refund-header">
+				<p>환불 안내</p>
+			</div>
+			<div class="refundInfo-div">
+				<p>- 구매자의 단순 변심에 의한 반품 요청은 제품 수령 후 7일 이내에 가능합니다. (이때 발생하는 왕복배송비는 구매자 부담입니다.)<br>- 반품을 원하시는 경우 소비자상담실(01-0235-0342)로 문의 부탁드립니다.<br>- 제품을 개봉하여서 사용하셨을 경우 반품이 불가합니다. (제품 하자에 의한 환불은 가능합니다.)</p>
+			</div>
 		</div>
 	</div>
 	

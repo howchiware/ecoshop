@@ -13,19 +13,19 @@ public interface NoticeManageMapper {
 	public long noticeSeq();
 	public void insertNotice(NoticeManage dto) throws SQLException;
 	public void updateNotice(NoticeManage dto) throws SQLException;
-	public void deleteNotice(long num) throws SQLException;
+	public void deleteNotice(long noticeId) throws SQLException;
 	
 	public int dataCount(Map<String, Object> map);
 	public List<NoticeManage> listNoticeTop();
 	public List<NoticeManage> listNotice(Map<String, Object> map);
 	
-	public NoticeManage findById(long num);
-	public void updateHitCount(long num) throws SQLException;
+	public NoticeManage findById(long noticeId);
+	public void updateHitCount(long noticeId) throws SQLException;
 	public NoticeManage findByPrev(Map<String, Object> map);
 	public NoticeManage findByNext(Map<String, Object> map);
 
 	public void insertNoticeFile(NoticeManage dto) throws SQLException;
-	public List<NoticeManage> listNoticeFile(long num);
-	public NoticeManage findByFileId(long fileNum);
+	public List<NoticeManage> listNoticeFile(long noticeId);
+	public NoticeManage findByFileId(long noticefileId);
 	public void deleteNoticeFile(Map<String, Object> map) throws SQLException;
 }

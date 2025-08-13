@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.WorkshopMapper"> 
+<!-- 카테고리 -->
+<insert id="insertProgramCategory" parameterType="com.sp.app.model.Workshop">
+  INSERT INTO programCategory (categoryId, categoryName) 
+  VALUES (programCategory_seq.NEXTVAL, #{categoryName})
+</insert>
+
+<update id="updateProgramCategory" parameterType="com.sp.app.model.Workshop">
+   UPDATE programCategory
+      SET categoryName = #{categoryName}
+   WHERE categoryId   = #{categoryId}
+ </update>
+  
+<delete id="deleteProgramCategory" parameterType="Long">
+DELETE FROM programCategory WHERE categoryId = #{value}
+</delete>
+
+<select id="listProgramCategory" parameterType="map" resultType="com.sp.app.model.Workshop">
+SELECT categoryId, categoryName
+FROM programCategory
+ORDER BY categoryId DESC
+OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+</select>
+
+<!-- 프로그램 -->
+<insert id="insertProgram" parameterType="com.sp.app.model.Workshop">
+INSERT INTO program (programId, categoryId, programTitle, programContent)
+VALUES (program_seq.NEXTVAL, #{categoryId}, #{programTitle}, #{programContent})
+</insert>
+
+<select id="listProgram" parameterType="map" resultType="com.sp.app.model.Workshop">
+SELECT p.programId, p.categoryId, c.categoryName, p.programTitle, p.programContent, p.regDate, p.updDate
+FROM program p
+JOIN programCategory c
+ON p.categoryId = c.categoryId
+<where>
+      <include refid="where-list"/>
+    </where>
+    ORDER BY regDate DESC
+    OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+</select>
+
+<!-- 검색 조건 -->
+<sql id="where-list">
+	<trim prefixOverrides="AND">
+    <if test="kwd != null and kwd != ''">
+      AND (LOWER(programTitle) LIKE '%' || LOWER(#{kwd}) || '%'
+           OR LOWER(programContent) LIKE '%' || LOWER(#{kwd}) || '%')
+    </if>
+    <if test="categoryId != null">
+    AND categoryId = #{categoryId}
+    </if>
+  </trim>
+</sql>
+
+<!-- 총 개수 -->
+<select id="programDataCount">
+SELECT NVL(COUNT(*), 0)
+FROM program
+	<where>
+		<include refid="where-list"/>
+	</where>
+</select>
+
+<select id="findProgramById" parameterType="Long" resultType="com.sp.app.model.Workshop">
+SELECT programId, categoryId, programTitle, programContent, regDate, updDate
+FROM program
+WHERE programId = #{value}
+</select>
+
+<update id="updateProgram" parameterType="com.sp.app.model.Workshop">
+UPDATE program SET programTitle = #{programTitle}, programContent = #{programContent}, updDate = SYSDATE
+WHERE programId = #{programId}
+</update>
+
+<delete id="deleteProgram" parameterType="Long">
+DELETE FROM program 
+WHERE programId = #{value}
+</delete>
+
+
+</mapper>

@@ -42,12 +42,12 @@
     </li>
     <li><a href="/admin/order/orderManage"> 주문 상태 관리</a></li>
     <li><a href="/admin/order/detailManage"> 주문 취소 관리</a></li>
-
+    
     <li class="menu-title">공동구매</li>
     <li>
       <a href="#"> 카테고리 관리 > </a>
       <ul class="submenu">
-        <li><a href="#"> 카테고리 등록 / 수정 / 삭제</a></li>
+        <li><a href="/admin/gonggu/category"> 카테고리 등록 / 수정 / 삭제</a></li>
         <li><a href="#"> 카테고리 순서</a></li>
       </ul>
     </li>
@@ -55,9 +55,9 @@
       <a href="#"> 상품 관리 > </a>
       <ul class="submenu">
         <li><a href="#"> 전체 상품 관리</a></li>
-        <li><a href="#"> 상품 등록</a></li>
+        <li><a href="/admin/gonggu/productForm"> 상품 등록</a></li>
         <li><a href="#"> 배송 정책 및 배송비</a></li>
-        <li><a href="#"> 리뷰 및 Q&A 관리</a></li>
+        <li><a href="/admin/gonggu/productReview"> 리뷰 및 Q&A 관리</a></li>
       </ul>
     </li>
     <li><a href=""> 주문 상태 관리</a></li>
@@ -80,22 +80,18 @@
 
     <li class="menu-title">워크숍</li>
     <li>
-      <a href="#"> 프로그램 관리 ></a>
-      <ul class="submenu">
-        <li><a href="#"> 프로그램 목록</a></li>
-        <li><a href="#"> 프로그램 등록 / 수정</a></li>
-      </ul>
+      <a href="/admin/workshop/program/list"> 프로그램 관리 </a>
     </li>
     <li>
       <a href="#"> 워크샵 관리 > </a>
       <ul class="submenu">
         <li><a href="#"> 워크샵 목록</a></li>
-        <li><a href="#"> 워크샵 등록 / 수정</a></li>
+        <li><a href="#"> 워크샵 등록</a></li>
         <li><a href="#"> 참여자 관리</a></li>
+        <li><a href="#"> 담당자 관리</a></li>
         <li><a href="#"> FAQ 관리</a></li>
       </ul>
     </li>
-    <li><a href="#"> 담당자 관리</a></li>
     <li>
       <a href="#">포인트 관리 ></a>
       <ul class="submenu">
@@ -123,7 +119,7 @@
     <li class="menu-title">고객센터</li>
     <li><a href="${pageContext.request.contextPath}/admin/notice/list"> 공지사항</a></li>
     <li><a href="${pageContext.request.contextPath}/admin/block/list"> 신고관리</a></li>
-    <li><a href="${pageContext.request.contextPath}/admin/faq/list"> 자주 묻는 질문</a></li>
+    <li><a href="${pageContext.request.contextPath}/admin/faq/main"> 자주 묻는 질문</a></li>
     <li><a href="${pageContext.request.contextPath}/admin/inquiry/list"> 1:1 문의</a></li>
 
   </ul>

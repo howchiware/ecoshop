@@ -47,7 +47,7 @@
 				<ul class="navbar-nav">
 					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/">홈</a></li>
 					<li class="nav-item"><a class="nav-link" href="#">SHOP</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">패키지</a></li>
+					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/gonggu/list">패키지</a></li>
 					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">이벤트</a>
 						<ul class="dropdown-menu">
 							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/event/attendance">출석체크</a></li>

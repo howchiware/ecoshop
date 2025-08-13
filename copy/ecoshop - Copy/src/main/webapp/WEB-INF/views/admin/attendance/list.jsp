@@ -13,11 +13,16 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
 <style>
-body {
-  font-family: 'Noto Sans KR', sans-serif;
-  background-color: #f7f6f3;
+* {
+  font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
   color: #333;
   margin: 0;
+}
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-style: normal;
 }
 
 h2.mb-4 {

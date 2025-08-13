@@ -118,9 +118,9 @@
   .btn-productLike, .btn-productCart {border: 1px solid #E6E6E6; color: #000; padding: 8px; border-radius: 5px; font-size: 15px;}
   /*
   .row {--bs-gutter-x: 0rem !important;}
+  */
   
   .section {font-size: 13px;}
-  */
   .productName {font-size: 15px; font-weight: 600}
   
   .info-table td:first-child{font-weight: 600; width: 100px;}
@@ -134,6 +134,10 @@
   .form-select {font-size: 13px;}
   
   .total {font-size: 15px;}
+  
+  .refundInfo-div, .deliveryInfo-div {
+  	padding: 15px;
+  }
 </style>
 
 </head>

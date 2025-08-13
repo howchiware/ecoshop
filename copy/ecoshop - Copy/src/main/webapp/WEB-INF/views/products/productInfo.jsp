@@ -7,41 +7,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hShop</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/board.css" type="text/css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<title>hShop</title>
-<jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp"/>
 
 <style type="text/css">
-  .nav-tabs .nav-link {
+  .myNavTab {
     min-width: 170px;
     margin-right: 4px;
-    color: silver !important;
+    color: #8E8D8D !important;
     font-weight: 500;
     text-align: center;
     border-radius: 4px 4px 0 0;
     transition: all 0.2s ease-in-out;
     margin-bottom: none;
-    border: none;
+    border: none !important;
   }
-  .nav-tabs .nav-link:hover {
-    color: black;
+  
+  .myNavTab .linkBtn:hover {
+    color: black !important;
     background: none;
     /*box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* hover 시 그림자 */
   }
-  .nav-tabs .nav-link.active {
+  
+  .myNavTab .linkBtn.active {
     color: black !important;
     background: none;
     /*box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2); /* 활성 탭 강조된 그림자 */
   }
   
-  button.nav-link {padding: 15px; font-size: 15px;}
+  .linkBtn {
+  	padding: 15px; font-size: 15px; color: #8E8D8D !important; border: none !important;
+  }
   
-  .nav-item {border-bottom: 1px solid #E6E6E6;}
-  .nav-item
+  .item-div {border-bottom: 1px solid #E6E6E6;}
   
   .tab-pane { min-height: 300px; }
 
@@ -114,11 +116,11 @@
   .btn-buySend:hover{background: #7b9580;}
   
   .btn-productLike, .btn-productCart {border: 1px solid #E6E6E6; color: #000; padding: 8px; border-radius: 5px; font-size: 15px;}
-  
+  /*
   .row {--bs-gutter-x: 0rem !important;}
+  */
   
-  main {font-size: 13px;}
-  
+  .section {font-size: 13px;}
   .productName {font-size: 15px; font-weight: 600}
   
   .info-table td:first-child{font-weight: 600; width: 100px;}
@@ -132,6 +134,10 @@
   .form-select {font-size: 13px;}
   
   .total {font-size: 15px;}
+  
+  .refundInfo-div, .deliveryInfo-div {
+  	padding: 15px;
+  }
 </style>
 
 </head>
@@ -142,10 +148,13 @@
 </header>
 
 <main>
+
 	<div class="section" style="background: #fff">
 		<div class="container">
-			<div class="row gy-4" data-aos="fade-up" data-aos-delay="200">
-			
+
+		
+			<div class="row gy-4" >
+	
 				<div class="col-md-12">
 					<div class="row">
 						<!-- 좌측 이미지 -->
@@ -392,6 +401,6 @@
 	<jsp:include page="/WEB-INF/views/layout/footer.jsp"/>
 </footer>
 
-<jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp"/>
+<jsp:include page="/WEB-INF/views/layout/footerResources.jsp"/>
 </body>
 </html>

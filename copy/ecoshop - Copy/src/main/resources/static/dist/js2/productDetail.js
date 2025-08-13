@@ -114,9 +114,10 @@ $(function(){
 		buyQuantity(stockNum, gvSalePrice, detailNum, detailNum2);
 	});
 	
-	/*
+	
 	// 구매 개수
 	function buyQuantity(stockNum, salePrice, detailNum, detailNum2) {
+		/*
 	    const totalPrice = salePrice.toLocaleString();
 	
 	    let buyOption = '';
@@ -161,8 +162,9 @@ $(function(){
 	    $('.order-area').append(itemHtml);
 	
 	    totalProductPrice();
+		*/
 	}
-	*/
+	
 	
 	// 수량 더하기
 	$('.order-area').on('click', '.qty-plus', function() {
