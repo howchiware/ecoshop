@@ -138,6 +138,17 @@
   .refundInfo-div, .deliveryInfo-div {
   	padding: 15px;
   }
+  .inquiry-total-area {font-size: 13px;}
+  .inquiry-add-btn {background: #87A78D; color:#fff; padding: 7px 12px; border: none; border-radius: 5px; font-size: 12px;}
+  
+  .inquiry-table td.table-header {border-top: 1px solid #5E5E5E;}
+  
+  .inquiry-table tr:first-child td {background: #fdfcfc}
+
+  .inquiry-table td {text-align: center; color: #8E8D8D; padding: 10px 0px;}
+  .inquiry-table td.inquiryTitle {text-align: left;}
+  .inquiry-table td.inquiryStatus {color: #8E4E09}
+  .inquiry-table td.secret {color: #D5D5D5}
 </style>
 
 </head>

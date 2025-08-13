@@ -88,7 +88,7 @@
         <li><a href="#"> 워크샵 목록</a></li>
         <li><a href="#"> 워크샵 등록</a></li>
         <li><a href="#"> 참여자 관리</a></li>
-        <li><a href="#"> 담당자 관리</a></li>
+        <li><a href="/admin/workshop/manager/list"> 담당자 관리</a></li>
         <li><a href="#"> FAQ 관리</a></li>
       </ul>
     </li>
