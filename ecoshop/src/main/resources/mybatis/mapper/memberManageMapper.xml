@@ -4,7 +4,6 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.sp.app.admin.mapper.MemberManageMapper">
-
     <!-- 공통 WHERE 조건 -->
     <sql id="where-list">
         <choose>
@@ -30,7 +29,7 @@
     <!-- 회원 목록 -->
     <select id="listMember" parameterType="map" resultType="com.sp.app.admin.model.MemberManage">
     SELECT 
-        m1.memberId, m1.userId, m1.userLevel, m1.regUpdate,
+        m1.memberId, m1.userId, userLevel, m1.regUpdate,
         TO_CHAR(m1.regDate, 'YYYY-MM-DD') regDate, m2.name, m2.nickname, m2.tel
     FROM member1 m1
     LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
@@ -38,24 +37,17 @@
         <if test="kwd != null and kwd != ''">
             <include refid="where-list"/>
         </if>
-        
-        <if test="userLevel != null">
-            AND
             <choose>
-                <when test="userLevel == 3">
-                    m1.userLevel = 99
+                <when test="role == 2">
+                    AND userLevel = 51
                 </when>
-                <when test="userLevel == 2">
-                    m1.userLevel = 51
-                </when>
-                <when test="userLevel == 1">
-                    m1.userLevel = 1
+                <when test="role == 1">
+                    AND userLevel = 1
                 </when>
                 <otherwise>
-                    1=1
-                </otherwise>
+					AND ( userLevel = 0 OR userLevel = 1 )
+				</otherwise>
             </choose>
-        </if>
     </where>
     ORDER BY m1.regDate DESC
     OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
@@ -70,18 +62,47 @@
             <if test="kwd != null and kwd != ''">
                 <include refid="where-list"/>
             </if>
+            <if test="enabled != ''">
+				AND enabled = #{enabled}
+			</if>
             <choose>
-                <when test="userLevel == 3">
-                    AND m1.userLevel = 99
+                <when test="role == 2">
+                    AND userLevel = 51
                 </when>
-                <when test="userLevel == 2">
-                    AND m1.userLevel = 51
+                <when test="role == 1">
+                    AND userLevel = 1
                 </when>
-                <when test="userLevel == 1">
-                    AND m1.userLevel = 1
-                </when>
+                <otherwise>
+					AND ( userLevel = 0 OR userLevel = 1 )
+				</otherwise>
             </choose>
         </where>
     </select>
+    
+    <select id="findById" parameterType="Long" resultType="com.sp.app.admin.model.MemberManage">
+	    SELECT m1.memberId, m1.userId, userLevel, m1.regUpdate,
+	        TO_CHAR(m1.regDate, 'YYYY-MM-DD') regDate, m2.name, m2.nickname, m2.tel
+	    FROM member1 m1
+	    LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
+	    WHERE m1.memberId = #{memberId}
+    </select>
+    
+     <update id="updateMember1" parameterType="map">
+		UPDATE member1 SET userLevel = #{userLevel}
+		WHERE memberId = #{memberId}
+    </update>
+    <update id="updateMember2" parameterType="map">
+		UPDATE member2 SET name = #{name}, birth = TO_DATE(#{birth}, 'YYYY-MM-DD')
+		WHERE memberId = #{memberId}
+    </update>
+     <delete id="deleteMember1" parameterType="map">
+		DELETE FROM member1
+		WHERE memberId = #{memberId}
+    </delete>
+    
+    <delete id="deleteMember2" parameterType="map">
+		DELETE FROM member2
+		WHERE memberId = #{memberId}
+    </delete>
 
 </mapper>

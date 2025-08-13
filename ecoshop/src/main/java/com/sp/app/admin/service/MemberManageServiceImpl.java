@@ -2,12 +2,13 @@ package com.sp.app.admin.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 
 import com.sp.app.admin.mapper.MemberManageMapper;
 import com.sp.app.admin.model.MemberManage;
-
+import com.sp.app.editor.QuillEditorController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class MemberManageServiceImpl implements MemberManageService {
+
+    private final QuillEditorController quillEditorController;
 	private final MemberManageMapper mapper;
 	
 	@Override
@@ -44,9 +47,17 @@ public class MemberManageServiceImpl implements MemberManageService {
 	}
 
 	@Override
-	public MemberManage findById(Long member_id) {
-		// TODO Auto-generated method stub
-		return null;
+	public MemberManage findById(Long memerId) {
+		MemberManage dto = null;
+		
+		try {
+			dto = Objects.requireNonNull(mapper.findById(memerId));
+		} catch (NullPointerException e) {
+		} catch (ArrayIndexOutOfBoundsException e) {
+		} catch (Exception e) {
+			log.info("findById : ", e);
+		}
+		return dto;
 	}
 
 
@@ -68,10 +79,19 @@ public class MemberManageServiceImpl implements MemberManageService {
 		return null;
 	}
 
+
 	@Override
-	public List<Map<String, Object>> listAgeSection() {
-		// TODO Auto-generated method stub
-		return null;
+	public void updateMember(Map<String, Object> map) throws Exception {
+		try {
+			mapper.updateMember1(map);
+			mapper.updateMember2(map);
+		} catch (Exception e) {
+			log.info("updateMember : ", e);
+			
+			throw e;
+		}
+		
 	}
+
 
 }

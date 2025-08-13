@@ -3,12 +3,15 @@ package com.sp.app.admin.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.app.admin.model.MemberManage;
 import com.sp.app.admin.service.MemberManageService;
@@ -16,6 +19,7 @@ import com.sp.app.common.MyUtil;
 import com.sp.app.common.PaginateUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,11 +33,17 @@ public class MemberManageController {
 	private final MemberManageService service;
 	private final PaginateUtil paginateUtil;
 	
+	@GetMapping("main")
+	public String memberManage(Model model) throws Exception {
+
+		return "admin/member/main";
+	}
+	
 	@GetMapping("list")
 	public String handleHome(@RequestParam(name = "page", defaultValue = "1") int current_page,
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
 			@RequestParam(name = "kwd", defaultValue = "") String kwd, 
-			@RequestParam(name = "userLevel", defaultValue = "1") int  userLevel,
+			@RequestParam(name = "role", defaultValue = "1") int  role,
 			@RequestParam(name = "enabled", defaultValue = "") String enabled,
 			Model model,
 			HttpServletRequest resp) throws Exception {
@@ -47,7 +57,7 @@ public class MemberManageController {
 			
 			// 전체 페이지 수
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("userLevel", userLevel);
+			map.put("role", role);
 			map.put("enabled", enabled);
 			map.put("schType", schType);
 			map.put("kwd", kwd);
@@ -74,19 +84,58 @@ public class MemberManageController {
 			model.addAttribute("dataCount", dataCount);
 			model.addAttribute("size", size);
 			model.addAttribute("total_page", total_page);
-			model.addAttribute("userLevel", userLevel);
+			model.addAttribute("role", role);
 			model.addAttribute("enabled", enabled);
 			model.addAttribute("paging", paging);
 			model.addAttribute("schType", schType);
 			model.addAttribute("kwd", kwd);
 			
 		} catch (Exception e) {
-			log.info("list", e);
+			log.info("main", e);
 			
 			throw e;
 		}
 		
 		return "admin/member/list";
+	}
+	
+	@GetMapping("profile")
+	public String detaileMember(@RequestParam(name = "memberId") Long member_id, 
+			@RequestParam(name = "page") String page, Model model, 
+			HttpServletResponse resp) throws Exception {
+		
+		try {
+			MemberManage dto = Objects.requireNonNull(service.findById(member_id));
+			
+			model.addAttribute("dto", dto);
+			model.addAttribute("page", page);
+			
+		} catch (NullPointerException e) {
+			resp.sendError(410);	
+			throw e;
+		} catch (Exception e) {
+			resp.sendError(406);
+			throw e;
+		}
+				return "admin/member/profile";
+		
+	}
+	
+	@ResponseBody
+	@PostMapping("updateMember")
+	public Map<String, ?> updateMember(@RequestParam Map<String, Object> paramMap) throws Exception{
+		Map<String, Object> model = new HashMap<>();
+		
+		String state = "true";
+		
+		try {
+			service.updateMember(paramMap);
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		model.put("state", state);
+		return model;
 	}
 	
 	

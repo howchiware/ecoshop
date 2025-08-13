@@ -9,12 +9,15 @@ public interface MemberManageService {
 	public int dataCount(Map<String, Object> map);
 	public List<MemberManage> listMember(Map<String, Object> map);
 	
-	public MemberManage findById(Long member_id);
+	public MemberManage findById(Long memberId);
 	
 	public void insertMemberStatus(MemberManage dto) throws Exception;
-	public List<MemberManage> listMemberStatus(Long member_id);
-	public MemberManage findByStatus(Long member_id);
 	
-	public List<Map<String, Object>> listAgeSection();
+	public void updateMember(Map<String, Object> map) throws Exception;
+
+	
+	public List<MemberManage> listMemberStatus(Long memberId);
+	public MemberManage findByStatus(Long memberId);
+	
 	
 }
