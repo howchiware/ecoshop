@@ -7,6 +7,7 @@
   /**
    * Mobile Menu 
   */
+ /*
 	const mobileNavToggleBtn = document.querySelector('.mobile-nav-toggle');
 	function mobileNavToogle() {
 		document.querySelectorAll('.vertical-nav > .nav-menu > li.has-sub-menu').forEach(el => {
@@ -26,7 +27,8 @@
 			mobileNavToogle();
 		}
 	});
-		
+*/
+	
   /*
 	document.querySelectorAll('.vertical-nav > .nav-menu .menu-link').forEach(navmenu => {
 		navmenu.addEventListener('click', () => {
@@ -74,6 +76,7 @@
 	});
 
 	// collapsed-menu click
+	/*
 	document.querySelector('.collapsed-menu').onclick = function () {
 		// expanded 된 메뉴인 경우 닫기
 		document.querySelectorAll('.vertical-nav > .nav-menu > li').forEach(el => {
@@ -92,6 +95,7 @@
 		const expanded = this.parentNode.getAttribute('aria-expanded') === 'true';
 		this.parentNode.setAttribute('aria-expanded', ! expanded);
 	};
+	*/
  
   /**
    * Preloader : 로딩중일 때 출력 

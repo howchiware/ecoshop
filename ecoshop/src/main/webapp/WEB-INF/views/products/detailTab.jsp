@@ -3,15 +3,15 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
 		
-<div class="nav nav-tabs mt-5" id="myTab" role="tablist">
-	<div class="nav-item col-4" role="presentation">
-		<button class="nav-link active w-100" id="tab-1" data-bs-toggle="tab" data-bs-target="#tab-pane-1" type="button" role="tab" aria-controls="1" aria-selected="true">상세정보</button>
+<div class="nav nav-tabs mt-5 myNavTab" id="myTab" role="tablist">
+	<div class="nav-item item-div col-4" role="presentation">
+		<button class="nav-link linkBtn active w-100" id="tab-1" data-bs-toggle="tab" data-bs-target="#tab-pane-1" type="button" role="tab" aria-controls="1" aria-selected="true">상세정보</button>
 	</div>
-	<div class="nav-item col-4" role="presentation">
-		<button class="nav-link w-100" id="tab-2" data-bs-toggle="tab" data-bs-target="#tab-pane-2" type="button" role="tab" aria-controls="2" aria-selected="false">구매후기 <span class="title-reviewCount">(10)</span></button>
+	<div class="nav-item item-div col-4" role="presentation">
+		<button class="nav-link linkBtn w-100" id="tab-2" data-bs-toggle="tab" data-bs-target="#tab-pane-2" type="button" role="tab" aria-controls="2" aria-selected="false">구매후기 <span class="title-reviewCount">(10)</span></button>
 	</div>
-	<div class="nav-item col-4" role="presentation">
-		<button class="nav-link w-100" id="tab-3" data-bs-toggle="tab" data-bs-target="#tab-pane-3" type="button" role="tab" aria-controls="3" aria-selected="false">Q&A <span class="title-qnaCount">(3)</span></button>
+	<div class="nav-item item-div col-4" role="presentation">
+		<button class="nav-link linkBtn w-100" id="tab-3" data-bs-toggle="tab" data-bs-target="#tab-pane-3" type="button" role="tab" aria-controls="3" aria-selected="false">Q&A <span class="title-qnaCount">(3)</span></button>
 	</div>
 </div>
 

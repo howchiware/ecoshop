@@ -5,7 +5,7 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <!-- Favicons -->
 <link href="${pageContext.request.contextPath}/dist/images/h.png" rel="icon">
- 
+  
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com" rel="preconnect">
 <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -19,7 +19,7 @@
 <!-- Core CSS Files -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/core.css" type="text/css">
 <!-- Main CSS Files -->
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/main2.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/main.css" type="text/css">
 <!-- Form CSS Files -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/forms.css" type="text/css">
 

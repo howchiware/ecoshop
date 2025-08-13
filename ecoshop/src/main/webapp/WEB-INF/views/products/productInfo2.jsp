@@ -8,42 +8,39 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>hShop</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>
+
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/board.css" type="text/css">
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <style type="text/css">
-  .myNavTab {
+  .nav-tabs .nav-link {
     min-width: 170px;
     margin-right: 4px;
-    color: #8E8D8D !important;
+    color: silver !important;
     font-weight: 500;
     text-align: center;
     border-radius: 4px 4px 0 0;
     transition: all 0.2s ease-in-out;
     margin-bottom: none;
-    border: none !important;
+    border: none;
   }
-  
-  .myNavTab .linkBtn:hover {
-    color: black !important;
+  .nav-tabs .nav-link:hover {
+    color: black;
     background: none;
     /*box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* hover 시 그림자 */
   }
-  
-  .myNavTab .linkBtn.active {
+  .nav-tabs .nav-link.active {
     color: black !important;
     background: none;
     /*box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2); /* 활성 탭 강조된 그림자 */
   }
   
-  .linkBtn {
-  	padding: 15px; font-size: 15px; color: #8E8D8D !important; border: none !important;
-  }
+  button.nav-link {padding: 15px; font-size: 15px;}
   
-  .item-div {border-bottom: 1px solid #E6E6E6;}
+  .nav-item {border-bottom: 1px solid #E6E6E6;}
+  .nav-item
   
   .tab-pane { min-height: 300px; }
 
@@ -116,11 +113,11 @@
   .btn-buySend:hover{background: #7b9580;}
   
   .btn-productLike, .btn-productCart {border: 1px solid #E6E6E6; color: #000; padding: 8px; border-radius: 5px; font-size: 15px;}
-  /*
+  
   .row {--bs-gutter-x: 0rem !important;}
   
-  .section {font-size: 13px;}
-  */
+  main {font-size: 13px;}
+  
   .productName {font-size: 15px; font-weight: 600}
   
   .info-table td:first-child{font-weight: 600; width: 100px;}
