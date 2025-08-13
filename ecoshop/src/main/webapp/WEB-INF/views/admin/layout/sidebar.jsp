@@ -118,9 +118,8 @@
 
     <li class="menu-title">고객센터</li>
     <li><a href="${pageContext.request.contextPath}/admin/notice/list"> 공지사항</a></li>
-    <li><a href="${pageContext.request.contextPath}/admin/block/list"> 신고관리</a></li>
+    <li><a href="${pageContext.request.contextPath}/admin/blockAndInquiry/main"> 신고 / 1:1</a></li>
     <li><a href="${pageContext.request.contextPath}/admin/faq/main"> 자주 묻는 질문</a></li>
-    <li><a href="${pageContext.request.contextPath}/admin/inquiry/list"> 1:1 문의</a></li>
 
   </ul>
 </div>
