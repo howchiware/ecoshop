@@ -215,7 +215,7 @@
 							</div>
 						</div>
 						<div class="p-1">
-							<input type="hidden" name="productNum" value="${dto.productNum}">
+							<input type="hidden" name="productCode" value="1">
 							<textarea name="question" id="question" class="form-control"></textarea>
 						</div>
 						<div class="p-1">

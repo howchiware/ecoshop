@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/board.css" type="text/css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
 
 <style type="text/css">
   .myNavTab {
@@ -314,7 +315,7 @@
 							                    <div class="input-group">
 							                        <i class="bi bi-dash input-group-text bg-white qty-minus"></i>
 							                        <input type="text" name="buyQtys" class="form-control" value="1" style="flex:none; width: 60px; text-align: center;" readonly>
-							                        <input type="hidden" name="productNums" value="${gvProductNum}">
+							                        <input type="hidden" name="productCodes" value="${gvProductCodes}">
 							                        <input type="hidden" name="stockNums" value="${stockNum}">
 							                        <input type="hidden" name="detailNums" value="${detailNum}" disabled>
 							                        <input type="hidden" name="detailNums2" value="${detailNum2}" disabled>
@@ -334,7 +335,7 @@
 							                    <div class="input-group">
 							                        <i class="bi bi-dash input-group-text bg-white qty-minus"></i>
 							                        <input type="text" name="buyQtys" class="form-control" value="1" style="flex:none; width: 60px; text-align: center;" readonly>
-							                        <input type="hidden" name="productNums" value="${gvProductNum}">
+							                        <input type="hidden" name="productCodes" value="${gvProductCodes}">
 							                        <input type="hidden" name="stockNums" value="${stockNum}">
 							                        <input type="hidden" name="detailNums" value="${detailNum}" disabled>
 							                        <input type="hidden" name="detailNums2" value="${detailNum2}" disabled>
@@ -368,7 +369,7 @@
 								
 								<div class="row mt-2 mb-2">
 									<div class="col pe-1">
-										<button type="button" class="btn-default btn-lg w-100 btn-productLike" data-productNum="${dto.productNum}" ${empty sessionScope.member.member_id ? "disabled" : ""}>찜하기&nbsp;&nbsp;<i class="bi ${dto.userWish==1 ? 'bi-heart-fill text-danger':'bi-heart'}"></i></button>
+										<button type="button" class="btn-default btn-lg w-100 btn-productLike" data-productCode="1" ${empty sessionScope.member.member_id ? "disabled" : ""}>찜하기&nbsp;&nbsp;<i class="bi ${dto.userWish==1 ? 'bi-heart-fill text-danger':'bi-heart'}"></i></button>
 									</div>
 									<div class="col ps-1">
 										<button type="button" class="btn-default btn-lg w-100 btn-productCart" onclick="sendOk('cart');" ${empty sessionScope.member.member_id || dto.totalStock < 1 ? "disabled" : ""}>장바구니&nbsp;&nbsp;<i class="bi bi-cart-plus"></i></button>
@@ -393,7 +394,7 @@
 
 <div id="product-template">
 	<input type="hidden" id="web-contextPath" value="${pageContext.request.contextPath}">
-	<input type="hidden" id="product-productNum" value="${dto.productNum}">
+	<input type="hidden" id="product-productCode" value="1">
 	<input type="hidden" id="product-productName" value="${dto.productName}">
 	<input type="hidden" id="product-optionCount" value="${dto.optionCount}">
 	<input type="hidden" id="product-price" value="${dto.price}">

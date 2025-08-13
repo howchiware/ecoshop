@@ -20,11 +20,11 @@ $(function(){
 
 function listReview(page) {
 	const contextPath = document.getElementById('web-contextPath').value;
-	const productNum = document.getElementById('product-productNum').value;
+	const productCode = document.getElementById('product-productCode').value;
 	
 	let sortBy = $('.reviewSortBy').val();
 	let url = contextPath + '/review/list';
-	let requestParams = {productNum:productNum, pageNo:page, sortBy:sortBy};
+	let requestParams = {productCode:productCode, pageNo:page, sortBy:sortBy};
 	
 	const fn = function(data) {
 		printReview(data);
@@ -183,10 +183,10 @@ $(function(){
 // question
 function listQuestion(page) {
 	const contextPath = document.getElementById('web-contextPath').value;
-	const productNum = document.getElementById('product-productNum').value;
+	const productCode = document.getElementById('product-productCode').value;
 	
-	let url = contextPath + '/qna/list';
-	let params = {productNum:productNum, pageNo:page};
+	let url = contextPath + '/inquiry/list';
+	let params = {productCode:productCode, pageNo:page};
 	
 	const fn = function(data) {
 		printQuestion(data);
@@ -196,6 +196,7 @@ function listQuestion(page) {
 }
 
 function printQuestion(data) {
+	/*
 	const contextPath = document.getElementById('web-contextPath').value;	
     // 데이터를 구조 분해 할당으로 추출
     const { dataCount, pageNo, total_page, size, paging, list } = data;
@@ -265,6 +266,7 @@ function printQuestion(data) {
     }
 
     $('.list-question').html(out);
+	*/
 }
 
 $(function(){
@@ -369,7 +371,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		}
 		
 		const contextPath = document.getElementById('web-contextPath').value;
-		const url = contextPath + '/qna/write';
+		const url = contextPath + '/inquiry/write';
 		
 		// FormData : form 필드와 그 값을 나타내는 일련의 key/value 쌍을 쉽게 생성하는 방법을 제공 
 		// FormData는 Content-Type을 명시하지 않으면 multipart/form-data로 전송
