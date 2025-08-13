@@ -33,7 +33,7 @@ body {
 	display: flex;
 }
 
-.right-panel {
+.right-PANEL {
 	flex-grow: 1;
 	padding: 2rem;
 	overflow-y: auto;
@@ -111,7 +111,7 @@ text-align: center;
 <main class="main-container">
 	<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp"/>
 
-	<div class="right-panel">
+	<div class="right-PANEL">
 		<div class="title">
 			<h3>주문 상태 관리</h3>
 		</div>

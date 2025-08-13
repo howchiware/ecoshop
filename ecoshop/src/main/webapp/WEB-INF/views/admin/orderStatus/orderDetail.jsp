@@ -14,7 +14,7 @@
   .orderStatus-update:hover, .orderDetailStatus-update:hover { color: #0d6efd; }
   .text-line { text-decoration: line-through; }
 
-.right-panel {
+.right-PANEL {
 background: #fff;
 margin-left: 250px;
 padding: 30px;
@@ -39,7 +39,7 @@ margin-bottom: 0px;
 <main class="main-container">
 	<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp"/>
 
-	<div class="right-panel">
+	<div class="right-PANEL">
 		<div class="page-title">
 			<h2>주문 현황</h2>
 		</div>
