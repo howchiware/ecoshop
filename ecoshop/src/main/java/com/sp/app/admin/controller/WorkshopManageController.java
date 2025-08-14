@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/admin/workshop/*")
+@RequestMapping("/admin/workshop")
 public class WorkshopManageController {
 	private final WorkshopService service;
 	private final MyUtil myUtil;
@@ -42,7 +42,7 @@ public class WorkshopManageController {
 	}
 
 	// 프로그램 등록 폼
-	@GetMapping("program/write")
+	@GetMapping("/program/write")
 	public String programWriteForm(Model model) {
 		try {
 			Map<String, Object> map = new HashMap<>();
@@ -57,11 +57,11 @@ public class WorkshopManageController {
 			log.info("program writeForm : ", e);
 		}
 
-		return "admin/workshop/program/write";
+		return "admin/workshop/programWrite";
 	}
 
 	// 카테고리 등록
-	@PostMapping("category")
+	@PostMapping("/category")
 	public String addCategory(Workshop dto, @RequestParam("categoryName") String categoryName) {
 		try {
 			service.insertCategory(dto, categoryName);
@@ -73,18 +73,18 @@ public class WorkshopManageController {
 	}
 
 	// 프로그램 등록
-	@PostMapping("program/write")
+	@PostMapping("/program/write")
 	public String writeSubmitProgram(Workshop dto, HttpSession session) throws Exception {
 		try {
 			service.insertProgram(dto, dto.getCategoryId(), dto.getProgramTitle(), dto.getProgramContent());
 		} catch (Exception e) {
 			log.info("program writeSubmit : ", e);
 		}
-		return "redirect:/admin/workshop/program/write";
+		return "redirect:/admin/workshop/program/list";
 	}
 
 	// 프로그램 목록
-	@GetMapping("program/list")
+	@GetMapping("/program/list")
 	public String programList(@RequestParam(name = "page", defaultValue = "1") int current_page,
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
 			@RequestParam(name = "kwd", defaultValue = "") String kwd,
@@ -128,23 +128,22 @@ public class WorkshopManageController {
 			log.info("program list : ", e);
 		}
 
-		return "admin/workshop/program/list";
+		return "admin/workshop/programList";
 	}
 
 	// 프로그램 내용 상세보기
-	@GetMapping("program/detail")
+	@GetMapping("/program/detail")
 	@ResponseBody
 	public Map<String, Object> programDetail(@RequestParam("programId") Long programId) {
-	    Workshop dto = service.findProgramById(programId);
-	    Map<String, Object> map = new HashMap<>();
-	    String content = (dto == null || dto.getProgramContent() == null) ? "" : dto.getProgramContent();
-	    map.put("programContent", content);
-	    return map;
+		Workshop dto = service.findProgramById(programId);
+		Map<String, Object> map = new HashMap<>();
+		String content = (dto == null || dto.getProgramContent() == null) ? "" : dto.getProgramContent();
+		map.put("programContent", content);
+		return map;
 	}
 
-
 	// 프로그램 수정
-	@GetMapping("program/update")
+	@GetMapping("/program/update")
 	public String updateFormProgram(@RequestParam(name = "num") long num, @RequestParam(name = "page") String page,
 			Model model) throws Exception {
 		try {
@@ -161,7 +160,7 @@ public class WorkshopManageController {
 			model.addAttribute("mode", "update");
 			model.addAttribute("page", page);
 
-			return "admin/workshop/program/write";
+			return "admin/workshop/programWrite";
 		} catch (NullPointerException e) {
 		} catch (Exception e) {
 			log.info("update Program : ", e);
@@ -170,7 +169,7 @@ public class WorkshopManageController {
 		return "redirect:/admin/workshop/program/list?page=" + page;
 	}
 
-	@PostMapping("program/update")
+	@PostMapping("/program/update")
 	public String updateSubmitProgram(Workshop dto, @RequestParam(name = "page", defaultValue = "1") String page)
 			throws Exception {
 		try {
@@ -184,7 +183,7 @@ public class WorkshopManageController {
 	}
 
 	// 프로그램 삭제
-	@PostMapping("program/delete")
+	@PostMapping("/program/delete")
 	public String deleteProgram(@RequestParam(name = "num") long num,
 			@RequestParam(name = "page", defaultValue = "1") String page,
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
@@ -206,7 +205,7 @@ public class WorkshopManageController {
 	}
 
 	// 담당자 등록
-	@PostMapping("manager/write")
+	@PostMapping("/manager/write")
 	public String addManager(Workshop dto) {
 		try {
 			service.insertManager(dto);
@@ -218,7 +217,7 @@ public class WorkshopManageController {
 	}
 
 	// 담당자 목록
-	@GetMapping("manager/list")
+	@GetMapping("/manager/list")
 	public String managerList(@RequestParam(name = "page", defaultValue = "1") int current_page,
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
 			@RequestParam(name = "kwd", defaultValue = "") String kwd,
@@ -255,11 +254,11 @@ public class WorkshopManageController {
 			throw e;
 		}
 
-		return "admin/workshop/manager/list";
+		return "admin/workshop/managerList";
 	}
 
 	// 담당자 수정
-	@GetMapping("manager/update")
+	@GetMapping("/manager/update")
 	public String updateManager(@RequestParam(name = "num") long num, @RequestParam(name = "page") String page,
 			Model model) throws Exception {
 		try {
@@ -273,7 +272,7 @@ public class WorkshopManageController {
 			model.addAttribute("mode", "update");
 			model.addAttribute("page", page);
 
-			return "admin/workshop/manager/list";
+			return "admin/workshop/managerList";
 		} catch (Exception e) {
 			log.info("update Manager : ", e);
 		}
@@ -281,7 +280,7 @@ public class WorkshopManageController {
 		return "redirect:/admin/workshop/manager/list?page=" + page;
 	}
 
-	@PostMapping("manager/update")
+	@PostMapping("/manager/update")
 	public String updateSubmitManager(Workshop dto, @RequestParam(name = "page", defaultValue = "1") String page)
 			throws Exception {
 		try {
@@ -295,7 +294,7 @@ public class WorkshopManageController {
 	}
 
 	// 담당자 삭제
-	@PostMapping("manager/delete")
+	@PostMapping("/manager/delete")
 	public String deleteManager(@RequestParam(name = "num") long num,
 			@RequestParam(name = "page", defaultValue = "1") String page,
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
@@ -317,7 +316,7 @@ public class WorkshopManageController {
 	}
 
 	// 워크샵 목록
-	@GetMapping("list")
+	@GetMapping("/list")
 	public String workshopList(@RequestParam(name = "page", defaultValue = "1") int current_page,
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
 			@RequestParam(name = "kwd", defaultValue = "") String kwd, Model model, HttpServletRequest req)
@@ -350,6 +349,12 @@ public class WorkshopManageController {
 			map.put("size", size);
 
 			List<Workshop> list = service.listWorkshop(map);
+			
+			Map<String, Object> programMap = new HashMap<>();
+		    programMap.put("offset", 0);
+		    programMap.put("size", 100);
+		    List<Workshop> programList = service.listProgram(programMap);
+		    model.addAttribute("programList", programList);
 
 			String cp = req.getContextPath();
 			String query = "";
@@ -379,22 +384,53 @@ public class WorkshopManageController {
 			log.info("workshop list : ", e);
 		}
 
-		return "admin/workshop/list";
+		return "admin/workshop/workshopList";
 	}
 
 	// 워크샵 작성
-	@GetMapping("write")
+	@GetMapping("/write")
 	public String workshopWriteForm(Model model) throws Exception {
+		Map<String, Object> programMap = new HashMap<>();
+		programMap.put("offset", 0);
+		programMap.put("size", 100);
+		List<Workshop> programList = service.listProgram(programMap);
+
+		Map<String, Object> managerMap = new HashMap<>();
+		managerMap.put("offset", 0);
+		managerMap.put("size", 100);
+		List<Workshop> managerList = service.listManager(managerMap);
 
 		model.addAttribute("mode", "write");
+		model.addAttribute("programList", programList);
+		model.addAttribute("managerList", managerList);
 
-		return "admin/workshop/write";
+		return "admin/workshop/workshopWrite";
 	}
 
-	@PostMapping("write")
-	public String workshopWriteSubmit(Workshop dto) throws Exception {
+	@PostMapping("/write")
+	public String workshopWriteSubmit(Workshop dto, @RequestParam("thumbnail") MultipartFile thumbnail,
+			@RequestParam("photos") List<MultipartFile> photos) throws Exception {
 		try {
+			// 썸네일
+			if (thumbnail != null && !thumbnail.isEmpty()) {
+				String path = storageService.uploadFileToServer(thumbnail, uploadPath);
+				dto.setThumbnailPath(path);
+			}
+			
 			service.insertWorkshop(dto);
+			
+			// 상세 이미지
+			for(MultipartFile photo : photos) {
+				if(photo != null && !photo.isEmpty()) {
+					String path = storageService.uploadFileToServer(photo, uploadPath);
+					
+					dto.setWorkshopId(dto.getWorkshopId());
+					dto.setWorkshopImagePath(path);
+					
+					service.insertWorkshopPhoto(dto);
+				}
+			}
+
 		} catch (Exception e) {
 			log.info("workshop writeSubmit : ", e);
 		}
@@ -402,10 +438,12 @@ public class WorkshopManageController {
 	}
 
 	// 워크샵 상세
-	@GetMapping("detail")
-	public String workshopDetail(@RequestParam(name = "num") long num, @RequestParam(name = "page") String page,
-			@RequestParam(name = "schType", defaultValue = "all") String schType,
-			@RequestParam(name = "kwd", defaultValue = "") String kwd, Model model, HttpSession session)
+	@GetMapping("/detail")
+	public String workshopDetail(@RequestParam(name = "num") long num,
+            @RequestParam(name = "page", defaultValue = "1") String page,
+            @RequestParam(name = "schType", defaultValue = "all") String schType,
+            @RequestParam(name = "kwd", defaultValue = "") String kwd,
+            Model model, HttpSession session)
 			throws Exception {
 
 		String query = "page=" + page;
@@ -415,13 +453,20 @@ public class WorkshopManageController {
 				query += "&schType=" + schType + "&kwd=" + myUtil.encodeUrl(kwd);
 			}
 
+			// 기본 정보
 			Workshop dto = Objects.requireNonNull(service.findWorkshopById(num));
+			
+			// 상세 이미지
+			Map<String, Object> map = new HashMap<>();
+			map.put("workshopId", num);
+			List<Workshop> photoList = service.listWorkshopPhoto(map);
 
 			model.addAttribute("dto", dto);
+			model.addAttribute("photoList", photoList);
 			model.addAttribute("page", page);
 			model.addAttribute("query", query);
 
-			return "admin/workshop/detail";
+			return "admin/workshop/workshopDetail";
 		} catch (Exception e) {
 			log.info("workshop detail : ", e);
 		}
@@ -430,18 +475,32 @@ public class WorkshopManageController {
 	}
 
 	// 워크샵 수정
-	@GetMapping("workshop/update")
+	@GetMapping("/workshop/update")
 	public String updateFormWorkshop(@RequestParam(name = "num") long num, @RequestParam(name = "page") String page,
 			Model model) throws Exception {
 
 		try {
 			Workshop dto = Objects.requireNonNull(service.findWorkshopById(num));
+			
+			// 프로그램 목록
+		    Map<String, Object> programMap = new HashMap<>();
+		    programMap.put("offset", 0);
+		    programMap.put("size", 100);
+		    List<Workshop> programList = service.listProgram(programMap);
 
+		    // 담당자 목록
+		    Map<String, Object> managerMap = new HashMap<>();
+		    managerMap.put("offset", 0);
+		    managerMap.put("size", 100);
+		    List<Workshop> managerList = service.listManager(managerMap);
+			
+		    model.addAttribute("programList", programList);
+			model.addAttribute("managerList", managerList);
 			model.addAttribute("dto", dto);
 			model.addAttribute("mode", "update");
 			model.addAttribute("page", page);
 
-			return "admin/workshop/write";
+			return "admin/workshop/workshopWrite";
 		} catch (Exception e) {
 			log.info("workshopUpdateForm : ", e);
 		}
@@ -449,7 +508,7 @@ public class WorkshopManageController {
 		return "redirect:/admin/workshop/list?page=" + page;
 	}
 
-	@PostMapping("workshop/update")
+	@PostMapping("/workshop/update")
 	public String updateSubmitWorkshop(Workshop dto, @RequestParam(name = "page", defaultValue = "1") String page)
 			throws Exception {
 		try {
@@ -463,7 +522,7 @@ public class WorkshopManageController {
 	}
 
 	// 워크샵 삭제
-	@PostMapping("workshop/delete")
+	@PostMapping("/delete")
 	public String deleteWorkshop(@RequestParam(name = "num") long num,
 			@RequestParam(name = "page", defaultValue = "1") String page,
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
@@ -486,26 +545,29 @@ public class WorkshopManageController {
 	}
 
 	// 사진 목록
-	@GetMapping("photo/list")
+	@GetMapping("/photo/list")
 	public String workshopPhotoList(@RequestParam long workshopId, Model model) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("workshopId", workshopId);
 		List<Workshop> photo = service.listWorkshopPhoto(map);
 		model.addAttribute("photo", photo);
 
-		return "admin/workshop/photo/list";
+		return "admin/workshop/photoList";
 	}
 
 	// 사진 업로드
-	@PostMapping("photo/upload")
-	public String workshopPhotoUpload(Workshop dto, @RequestParam long workshopId, MultipartFile file) {
-		if (file == null || file.isEmpty()) {
-	        return "redirect:/admin/workshop/photo/list?workshopId=" + workshopId;
-	    }
+	@PostMapping("/photo/upload")
+	public String workshopPhotoUpload(Workshop dto, @RequestParam long workshopId,
+			@RequestParam("photo") List<MultipartFile> files) {
 		try {
-			String workshopImagePath = storageService.uploadFileToServer(file, uploadPath);
-			dto.setWorkshopId(workshopId);
-			service.insertWorkshopPhoto(dto, workshopImagePath);
+			for (MultipartFile file : files) {
+				if (file != null && !file.isEmpty()) {
+					String path = storageService.uploadFileToServer(file, uploadPath);
+					dto.setWorkshopId(workshopId);
+					dto.setWorkshopImagePath(path);
+					service.insertWorkshopPhoto(dto);
+				}
+			}
 		} catch (Exception e) {
 			log.info("workshopPhotoUpload : ", e);
 		}
@@ -514,7 +576,7 @@ public class WorkshopManageController {
 	}
 
 	// 사진 삭제
-	@PostMapping("photo/delete")
+	@PostMapping("/photo/delete")
 	public String photoDelete(@RequestParam long photoId, @RequestParam long workshopId) {
 		try {
 			service.deleteWorkshopPhotoById(photoId, uploadPath);

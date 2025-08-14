@@ -133,7 +133,7 @@
 	</select>
 	
 	<update id="updateManager" parameterType="com.sp.app.model.Workshop">
-	UPDATE WorkshopManager
+	UPDATE workshopManager
 	SET name = #{name}, tel = #{tel}, email = #{email}, department = #{department}
 	WHERE managerId = #{managerId}
 	</update>
@@ -145,16 +145,20 @@
 	
 	<!-- 워크샵 -->
 	<insert id="insertWorkshop" parameterType="com.sp.app.model.Workshop">
+	<selectKey keyProperty="workshopId" resultType="long" order="BEFORE">
+        SELECT workshop_seq.NEXTVAL FROM dual
+    </selectKey>
 	INSERT INTO workshop (workshopId, programId, managerId, workshopTitle, scheduleDate, applyDeadline, location,
 		workshopStatus, capacity, thumbnailPath, workshopContent, regDate, updDate) 
-	VALUES (workshop_seq.NEXTVAL, #{programId}, #{managerId}, #{workshopTitle}, #{scheduleDate}, #{applyDeadline}, #{location},
-	#{workshopStatus}, #{capacity}, #{thumbnailPath}, #{workshopContent}, SYSDATE, SYSDATE)
+	VALUES (#{workshopId}, #{programId}, #{managerId}, #{workshopTitle}, #{scheduleDate, jdbcType=TIMESTAMP}, 
+	#{applyDeadline, jdbcType=TIMESTAMP}, #{location}, #{workshopStatus}, #{capacity}, #{thumbnailPath, jdbcType=VARCHAR}, #{workshopContent}, SYSDATE, SYSDATE)
 	</insert>
 	
 	<select id="listWorkshop" parameterType="map" resultType="com.sp.app.model.Workshop">
-	SELECT workshopId, programId, managerId, workshopTitle, scheduleDate, applyDeadline, location,
-		workshopStatus, capacity, thumbnailPath, workshopContent, regDate, updDate
-	FROM workshop
+	SELECT w.workshopId, w.programId, w.managerId, p.programTitle, w.workshopTitle, w.scheduleDate, w.applyDeadline, w.location,
+		w.workshopStatus, w.capacity, w.thumbnailPath, w.workshopContent, w.regDate, w.updDate
+	FROM workshop w
+	LEFT JOIN program p ON w.programId = p.programId
 	<where>
 		<include refid="where-list-workshop"/>
 	</where>
@@ -191,8 +195,9 @@
 	
 	<update id="updateWorkshop" parameterType="com.sp.app.model.Workshop">
 	UPDATE workshop
-	SET workshopTitle = #{workshopTitle}, scheduleDate = #{scheduleDate}, applyDeadline = #{applyDeadline}, location = #{location}, workshopStatus = #{workshopStatus},
-			 capacity = #{capacity}, thumbnailPath = #{thumbnailPath}, workshopContent = #{workshopContent}, updDate = SYSDATE
+	SET workshopTitle = #{workshopTitle}, #{scheduleDate, jdbcType=TIMESTAMP}, #{applyDeadline, jdbcType=TIMESTAMP}, 
+	location = #{location}, workshopStatus = #{workshopStatus}, capacity = #{capacity}, thumbnailPath = #{thumbnailPath}, 
+	workshopContent = #{workshopContent}, updDate = SYSDATE
 	WHERE workshopId = #{workshopId}
 	</update>
 	
@@ -207,7 +212,7 @@
 	VALUES (workshopPhoto_seq.NEXTVAL, #{workshopId}, #{workshopImagePath})
 	</insert>
 	
-	<select id="workshopPhotoDataCount" parameterType="map" resultType="Integer">
+	<select id="workshopPhotoDataCount" parameterType="map" resultType="Long">
 	SELECT NVL(COUNT(*), 0)
 	FROM workshopPhoto
 	</select>
