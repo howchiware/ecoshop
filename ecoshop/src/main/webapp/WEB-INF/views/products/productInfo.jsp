@@ -150,6 +150,47 @@
   .inquiry-table td.inquiryTitle {text-align: left;}
   .inquiry-table td.inquiryStatus {color: #8E4E09}
   .inquiry-table td.secret {color: #D5D5D5}
+  
+  img.user-icon {   
+  	display: block;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #999;
+    border-radius: 35px;
+    object-fit: cover;
+    color: #999;
+    margin: 0px 10px;
+  }
+  
+  img.answer-icon {   
+  	display: block;
+    width: 25px;
+    height: 25px;
+    border: 1px solid #999;
+    border-radius: 35px;
+    object-fit: cover;
+    color: #999;
+    margin: 0px 10px;
+  }
+  
+  .inquiry-detailInfo{text-align: left; padding: 0px 50px;}
+  
+  .inquiryDetailHeader{display: inline-flex; align-items: center;}
+  .inquireDetailAnswer{display: inline-flex; align-items: top; margin-top: 10px}
+  
+  p.inquiryDetailTitle{margin: 5px; text-align: left; color: black;}
+  p.inquiryDetailName{margin: 5px; font-size: 11px;  text-align: left; color: black;}
+  p.inquiryDetailDate{margin: 5px; font-size: 11px;  text-align: left; padding-left: 5px;}  
+  p.inquiryDetailAnswerDate{padding-left: 10px;}
+  p.inquiryDetailAnswerName{color: black;}
+  p.content, p.answerContent {margin: 0px;}
+  
+  div.inquiryDetailTD{display: inline-flex;}
+  div.inquiryDetailAnswerND{display: inline-flex; font-size: 11px;}
+  div.inquireDetailAnswerContent{font-size: 11px;}
+  div.inquireDetailContent{padding: 15px 10px;}
+  
+  hr.inquireDivider{margin: 5px 0px;}
 </style>
 
 </head>
@@ -382,7 +423,7 @@
 				
 			</div>
 							
-			<div class="row gy-4">
+			<div class="row gy-4 detailTabList">
 				<div class="col-md-12">
 					<c:import url="/WEB-INF/views/products/detailTab.jsp"/>
 				</div>
@@ -410,9 +451,9 @@
 <script src="${pageContext.request.contextPath}/dist/js2/productDetail2.js"></script>
 
 <footer>
-	<jsp:include page="/WEB-INF/views/layout/footer.jsp"/>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>	
+	<script type="text/javascript" src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </footer>
 
-<jsp:include page="/WEB-INF/views/layout/footerResources.jsp"/>
 </body>
 </html>

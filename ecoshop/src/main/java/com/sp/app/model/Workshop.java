@@ -2,6 +2,8 @@ package com.sp.app.model;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class Workshop {
 	private long categoryId;
 	private String categoryName;
@@ -20,8 +22,10 @@ public class Workshop {
 
 	private long workshopId;
 	private String workshopTitle;
-	private String scheduleDate;
-	private String applyDeadline;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	private Date scheduleDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	private Date applyDeadline;
 	private String location;
 	private int workshopStatus;
 	private int capacity;
@@ -38,7 +42,7 @@ public class Workshop {
 	private long participantId;
 	private int participantStatus;
 	private String isAttended;
-	private String appliedDate;
+	private Date appliedDate;
 
 	private long workshopReviewId;
 	private String reviewContent;
@@ -158,19 +162,19 @@ public class Workshop {
 		this.workshopTitle = workshopTitle;
 	}
 
-	public String getScheduleDate() {
+	public Date getScheduleDate() {
 		return scheduleDate;
 	}
 
-	public void setScheduleDate(String scheduleDate) {
+	public void setScheduleDate(Date scheduleDate) {
 		this.scheduleDate = scheduleDate;
 	}
 
-	public String getApplyDeadline() {
+	public Date getApplyDeadline() {
 		return applyDeadline;
 	}
 
-	public void setApplyDeadline(String applyDeadline) {
+	public void setApplyDeadline(Date applyDeadline) {
 		this.applyDeadline = applyDeadline;
 	}
 
@@ -278,11 +282,11 @@ public class Workshop {
 		this.isAttended = isAttended;
 	}
 
-	public String getAppliedDate() {
+	public Date getAppliedDate() {
 		return appliedDate;
 	}
 
-	public void setAppliedDate(String appliedDate) {
+	public void setAppliedDate(Date appliedDate) {
 		this.appliedDate = appliedDate;
 	}
 

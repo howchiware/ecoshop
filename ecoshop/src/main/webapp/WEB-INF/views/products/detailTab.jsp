@@ -147,7 +147,7 @@
 			<button type="button" class="inquiry-add-btn">상품 문의</button>
 		</div>
 
-		<div class="mt-4 p-2 list-question">
+		<div class="mt-4 p-2 list-inquiry">
 			<table class="inquiry-table table">
 				<tbody>
 					<tr>
@@ -156,30 +156,89 @@
 						<td class="table-header" width="150px">작성자</td>
 						<td class="table-header" width="230px">등록일</td>
 					</tr>
-					<tr>
-						<td class="inquiryStatus" width="150px">답변완료</td>
-						<td class="inquiryTitle">가격?</td>
-						<td class="inquiryName" width="150px">정**</td>
-						<td class="inquiryDate" width="230px">2025-07-04 13:21</td>
-
+					<tr class="inquiryTr" data-inquiryId="1">
+						<td class="inquiryStatus" data-inquiryId="1" width="150px">답변완료</td>
+						<td class="inquiryTitle" data-inquiryId="1">가격?</td>
+						<td class="inquiryName" data-inquiryId="1" width="150px">정**</td>
+						<td class="inquiryDate" data-inquiryId="1" width="230px">2025-07-04 13:21</td>
 					</tr>
-					<tr>
+					<tr class="inquiryDetailTr d-none">
+						<td colspan="4">
+							<div class="">
+								<div id="inquiryDetail1" class="inquiry-detailInfo">
+									<div class="inquiryDetailHeader">
+										<img src="/dist/images/person.png" class="user-icon">
+										<div class="inquiryDetailNTD">
+											<p class="inquiryDetailTitle">가격?</p>
+											<div class="inquiryDetailTD">
+												<p class="inquiryDetailName">정**</p>
+												<p class="inquiryDetailDate">2025-07-04 13:21</p>
+											</div>
+										</div>
+									</div>
+									<hr class="inquireDivider">
+									<div class="inquiryDetailBody">
+										<div class="inquireDetailContent">
+											<p class="content">타임세일이라 1990원이라고 되어 있는데<br>장바구니에 담으면 5990원으로 바뀌는 이유가 뭘까요?<br>아직 세일기간이 남았는데요...</p>
+										</div>
+										<hr class="inquireDivider">
+										<div class="inquireDetailAnswer">
+											<img src="/dist/images/person.png" class="answer-icon">
+											<div class="inquiryDetailNDC">
+												<div class="inquiryDetailAnswerND">
+													<p class="inquiryDetailAnswerName">관리자</p>
+													<p class="inquiryDetailAnswerDate">2025-04-05 12:09</p>
+												</div>
+												<div class="inquireDetailAnswerContent">
+													<p class="answerContent">안녕하세요, OO 샵입니다.<br>장바구니에 담으신 후 화면에서 5,990원으로 표기되나,<br>실제 결제단계에서 할인이 적용되는 것을 확인하실 수 있습니다.<br>결제화면에서 확인 부탁드리며, 할인이 적용되지 않을 경우 고객센터로 연락주시면 친절히 안내해드리겠습니다.<br>감사합니다 :-)</p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr class="inquiryTr secret-inquiry" data-inquiryId="2">
 						<td class="inquiryStatus" width="150px">답변완료</td>
 						<td class="inquiryTitle secret">비밀글입니다.<i class="bi bi-lock"></i></td>
 						<td class="inquiryName" width="150px">이**</td>
 						<td class="inquiryDate" width="230px">2025-07-01 13:21</td>
 					</tr>
-					<tr>
+					<tr class="inquiryDetailTr d-none">
+						<td colspan="4">
+							<div class="border rounded">
+								<div id="inquiryDetail2" class="inquiry-detailInfo">
+									3456
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr class="inquiryTr secret-inquiry" data-inquiryId="3">
 						<td class="inquiryStatus" width="150px">답변완료</td>
 						<td class="inquiryTitle secret">비밀글입니다.<i class="bi bi-lock"></i></td>
 						<td class="inquiryName" width="150px">정**</td>
 						<td class="inquiryDate" width="230px">2025-07-04 13:21</td>
 					</tr>
-					<tr>
+					<tr class="inquiryDetailTr d-none">
+						<td colspan="4">
+							<div class="border rounded">
+								<div id="inquiryDetail3" class="inquiry-detailInfo"></div>
+							</div>
+						</td>
+					</tr>
+					<tr class="inquiryTr" data-inquiryId="4">
 						<td class="inquiryStatus" width="150px">답변완료</td>
 						<td class="inquiryTitle">환불하고 싶을 때는 어떻게 하나요?</td>
 						<td class="inquiryName" width="150px">정**</td>
 						<td class="inquiryDate" width="230px">2025-07-04 13:21</td>
+					</tr>
+					<tr class="inquiryDetailTr d-none">
+						<td colspan="4">
+							<div class="border rounded">
+								<div id="inquiryDetail4" class="inquiry-detailInfo"></div>
+							</div>
+						</td>
 					</tr>
 				</tbody>
 			</table>

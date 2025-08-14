@@ -1,7 +1,6 @@
 package com.sp.app.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sp.app.common.PaginateUtil;
 import com.sp.app.common.StorageService;
 import com.sp.app.model.ProductInquiry;
-import com.sp.app.model.SessionInfo;
 import com.sp.app.service.ProductInquiryService;
 
 import jakarta.annotation.PostConstruct;
@@ -72,5 +70,4 @@ public class ProductInquiryController {
 		
 		return model;
 	}
-
 }

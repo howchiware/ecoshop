@@ -261,10 +261,8 @@ public class WorkshopServiceImpl implements WorkshopService {
 
 	// 워크샵 사진
 	@Override
-	public void insertWorkshopPhoto(Workshop dto, String workshopImagePath) throws Exception {
+	public void insertWorkshopPhoto(Workshop dto) throws Exception {
 		try {
-			dto.setWorkshopImagePath(workshopImagePath);
-
 			mapper.insertWorkshopPhoto(dto);
 		} catch (Exception e) {
 			log.info("insertWorkshopPhoto : ", e);
@@ -320,8 +318,6 @@ public class WorkshopServiceImpl implements WorkshopService {
 	    }
 	}
 
-
-	// 기존 메서드 대체
 	@Override
 	public void deleteWorkshopPhotosByWorkshopId(long workshopId, String uploadPath) throws Exception {
 	    try {
