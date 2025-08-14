@@ -15,7 +15,7 @@ public class Challenge {
     private String thumbnail;    
     private Integer rewardPoints; 
     private String challengeRegDate; // 챌린지 등록일  
-    private String challengeType;
+    private String challengeType; // 'DAILY' | 'SPECIAL'
     
     // 데일리챌린지(요일별)
     private Integer weekday;
@@ -30,7 +30,7 @@ public class Challenge {
     private Long participationId;
     private Long memberId;
     private String participateDate; 
-    private Integer participationStatus; // 챌린지 참여상태
+    private Integer participationStatus; // 챌린지 참여상태 , 0~5
     private String cancelAt;
     
     // 인증 게시글

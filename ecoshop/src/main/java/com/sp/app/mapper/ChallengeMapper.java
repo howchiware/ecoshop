@@ -5,25 +5,63 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.sp.app.model.Challenge;
 
 @Mapper
 public interface ChallengeMapper {
-	public Long challengeSeq() throws SQLException;
+	// 데일리 챌린지 7개 전체 
+	public List<Challenge> listDailyAll() throws SQLException;
+	
+	// 데일리 오늘 요일 챌린지 1개, (todayDow: 0=일 ~ 6=토)
+	public Challenge getTodayDaily(@Param("todayDow") int todayDow) throws SQLException;
     
-    public int insertChallenge(Challenge dto) throws SQLException;
-    public int insertDailyChallenge(Challenge dto) throws SQLException;
-    public int insertSpecialChallenge(Challenge dto) throws SQLException;
-    
-    public Challenge findById(long challengeId) throws SQLException;
-    public Challenge findDailyById(long challengeId) throws SQLException;
-    public Challenge findSpecialById(long challengeId) throws SQLException;
-    
-    public int dataCount(Map<String, Object> map) throws SQLException;
-    public List<Challenge> listChallenge(Map<String, Object> map) throws SQLException;
-    
-    public int updateChallenge(Challenge dto) throws SQLException;
-    public int deleteChallenge(long challengeId) throws SQLException;
-    
+	// SPECIAL (더보기 전용: 키셋 페이지네이션) 
+
+    /**
+     * 스페셜 카드 목록 - 더보기
+     * @param lastId 직전 페이지 마지막 challengeId (첫 로드 null)
+     * @param size   가져올 개수 (예: 6/9)
+     * @param sort   'POPULAR' | 'CLOSE_DATE' | 'RECENT'
+     */
+    public List<Challenge> listSpecialMore(
+            @Param("lastId") Long lastId,
+            @Param("size") int size,
+            @Param("sort") String sort
+    ) throws SQLException;
+
+
+    // 상세 
+    public Challenge findDailyDetail(@Param("challengeId") long challengeId) throws SQLException;
+    public Challenge findSpecialDetail(@Param("challengeId") long challengeId) throws SQLException;
+
+
+    // 참여(요일: 당일 1회 제한) 
+    public int countTodayDailyJoin(
+            @Param("memberId") long memberId,
+            @Param("challengeId") long challengeId
+    ) throws SQLException;
+
+    // 참여 시퀀스 
+    public Long nextParticipationId() throws SQLException;
+
+    /** 참여 등록 (parameterType = com.sp.app.model.Challenge) */
+    public int insertParticipation(Challenge dto) throws SQLException;
+
+    /** 참여 상태/취소일 갱신 (넘겨준 필드만 갱신) */
+    public int updateParticipation(Challenge dto) throws SQLException;
+
+
+    //스페셜 진행률(1~3일) - 진행 현황 조회
+
+    /**
+     * dayNumber(1~3), done(0/1) 형태로 반환
+     * resultType=map 이므로 List<Map<String, Object>>로 받기
+     */
+    public List<Map<String, Object>> selectSpecialProgress(
+            @Param("participationId") long participationId
+    ) throws SQLException;
+	
+	
 }

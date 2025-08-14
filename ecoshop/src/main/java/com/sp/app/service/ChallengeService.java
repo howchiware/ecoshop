@@ -6,16 +6,25 @@ import java.util.Map;
 import com.sp.app.model.Challenge;
 
 public interface ChallengeService {
-	public void insertChallenge(Challenge dto) throws Exception;
 
-    public int dataCount(Map<String, Object> map);
-    public List<Challenge> listChallenge(Map<String, Object> map);
+    // DAILY
+    public List<Challenge> listDailyAll();
+    public Challenge getTodayDaily();                   // 오늘 요일 자동 계산
+    public Challenge getTodayDaily(int todayDow);       // 0(일)~6(토) 직접 지정
 
-    // 상세 
-    public Challenge findById(long challengeId);
-    public Challenge findDailyById(long challengeId);
-    public Challenge findSpecialById(long challengeId);
+    // SPECIAL (더보기)
+    public List<Challenge> listSpecialMore(Long lastId, Integer size, String sort);
 
-    public void updateChallenge(Challenge dto) throws Exception;
-    public void deleteChallenge(long challengeId) throws Exception;
+    // 상세
+    public Challenge findDailyDetail(long challengeId);
+    public Challenge findSpecialDetail(long challengeId);
+
+    // 참여
+    public int countTodayDailyJoin(long memberId, long challengeId);
+    public Long nextParticipationId();
+    public void insertParticipation(Challenge dto) throws Exception;
+    public void updateParticipation(Challenge dto) throws Exception;
+
+    // 스페셜 진행률 1~3일 (dayNumber, done)
+    public List<Map<String, Object>> selectSpecialProgress(long participationId);
 }

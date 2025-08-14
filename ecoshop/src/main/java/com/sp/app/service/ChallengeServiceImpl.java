@@ -1,5 +1,7 @@
 package com.sp.app.service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -18,150 +20,135 @@ import lombok.extern.slf4j.Slf4j;
 public class ChallengeServiceImpl implements ChallengeService {
 	
 	private final ChallengeMapper mapper;
-
-	@Transactional
+	
+	/** Java DayOfWeek(1=MON..7=SUN) -> 0(SUN)..6(SAT) 변환 */
+    private int calcTodayDow() {
+        int dow = LocalDate.now().getDayOfWeek().getValue(); // 1~7 (MON..SUN)
+        return (dow == DayOfWeek.SUNDAY.getValue()) ? 0 : dow; // SUN->0, MON..SAT 그대로(1..6)
+    }
+	
+	
+	
 	@Override
-	public void insertChallenge(Challenge dto) throws Exception {
+	public List<Challenge> listDailyAll() {
 		try {
-			// 시퀀스로 새로운 챌린지 아이디 생성 
-			Long challengeId = mapper.challengeSeq();
-			dto.setChallengeId(challengeId);
-			
-			// 메인 챌린지 정보 저장 
-			mapper.insertChallenge(dto);
-			
-			 // 챌린지 타입에 따라 추가정보 저장(1:DAILY, 2: SPECIAL)
-			if("DAILY".equals(dto.getChallengeType())) {
-				mapper.insertDailyChallenge(dto);
-			} else if ("SPECIAL".equals(dto.getChallengeType())) {
-				mapper.insertSpecialChallenge(dto);
-			}
-			
+			return mapper.listDailyAll();
 		} catch (Exception e) {
-			log.info("insertChallenge : ", e);
-			throw e;
+			log.info("listDailyAll :", e);
+            
 		}
-		
+		return List.of();
 	}
 
 	@Override
-	public int dataCount(Map<String, Object> map) {
-		int result = 0;
-		try {
-			result = mapper.dataCount(map);
-		} catch (Exception e) {
-			log.info("dataCount : ", e);
-		}
-		return result;
+	public Challenge getTodayDaily() {
+		return getTodayDaily(calcTodayDow());
 	}
 
 	@Override
-	public List<Challenge> listChallenge(Map<String, Object> map) {
-		List<Challenge> list = null;
+	public Challenge getTodayDaily(int todayDow) {
 		try {
-			list = mapper.listChallenge(map);
+			return mapper.getTodayDaily(todayDow);
 		} catch (Exception e) {
-			log.info("listChallenge : ", e);
+			log.info("getTodayDaily :", e);
+            
 		}
-		return list;
+		return null;
 	}
 
 	@Override
-	public Challenge findById(long challengeId) {
-		Challenge dto = null;
+	public List<Challenge> listSpecialMore(Long lastId, Integer size, String sort) {
 		try {
-			// 챌린지 정보 조회 
-			dto = mapper.findById(challengeId);
-			
-			if (dto != null) {
-				// 챌린지 타입에 따라 상세정보 조회
-				if(dto.getChallengeType().equals("DAILY")) {
-					Challenge dailyDto  = mapper.findDailyById(challengeId);
-					if(dailyDto != null) {
-						dto.setWeekday(dailyDto.getWeekday());
-					}
-				} else if(dto.getChallengeType().equals("SPECIAL")) {
-					Challenge specialDto = mapper.findSpecialById(challengeId);
-					if(specialDto != null) {
-						dto.setStartDate(specialDto.getStartDate());
-						dto.setEndDate(specialDto.getEndDate());
-						dto.setRequireDays(specialDto.getRequireDays());
-						dto.setSpecialStatus(specialDto.getSpecialStatus());
-					}
-				}
-			}
-			
+			int pageSize = (size == null || size <= 0 || size > 50) ? 6 : size;
+			String s = (sort == null || sort.isBlank()) ? "RECENT" : sort;
+			return mapper.listSpecialMore(lastId, pageSize, s);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.info("listSpecialMore :", e);
+            
 		}
-		return dto;
+		return List.of();
 	}
 
 	@Override
-	public Challenge findDailyById(long challengeId) {
-		Challenge dto = null;
+	public Challenge findDailyDetail(long challengeId) {
 		try {
-			dto = mapper.findDailyById(challengeId);
-			if(dto != null) {
-				Challenge dailyDto = mapper.findDailyById(challengeId);
-				if(dailyDto != null) {
-					dto.setWeekday(dailyDto.getWeekday());
-				}
-			}
+			return mapper.findDailyDetail(challengeId);
 		} catch (Exception e) {
-			log.info("findDailyById : ", e);
+			log.info("findDailyDetail :", e);
+           
 		}
-		return dto;
+		 return null;
 	}
 
 	@Override
-	public Challenge findSpecialById(long challengeId) {
-		Challenge dto = null;
+	public Challenge findSpecialDetail(long challengeId) {
 		try {
-			dto = mapper.findSpecialById(challengeId);
-			if(dto != null) {
-				Challenge specialDto = mapper.findSpecialById(challengeId);
-				if(specialDto != null) {
-					dto.setStartDate(specialDto.getStartDate());
-					dto.setEndDate(specialDto.getEndDate());
-					dto.setRequireDays(specialDto.getRequireDays());
-					dto.setSpecialStatus(specialDto.getSpecialStatus());
-					
-				}
-			}
+			return mapper.findSpecialDetail(challengeId);
 		} catch (Exception e) {
-			log.info("findSpecialById : ", e);
-			
+			log.info("findSpecialDetail :", e);
+            
 		}
-		return dto;
+		return null;
 	}
 
 	@Override
-	public void updateChallenge(Challenge dto) throws Exception {
+	public int countTodayDailyJoin(long memberId, long challengeId) {
 		try {
-			if(dto.getChallengeType() != null) {
-				dto.setChallengeType(dto.getChallengeType().toUpperCase());
-			}
-			
-			mapper.updateChallenge(dto);
-			// 데일리/스페셜 업데이트가 필요하면
-            // - mapper에 updateDailyChallenge / updateSpecialChallenge 추가해서 타입 분기 처리
+			return mapper.countTodayDailyJoin(memberId, challengeId);
 		} catch (Exception e) {
-			log.info("updateChallenge : ", e);
+			log.info("countTodayDailyJoin :", e);
+            
+		}
+		return 0;
+	}
+
+	@Override
+	public Long nextParticipationId() {
+		try {
+			 return mapper.nextParticipationId();
+		} catch (Exception e) {
+			log.info("nextParticipationId :", e);
+            
+		}
+		return null;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void insertParticipation(Challenge dto) throws Exception {
+		try {
+			if(dto.getParticipationStatus() == null) dto.setParticipationStatus(0);
+			mapper.insertParticipation(dto);
+		} catch (Exception e) {
+			log.info("insertParticipation :", e);
             throw e;
 		}
 		
 	}
 
 	@Override
-	public void deleteChallenge(long challengeId) throws Exception {
+	@Transactional(rollbackFor = Exception.class)
+	public void updateParticipation(Challenge dto) throws Exception {
 		try {
-			mapper.deleteChallenge(challengeId);
+			mapper.updateParticipation(dto);
 		} catch (Exception e) {
-			log.info("deleteChallenge : ", e);
+			log.info("updateParticipation :", e);
             throw e;
 		}
 		
 	}
+
+	@Override
+	public List<Map<String, Object>> selectSpecialProgress(long participationId) {
+		try {
+			return mapper.selectSpecialProgress(participationId);
+		} catch (Exception e) {
+			 log.info("selectSpecialProgress :", e);
+	            
+		}
+		return List.of();
+	}
+	
+	
 	
 }
