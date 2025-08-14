@@ -55,7 +55,7 @@
 						</ul>
 					</li>
 					<li class="nav-item"><a class="nav-link" href="#">워크샵</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">챌린지</a></li>
+					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/challenge/list">챌린지</a></li>
 					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">콘텐츠</a>
 						<ul class="dropdown-menu">
 							<li><a class="dropdown-item" href="#">매거진</a></li>
