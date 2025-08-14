@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.admin.mapper.CategoryManageMapper">
+	<select id="listCategory" parameterType="com.sp.app.admin.model.CategoryManage">
+		SELECT categoryId, categoryName, enabled, orderNo
+		FROM productCategory
+		ORDER BY orderNo ASC
+	</select>
+
+	<insert id="insertCategory" parameterType="com.sp.app.admin.model.CategoryManage">
+		INSERT INTO productCategory(categoryId, categoryName, enabled, orderNo)
+		VALUES(productCategory_seq.NEXTVAL, #{categoryName}, 1, #{orderNo})
+	</insert>	
+	
+	<update id="updateCategory" parameterType="com.sp.app.admin.model.CategoryManage">
+		UPDATE productCategory SET categoryName = #{categoryName}, enabled = #{enabled}, orderNo = #{orderNo}
+		WHERE categoryId = #{categoryId}
+	</update>
+	
+	<delete id="deleteCategory" parameterType="long">
+		DELETE FROM productCategory
+		WHERE categoryId = #{categoryId}
+	</delete>
+</mapper>

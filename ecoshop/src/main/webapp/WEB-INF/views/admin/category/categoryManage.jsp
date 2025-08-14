@@ -135,7 +135,7 @@ text-align: center;
 	text-align: right;
 }
 
-.category-modify-btn {
+.category-modify-btn, .category-modify-btnOk {
 	font-size: 20px;
 }
 
@@ -158,8 +158,8 @@ text-align: center;
 		
 		<hr>
 		
-		<form name="categoryManageForm">
-			<div class="outside">
+		<div class="outside">
+			<form name="categoryManageForm">
 				<div class="section ps-5 pe-5 left">
 					<div>
 						<div class="row gy-4 m-0">
@@ -173,18 +173,18 @@ text-align: center;
 										<tr>
 											<td>카테고리명</td>
 											<td>
-												<input class="category-input" name="categoryName">
+												<input type="text" class="category-input" name="categoryName">
 											</td>
 										</tr>
 										<tr>
 											<td>순서</td>
 											<td>
-												<input class="category-input" name="categoryOrder">
+												<input type="text" class="category-input" name="orderNo">
 											</td>
 										</tr>
 									</table>
 									<div class="addCategory">
-										<button class="addCategoryBtn">등록</button>
+										<button type="button" class="addCategoryBtn">등록</button>
 									</div>
 								</div>
 								
@@ -192,6 +192,8 @@ text-align: center;
 						</div>
 					</div>
 				</div>
+			</form>
+
 				
 				<div class="hr-vertical"></div>
 				
@@ -213,135 +215,7 @@ text-align: center;
 												<th width="100">변경</th>
 											</tr>
 										</thead>
-										<tbody class="category-list">
-											
-												<tr>
-													<td> <input type="text" name="category" class="form-control" disabled value="카테고리1"> </td>
-													<td>
-														<select name="enabled" class="form-select" disabled>
-															<option value="1" selected>활성</option>
-															<option value="0">비활성</option>
-														</select>
-													</td>
-													<td> <input type="text" name="orderNo" class="form-control" disabled value="1"> </td>
-													<td align="center">
-														<input type="hidden" name="categoryNum" value="1">
-														<div class="category-modify-btn">
-															<span class="span-icon btnCategoryUpdate" title="수정"><i class="bi bi-pencil-square"></i></span>&nbsp;&nbsp;
-															<span class="span-icon btnCategoryDeleteOk" title="삭제"><i class="bi bi-trash"></i></span>
-														</div>
-														<div class="category-modify-btnOk" style="display:none">
-															<span class="span-icon btnCategoryUpdateOk" title="수정완료"><i class="bi bi-check2-square"></i></span>&nbsp;&nbsp;
-															<span class="span-icon btnCategoryUpdateCancel" title="수정취소"><i class="bi bi-arrow-clockwise"></i></span>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td> <input type="text" name="category" class="form-control" disabled value="카테고리2"> </td>
-													<td>
-														<select name="enabled" class="form-select" disabled>
-															<option value="1" selected>활성</option>
-															<option value="0">비활성</option>
-														</select>
-													</td>
-													<td> <input type="text" name="orderNo" class="form-control" disabled value="2"> </td>
-													<td align="center">
-														<input type="hidden" name="categoryNum" value="2">
-														<div class="category-modify-btn">
-															<span class="span-icon btnCategoryUpdate" title="수정"><i class="bi bi-pencil-square"></i></span>&nbsp;&nbsp;
-															<span class="span-icon btnCategoryDeleteOk" title="삭제"><i class="bi bi-trash"></i></span>
-														</div>
-														<div class="category-modify-btnOk" style="display:none">
-															<span class="span-icon btnCategoryUpdateOk" title="수정완료"><i class="bi bi-check2-square"></i></span>&nbsp;&nbsp;
-															<span class="span-icon btnCategoryUpdateCancel" title="수정취소"><i class="bi bi-arrow-clockwise"></i></span>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td> <input type="text" name="category" class="form-control" disabled value="카테고리3"> </td>
-													<td>
-														<select name="enabled" class="form-select" disabled>
-															<option value="1" selected>활성</option>
-															<option value="0">비활성</option>
-														</select>
-													</td>
-													<td> <input type="text" name="orderNo" class="form-control" disabled value="3"> </td>
-													<td align="center">
-														<input type="hidden" name="categoryNum" value="3">
-														<div class="category-modify-btn">
-															<span class="span-icon btnCategoryUpdate" title="수정"><i class="bi bi-pencil-square"></i></span>&nbsp;&nbsp;
-															<span class="span-icon btnCategoryDeleteOk" title="삭제"><i class="bi bi-trash"></i></span>
-														</div>
-														<div class="category-modify-btnOk" style="display:none">
-															<span class="span-icon btnCategoryUpdateOk" title="수정완료"><i class="bi bi-check2-square"></i></span>&nbsp;&nbsp;
-															<span class="span-icon btnCategoryUpdateCancel" title="수정취소"><i class="bi bi-arrow-clockwise"></i></span>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td> <input type="text" name="category" class="form-control" disabled value="카테고리3"> </td>
-													<td>
-														<select name="enabled" class="form-select" disabled>
-															<option value="1" selected>활성</option>
-															<option value="0">비활성</option>
-														</select>
-													</td>
-													<td> <input type="text" name="orderNo" class="form-control" disabled value="3"> </td>
-													<td align="center">
-														<input type="hidden" name="categoryNum" value="3">
-														<div class="category-modify-btn">
-															<span class="span-icon btnCategoryUpdate" title="수정"><i class="bi bi-pencil-square"></i></span>&nbsp;&nbsp;
-															<span class="span-icon btnCategoryDeleteOk" title="삭제"><i class="bi bi-trash"></i></span>
-														</div>
-														<div class="category-modify-btnOk" style="display:none">
-															<span class="span-icon btnCategoryUpdateOk" title="수정완료"><i class="bi bi-check2-square"></i></span>&nbsp;&nbsp;
-															<span class="span-icon btnCategoryUpdateCancel" title="수정취소"><i class="bi bi-arrow-clockwise"></i></span>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td> <input type="text" name="category" class="form-control" disabled value="카테고리3"> </td>
-													<td>
-														<select name="enabled" class="form-select" disabled>
-															<option value="1" selected>활성</option>
-															<option value="0">비활성</option>
-														</select>
-													</td>
-													<td> <input type="text" name="orderNo" class="form-control" disabled value="3"> </td>
-													<td align="center">
-														<input type="hidden" name="categoryNum" value="3">
-														<div class="category-modify-btn">
-															<span class="span-icon btnCategoryUpdate" title="수정"><i class="bi bi-pencil-square"></i></span>&nbsp;&nbsp;
-															<span class="span-icon btnCategoryDeleteOk" title="삭제"><i class="bi bi-trash"></i></span>
-														</div>
-														<div class="category-modify-btnOk" style="display:none">
-															<span class="span-icon btnCategoryUpdateOk" title="수정완료"><i class="bi bi-check2-square"></i></span>&nbsp;&nbsp;
-															<span class="span-icon btnCategoryUpdateCancel" title="수정취소"><i class="bi bi-arrow-clockwise"></i></span>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td> <input type="text" name="category" class="form-control" disabled value="카테고리3"> </td>
-													<td>
-														<select name="enabled" class="form-select" disabled>
-															<option value="1" selected>활성</option>
-															<option value="0">비활성</option>
-														</select>
-													</td>
-													<td> <input type="text" name="orderNo" class="form-control" disabled value="3"> </td>
-													<td align="center">
-														<input type="hidden" name="categoryNum" value="3">
-														<div class="category-modify-btn">
-															<span class="span-icon btnCategoryUpdate" title="수정"><i class="bi bi-pencil-square"></i></span>&nbsp;&nbsp;
-															<span class="span-icon btnCategoryDeleteOk" title="삭제"><i class="bi bi-trash"></i></span>
-														</div>
-														<div class="category-modify-btnOk" style="display:none">
-															<span class="span-icon btnCategoryUpdateOk" title="수정완료"><i class="bi bi-check2-square"></i></span>&nbsp;&nbsp;
-															<span class="span-icon btnCategoryUpdateCancel" title="수정취소"><i class="bi bi-arrow-clockwise"></i></span>
-														</div>
-													</td>
-												</tr>
-																				
+										<tbody class="category-list">						
 										</tbody>
 									</table>
 								</div>
@@ -350,11 +224,139 @@ text-align: center;
 					</div>
 				</div>				
 			</div>
-		</form>
-	</div>
+		</div>
 </main>
 
 <script type="text/javascript">
+window.addEventListener('DOMContentLoaded', () => {
+	listAllCategory();
+});
+
+//카테고리 리스트
+function listAllCategory() {
+	let url = '${pageContext.request.contextPath}/admin/category/listAllCategory';
+	
+	const fn = function(data) {
+		$('.category-list').html(data);
+	};
+	
+	ajaxRequest(url, 'get', null, 'text', fn);
+}
+
+// 카테고리 등록
+$(function(){
+	$('.addCategoryBtn').on('click', function(){
+		const $div = $(this).closest('div').parent();
+		
+		let categoryName = $div.find('input[name=categoryName]').val().trim();
+		let orderNo = $div.find('input[name=orderNo]').val().trim();
+		
+		if(! categoryName){
+			$div.find('input[name=categoryName]').focus();
+			return false;
+		}
+		
+		if(! /^\d+$/.test(orderNo)) {
+			$div.find('input[name=orderNo]').focus();
+			return false;
+		}
+		
+		let url = '${pageContext.request.contextPath}/admin/category/insertCategory';
+		let params = {categoryName:categoryName, orderNo:orderNo};
+		
+		const fn = function(data){
+			$('form[name=categoryManageForm]')[0].reset();
+			
+			listAllCategory();
+		};
+		
+		ajaxRequest(url, 'post', params, 'json', fn);
+	});
+});
+
+//카테고리 수정
+$(function(){
+	let $cloneTr = null;
+	
+	$('.input-area').on('click', '.btnCategoryUpdate', function(){
+		const $tr = $(this).closest('tr');
+		
+		$cloneTr = $tr.clone(true); // clone
+		
+		$tr.find('input').prop('disabled', false);
+		$tr.find('select').prop('disabled', false);
+		$tr.find('input[name=categoryName]').focus();
+		
+		$tr.find('.category-modify-btn').hide();
+		$tr.find('.category-modify-btnOk').show();		
+	});
+
+	// 카테고리 수정 완료
+	$('.input-area').on('click', '.btnCategoryUpdateOk', function(){
+		const $tr = $(this).closest('tr');
+		
+		let categoryId = $tr.find('input[name=categoryId]').val();
+		let categoryName = $tr.find('input[name=categoryName]').val().trim();
+		let enabled = $tr.find('select[name=enabled]').val();
+		let orderNo = $tr.find('input[name=orderNo]').val();
+		
+		if(! categoryName) {
+			$tr.find('input[name=categoryName]').focus();
+			return false;
+		}
+		
+		if(! /^[0-9]+$/.test(orderNo)) {
+			$tr.find('input[name=orderNo]').focus();
+			return false;
+		}
+		
+		let url = '${pageContext.request.contextPath}/admin/category/updateCategory';
+		let params = {categoryId:categoryId, categoryName:categoryName, enabled:enabled, orderNo:orderNo};
+		const fn = function(data){
+			let state = data.state;
+			if(state === 'false') {
+				alert('카테고리 수정이 불가능합니다.');
+				return false;
+			}
+			
+			$cloneTr = null;
+			
+			listAllCategory();
+		};
+		
+		ajaxRequest(url, 'post', params, 'json', fn);
+	});
+
+	// 카테고리 수정 취소
+	$('.input-area').on('click', '.btnCategoryUpdateCancel', function(){
+		const $tr = $(this).closest('tr');
+
+		if( $cloneTr ) {
+			$tr.replaceWith($cloneTr);
+		}
+		
+		$cloneTr = null;
+	});
+});
+
+// 카테고리 삭제
+$(function(){
+	$('.input-area').on('click', '.btnCategoryDeleteOk', function(){
+		if(! confirm('카테고리를 삭제하시겠습니까 ? ')) {
+			return false;
+		}
+		
+		const $tr = $(this).closest('tr');
+		let categoryId = $tr.find('input[name=categoryId]').val();
+		
+		let url = '${pageContext.request.contextPath}/admin/category/deleteCategory';
+		const fn = function(data) {
+			listAllCategory();
+		};
+		
+		ajaxRequest(url, 'post', {categoryId:categoryId}, 'json', fn);
+	});
+});
 
 </script>
 
@@ -362,7 +364,9 @@ text-align: center;
 	<jsp:include page="/WEB-INF/views/admin/layout/footer.jsp"/>
 </footer>
 
-<jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp"/>
+<!-- Vendor JS Files -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>	
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
 </body>
 </html>

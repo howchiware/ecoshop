@@ -232,9 +232,25 @@ body {
 						<table class="form-table">
 							<tr>
 								<th>카테고리</th>
-								<td><select name="categoryId" class="st">
+								<select class="form-select requiredOption" data-optionNum="${listOption[0].optionNum}" ${dto.totalStock < 1 ? 'disabled':''}>
+									<option value="">${listOption[0].optionName}</option>
+									<c:forEach var="vo" items="${listOptionDetail}">
+										<c:if test="${dto.optionCount == 1}">
+											<option value="${vo.detailNum}" data-stockNum="${vo.stockNum}" data-totalStock="${vo.totalStock}" data-optionValue="${vo.optionValue}">${vo.optionValue}${vo.totalStock<5?' 재고 - '+= vo.totalStock:''}</option>
+										</c:if>
+										<c:if test="${dto.optionCount != 1}">
+											<option value="${vo.detailNum}">${vo.optionValue}</option>
+										</c:if>
+									</c:forEach>
+								</select>
+								<td>
+									<select name="categoryId" class="st">
 										<option value="">::카테고리 선택::</option>
-								</select></td>
+										<c:forEach var="vo" items="${listCategory}">
+											<option value="${vo.categoryId}">${vo.categoryName}</option>
+										</c:forEach>
+									</select>
+								</td>
 							</tr>
 						</table>
 					</div>
@@ -289,35 +305,12 @@ body {
 					<div class="card-body">
 						<table class="form-table">
 							<tr>
-								<th>원가</th>
+								<th>판매가</th>
 								<td>
 									<div class="input-flex">
 										<input type="text" name="originalPrice"
-											placeholder="원가를 입력하세요"> <span>원</span>
+											placeholder="판매가를 입력하세요"> <span>원</span>
 									</div>
-								</td>
-							</tr>
-							<tr>
-								<th>할인율</th>
-								<td>
-									<div class="input-flex">
-										<input type="text" name="gongguPrice"
-											placeholder="공동구매 할인율을 입력하세요"> <span>%</span>
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<th>재고</th>
-								<td>
-									<div class="input-flex">
-										<input type="text" name="limitCount"
-											placeholder="재고 수량을 입력하세요"> <span>개</span>
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<th>마감일</th>
-								<td><input type="date" name="deadline" class="deadLine">
 								</td>
 							</tr>
 						</table>
