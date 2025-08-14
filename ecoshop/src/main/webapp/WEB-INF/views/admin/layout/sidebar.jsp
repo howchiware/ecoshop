@@ -31,9 +31,9 @@
       <a href="#"> 상품 관리 > </a>
       <ul class="submenu">
         <li><a href="/admin/product/totalProductList"> 전체 상품 관리</a></li>
-        <li><a href="#"> 상품 등록</a></li>
+        <li><a href="/admin/product/productAddForm"> 상품 등록</a></li>
         <li><a href="/admin/product/deliveryInfo"> 배송 정책 및 배송비</a></li>
-        <li><a href="#"> 리뷰 및 Q&A 관리</a></li>
+        <li><a href="/admin/product/productReview"> 리뷰 및 Q&A 관리</a></li>
       </ul>
     </li>
     <li><a href="/admin/order/orderManage"> 주문 상태 관리</a></li>
