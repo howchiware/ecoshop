@@ -45,99 +45,113 @@
 	
 	<!-- 상품 리뷰 탭 Content -->
 	<div class="tab-pane fade" id="tab-pane-2" role="tabpanel" aria-labelledby="tab-2" tabindex="0">
-		<div class="mt-3 pt-3 border-bottom">
-			<p class="fs-4 fw-semibold">상품 리뷰</p> 
-		</div>
-
-		<div class="row border-bottom">
-			<div class="col p-3 text-center">
-				<div class="fs-6 fw-semibold">상품만족도</div>
-				<div class="score-star review-score-star">
-					<fmt:parseNumber var="intScore" value="${dto.score}" integerOnly="true" type="number"/>
-					<c:forEach var="i" begin="1" end="${intScore}">
-						<i class="bi bi-star-fill"></i>
-					</c:forEach>
-					<c:if test="${dto.score -  intScore >= 0.5}">
-						<i class="bi bi bi-star-half"></i>
-						<c:set var="intScore" value="${intScore+1}"/>
-					</c:if>
-					<c:forEach var="i" begin="${intScore + 1}" end="5">
-						<i class="bi bi-star"></i>
-					</c:forEach>
-				</div>
-				<div class="fs-2">
-					<label class="review-score">${dto.score} / 5</label> 
-				</div>
-			</div>
-			
-			<div class="col p-3 text-center">
-				<div class="fs-6 fw-semibold">리뷰수</div>
-				<div class="fs-2"><i class="bi bi-chat-right-text"></i></div>
-				<div class="fs-2 review-reviewCount">${dto.reviewCount}</div>
-			</div> 
-			
-			<div class="col p-3 text-center review-rate">
-				<div class="fs-6 fw-semibold">평점비율</div>
-				<div class="p-1 score-5">
-					<span class="graph-title">5점</span>
-					<span class="graph">
-						<c:forEach var="n" begin="1" end="10">
-							<label class="one-space"></label>
-						</c:forEach>
-					</span>
-					<span class="graph-rate">0%</span>
-				</div>
-				<div class="p-1 score-4">
-					<span class="graph-title">4점</span>
-					<span class="graph">
-						<c:forEach var="n" begin="1" end="10">
-							<label class="one-space"></label>
-						</c:forEach>
-					</span>
-					<span class="graph-rate">0%</span>
-				</div>
-				<div class="p-1 score-3">
-					<span class="graph-title">3점</span>
-					<span class="graph">
-						<c:forEach var="n" begin="1" end="10">
-							<label class="one-space"></label>
-						</c:forEach>
-					</span>
-					<span class="graph-rate">0%</span>
-				</div>
-				<div class="p-1 score-2">
-					<span class="graph-title">2점</span>
-					<span class="graph">
-						<c:forEach var="n" begin="1" end="10">
-							<label class="one-space"></label>
-						</c:forEach>
-					</span>
-					<span class="graph-rate">0%</span>
-				</div>
-				<div class="p-1 score-1">
-					<span class="graph-title">1점</span>
-					<span class="graph">
-						<c:forEach var="n" begin="1" end="10">
-							<label class="one-space"></label>
-						</c:forEach>
-					</span>
-					<span class="graph-rate">0%</span>
-				</div>
-			</div>
-		</div>
-
-		<div class="row mt-3 reviewSort-area">
-			<div class="col">&nbsp;</div>
-			<div class="col-auto text-end">
-				<select class="form-select reviewSortBy" style="width: 180px;">
-					<option value="0"> 출력 순서 </option>
-					<option value="1"> 최신 글 </option>
-					<option value="2"> 평점 높은순 </option>
-					<option value="3"> 평점 낮은순 </option>
-				</select>
-			</div>
-		</div>
-		<div class="mt-2 list-review"></div>
+	    <div class="row mt-3 pt-3">
+	        <p class="fs-6">구매평(30)</p>
+	        <div class="col">
+	            <i class="bi bi-star-fill fs-4 text-warning"></i>
+	            <i class="bi bi-star-fill fs-4 text-warning"></i>
+	            <i class="bi bi-star-fill fs-4 text-warning"></i>
+	            <i class="bi bi-star-fill fs-4 text-warning"></i>
+	            <i class="bi bi-star-half fs-4 text-warning"></i>
+	        </div>
+	        <div class="col">
+	            <p style="text-align: right; text-decoration: underline;">구매평 작성하기</p>
+	        </div>
+	    </div>
+	
+	    <div class="image-grid">
+	        <div>
+	            <a href="#">
+	                <img src="${pageContext.request.contextPath}/dist/images/Group 303.png" class="image-photo" alt="">
+	            </a>
+	        </div>
+	        <div>
+	            <a href="#">
+	                <img src="${pageContext.request.contextPath}/dist/images/Group 303.png" class="image-photo" alt="">
+	            </a>
+	        </div>
+	        <div>
+	            <a href="#">
+	                <img src="${pageContext.request.contextPath}/dist/images/Group 303.png" class="image-photo" alt="">
+	            </a>
+	        </div>
+	        <div>
+	            <a href="#">
+	                <img src="${pageContext.request.contextPath}/dist/images/Group 303.png" class="image-photo" alt="">
+	            </a>
+	        </div>
+	        <div>
+	            <a href="#">
+	                <img src="${pageContext.request.contextPath}/dist/images/Group 303.png" class="image-photo" alt="">
+	                <button type="button" class="moreBtn">더보기 &gt;</button>
+	            </a>
+	        </div>
+	    </div>
+	
+	    <div class="row mt-3 reviewSort-area">
+	        <div class="col">
+	            <i class="bi bi-image"></i> <span>포토 구매평만 보기</span>
+	        </div>
+	        <div class="col-auto text-end">
+	            <div class="dropdown">
+	                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+	                    전체 평점 보기
+	                </button>
+	                <ul class="dropdown-menu">
+	                    <li><a class="dropdown-item" href="#" data-value="0">전체 평점 보기</a></li>
+	                    <li><a class="dropdown-item" href="#" data-value="5">최고&nbsp; 
+	                        <i class="bi bi-star-fill text-warning"></i>
+	                        <i class="bi bi-star-fill text-warning"></i>
+	                        <i class="bi bi-star-fill text-warning"></i>
+	                        <i class="bi bi-star-fill text-warning"></i>
+	                        <i class="bi bi-star-fill text-warning"></i>
+	                    </a></li>
+	                    <li><a class="dropdown-item" href="#" data-value="4">좋음&nbsp; 
+	                        <i class="bi bi-star-fill text-warning"></i>
+	                        <i class="bi bi-star-fill text-warning"></i>
+	                        <i class="bi bi-star-fill text-warning"></i>
+	                        <i class="bi bi-star-fill text-warning"></i>
+	                        <i class="bi bi-star text-warning"></i>
+	                    </a></li>
+	                    <li><a class="dropdown-item" href="#" data-value="3">보통&nbsp; 
+	                        <i class="bi bi-star-fill text-warning"></i>
+	                        <i class="bi bi-star-fill text-warning"></i>
+	                        <i class="bi bi-star-fill text-warning"></i>
+	                        <i class="bi bi-star text-warning"></i>
+	                        <i class="bi bi-star text-warning"></i>
+	                    </a></li>
+	                    <li><a class="dropdown-item" href="#" data-value="2">별로&nbsp; 
+	                        <i class="bi bi-star-fill text-warning"></i>
+	                        <i class="bi bi-star-fill text-warning"></i>
+	                        <i class="bi bi-star text-warning"></i>
+	                        <i class="bi bi-star text-warning"></i>
+	                        <i class="bi bi-star text-warning"></i>
+	                    </a></li>
+	                    <li><a class="dropdown-item" href="#" data-value="1">나쁨&nbsp; 
+	                        <i class="bi bi-star-fill text-warning"></i>
+	                        <i class="bi bi-star text-warning"></i>
+	                        <i class="bi bi-star text-warning"></i>
+	                        <i class="bi bi-star text-warning"></i>
+	                        <i class="bi bi-star text-warning"></i>
+	                    </a></li>
+	                </ul>
+	            </div>
+	        </div>
+	    </div>
+	    <hr>
+	    <div>
+	        <i class="bi bi-star-fill text-warning"></i>
+	        <i class="bi bi-star-fill text-warning"></i>
+	        <i class="bi bi-star-fill text-warning"></i>
+	        <i class="bi bi-star-fill text-warning"></i>
+	        <i class="bi bi-star-fill text-warning"></i>
+	        <p style="padding-top:10px;">너무 부드러운 비누! 또 구매할거에요.</p>
+	        <img alt="" src="${pageContext.request.contextPath}/dist/images/sample1.jpg" style="width:100px; height:100px;">
+	        <p>3명에게 도움된 리뷰</p>
+	        <button type="button"><i class="bi bi-hand-thumbs-up"></i>도움이 돼요</button>
+	        <button type="button"><i class="bi bi-hand-thumbs-down"></i>도움이 안돼요</button>
+	        <hr>
+	    </div>
 	</div>
 	
 	<!-- 상품 문의 탭 Content -->

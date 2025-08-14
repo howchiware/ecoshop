@@ -191,6 +191,32 @@
   div.inquireDetailContent{padding: 15px 10px;}
   
   hr.inquireDivider{margin: 5px 0px;}
+  
+  .image-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); 
+  gap: 4px; 
+  overflow: hidden;
+  }
+
+  .image-grid > div {
+  border: 1px solid #c6c6c6;
+  width: 240px;
+  height: 210px;
+  
+  }
+
+.image-grid img {
+  width: 100%;
+  height: auto; 
+  }
+
+.image-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+  
 </style>
 
 </head>
