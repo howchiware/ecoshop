@@ -41,7 +41,7 @@ public class MemberManageController {
 	
 	@GetMapping("list")
 	public String handleHome(@RequestParam(name = "page", defaultValue = "1") int current_page,
-			@RequestParam(name = "schType", defaultValue = "all") String schType,
+			@RequestParam(name = "schType", defaultValue = "") String schType,
 			@RequestParam(name = "kwd", defaultValue = "") String kwd, 
 			@RequestParam(name = "role", defaultValue = "1") int  role,
 			@RequestParam(name = "enabled", defaultValue = "") String enabled,
@@ -91,7 +91,7 @@ public class MemberManageController {
 			model.addAttribute("kwd", kwd);
 			
 		} catch (Exception e) {
-			log.info("main", e);
+			log.info("list", e);
 			
 			throw e;
 		}
@@ -100,12 +100,12 @@ public class MemberManageController {
 	}
 	
 	@GetMapping("profile")
-	public String detaileMember(@RequestParam(name = "memberId") Long member_id, 
+	public String detaileMember(@RequestParam(name = "memberId") Long memberId, 
 			@RequestParam(name = "page") String page, Model model, 
 			HttpServletResponse resp) throws Exception {
 		
 		try {
-			MemberManage dto = Objects.requireNonNull(service.findById(member_id));
+			MemberManage dto = Objects.requireNonNull(service.findById(memberId));
 			
 			model.addAttribute("dto", dto);
 			model.addAttribute("page", page);

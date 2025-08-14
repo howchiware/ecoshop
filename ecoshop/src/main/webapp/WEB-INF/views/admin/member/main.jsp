@@ -87,6 +87,10 @@
   pointer-events: none;
   box-shadow: none;
 }
+
+.modal-backdrop { z-index: 9998 !important; }
+  .modal { z-index: 9999 !important; }
+  body.modal-open { overflow: hidden; padding-right: 0 !important; }
 </style>
 </head>
 <body>
@@ -125,6 +129,20 @@
      </div>
   </div>
 </main>
+
+<div class="modal fade" id="myDialogModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="myDialogModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="myDialogModalLabel">직원 등록</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body p-2">
+			</div>
+		</div>
+	</div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.6.0/echarts.min.js"></script>
@@ -178,7 +196,7 @@ function resetList() {
 
 // 검색
 function searchList() {
-	const f = document.memberSearchFrom;
+	const f = document.memberSearchForm;
 	
 	f.schType.value = $('#searchType').val();
 	f.kwd.value = $('#keyword').val();
@@ -186,30 +204,9 @@ function searchList() {
 	listMember(1);
 }
 
-// 상세보기
-function profile(memberId, page){
-	let url = '${pageContext.request.contextPath}/admin/member/profile';
-	let params = 'memberId=' + memberId + '&page=' + page;
-	
-	const fn = function(data){
-		$('#nav-tabContent').html(data);
-	};
-
-	ajaxRequest(url, 'get', params, 'text', fn);
-}
-
-function updateMember(){
-	$('#memberUpdateDialogModal').appendTo('body');
-	$('#memberUpdateDialogModal').modal('show');
-}
-
-// 회원 정보 수정
+//회원 정보 수정
 function updateMemberOk(page) {
 	const f = document.memberUpdateForm;
-	
-	if(f.userLevel.value === '0' || f.userLevel.value === '50') {
-		f.enabled.value = '0';	
-	}
 	
 	if( ! confirm('회원 정보를 수정하시겠습니까?')){
 		return;
@@ -225,6 +222,39 @@ function updateMemberOk(page) {
 	
 	$('#memberUpdateDialogModal').modal('hide');
 }
+
+// 상세보기
+function profile(memberId, page){
+	let url = '${pageContext.request.contextPath}/admin/member/profile';
+	let params = 'memberId=' + memberId + '&page=' + page;
+	
+	const fn = function(data){
+		$('#nav-tabContent').html(data);
+	};
+	
+	ajaxRequest(url, 'get', params, 'text', fn);
+}
+
+function updateMember(){
+	$('#memberUpdateDialogModal').appendTo('body');
+	$('#memberUpdateDialogModal').modal('show');
+}
+
+// 회원 등록
+function writeForm(){
+	$('#myDialogModalLabel').text('회원 등록');
+	
+	let url = '${pageContext.request.contextPath}/admin/member/write';
+	
+	const fn = function(data){
+		$('#myDialogModal .modal-body').html(data);
+		$('#myDialogModal').modal("show");
+	}
+	
+	ajaxRequest(url, 'get', null, 'text', fn);
+}
+
+
 
 function deleteMember(memberIdx) {
 	// 회원 삭제

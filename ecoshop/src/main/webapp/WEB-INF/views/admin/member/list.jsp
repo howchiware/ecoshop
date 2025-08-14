@@ -2,17 +2,19 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
     <!-- 회원 목록 -->
+    
     <div class="col-md-6 text-end">
 		<div class="form-search">
 			<select id="searchType" name="schType">
 				<option value="memberId"  ${schType=="memberId" ? "selected":""}>아이디</option>
 				<option value="name"      ${schType=="name" ? "selected":""}>이름</option>
-				<option value="email"     ${schType=="email" ? "selected":""}>이메일</option>
-				<option value="tel"       ${schType=="tel" ? "selected":""}>전화번호</option>
+				<option value="nickname"     ${schType=="nickname" ? "selected":""}>닉네임</option>
 			</select>
 			<input type="text" id="keyword" name="kwd" value="${kwd}">
 			<button type="button" class="btn-default" onclick="searchList()"> <i class="bi bi-search"></i> </button>
+			<button type="button" class="btn-default btnMemberAddOk">등록</button> 		
 		</div>
+		
 	</div>
 	<span class="dataCount">${dataCount}개(${page}/${total_page} 페이지)</span>
 		<div class="col-md-3 text-end">

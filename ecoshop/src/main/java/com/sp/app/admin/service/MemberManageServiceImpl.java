@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.sp.app.admin.mapper.MemberManageMapper;
 import com.sp.app.admin.model.MemberManage;
-import com.sp.app.editor.QuillEditorController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MemberManageServiceImpl implements MemberManageService {
 
-    private final QuillEditorController quillEditorController;
 	private final MemberManageMapper mapper;
 	
 	@Override
@@ -62,8 +60,14 @@ public class MemberManageServiceImpl implements MemberManageService {
 
 
 	@Override
-	public void insertMemberStatus(MemberManage dto) throws Exception {
-		// TODO Auto-generated method stub
+	public void insertMember(MemberManage dto) throws Exception {
+		try {
+			mapper.insertMember(dto);
+		} catch (Exception e) {
+			log.info("insertFaq : ", e);
+			
+			throw e;
+		}
 		
 	}
 
@@ -93,5 +97,11 @@ public class MemberManageServiceImpl implements MemberManageService {
 		
 	}
 
+	@Override
+	public void updateMemberEnabled(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 
+	
 }

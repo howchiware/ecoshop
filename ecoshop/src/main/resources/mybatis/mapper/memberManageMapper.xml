@@ -13,25 +13,29 @@
             <when test="schType == 'name'">
                 INSTR(m2.name, #{kwd}) &gt;= 1
             </when>
-            <when test="schType == 'email'">
-                INSTR(m2.email, #{kwd}) &gt;= 1
-            </when>
-            <when test="schType == 'tel'">
-                INSTR(m2.tel, #{kwd}) &gt;= 1
-            </when>
             <!-- 안전하지 않은 ${schType} 직접 사용 제거 -->
             <otherwise>
-                1 = 1
+                INSTR(${schType}, #{kwd}) &gt;= 1
             </otherwise>
         </choose>
     </sql>
+    
+  	<insert id="insertMember3" parameterType="com.sp.app.admin.model.MemberManage">
+	    INSERT INTO member1(memberId, userId, password, userLevel, regDate, regUpdate)
+	    VALUES (#{memberId}, #{userId}, #{password}, 51, SYSDATE, SYSDATE)
+	</insert>
+	
+	<insert id="insertMember4" parameterType="com.sp.app.admin.model.MemberManage">
+	    INSERT INTO member2(memberId, name, nickname, birth, tel, zip, addr1, addr2, email)
+	    VALUES (#{memberId}, #{name}, #{nickname}, TO_DATE(#{birth}, 'YYYY-MM-DD'), #{tel}, #{zip}, #{addr1}, #{addr2}, #{email})
+	</insert>
 
     <!-- 회원 목록 -->
     <select id="listMember" parameterType="map" resultType="com.sp.app.admin.model.MemberManage">
-    SELECT 
-        m1.memberId, m1.userId, userLevel, m1.regUpdate,
-        TO_CHAR(m1.regDate, 'YYYY-MM-DD') regDate, m2.name, m2.nickname, m2.tel
-    FROM member1 m1
+    SELECT m1.memberId, m1.userId, userLevel, m1.regUpdate,
+	        TO_CHAR(m1.regDate, 'YYYY-MM-DD') regDate, m2.name, m2.nickname, m2.tel , 
+	        TO_CHAR(m2.birth, 'YYYY-MM-DD') birth, m2.zip, m2.email, m2.addr1, m2.addr2
+	    FROM member1 m1
     LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
     <where>
         <if test="kwd != null and kwd != ''">
@@ -81,28 +85,66 @@
     
     <select id="findById" parameterType="Long" resultType="com.sp.app.admin.model.MemberManage">
 	    SELECT m1.memberId, m1.userId, userLevel, m1.regUpdate,
-	        TO_CHAR(m1.regDate, 'YYYY-MM-DD') regDate, m2.name, m2.nickname, m2.tel
+	        TO_CHAR(m1.regDate, 'YYYY-MM-DD') regDate, m2.name, m2.nickname, m2.tel , 
+	        TO_CHAR(m2.birth, 'YYYY-MM-DD') birth, m2.zip, m2.email, m2.addr1, m2.addr2
 	    FROM member1 m1
 	    LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
 	    WHERE m1.memberId = #{memberId}
     </select>
     
      <update id="updateMember1" parameterType="map">
-		UPDATE member1 SET userLevel = #{userLevel}
+		UPDATE member1 SET regUpdate = SYSDATE
 		WHERE memberId = #{memberId}
     </update>
     <update id="updateMember2" parameterType="map">
 		UPDATE member2 SET name = #{name}, birth = TO_DATE(#{birth}, 'YYYY-MM-DD')
 		WHERE memberId = #{memberId}
     </update>
-     <delete id="deleteMember1" parameterType="map">
-		DELETE FROM member1
+   <update id="updateMember3" parameterType="map">
+		UPDATE member2 SET name = #{name}, birth = TO_DATE(#{birth}, 'YYYY-MM-DD')
 		WHERE memberId = #{memberId}
-    </delete>
-    
+    </update>
     <delete id="deleteMember2" parameterType="map">
 		DELETE FROM member2
 		WHERE memberId = #{memberId}
     </delete>
+    
+    <update id="updateMemberEnabled" parameterType="map">
+		UPDATE member1 SET enabled = #{enabled}
+		WHERE memberId = #{memberId}
+    </update>
+    
+    <select id="selectMemberId1" resultType="long">
+	    SELECT
+	        (
+	            SELECT r FROM (
+	                SELECT TRUNC(DBMS_RANDOM.VALUE(100000, 999999)) AS r
+	                FROM dual
+	                CONNECT BY LEVEL &lt;= 1000
+	                MINUS
+	                SELECT memberId FROM member1
+	            ) WHERE ROWNUM = 1
+	        ) AS randomId
+	    FROM dual
+	</select>
+	 
+	<select id="findById1" parameterType="String" resultType="com.sp.app.admin.model.MemberManage">
+		SELECT m1.memberId, userId, password, userLevel, TO_CHAR(regDate, 'YYYY-MM-DD') regDate, TO_CHAR(regUpdate, 'YYYY-MM-DD') regUpdate,
+			name, nickname, TO_CHAR(birth, 'YYYY-MM-DD') birth, tel, zip, addr1, addr2, email
+		FROM member1 m1
+		LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
+		WHERE m1.userId = #{userId}
+	</select>
+	
+	
+	<select id="findByNickname" parameterType="String" resultType="com.sp.app.admin.model.MemberManage">
+		SELECT m1.memberId, userId, password, userLevel, TO_CHAR(regDate, 'YYYY-MM-DD') regDate, TO_CHAR(regUpdate, 'YYYY-MM-DD') regUpdate,
+			name, nickname, TO_CHAR(birth, 'YYYY-MM-DD') birth, tel, zip, addr1, addr2, email
+		FROM member1 m1
+		LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
+		WHERE m2.nickname = #{nickname}
+	</select>
+	
+	
 
 </mapper>
