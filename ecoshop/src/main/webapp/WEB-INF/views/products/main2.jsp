@@ -20,8 +20,6 @@
 <!-- Owl Carousel의 javascript CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 
-<script type="text/javascript" src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
-
 <style type="text/css">
 * {
 	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
@@ -184,33 +182,119 @@
 						</div>
 					</div>
 				</div>
-				
-				<div class="row gy-4 displayTabList">
-					<div class="col-md-12">
-						<c:import url="/WEB-INF/views/products/displayTab.jsp"/>
+				<div class="category-container">
+					<div class="row">
+						<div class="col category">식품</div>
+						<div class="col category">욕실</div>
+						<div class="col category">주방</div>
+						<div class="col category">리빙</div>
+						<div class="col category">기타</div>
+					</div>
+					<hr>
+					<div class="filter-border">
+						<select name="filter" class="filter-style">
+							<option value="insertdate">등록순</option>
+							<option value="popular">인기순</option>
+							<option value="lowPrice">낮은가격순</option>
+							<option value="highPrice">낮은가격순</option>
+							<option value="manyReviews">상품평 많은 순</option>
+						</select>
+					</div>
+
+					<div class="row row-cols-1 row-cols-md-4 g-4 list-container">
+						<div class="col product-card" data-productCode="1">
+							<div class="card">
+								<img
+									src="${pageContext.request.contextPath}/dist/images/Group 303.png"
+									class="card-img-top"
+									style="position: absolute; width: 100%; height: 100%;"
+									alt="...">
+							</div>
+							<div class="card-body">
+							<div class="d-flex justify-content-between align-items-center">
+								<h5 class="card-name">리바이브 칫솔</h5>
+								<i class="bi bi-heart heart-icon"></i>
+							</div>
+							<p class="card-price">6000원</p>
+								<a href="#" class="card-link"><i class="bi bi-chat-right"></i></a>&nbsp;&nbsp;32
+							</div>
+						</div>
+						<div class="col product-card" data-productCode="2">
+							<div class="card">
+								<img
+									src="${pageContext.request.contextPath}/dist/images/Group 308.png"
+									class="card-img-top"
+									style="position: absolute; width: 100%; height: 100%;"
+									alt="...">
+							</div>
+							<div class="card-body">
+							<div class="d-flex justify-content-between align-items-center">
+								<h5 class="card-name">리바이브 칫솔</h5>
+								<i class="bi bi-heart heart-icon"></i>
+							</div>
+							<p class="card-price">6000원</p>
+								<a href="#" class="card-link"><i class="bi bi-chat-right"></i></a>&nbsp;&nbsp;32
+							</div>
+						</div>
+						<div class="col product-card" data-productCode="3">
+							<div class="card">
+								<img
+									src="${pageContext.request.contextPath}/dist/images/Group 313.png"
+									class="card-img-top"
+									style="position: absolute; width: 100%; height: 100%;"
+									alt="...">
+							</div>
+							<div class="card-body">
+							<div class="d-flex justify-content-between align-items-center">
+								<h5 class="card-name">리바이브 칫솔</h5>
+								<i class="bi bi-heart heart-icon"></i>
+							</div>
+							<p class="card-price">6000원</p>
+								<a href="#" class="card-link"><i class="bi bi-chat-right"></i></a>&nbsp;&nbsp;32
+							</div>
+						</div>
+						<div class="col product-card" data-productCode="4">
+							<div class="card">
+								<img
+									src="${pageContext.request.contextPath}/dist/images/Group 303.png"
+									class="card-img-top"
+									style="position: absolute; width: 100%; height: 100%;"
+									alt="...">
+							</div>
+							<div class="card-body">
+							<div class="d-flex justify-content-between align-items-center">
+								<h5 class="card-name">리바이브 칫솔</h5>
+								<i class="bi bi-heart heart-icon"></i>
+							</div>
+							<p class="card-price">6000원</p>
+								<a href="#" class="card-link"><i class="bi bi-chat-right"></i></a>&nbsp;&nbsp;32
+							</div>
+						</div>
+						<div class="col product-card" data-productCode="5">
+							<div class="card">
+								<img
+									src="${pageContext.request.contextPath}/dist/images/Group 313.png"
+									class="card-img-top"
+									style="position: absolute; width: 100%; height: 100%;"
+									alt="...">
+							</div>
+							<div class="card-body">
+							<div class="d-flex justify-content-between align-items-center">
+								<h5 class="card-name">리바이브 칫솔</h5>
+								<i class="bi bi-heart heart-icon"></i>
+							</div>
+							<p class="card-price">6000원</p>
+								<a href="#" class="card-link"><i class="bi bi-chat-right"></i></a>&nbsp;&nbsp;32
+							</div>
+						</div>
 					</div>
 				</div>
-				
 			</div>
 		</div>
-		<div id="product-template">
-			<input type="hidden" id="web-contextPath" value="${pageContext.request.contextPath}">
-			<input type="hidden" id="product-productCode" value="1">
-			<input type="hidden" id="product-productName" value="${dto.productName}">
-			<input type="hidden" id="product-optionCount" value="${dto.optionCount}">
-			<input type="hidden" id="product-price" value="${dto.price}">
-			<input type="hidden" id="product-salePrice" value="${dto.salePrice}">
-			<input type="hidden" id="product-stockNum" value="${dto.stockNum}">
-			<input type="hidden" id="product-totalStock" value="${dto.totalStock}">
-			<input type="hidden" id="product-thumbnail" value="${dto.thumbnail}">
-			<input type="hidden" id="product-endDate" value="${dto.endDate}">
-			<input type="hidden" id="product-classify" value="${dto.classify}">
-		</div>
 	</main>
-	<script src="${pageContext.request.contextPath}/dist/js2/productDisplay.js"></script>
-	<footer>
+	<header>
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
-	</footer>
+	</header>
 	<script>
 		$('.owl-carousel').owlCarousel({
 			loop : true,
