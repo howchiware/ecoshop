@@ -410,3 +410,27 @@ window.addEventListener('DOMContentLoaded', () => {
 		location.href = contextPath + '/myPage/review?mode=qna';
 	});	
 });
+
+// 추가 - 문의사항 디테일 보기
+$(function(){
+	$('div.detailTabList').on('click', 'tr.inquiryTr', function(){
+		const $inquiryDetailTr = $(this).next();
+		
+		let isHidden = $inquiryDetailTr.hasClass('d-none');
+		let isSecret = $(this).hasClass('secret-inquiry');
+		let inquiryId = $(this).attr('data-inquiryId');
+		
+		if(! isSecret) {
+			$inquiryDetailTr.toggleClass('d-none');
+		}
+		
+		/*
+		if(isHidden && ! isSecret) {
+			$inquiryDetailTr.removeClass('d-none');
+		} else if(! isHidden && ! isSecret){
+			$inquiryDetailTr.addClass('d-none');
+		}
+		*/
+		
+	});
+});

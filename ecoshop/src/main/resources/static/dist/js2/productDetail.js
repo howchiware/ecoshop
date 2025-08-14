@@ -1,6 +1,6 @@
 $(function(){
 	const gvContextPath = document.getElementById('web-contextPath').value;
-	const gvProductNum = document.getElementById('product-productNum').value;
+	const gvProductCode = document.getElementById('product-productCode').value;
 	const gvOptionCount = Number(document.getElementById('product-optionCount').value) || 0;
 	const gvTotalStock = Number(document.getElementById('product-totalStock').value) || 0;
 	const gvSalePrice = Number(document.getElementById('product-salePrice').value) || 0;
@@ -78,7 +78,7 @@ $(function(){
 			});
 		};
 		
-		ajaxRequest(url, 'get', {productNum:gvProductNum, detailNum:detailNum}, 'json', fn);
+		ajaxRequest(url, 'get', {productCode:gvProductCode, detailNum:detailNum}, 'json', fn);
 	});
 	
 	// 옵션-2 선택
@@ -142,7 +142,7 @@ $(function(){
 	                    <div class="input-group">
 	                        <i class="bi bi-dash input-group-text bg-white qty-minus"></i>
 	                        <input type="text" name="buyQtys" class="form-control" value="1" style="flex:none; width: 60px; text-align: center;" readonly>
-	                        <input type="hidden" name="productNums" value="${gvProductNum}">
+	                        <input type="hidden" name="productCodes" value="${gvProductCode}">
 	                        <input type="hidden" name="stockNums" value="${stockNum}">
 	                        <input type="hidden" name="detailNums" value="${detailNum}" disabled>
 	                        <input type="hidden" name="detailNums2" value="${detailNum2}" disabled>
@@ -301,7 +301,7 @@ function sendOk(mode) {
 
 // 오늘본 상품 목록
 $(function(){
-	const pnum = document.getElementById('product-productNum').value;
+	const pnum = document.getElementById('product-productCode').value;
 	const pname = document.getElementById('product-productName').value;
 	const pimg = document.getElementById('product-thumbnail').value;
 	const price = Number(document.getElementById('product-price').value) || 0;
