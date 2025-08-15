@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.sp.app.admin.model.CategoryManage;
 import com.sp.app.admin.model.GongguManage;
 import com.sp.app.admin.model.GongguReviewManage;
+import com.sp.app.admin.service.CategoryManageService;
 import com.sp.app.admin.service.GongguManageService;
 import com.sp.app.common.StorageService;
 
@@ -25,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GongguManageController {
     private final GongguManageService gongguManageService;
     private final StorageService storageService;
+    private final CategoryManageService categoryManageService;
     
     private String uploadPath;
 
@@ -67,12 +70,11 @@ public class GongguManageController {
     
     @GetMapping("productReview")
     public String getProductReview(@RequestParam(value="memberId", required = false) Long memberId, Model model) {
-    	List<GongguReviewManage> reviewList = gongguManageService.getReviewList(); 
-
+    	
     	return "admin/gonggu/gongguReview";
     }
     
-    @GetMapping(value = "reviewList", headers = "X-Requested-With=XMLHttpRequest")
+    @GetMapping(value = "reviewList")
     public String getProductReviewList(Model model) {
         List<GongguReviewManage> reviewList = gongguManageService.getReviewList();
       
@@ -80,15 +82,17 @@ public class GongguManageController {
         return "admin/gonggu/reviewList";
     }
     
-    @GetMapping(value = "inquiryList", headers = "X-Requested-With=XMLHttpRequest")
+    @GetMapping(value = "inquiryList")
     public String getInquiryList(Model model) {
         
         return "admin/gonggu/inquiryList";
     }
 
     @GetMapping("category")
-    public String category(@RequestParam(value="categoryId", required = false) Long categoryId, Model model) {
+    public String category(@RequestParam(value="categoryId", required = false) Long categoryId, Model model) throws Exception {
+    	List<CategoryManage> categoryList = categoryManageService.listCategory();
     	
     	return "admin/category/category";
     }
+
 }

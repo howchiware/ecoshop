@@ -10,4 +10,5 @@
 		JOIN gongguProduct p ON g.gongguProductId = p.gongguProductId
 		ORDER BY g.regDate DESC
 	</select>
+	
 </mapper>
