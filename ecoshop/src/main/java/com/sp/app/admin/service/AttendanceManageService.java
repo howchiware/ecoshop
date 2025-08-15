@@ -11,4 +11,7 @@ public interface AttendanceManageService {
 	public int dataCount(Map<String, Object> map);
 	public int memberCount(Map<String, Object> map);
 	
+	public int pointTargetCount(Map<String, Object> map);
+	public int totalAttendanceCount(Map<String, Object> map);
+	
 }

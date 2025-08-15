@@ -17,7 +17,7 @@
 	
 	<select id="countAttendance" parameterType="map" resultType="int">
 	    SELECT COUNT(*) FROM attendanceBoard
-    WHERE memberId = #{memberId} AND TRUNC(regDate) = TRUNC(SYSDATE)
+    	WHERE memberId = #{memberId} AND TRUNC(regDate) = TRUNC(SYSDATE)
 	</select>
 		
 	<select id="countWeeklyAttendance" parameterType="long" resultType="int">
@@ -32,6 +32,23 @@
 	
 	
 	<!-- 퀴즈 -->
-
+	<insert id="playQuiz" parameterType="com.sp.app.model.Quiz">
+	    INSERT INTO quizAnswer(quizAnswerId, quizAnswer, answerDate, quizId, memberId)
+	    VALUES (quizAnswer_seq.NEXTVAL, #{quizAnswer}, SYSDATE, #{quizId}, #{memberId})
+	</insert>
+	
+	<select id="findTodayQuiz" parameterType="map" resultType="com.sp.app.model.Quiz">
+	    SELECT quizId, subject, content, answer, commentary
+	    FROM quizBoard
+	    WHERE TO_CHAR(openDate, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+	    FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<select id="isQuizSolved" parameterType="map" resultType="int">
+		SELECT COUNT(*) 
+		FROM quizAnswer
+   		WHERE memberId = #{memberId} AND quizId = #{quizId}
+	</select>
+	
 	
 </mapper>

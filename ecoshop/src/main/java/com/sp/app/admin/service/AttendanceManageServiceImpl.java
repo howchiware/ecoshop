@@ -61,6 +61,34 @@ public class AttendanceManageServiceImpl implements AttendanceManageService {
 		
 		return result;
 	}
+
+	@Override
+	public int pointTargetCount(Map<String, Object> map) {
+		
+		int result = 0;
+		
+		try {
+			result = mapper.pointTargetCount(map);
+		} catch (Exception e) {
+			log.info("pointTargetCount: ", e);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public int totalAttendanceCount(Map<String, Object> map) {
+		
+		int result = 0;
+		
+		try {
+			result = mapper.totalAttendanceCount(map);
+		} catch (Exception e) {
+			log.info("totalAttendanceCount: ", e);
+		}
+		
+		return result;
+	}
 	
 	
 

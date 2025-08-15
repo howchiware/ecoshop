@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/admin/product/*")
+@RequestMapping("/admin/products/*")
 public class ProductManageController {
 	private final ProductManageService service;
 	private final PaginateUtil paginateUtil;
@@ -34,7 +34,7 @@ public class ProductManageController {
 	
 	@PostConstruct
 	public void init() {
-		uploadPath = this.storageService.getRealPath("/uploads/product");		
+		uploadPath = this.storageService.getRealPath("/uploads/products");		
 	}	
 	
 	@GetMapping("totalProductList")
@@ -45,7 +45,7 @@ public class ProductManageController {
 			Model model,
 			HttpServletRequest req) throws Exception {
 		
-		return "admin/product/totalProductList";
+		return "admin/products/totalProductList";
 	}
 	
 	@GetMapping("deliveryInfo")
@@ -56,10 +56,10 @@ public class ProductManageController {
 			Model model,
 			HttpServletRequest req) throws Exception {
 
-		return "admin/product/deliveryInfo";
+		return "admin/products/deliveryInfo";
 	}
 	
-	@GetMapping("productAddForm")
+	@GetMapping("write")
     public String productAddForm(Model model) {
 		try {
 			List<ProductManage> listCategory = service.listCategory();
@@ -71,13 +71,20 @@ public class ProductManageController {
 			log.info("productAddForm : ", e);
 		}
 		
-		return "admin/product/productAdd";
+		return "admin/products/productAdd";
 	}
 	
-	@PostMapping("productAddForm")
-	public String productAddSubmit(GongguManage dto) {
+	@PostMapping("write")
+	public String productAddSubmit(ProductManage dto,
+			Model model) {
 		
-		return "redirect:/admin/product/totalProductList";
+		try {
+			service.insertProduct(dto, uploadPath);
+		} catch (Exception e) {
+			log.info("productAddSubmit : ", e);
+		}
+		
+		return "redirect:/admin/products/totalProductList";
 	}
 	
 	

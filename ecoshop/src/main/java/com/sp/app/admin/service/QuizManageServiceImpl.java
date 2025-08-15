@@ -101,6 +101,38 @@ public class QuizManageServiceImpl implements QuizManageService {
 		
 	}
 
+	@Override
+	public QuizManage findByOpenDate(String openDate) {
+		
+		QuizManage dto = null;
+		
+		try {
+			dto = Objects.requireNonNull(mapper.findByOpenDate(openDate));
+		} catch (NullPointerException e) {
+		} catch (ArrayIndexOutOfBoundsException e) {	
+		} catch (Exception e) {
+			log.info("findByOpenDate: ", e);
+		}
+		
+		return dto;		
+	}
+
+	@Override
+	public QuizManage findTodayQuiz() {
+
+		QuizManage dto = null;
+		
+		try {
+			dto = Objects.requireNonNull(mapper.findTodayQuiz());
+		} catch (NullPointerException e) {
+		} catch (ArrayIndexOutOfBoundsException e) {	
+		} catch (Exception e) {
+			log.info("findTodayQuiz: ", e);
+		}
+		
+		return dto;		
+	}
+
 	
 	
 	

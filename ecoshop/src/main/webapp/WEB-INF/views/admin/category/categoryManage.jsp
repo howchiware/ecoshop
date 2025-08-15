@@ -159,7 +159,7 @@ text-align: center;
 		<hr>
 		
 		<div class="outside">
-			<form name="categoryManageForm">
+			<form method="post" name="categoryManageForm" enctype="multipart/form-data">
 				<div class="section ps-5 pe-5 left">
 					<div>
 						<div class="row gy-4 m-0">

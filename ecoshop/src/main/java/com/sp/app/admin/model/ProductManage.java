@@ -12,11 +12,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ProductManage {
+	private long productId;
 	private long productCode;
 	private String productName;
 	private int classify;
 	private int price;
-	private int savedPoint;
+	private int point;
 	private int salePrice;
 	private int delivery;
 	private int productShow;

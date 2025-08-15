@@ -26,5 +26,5 @@ public class QuizManage {
 	private String openDate;
 	
 	private Long insertId;
-	
+	private int dayIndex;
 }

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.admin.mapper.ProductManageMapper">
+<!-- 상품 등록 -->
+	<!-- 상품 번호 -->
+	<select id="productSeq" resultType="Long">
+		SELECT product_seq.NEXTVAL FROM dual
+	</select>
+	
+	<!-- 상품 등록 -->
+	<insert id="insertProduct" parameterType="com.sp.app.admin.model.ProductManage">
+		INSERT INTO product(productId, productCode, categoryId, productName, price,
+				thumbnail, sale, reg_date, optionCount, productShow, point, content, detailInfo)
+		VALUES (#{productId}, #{productCode}, #{categoryId}, #{productName}, #{price},
+				 #{thumbnail}, #{price}, SYSDATE, #{optionCount}, #{productShow}, 
+				 #{point}, #{content}, #{detailInfo})
+	</insert>
+	
+	<!-- 추가 이미지 등록 -->
+	<insert id="insertProductFile" parameterType="com.sp.app.admin.model.ProductManage">
+		INSERT INTO productPhoto(productPhotoNum, productCode, photoName)
+		VALUES(productPhoto_seq.NEXTVAL, #{productCode}, #{photoName})
+	</insert>
+	
+	<!-- 옵션 번호 -->
+	<select id="optionSeq" resultType="Long">
+		SELECT productOption_seq.NEXTVAL FROM dual
+	</select>
+
+	<!-- 상품 옵션 등록 -->
+	<insert id="insertProductOption" parameterType="com.sp.app.admin.model.ProductManage">
+		INSERT INTO productOption(optionNum, optionName, productCode, parentOption)
+		VALUES(#{optionNum}, #{optionName}, #{productCode}, #{parentOption, jdbcType=INTEGER})
+	</insert>
+	
+	<!-- 옵션 상세 번호 -->
+	<select id="detailSeq" resultType="Long">
+		SELECT productOptionDetail_seq.NEXTVAL FROM dual
+	</select>
+
+	<!-- 상품 상세 옵션 등록 -->
+	<insert id="insertOptionDetail" parameterType="com.sp.app.admin.model.ProductManage">
+		INSERT INTO optionDetail(optionDetailNum, optionNum, optionValue)
+		VALUES(#{optionDetailNum}, #{optionNum}, #{optionValue})
+	</insert>
+	
+	<!-- 카테고리 리스트 -->
+	<select id="listCategory" resultType="com.sp.app.admin.model.CategoryManage">
+		SELECT categoryId, categoryName
+		FROM productCategory
+		ORDER BY orderNo ASC
+	</select>
+
+
+</mapper>

@@ -12,9 +12,9 @@ public interface QuizManageService {
 	public void insertQuiz(QuizManage dto) throws Exception;
 	public QuizManage findByQuiz(long quizId);
 	
-	
 	public void updateQuiz(QuizManage dto) throws Exception;
 	public void deleteQUiz(long quizId) throws Exception;
 	
-	
+	public QuizManage findByOpenDate(String openDate);
+	public QuizManage findTodayQuiz();
 }

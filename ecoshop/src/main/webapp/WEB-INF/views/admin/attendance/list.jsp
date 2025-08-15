@@ -6,12 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <title>관리자 페이지</title>
+<jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp"/>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/admin.css">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
 * {
   font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
@@ -25,11 +23,13 @@
     font-style: normal;
 }
 
+/* --- ▼ 기능에 집중하는 무채색(Grayscale) 테마로 변경 ▼ --- */
+
 h2.mb-4 {
     font-family: 'Noto Sans KR', sans-serif;
     font-weight: 600;
-    font-size: 1.8rem;
-    color: #333;
+    font-size: 1.7rem;
+    color: #212529;
     letter-spacing: -0.5px;
     position: relative;
     padding-left: 16px;
@@ -42,9 +42,9 @@ h2.mb-4::before {
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: 6px;
-    height: 80%;
-    background: linear-gradient(180deg, #4CAF50, #81C784);
+    width: 5px;
+    height: 70%;
+    background: #343a40; /* 변경: 진한 회색 */
     border-radius: 3px;
 }
 
@@ -57,207 +57,207 @@ h2.mb-4::before {
 .content {
   flex: 1;
   background-color: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border: 1px solid #e9ecef; /* 추가: 콘텐츠 영역 구분선 */
+  border-radius: 4px; 
+  padding: 25px;
+  box-shadow: none; /* 변경: 그림자 제거 */
 }
 
 form label {
-  font-weight: 700;
-  color: #315e4e;
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.9rem;
 }
 
 form .form-control,
 form .form-select {
-  border-radius: 6px;
-  border: 1px solid #ddd;
+  border-radius: 4px;
+  border: 1px solid #ced4da;
   font-size: 0.9rem;
 }
 
 form .form-control:focus,
 form .form-select:focus {
-  border-color: #315e4e;
-  box-shadow: 0 0 0 0.15rem rgba(49, 94, 78, 0.25);
+  border-color: #343a40; /* 변경: 진한 회색 */
+  box-shadow: 0 0 0 0.15rem rgba(52, 58, 64, 0.2); /* 변경 */
 }
 
+/* 조회 버튼 */
 form .btn-primary {
-  background-color: #315e4e;
-  border: none;
+  background-color: #343a40; /* 변경: 진한 회색 */
+  border: 1px solid #343a40; /* 변경 */
+  color: white;
   font-weight: 500;
-  padding: 0.45rem 1rem;
-  border-radius: 6px;
+  padding: 0.45rem 1.2rem;
+  border-radius: 4px;
 }
 
 form .btn-primary:hover {
-  background-color: #234d3c;
+  background-color: #212529; /* 변경: 더 진한 회색 */
 }
 
+/* 초기화 버튼 */
 form button[type=button] {
-  background-color: #e2e2e2;
-  border: none;
+  background-color: #fff; /* 변경: 흰색 배경 */
+  color: #495057; /* 변경: 회색 글씨 */
+  border: 1px solid #ced4da; /* 변경: 테두리선 */
   padding: 0.45rem 1rem;
-  border-radius: 6px;
+  border-radius: 4px;
   font-weight: 500;
 }
 
 form button[type=button]:hover {
-  background-color: #ccc;
+  background-color: #f8f9fa; /* 변경: 밝은 회색 배경 */
 }
 
 .table-wrapper {
-    max-width: 90%;
+    max-width: 100%;
     margin: 0 auto;
 }
 
 .table {
     border-collapse: separate;
     border-spacing: 0;
-    border-radius: 12px;
+    border-radius: 4px;
     overflow: hidden;
     font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.9rem;
 }
 
 .table thead th {
-    background-color: #e6f4ea;
-    color: #2e7d32;
+    background-color: #f8f9fa;
+    color: #343a40;
     font-weight: 600;
     text-align: center;
-    border-bottom: 2px solid #c8e6c9;
+    border-bottom: 2px solid #dee2e6;
+    padding: 0.6rem 0.5rem;
 }
 
 .table tbody td {
     vertical-align: middle;
     text-align: center;
-    border-color: #e0e0e0;
+    border-color: #e9ecef;
+    color: #495057;
 }
 
 .table-hover tbody tr:hover {
-    background-color: #f1f8f4;
+    background-color: #f1f3f5;
     transition: background-color 0.2s ease;
 }
 
 .table-bordered {
-    border: 1.5px solid #dcdcdc;
-    border-radius: 12px;
-    border-collapse: separate;
-    border-spacing: 0;
-    overflow: hidden;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
 }
 
 .table-bordered thead th,
 .table-bordered tbody td {
-    border: 1px solid #dcdcdc;
+    border: 1px solid #dee2e6;
 }
 
-.table-bordered thead th:first-child {
-    border-left: none;
-}
-
-.table-bordered thead th:last-child {
-    border-right: none;
-}
-
-.table-bordered tbody td:first-child {
-    border-left: none;
-}
-
-.table-bordered tbody td:last-child {
-    border-right: none;
-}
-
-
+/* 뱃지 스타일 */
 .badge.bg-success {
-  background-color: #315e4e !important;
+  background-color: #343a40 !important; /* 변경: 진한 회색 */
+  color: #fff;
   font-weight: 500;
-  padding: 0.4em 0.6em;
+  padding: 0.4em 0.7em;
 }
 
 .badge.bg-secondary {
-  background-color: #bbb !important;
+  background-color: #e9ecef !important; /* 변경: 밝은 회색 */
+  color: #495057; /* 변경 */
   font-weight: 500;
-  padding: 0.4em 0.6em;
+  padding: 0.4em 0.7em;
 }
 
+/* 페이지네이션 스타일 */
 .page-navigation {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-  font-family: 'Noto Sans KR', sans-serif;
-  gap: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25px;
+    font-family: 'Noto Sans KR', sans-serif;
+    gap: 6px;
 }
-
-.page-navigation a,
-.page-navigation span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 2px solid #7ecf98;
-  color: #4caf50;
-  text-decoration: none;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(126, 207, 152, 0.4);
-  transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
-  font-size: 1rem;
-}
-
-.page-navigation a:hover {
-  background-color: #a4d7a7;
-  color: white;
-  box-shadow: 0 4px 12px rgba(126, 207, 152, 0.6);
-}
-
-.paginate span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 2px solid #4caf50;
-  background-color: #4caf50;
-  color: #fff;
-  font-weight: 700;
-  cursor: default;
-  box-shadow: 0 2px 5px rgba(76, 175, 80, 0.6);
-  font-size: 1rem;
+.paginate {
+    display: flex;
+    gap: 6px;
 }
 
 .paginate a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 2px solid #4caf50;
-  color: #4caf50;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background-color 0.3s, color 0.3s;
-  font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    background-color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.1s ease, border-color 0.1s ease;
+}
+
+/* 현재 페이지 번호 */
+.paginate span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: 4px;
+    border: 1px solid #343a40; /* 변경 */
+    background-color: #343a40; /* 변경 */
+    color: #fff;
+    font-weight: 600;
+    cursor: default;
 }
 
 .paginate a:hover {
-  background-color: #81c784;
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(129, 199, 132, 0.6);
+    background-color: #f1f3f5; /* 변경 */
+    border-color: #dee2e6; /* 변경 */
 }
 
+/* 이전/다음 버튼 */
+.page-navigation a {
+    border-radius: 4px;
+}
+.page-navigation a:hover {
+    background-color: #f1f3f5;
+    border-color: #dee2e6;
+}
+
+/* 비활성화된 버튼 */
 .page-navigation .disabled {
-  color: #cde5d4;
-  border-color: #cde5d4;
-  cursor: default;
-  pointer-events: none;
-  box-shadow: none;
+    color: #adb5bd;
+    border-color: #dee2e6;
+    cursor: default;
+    pointer-events: none;
+    background-color: #f8f9fa;
+}
+
+.card {
+    border: 1px solid #e9ecef;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #495057;
+}
+
+.card-text {
+    color: #212529;
+}
+.text-success {
+	color: #198754 !important;
 }
 
 </style>
-
 </head>
 <body>
 
@@ -266,6 +266,8 @@ form button[type=button]:hover {
 
 	<main class="main-container">
 		<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
+		
+
 		<div class="content">
 			<h2 class="mb-4">출석체크 관리</h2>
 
@@ -299,9 +301,38 @@ form button[type=button]:hover {
 				</div>
 				
 				
-			</form>
+					</form>
 
-			<table class="table table-bordered table-hover">
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">총 조회 인원</h5>
+                <p class="card-text fs-4 fw-bold">${dataCount}명</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">포인트 지급 대상</h5>
+                <%-- 이 값은 컨트롤러에서 계산해서 넘겨줘야 합니다 --%>
+                <p class="card-text fs-4 fw-bold text-success">${pointTargetCount}명</p> 
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">기간 내 총 출석</h5>
+                <%-- 이 값도 컨트롤러에서 계산해서 넘겨줘야 합니다 --%>
+                <p class="card-text fs-4 fw-bold">${totalAttendanceCount}회</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="table table-bordered table-hover">
 				<thead class="table-light">
 					<tr class="text-center">
 						<th>회원번호</th>

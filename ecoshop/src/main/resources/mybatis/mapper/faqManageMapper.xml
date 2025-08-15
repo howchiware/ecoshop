@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.admin.mapper.FaqManageMapper">
+
+	<sql id="where-list">
+		( INSTR(subject, #{kwd}) &gt; 0 
+		OR INSTR(content, #{kwd}) &gt; 0 
+		OR INSTR(LOWER(categoryName), LOWER(#{kwd})) &gt; 0)
+	</sql>
+
+	<select id="listFaq" parameterType="map" resultType="com.sp.app.admin.model.FaqManage">
+		SELECT faqId, subject, m2.name, fb.content, m1.memberId, fb.regDate, fb.updateId, fb.regUpdate, fc.categoryId, fc.categoryName, updateName
+		FROM faqBoard fb 
+		JOIN faqCategory fc ON fb.categoryId = fc.categoryId
+		JOIN member1 m1 ON m1.memberId = fb.memberId
+		LEFT OUTER JOIN member2 m2 ON fb.memberId = m2.memberId
+		LEFT OUTER JOIN member2 m3 ON fb.updateId = m3.memberId
+		<where>
+			<if test="categoryId != 0">
+				( fc.categoryId = #{categoryId} )
+			</if>
+			<if test="kwd != null and kwd != '' ">
+				AND <include refid="where-list"/>
+			</if>
+		</where>
+		ORDER BY faqId
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM faqBoard fb 
+		JOIN member1 m1 ON m1.memberId = fb.memberId
+		JOIN faqCategory fc ON fb.categoryId = fc.categoryId
+		<where>
+			<if test="categoryId != 0">
+				( fc.categoryId = #{categoryId} )
+			</if>		
+			<if test="kwd != null and kwd != '' ">
+				AND <include refid="where-list"/>
+			</if>
+		</where>
+	</select>
+	
+	<update id="updateFaq" parameterType="com.sp.app.admin.model.FaqManage">
+		UPDATE faqBoard SET subject = #{subject}, content = #{content}, updateName = #{name}, updateId = #{updateId}, regUpdate = SYSDATE, categoryId = #{categoryId}
+		WHERE faqId = #{faqId}
+	</update>
+	
+	<delete id="deleteFaq" parameterType="map">
+		DELETE FROM faqBoard
+		WHERE faqId = #{faqId}
+	</delete>
+	
+	<select id="findByFaq" parameterType="Long" resultType="com.sp.app.admin.model.FaqManage">
+		SELECT fb.faqId, fb.memberId, subject, content, fb.regDate, fb.categoryId, fc.categoryName, updateId, fb.regUpdate, updateName
+		FROM faqBoard fb
+		JOIN member1 m1 ON m1.memberId = fb.memberId
+		JOIN faqCategory fc ON fc.categoryId = fb.categoryId
+		LEFT OUTER JOIN member1 m2 ON fb.updateId = m2.memberId
+		WHERE fb.faqId = #{faqId}
+	</select>
+	
+	<insert id="insertFaq" parameterType="com.sp.app.admin.model.FaqManage">
+		INSERT INTO faqBoard(faqId, subject, content, memberId, regDate, categoryId)
+		VALUES(faqId_seq.NEXTVAL, #{subject}, #{content}, #{memberId}, SYSDATE, #{categoryId})
+	</insert>
+	
+	
+	<!-- 카테고리 구역 -->
+	<select id="listCategory" parameterType="map" resultType="com.sp.app.admin.model.FaqManage">
+		SELECT categoryId, categoryName
+		FROM faqCategory
+		ORDER BY categoryId
+	</select>
+	
+	<insert id="insertCategory" parameterType="com.sp.app.admin.model.FaqManage">
+		INSERT INTO faqCategory(categoryId, categoryName)
+		VALUES (faqCategory_seq.NEXTVAL, #{categoryName})
+	</insert>
+	
+	<update id="updateCategory" parameterType="com.sp.app.admin.model.FaqManage">
+		UPDATE faqCategory SET categoryName = #{categoryName}
+		WHERE categoryId = #{categoryId}
+	</update>
+	
+	<delete id="deleteCategory" parameterType="Long">
+		DELETE FROM faqCategory
+		WHERE categoryId = #{categoryId} 
+	</delete>
+
+</mapper>

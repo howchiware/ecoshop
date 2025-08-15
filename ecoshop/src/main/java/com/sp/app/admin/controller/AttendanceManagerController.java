@@ -85,6 +85,9 @@ public class AttendanceManagerController {
 			
 			List<AttendanceManage> list = service.listAttendanceMember(map);
 			
+			int pointTargetCount = service.pointTargetCount(map);
+	        int totalAttendanceCount = service.totalAttendanceCount(map);
+			
 			String cp = req.getContextPath();
 			String listUrl = cp + "/admin/attendance/list";
 
@@ -104,6 +107,8 @@ public class AttendanceManagerController {
 			model.addAttribute("kwd", kwd);
 			model.addAttribute("start", startDate.toString());
 			model.addAttribute("end", endDate.toString());
+			model.addAttribute("pointTargetCount", pointTargetCount);
+	        model.addAttribute("totalAttendanceCount", totalAttendanceCount);
 			
 		} catch (Exception e) {
 			log.info("attendanceList: ", e);

@@ -22,7 +22,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import oracle.jdbc.proxy.annotation.Post;
 
 @Controller
 @RequiredArgsConstructor
@@ -41,7 +40,7 @@ public class QuizManagerController {
 								Model model, HttpServletRequest req) {
 		
 		try {
-			int size = 15;
+			int size = 10;
 			int total_page = 0;
 			int dataCount = 0;
 			
@@ -65,6 +64,9 @@ public class QuizManagerController {
 			map.put("size", size);
 			
 			List<QuizManage> list = service.listQuiz(map);
+			
+			QuizManage todayQuiz = service.findTodayQuiz();
+			model.addAttribute("todayQuiz", todayQuiz);
 			
 			String cp = req.getContextPath();
 			String query = "";
@@ -105,9 +107,19 @@ public class QuizManagerController {
 	}
 	
 	@PostMapping("write")
-	public String quizWriteSubmit(QuizManage dto, HttpSession session) throws Exception {
+	public String quizWriteSubmit(QuizManage dto, HttpSession session, Model model) throws Exception {
 		
 		try {
+			QuizManage checkQuiz = service.findByOpenDate(dto.getOpenDate());
+			if(checkQuiz != null) {
+				String message = "선택하신 개시일(" + dto.getOpenDate() + ")에는 이미 다른 퀴즈가 등록되어 있습니다";
+				model.addAttribute("mode", "write");
+				model.addAttribute("dto", dto);
+				model.addAttribute("message", message);
+				
+				return "admin/quiz/write";
+			}
+			
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
 			
 			dto.setInsertId(info.getMemberId());
@@ -182,10 +194,24 @@ public class QuizManagerController {
 	}
 	
 	@PostMapping("update")
-	public String quizUpdateSubmit(QuizManage dto, @RequestParam(name = "page") String page) throws Exception {
+	public String quizUpdateSubmit(QuizManage dto, @RequestParam(name = "page") String page, HttpSession session, Model model) throws Exception {
 		
 		try {
-			service.updateQuiz(dto);
+			QuizManage checkQuiz = service.findByOpenDate(dto.getOpenDate());
+			
+			if(checkQuiz != null && checkQuiz.getQuizId() != dto.getQuizId()) {
+				String message = "선택하신 개시일(" + dto.getOpenDate() + ")에는 이미 다른 퀴즈가 등록되어 있습니다.";
+	            model.addAttribute("mode", "update");
+	            model.addAttribute("dto", dto);
+	            model.addAttribute("page", page);
+	            model.addAttribute("message", message);
+	            return "admin/quiz/write";
+			}
+			
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+	        dto.setInsertId(info.getMemberId()); // 최종 수정자를 insertId로 재활용
+	        service.updateQuiz(dto);
+	        
 		} catch (Exception e) {
 			log.info("updateSubmit: ", e);
 		}
