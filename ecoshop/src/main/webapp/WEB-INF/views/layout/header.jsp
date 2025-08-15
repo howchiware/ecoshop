@@ -14,7 +14,7 @@
 		<div class="container d-flex justify-content-between align-items-center">
 			<div class="text-muted">지속 가능한 일상을 위한 모든 것</div>
 			<div>
-				<a class="text-decoration-none me-3 text-muted" href="${pageContext.request.contextPath}/customer/list">고객센터</a>
+				<a class="text-decoration-none me-3 text-muted" href="${pageContext.request.contextPath}/customer/main">고객센터</a>
 				<c:choose>
 					<c:when test="${empty sessionScope.member}">
 						<a class="text-decoration-none me-3 text-muted" href="${pageContext.request.contextPath}/member/login">로그인</a>						
