@@ -40,6 +40,8 @@
 	$(document).ready(function() {
 		const initialButton = document.querySelector('.nav-tab.active');
 		if (initialButton) {
-			showTab(initialButton);
+			showReviewTab(initialButton);
 		}
 	});
+	
+	
