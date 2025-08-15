@@ -33,4 +33,5 @@ public interface ProductManageService {
 	public List<ProductStockManage> listProductStock(Map<String, Object> map);
 	
 	public boolean deleteUploadPhoto(String uploadPath, String photoName);
+	
 }
