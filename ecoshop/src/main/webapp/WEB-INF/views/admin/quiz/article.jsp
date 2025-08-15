@@ -5,329 +5,218 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>관리자 페이지</title>
+<title>관리자 페이지 - 퀴즈 상세 보기</title>
+<jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/admin.css">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <style>
+:root {
+  --color-primary: #315e4e;
+  --color-primary-darker: #234d3c;
+  --color-secondary: #e6f4ea;
+  --color-border: #e0e6ed;
+  --color-text-dark: #2c3e50;
+  --color-text-light: #8492a6;
+  --color-bg: #f8f9fa;
+  --color-white: #ffffff;
+}
 * {
   font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
-  color: #333;
-  margin: 0;
 }
-
-@font-face {
-    font-family: 'Pretendard-Regular';
-    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-    font-style: normal;
-}
-
-h2.mb-4 {
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 600;
-    font-size: 1.8rem;
-    color: #333;
-    letter-spacing: -0.5px;
-    position: relative;
-    padding-left: 16px;
-    margin-bottom: 2.0rem;
-}
-
-h2.mb-4::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 6px;
-    height: 80%;
-    background: linear-gradient(180deg, #4CAF50, #81C784);
-    border-radius: 3px;
+body {
+  background-color: var(--color-bg);
 }
 
 .main-container {
   display: flex;
-  padding: 20px;
-  gap: 20px;
 }
-
-.content {
+.right-panel {
   flex: 1;
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 1.5rem 2rem;
+}
+.content {
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: var(--color-white);
+  border-radius: 12px;
+  padding: 2.5rem;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
 }
 
-form label {
-  font-weight: 700;
-  color: #315e4e;
-}
-
-form .form-control,
-form .form-select {
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  font-size: 0.9rem;
-}
-
-form .form-control:focus,
-form .form-select:focus {
-  border-color: #315e4e;
-  box-shadow: 0 0 0 0.15rem rgba(49, 94, 78, 0.25);
-}
-
-form .btn-primary {
-  background-color: #315e4e;
-  border: none;
-  font-weight: 500;
-  padding: 0.45rem 1rem;
-  border-radius: 6px;
-}
-
-form .btn-primary:hover {
-  background-color: #234d3c;
-}
-
-form button[type=button] {
-  background-color: #e2e2e2;
-  border: none;
-  padding: 0.45rem 1rem;
-  border-radius: 6px;
-  font-weight: 500;
-}
-
-form button[type=button]:hover {
-  background-color: #ccc;
-}
-
-.table-wrapper {
-    max-width: 90%;
-    margin: 0 auto;
-}
-
-.table {
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: 12px;
-    overflow: hidden;
+.page-title h2 {
     font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--color-text-dark);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.page-title h2 i {
+    color: var(--color-primary);
+}
+.page-subtitle {
+    color: var(--color-text-light);
+    margin-bottom: 2.5rem;
 }
 
-.table thead th {
-    background-color: #e6f4ea;
-    color: #2e7d32;
-    font-weight: 600;
-    text-align: center;
-    border-bottom: 2px solid #c8e6c9;
-}
-
-.table tbody td {
-    vertical-align: middle;
-    text-align: center;
-    border-color: #e0e0e0;
-}
-
-.table-hover tbody tr:hover {
-    background-color: #f1f8f4;
-    transition: background-color 0.2s ease;
-}
-
-.table-bordered {
-    border: 1.5px solid #dcdcdc;
+.quiz-card {
+    border: 1px solid var(--color-border);
     border-radius: 12px;
-    border-collapse: separate;
-    border-spacing: 0;
     overflow: hidden;
+    margin-bottom: 2rem;
+}
+.quiz-card-header {
+    background-color: var(--color-secondary);
+    padding: 1rem 1.5rem;
+}
+.quiz-card-header h4 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0;
+}
+.quiz-card-body {
+    padding: 1.5rem;
+}
+.quiz-section {
+    margin-bottom: 1.5rem;
+}
+.quiz-section:last-child {
+    margin-bottom: 0;
+}
+.quiz-section-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+    margin-bottom: 0.5rem;
+}
+.quiz-section-content {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--color-text-dark);
+}
+.quiz-answer {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--color-primary-darker);
 }
 
-.table-bordered thead th,
-.table-bordered tbody td {
-    border: 1px solid #dcdcdc;
+.meta-table {
+    font-size: 0.9rem;
+}
+.meta-table th {
+    width: 100px;
+    font-weight: 600;
+    color: var(--color-text-light);
+    border: none;
+}
+.meta-table td {
+    color: var(--color-text-dark);
+    border: none;
 }
 
-.table-bordered thead th:first-child {
-    border-left: none;
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--color-border);
+    padding-top: 1.5rem;
+    margin-top: 2rem;
 }
-
-.table-bordered thead th:last-child {
-    border-right: none;
-}
-
-.table-bordered tbody td:first-child {
-    border-left: none;
-}
-
-.table-bordered tbody td:last-child {
-    border-right: none;
-}
-
-
-.badge.bg-success {
-  background-color: #315e4e !important;
-  font-weight: 500;
-  padding: 0.4em 0.6em;
-}
-
-.badge.bg-secondary {
-  background-color: #bbb !important;
-  font-weight: 500;
-  padding: 0.4em 0.6em;
-}
-
-.page-navigation {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-  font-family: 'Noto Sans KR', sans-serif;
-  gap: 10px;
-}
-
-.page-navigation a,
-.page-navigation span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 2px solid #7ecf98;
-  color: #4caf50;
-  text-decoration: none;
+.btn-primary {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
   font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(126, 207, 152, 0.4);
-  transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
-  font-size: 1rem;
 }
-
-.page-navigation a:hover {
-  background-color: #a4d7a7;
-  color: white;
-  box-shadow: 0 4px 12px rgba(126, 207, 152, 0.6);
+.btn-outline-danger {
+    font-weight: 600;
 }
-
-.paginate span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 2px solid #4caf50;
-  background-color: #4caf50;
-  color: #fff;
-  font-weight: 700;
-  cursor: default;
-  box-shadow: 0 2px 5px rgba(76, 175, 80, 0.6);
-  font-size: 1rem;
+.btn-secondary {
+    background-color: #e9ecef;
+    border-color: #e9ecef;
+    color: #495057;
+    font-weight: 600;
 }
-
-.paginate a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 2px solid #4caf50;
-  color: #4caf50;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background-color 0.3s, color 0.3s;
-  font-size: 1rem;
-}
-
-.paginate a:hover {
-  background-color: #81c784;
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(129, 199, 132, 0.6);
-}
-
-.page-navigation .disabled {
-  color: #cde5d4;
-  border-color: #cde5d4;
-  cursor: default;
-  pointer-events: none;
-  box-shadow: none;
-}
-
 </style>
-
 </head>
 <body>
-
-	<jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
-
 
 	<main class="main-container">
 		<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
 		
-			<h2>오늘의 퀴즈 관리</h2>
-			
-			<div>
-				<table>
-					<thead>
-						<tr>
-							<td>퀴즈 제목</td>
-							<td>${dto.subject}</td>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>퀴즈 내용</td>
-							<td>${dto.content}</td>
-						</tr>
-						<tr>
-							<td>답</td>
-							<td>
-								<c:if test="${dto.answer eq '1'}">
-								    O
-								</c:if>
-								<c:if test="${dto.answer eq '0'}">
-								    X
-								</c:if>
-							</td>
-						</tr>
-						<tr>
-							<td>해석</td>
-							<td>${dto.commentary}</td>
-						</tr>
-						<tr>
-							<td>작성자</td>
-							<td>${dto.name}</td>
-						</tr>
-						<tr>
-							<td>작성일</td>
-							<td>${dto.regDate}</td>
-						</tr>
-						<tr>
-							<td>개시일</td>
-							<td>${dto.openDate}</td>
-						</tr>
-					</tbody>
-				</table>
+        <div class="right-panel">
+			<div class="page-title">
+			    <h2><i class="bi bi-file-text-fill"></i> 퀴즈 상세 정보</h2>
+                <p class="page-subtitle">등록된 퀴즈의 상세 내용을 확인합니다.</p>
 			</div>
-			
-			<div>
-				<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/quiz/update?quizId=${dto.quizId}&page=${page}';">수정</button>
-				<button type="button" onclick="deleteOk();">삭제</button>
-			</div>
-			
-			<div>
-				<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/quiz/list?${query}';">목록으로 돌아가기</button>
-			</div>
-			
+
+            <div class="content">
+                <div class="quiz-card">
+                    <div class="quiz-card-header">
+                        <h4>${dto.subject}</h4>
+                    </div>
+                    <div class="quiz-card-body">
+                        <div class="quiz-section">
+                            <h5 class="quiz-section-title">퀴즈 내용</h5>
+                            <p class="quiz-section-content">${dto.content}</p>
+                        </div>
+                        <div class="quiz-section">
+                            <h5 class="quiz-section-title">정답</h5>
+                            <p class="quiz-section-content quiz-answer">
+                                <c:if test="${dto.answer eq '1'}">O</c:if>
+								<c:if test="${dto.answer eq '0'}">X</c:if>
+                            </p>
+                        </div>
+                        <div class="quiz-section">
+                            <h5 class="quiz-section-title">해설</h5>
+                            <p class="quiz-section-content">${dto.commentary}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="table meta-table">
+                    <tbody>
+                        <tr>
+                            <th>작성자</th>
+                            <td>${dto.name}</td>
+                            <th>작성일</th>
+                            <td>${dto.regDate}</td>
+                        </tr>
+                        <tr>
+                            <th>개시일</th>
+                            <td>${dto.openDate}</td>
+                            <th>퀴즈번호</th>
+                            <td>${dto.quizId}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="action-buttons">
+                    <div>
+                        <button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/admin/quiz/update?quizId=${dto.quizId}&page=${page}';">
+                            <i class="bi bi-pencil-square"></i> 수정
+                        </button>
+                        <button type="button" class="btn btn-outline-danger" onclick="deleteOk();">
+                            <i class="bi bi-trash-fill"></i> 삭제
+                        </button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-secondary" onclick="location.href='${pageContext.request.contextPath}/admin/quiz/list?${query}';">
+                            <i class="bi bi-list-ul"></i> 목록
+                        </button>
+                    </div>
+                </div>
+            </div>
+		</div>
 	</main>
 
 <c:if test="${sessionScope.member.memberId==dto.memberId||sessionScope.member.userLevel>50}">
 	<script type="text/javascript">
 	function deleteOk() {
-		if(confirm('퀴즈를 삭제하시겠습니까?')) {
+		if(confirm('이 퀴즈를 정말 삭제하시겠습니까?')) {
 			let params = 'quizId=${dto.quizId}&${query}';
 			let url = '${pageContext.request.contextPath}/admin/quiz/delete?' + params;
 			location.href = url;

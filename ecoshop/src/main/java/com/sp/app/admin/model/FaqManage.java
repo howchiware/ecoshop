@@ -7,24 +7,25 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class QuizManage {
+public class FaqManage {
 	
 	private Long memberId;
 	private String userId;
 	private int userLevel;
+	private String regDate;
+	private String regUpdate;
 	
 	private String name;
 	private String nickname;
-	
-	// 퀴즈
-	private Long quizId;
+
+	private Long faqId;
 	private String subject;
 	private String content;
-	private int answer;
-	private String commentary;
-	private String regDate;
-	private String openDate;
+	private Long updateId;
 	
-	private Long insertId;
-	private int dayIndex;
+	private Long categoryId;
+	private String categoryName;
+	
+	private String updateName;
+
 }

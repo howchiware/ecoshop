@@ -1,343 +1,262 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
-<%@ taglib prefix="c" uri="jakarta.tags.core"%>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>관리자 페이지</title>
+<title>관리자 페이지 - 오늘의 퀴즈 관리</title>
+<jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/admin.css">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <style>
+:root {
+  --color-primary: #315e4e;
+  --color-primary-darker: #234d3c;
+  --color-secondary: #e6f4ea;
+  --color-border: #e0e6ed;
+  --color-text-dark: #2c3e50;
+  --color-text-light: #8492a6;
+  --color-bg: #f8f9fa;
+  --color-white: #ffffff;
+}
 * {
   font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
-  color: #333;
-  margin: 0;
 }
-
-@font-face {
-    font-family: 'Pretendard-Regular';
-    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-    font-style: normal;
-}
-
-h2.mb-4 {
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 600;
-    font-size: 1.8rem;
-    color: #333;
-    letter-spacing: -0.5px;
-    position: relative;
-    padding-left: 16px;
-    margin-bottom: 2.0rem;
-}
-
-h2.mb-4::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 6px;
-    height: 80%;
-    background: linear-gradient(180deg, #4CAF50, #81C784);
-    border-radius: 3px;
+body {
+  background-color: var(--color-bg);
 }
 
 .main-container {
   display: flex;
-  padding: 20px;
-  gap: 20px;
 }
-
-.content {
+.right-panel {
   flex: 1;
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 1.5rem 2rem;
+}
+.content {
+  background-color: var(--color-white);
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
 }
 
-form label {
-  font-weight: 700;
-  color: #315e4e;
+.page-title h2 {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--color-text-dark);
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.page-title h2 i {
+    color: var(--color-primary);
 }
 
-form .form-control,
-form .form-select {
-  border-radius: 6px;
-  border: 1px solid #ddd;
+.stats-card {
+    background: linear-gradient(135deg, var(--color-primary), #4caf50);
+    color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 8px 16px rgba(49, 94, 78, 0.2);
+}
+.stats-card .card-title {
+    font-weight: 500;
+    opacity: 0.9;
+    font-size: 1rem;
+}
+.stats-card .card-text {
+    font-size: 2rem;
+    font-weight: 700;
+}
+.stats-card .badge {
+    font-size: 0.9rem;
+    padding: 0.5em 0.8em;
+}
+
+.search-form {
+    background-color: var(--color-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border: 1px solid var(--color-border);
+}
+.search-form label {
+  font-weight: 600;
+  color: var(--color-text-dark);
   font-size: 0.9rem;
 }
 
-form .form-control:focus,
-form .form-select:focus {
-  border-color: #315e4e;
-  box-shadow: 0 0 0 0.15rem rgba(49, 94, 78, 0.25);
+.btn-primary {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  font-weight: 600;
 }
-
-form .btn-primary {
-  background-color: #315e4e;
-  border: none;
-  font-weight: 500;
-  padding: 0.45rem 1rem;
-  border-radius: 6px;
+.btn-primary:hover {
+  background-color: var(--color-primary-darker) !important;
+  border-color: var(--color-primary-darker) !important;
 }
-
-form .btn-primary:hover {
-  background-color: #234d3c;
+.btn-secondary {
+    background-color: #e9ecef;
+    border-color: #e9ecef;
+    color: #495057;
+    font-weight: 600;
 }
-
-form button[type=button] {
-  background-color: #e2e2e2;
-  border: none;
-  padding: 0.45rem 1rem;
-  border-radius: 6px;
-  font-weight: 500;
-}
-
-form button[type=button]:hover {
-  background-color: #ccc;
-}
-
-.table-wrapper {
-    max-width: 90%;
-    margin: 0 auto;
+.btn-secondary:hover {
+    background-color: #dee2e6;
+    border-color: #dee2e6;
 }
 
 .table {
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: 12px;
-    overflow: hidden;
-    font-family: 'Noto Sans KR', sans-serif;
+    border-top: 2px solid var(--color-primary);
 }
-
 .table thead th {
-    background-color: #e6f4ea;
-    color: #2e7d32;
+    background-color: #f8f9fa;
+    color: var(--color-text-secondary);
     font-weight: 600;
     text-align: center;
-    border-bottom: 2px solid #c8e6c9;
+    border-bottom: 1px solid var(--color-border);
 }
-
 .table tbody td {
     vertical-align: middle;
     text-align: center;
-    border-color: #e0e0e0;
+    color: #495057;
+}
+.table tbody tr:hover {
+    background-color: #fcfcfd;
+}
+.table a {
+    color: var(--color-text-dark);
+    text-decoration: none;
+    font-weight: 600;
+}
+.table a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
 }
 
-.table-hover tbody tr:hover {
-    background-color: #f1f8f4;
-    transition: background-color 0.2s ease;
-}
-
-.table-bordered {
-    border: 1.5px solid #dcdcdc;
-    border-radius: 12px;
-    border-collapse: separate;
-    border-spacing: 0;
-    overflow: hidden;
-}
-
-.table-bordered thead th,
-.table-bordered tbody td {
-    border: 1px solid #dcdcdc;
-}
-
-.table-bordered thead th:first-child {
-    border-left: none;
-}
-
-.table-bordered thead th:last-child {
-    border-right: none;
-}
-
-.table-bordered tbody td:first-child {
-    border-left: none;
-}
-
-.table-bordered tbody td:last-child {
-    border-right: none;
-}
-
-
-.badge.bg-success {
-  background-color: #315e4e !important;
-  font-weight: 500;
-  padding: 0.4em 0.6em;
-}
-
-.badge.bg-secondary {
-  background-color: #bbb !important;
-  font-weight: 500;
-  padding: 0.4em 0.6em;
+.table-bottom-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
 }
 
 .page-navigation {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-  font-family: 'Noto Sans KR', sans-serif;
-  gap: 10px;
+    display: flex;
+    justify-content: center;
 }
-
-.page-navigation a,
-.page-navigation span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 2px solid #7ecf98;
-  color: #4caf50;
-  text-decoration: none;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(126, 207, 152, 0.4);
-  transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
-  font-size: 1rem;
+.pagination .page-link {
+    color: var(--color-primary);
 }
-
-.page-navigation a:hover {
-  background-color: #a4d7a7;
-  color: white;
-  box-shadow: 0 4px 12px rgba(126, 207, 152, 0.6);
+.pagination .page-item.active .page-link {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
 }
-
-.paginate span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 2px solid #4caf50;
-  background-color: #4caf50;
-  color: #fff;
-  font-weight: 700;
-  cursor: default;
-  box-shadow: 0 2px 5px rgba(76, 175, 80, 0.6);
-  font-size: 1rem;
+.pagination .page-link:focus {
+    box-shadow: 0 0 0 0.2rem rgba(49, 94, 78, 0.25);
 }
-
-.paginate a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 2px solid #4caf50;
-  color: #4caf50;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background-color 0.3s, color 0.3s;
-  font-size: 1rem;
-}
-
-.paginate a:hover {
-  background-color: #81c784;
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(129, 199, 132, 0.6);
-}
-
-.page-navigation .disabled {
-  color: #cde5d4;
-  border-color: #cde5d4;
-  cursor: default;
-  pointer-events: none;
-  box-shadow: none;
-}
-
 </style>
-
 </head>
 <body>
 
-	<jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
-
-
 	<main class="main-container">
 		<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
-		<div class="content">
-			<h2 class="mb-4">오늘의 퀴즈 관리</h2>
-
-			<form name="searchForm" class="row g-3 mb-4" method="get">
-				<div class="col-auto">
-					<label for="schType" class="form-label">검색 조건</label> 
-						<select 	id="schType" name="schType" class="form-select">
-							<option value="name" ${schType=="name"?"selected":""}>작성자</option>
-							<option value="openDate" ${schType=="openDate"?"selected":""}>개시일</option>
-						</select>
-					
-				</div>
-				<div class="col-auto">
-					<label for="keyword" class="form-label">검색어</label> 
-					<input type="text" id="kwd" name="kwd" value="${kwd}" class="form-control">
-				</div>
-
-				<div class="col-auto align-self-end">
-					<button type="submit" class="btn btn-primary" onclick="searchList();">조회</button>
-					<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/quiz/list'">초기화
-				</button>
-				</div>
-				
-				
-			</form>
-
-			<table class="table table-bordered table-hover">
-				<thead class="table-light">
-					<tr class="text-center">
-						<th>No</th>
-						<th>퀴즈 고유 번호</th>
-						<th>퀴즈 제목</th>
-						<th>개시일</th>
-						<th>작성일</th>
-						<th>최종 출제자</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach var="item" items="${list}" varStatus="status">
-						<tr class="text-center">
-							<td>${dataCount - (page-1) * size - status.index}</td>
-							<td>${item.quizId}</td>
-							<td>
-							 	<a href="${articleUrl}&quizId=${item.quizId}"> ${item.subject}</a>
-							 </td>
-							<td>${item.openDate}</td>
-							<td>${item.regDate}</td>
-							<td>${item.name}</td>
-						</tr>
-					</c:forEach>
-
-
-					<c:if test="${empty list}">
-						<tr>
-							<td colspan="6" class="text-center">퀴즈를 등록해주세요.</td>
-						</tr>
-					</c:if>
-				</tbody>
-			</table>
-			<table>
-				<tr> 
-					<td>
-						<div class="col-auto align-self-end">
-							<button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/admin/quiz/write';">퀴즈 등록</button>
-						</div>
-					</td>
-				</tr>
-			</table>
-			
-			<div class="page-navigation">
-				${dataCount == 0 ? "" : paging}
+		
+        <div class="right-panel">
+			<div class="page-title">
+			    <h2><i class="bi bi-patch-question-fill"></i> 오늘의 퀴즈 관리</h2>
 			</div>
+            
+            <div class="content">
+                <div class="row">
+                    <div class="col-md-6">
+                         <div class="stats-card">
+                            <h5 class="card-title">총 등록된 퀴즈</h5>
+                            <p class="card-text">${dataCount}개</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="stats-card">
+                            <h5 class="card-title">오늘의 퀴즈</h5>
+                            <p class="card-text">
+                                <c:choose>
+                                    <c:when test="${not empty todayQuiz}">
+                                        ${todayQuiz.subject}
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="badge bg-light text-dark">미지정</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <form name="searchForm" class="search-form row g-3 align-items-end" method="get">
+                    <div class="col-md-3">
+                        <label for="schType" class="form-label">검색 조건</label> 
+                        <select id="schType" name="schType" class="form-select">
+                            <option value="name" ${schType=="name"?"selected":""}>작성자</option>
+                            <option value="openDate" ${schType=="openDate"?"selected":""}>개시일</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="kwd" class="form-label">검색어</label> 
+                        <input type="text" id="kwd" name="kwd" value="${kwd}" class="form-control">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">조회</button>
+                        <button type="button" class="btn btn-secondary" onclick="location.href='${pageContext.request.contextPath}/admin/quiz/list'">초기화</button>
+                    </div>
+                </form>
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="text-center">
+                            <th width="8%">No</th>
+                            <th width="12%">퀴즈 번호</th>
+                            <th>퀴즈 제목</th>
+                            <th width="15%">개시일</th>
+                            <th width="15%">작성일</th>
+                            <th width="12%">최종 출제자</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="item" items="${list}" varStatus="status">
+                            <tr class="text-center">
+                                <td>${dataCount - (page-1) * size - status.index}</td>
+                                <td>${item.quizId}</td>
+                                <td class="text-start">
+                                    <a href="${articleUrl}&quizId=${item.quizId}">${item.subject}</a>
+                                </td>
+                                <td>${item.openDate}</td>
+                                <td>${item.regDate}</td>
+                                <td>${item.name}</td>
+                            </tr>
+                        </c:forEach>
+
+                        <c:if test="${empty list}">
+                            <tr>
+                                <td colspan="6" class="text-center py-5">등록된 퀴즈가 없습니다.</td>
+                            </tr>
+                        </c:if>
+                    </tbody>
+                </table>
+                
+                <div class="table-bottom-controls">
+                    <div class="align-self-center">
+                        <button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/admin/quiz/write';">퀴즈 등록</button>
+                    </div>
+                    <div class="page-navigation">
+                        ${dataCount == 0 ? "" : paging}
+                    </div>
+                </div>
+            </div>
 		</div>
 	</main>
 
@@ -347,7 +266,6 @@ window.addEventListener('DOMContentLoaded', () => {
 	inputEL.addEventListener('keydown', function (evt) {
 		if(evt.key === 'Enter') { 
 			evt.preventDefault();
-	    	
 			searchList();
 		}
 	});
@@ -355,20 +273,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function searchList() {
 	const f = document.searchForm;
-	if(! f.kwd.value.trim()) {
-		return;
-	}
-	
-	const formData = new FormData(f);
-	let params = new URLSearchParams(formData).toString();
-	
-	let url = '${pageContext.request.contextPath}/admin/quiz/list';
-	location.href = url + '?' + params;
+	// 검색어 유효성 검사는 필요 시 추가
+	f.submit();
 }
-
-
 </script>
 	
-
 </body>
 </html>

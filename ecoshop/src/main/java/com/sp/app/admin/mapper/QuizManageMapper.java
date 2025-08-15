@@ -11,11 +11,15 @@ import com.sp.app.admin.model.QuizManage;
 @Mapper
 public interface QuizManageMapper {
 
-	public List<QuizManage> listQuiz(Map<String, Object> map	);
+	public List<QuizManage> listQuiz(Map<String, Object> map);
 	public int dataCount(Map<String, Object> map);
 	public QuizManage findByQuiz(Long quizId);
 	
 	public void insertQuiz(QuizManage dto) throws SQLException;
 	public void updateQuiz(QuizManage dto) throws SQLException;
 	public void deleteQuiz(long quizId) throws SQLException;
+	
+	public QuizManage findByOpenDate(String openDate);
+	public QuizManage findTodayQuiz();
+	
 }

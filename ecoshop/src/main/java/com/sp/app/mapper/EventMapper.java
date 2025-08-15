@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.sp.app.model.Attendance;
+import com.sp.app.model.Quiz;
 
 @Mapper
 public interface EventMapper {
@@ -21,4 +22,11 @@ public interface EventMapper {
 	
 	
 	/* 퀴즈 */
+	public void playQuiz(long memberId) throws SQLException;
+	public List<Quiz> listQuiz(Map<String, Object> map) throws SQLException;
+	public int countQuiz(Map<String, Object> map) throws SQLException;
+	public Quiz findTodayQuiz() throws SQLException;
+	public int isQuizSolved(Map<String, Object> map);
+	
+	// public void addPoints(Quiz dto) throws SQLException;
 }

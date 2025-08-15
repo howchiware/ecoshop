@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.app.model.Attendance;
+import com.sp.app.model.Member;
+import com.sp.app.model.Quiz;
 import com.sp.app.model.SessionInfo;
 import com.sp.app.service.EventService;
 
@@ -38,8 +40,10 @@ public class EventController {
 	@GetMapping("attendance")
 	public String attendancePage(Model model, HttpSession session) throws SQLException {
 	    
+		try {
 	    SessionInfo info = (SessionInfo) session.getAttribute("member");
 	    List<Attendance> list = new ArrayList<>();
+	    
 	    if (info != null) {
 	        Map<String, Object> map = new HashMap<>();
 	        map.put("memberId", info.getMemberId());
@@ -71,6 +75,11 @@ public class EventController {
 	    List<Integer> attendanceDaysList = new ArrayList<>(attendanceDays);
 	    model.addAttribute("attendanceDays", attendanceDaysList);
 	    model.addAttribute("weekDate", weekDate);
+	    
+		} catch (Exception e) {
+			log.info("attendancePage", e);
+			throw e;
+		}
 
 	    return "event/attendance";
 	}
@@ -117,6 +126,54 @@ public class EventController {
 	    }
 	    return map;
 	}
+	
+	
+	
+	
+	
+	@GetMapping("quiz")
+	public String quizPage(Model model, HttpSession session) throws SQLException {
+	    
+		
+		try {
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			if (info == null) {
+	            return "redirect:/member/login";
+	         }
+			
+		    Quiz todayQuiz = service.findTodayQuiz();
+		    model.addAttribute("todayQuiz", todayQuiz);
+		    
+		    boolean isSolved = false;
+	        if(todayQuiz != null) {
+	            isSolved = service.isQuizSolved(info.getMemberId(), todayQuiz.getQuizId());
+	        }
+	        model.addAttribute("isSolved", isSolved);
+		    
+		} catch (Exception e) {
+			log.info("quizPage : ", e);
+		}
+		
+		return "event/quiz";
+	}
+	
+	@PostMapping("/quiz/play")
+	@ResponseBody
+	public String quizPlay(Member dto, HttpSession session) {
+	   
+	    try {
+	    	SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    	dto.setMemberId(info.getMemberId());
+	    	
+	    	service.playQuiz(dto.getMemberId());
+	    	 
+	    } catch (Exception e) {
+	    	log.info("quizPlay");
+	    }
+	    
+	    return "redirect:/event/quiz";
+	}
+
 
 
 }
