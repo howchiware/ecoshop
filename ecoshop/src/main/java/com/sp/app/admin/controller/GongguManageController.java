@@ -1,5 +1,7 @@
 package com.sp.app.admin.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sp.app.admin.model.GongguManage;
+import com.sp.app.admin.model.GongguReviewManage;
 import com.sp.app.admin.service.GongguManageService;
 import com.sp.app.common.StorageService;
 
@@ -63,12 +66,26 @@ public class GongguManageController {
     }
     
     @GetMapping("productReview")
-    public String review(@RequestParam(value="memberId", required = false) Long memberId, Model model) {
-    	
-    	
+    public String getProductReview(@RequestParam(value="memberId", required = false) Long memberId, Model model) {
+    	List<GongguReviewManage> reviewList = gongguManageService.getReviewList(); 
+
     	return "admin/gonggu/gongguReview";
     }
     
+    @GetMapping(value = "reviewList", headers = "X-Requested-With=XMLHttpRequest")
+    public String getProductReviewList(Model model) {
+        List<GongguReviewManage> reviewList = gongguManageService.getReviewList();
+      
+        model.addAttribute("list", reviewList);
+        return "admin/gonggu/reviewList";
+    }
+    
+    @GetMapping(value = "inquiryList", headers = "X-Requested-With=XMLHttpRequest")
+    public String getInquiryList(Model model) {
+        
+        return "admin/gonggu/inquiryList";
+    }
+
     @GetMapping("category")
     public String category(@RequestParam(value="categoryId", required = false) Long categoryId, Model model) {
     	
