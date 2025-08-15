@@ -4,7 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+
+import com.sp.app.admin.mapper.GongguManageMapper;
 import com.sp.app.admin.model.GongguManage;
+import com.sp.app.admin.model.GongguReviewManage;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class GongguManageServiceImpl implements GongguManageService {
-
+	private final GongguManageMapper gongguManageMapper;
    
 	@Override
 	public void insertGongguProduct(GongguManage dto, String uploadPath) throws Exception {
@@ -60,5 +64,16 @@ public class GongguManageServiceImpl implements GongguManageService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<GongguReviewManage> getReviewList() {
+        List<GongguReviewManage> list = null;
+        try {
+            list = gongguManageMapper.findAllReviews();
+        } catch (Exception e) {
+            log.error("gongguReviewList :", e);
+        }
+        return list;
+    }
 
 }
