@@ -6,33 +6,118 @@
 <head>
   <meta charset="UTF-8" />
   <title>관리자 페이지 헤더</title>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/Aheader.css" />
-  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    /* --- ▼▼▼ 새롭게 개선된 헤더 CSS ▼▼▼ --- */
+    @font-face {
+        font-family: 'Pretendard-Regular';
+        src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+        font-style: normal;
+    }
+
+    .admin-header {
+        width: 100%;
+        height: 60px;
+        background-color: #ffffff;
+        border-bottom: 1px solid #e0e6ed;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 25px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
+    }
+
+    /* --- 왼쪽: 로고 및 타이틀 --- */
+    .header-left {
+        display: flex;
+        align-items: center;
+    }
+    .logo-link {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+    }
+    .logo-icon {
+        font-size: 1.8rem;
+        color: #2e7d32; /* ECOBRAND 테마 컬러 */
+    }
+    .site-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-left: 10px;
+    }
+    .admin-text {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #8492a6;
+        margin-left: 15px;
+        padding-left: 15px;
+        border-left: 1px solid #e0e6ed;
+    }
+
+    /* --- 오른쪽: 사용자 정보 및 아이콘 메뉴 --- */
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    .user-greeting {
+        font-size: 0.95rem;
+        color: #5c6e80;
+    }
+    .user-greeting strong {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+    .icon-menu {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .icon-menu a {
+        color: #5c6e80;
+        text-decoration: none;
+        font-size: 1.3rem;
+        transition: color 0.2s ease;
+    }
+    .icon-menu a:hover {
+        color: #2e7d32;
+    }
+  </style>
 </head>
 <body>
- <div class="header">
-  <div class="header-inner">
-    <ul class="left-menu">
-      <li>
-      <c:if test="${sessionScope.member.userLevel>50}">
-        <a href="${pageContext.request.contextPath}/admin" title="관리자 페이지" class="admin-text">관리자 페이지</a>
-      </c:if>
-      </li>
-    </ul>
+ <header class="admin-header">
+  <div class="header-left">
+    <a href="${pageContext.request.contextPath}/admin" class="logo-link">
+        <span class="site-title">ECOBRAND</span>
+    </a>
+    <span class="admin-text">Admin Page</span>
+  </div>
 
-    <ul class="right-menu">
+  <div class="header-right">
+    <span class="user-greeting">
+      안녕하세요, <strong>${sessionScope.member.name}</strong>님
+    </span>
+    <ul class="icon-menu">
       <li>
-        <a href="${pageContext.request.contextPath}/" title="홈">
+        <a href="${pageContext.request.contextPath}/" title="홈으로">
           <i class="bi bi-house-door-fill"></i>
         </a>
       </li>
 	  <li>
         <a href="<c:url value='/member/logout' />" title="로그아웃">
-          <i class="bi bi-box-arrow-in-left"></i>
+          <i class="bi bi-box-arrow-right"></i>
         </a>
       </li>
     </ul>
   </div>
-</div>
+</header>
 </body>
 </html>
