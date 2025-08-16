@@ -65,15 +65,4 @@ public class GongguManageServiceImpl implements GongguManageService {
 		return null;
 	}
 
-	@Override
-	public List<GongguReviewManage> getReviewList() {
-        List<GongguReviewManage> list = null;
-        try {
-            list = gongguManageMapper.findAllReviews();
-        } catch (Exception e) {
-            log.error("gongguReviewList :", e);
-        }
-        return list;
-    }
-
 }

@@ -55,10 +55,13 @@
 
 .carousel-container {
 	align-content: center;
+	min-height: 300px; 
 }
 
 .category-container {
 	padding-top: 100px;
+	border-bottom: 1px solid #c6c6c6;
+	position: relative;
 }
 
 .category {
@@ -122,3 +125,28 @@
 .heart-icon:hover {
   color: #e74c3c;
 }
+
+.category-container .nav-tab {
+    cursor: pointer;
+    position: relative;
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #555;
+    padding-bottom: 10px;
+}
+
+.category-container .nav-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; 
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #87A78D;
+}
+
+table.board-list thead th {
+    background-color: #f2f2f2 !important; 
+    color: #333 !important;
+}
+

@@ -10,8 +10,8 @@
 <title>문의</title>
 <jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp" />
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css_gonggu/productReview.css">
 </head>
 <body>
@@ -53,6 +53,7 @@
 	</main>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	<script src="${pageContext.request.contextPath}/dist/jsGonggu/showTab.js"></script>
+	<script src="${pageContext.request.contextPath}/dist/jsGonggu/sendAjaxRequest.js"></script>
+	<script src="${pageContext.request.contextPath}/dist/jsGonggu/showReviewTab.js"></script>
 </body>
 </html>

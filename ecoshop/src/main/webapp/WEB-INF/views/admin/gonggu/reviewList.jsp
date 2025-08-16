@@ -16,9 +16,9 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:if test="${not empty list}">
-				<c:forEach var="dto" items="${list}">
-					<tr>
+			<c:if test="${not empty reviewList}">
+				<c:forEach var="dto" items="${reviewList}">
+					<tr class="border-bottom">
 						<td>${dto.gongguProductName}</td>
 						<td>${dto.content}</td>
 						<td>${dto.rate}</td>
@@ -30,7 +30,7 @@
 					</tr>
 				</c:forEach>
 			</c:if>
-			<c:if test="${empty list}">
+			<c:if test="${empty reviewList}">
 				<tr>
 					<td colspan="6" style="text-align: center;">등록된 내용이 없습니다.</td>
 				</tr>

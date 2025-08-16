@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.sp.app.common.StorageService;
 import com.sp.app.mapper.WorkshopMapper;
+import com.sp.app.model.Participant;
 import com.sp.app.model.Workshop;
+import com.sp.app.model.WorkshopReview;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +22,12 @@ public class WorkshopServiceImpl implements WorkshopService {
 	private final WorkshopMapper mapper;
 	private final StorageService storageService;
 
+	// ** 관리자 **
 	// 카테고리
 	@Override
-	public void insertCategory(Workshop dto, String CategoryName) {
+	public void insertCategory(Workshop dto, String categoryName) {
 		try {
-			String name = CategoryName == null ? null : CategoryName.trim();
+			String name = categoryName == null ? null : categoryName.trim();
 
 			dto.setCategoryName(name);
 			mapper.insertProgramCategory(dto);
@@ -52,16 +55,16 @@ public class WorkshopServiceImpl implements WorkshopService {
 
 	// 프로그램
 	@Override
-	public void insertProgram(Workshop dto, Long categoryId, String programTitle, String programContent)
+	public void insertProgram(Workshop dto)
 			throws Exception {
 		try {
-			dto.setCategoryId(categoryId);
-			dto.setProgramTitle(programTitle);
-			dto.setProgramContent(programContent);
+			if (dto.getProgramTitle() != null) {
+	            dto.setProgramTitle(dto.getProgramTitle().trim());
+	        }
+	        mapper.insertProgram(dto);
 
-			mapper.insertProgram(dto);
 		} catch (Exception e) {
-			log.info("programContent : ", e);
+			log.info("insertProgram : ", e);
 
 			throw e;
 		}
@@ -325,6 +328,7 @@ public class WorkshopServiceImpl implements WorkshopService {
 	        map.put("workshopId", workshopId);
 
 	        List<Workshop> listFile = listWorkshopPhoto(map);
+	        
 	        if (listFile != null) {
 	            for (Workshop dto : listFile) {
 	                String p = dto.getWorkshopImagePath();
@@ -345,7 +349,6 @@ public class WorkshopServiceImpl implements WorkshopService {
 	    }
 	}
 
-
 	@Override
 	public int workshopPhotoDataCount(Map<String, Object> map) {
 		int result = 0;
@@ -357,5 +360,228 @@ public class WorkshopServiceImpl implements WorkshopService {
 		}
 		return result;
 	}
+
+	@Override
+	public List<Participant> listParticipant(Map<String, Object> map) {
+		try {
+			return mapper.listParticipant(map);
+		} catch (Exception e) {
+			log.info("listParticipant : ", e);
+			
+			throw e;
+		}
+	}
+
+	@Override
+	public int participantDataCount(Map<String, Object> map) {
+		int result = 0;
+
+		try {
+			result = mapper.participantDataCount(map);
+		} catch (Exception e) {
+			log.info("participantDataCount : ", e);
+		}
+		return result;
+	}
+
+	@Override
+	public int markAttendance(Map<String, Object> map) throws Exception {
+		int result = 0;
+
+		try {
+			result = mapper.markAttendance(map);
+		} catch (Exception e) {
+			log.info("markAttendance : ", e);
+			
+			throw e;
+		}
+		return result;
+	}
+
+	@Override
+	public int hasApplied(Map<String, Object> map) {
+		int result = 0;
+
+		try {
+			result = mapper.hasApplied(map);
+		} catch (Exception e) {
+			log.info("hasApplied : ", e);
+			
+			throw e;
+		}
+		return result;
+	}
+	
+	@Override
+	public List<Workshop> listAdminFaq(Map<String, Object> map) {
+		try {
+			return mapper.listAdminFaq(map);
+		} catch (Exception e) {
+			log.info("listAdminFaq : ", e);
+			
+			throw e;
+		}
+	}
+	
+	// ** 사용자 **
+	@Override
+	public List<Workshop> listUserWorkshop(Map<String, Object> map) {
+		try {
+			return mapper.listUserWorkshop(map);
+		} catch (Exception e) {
+			log.info("listUserWorkshop : ", e);
+			
+			throw e;
+		}
+	}
+	
+	@Override
+	public int userWorkshopDataCount(Map<String, Object> map) {
+		int result = 0;
+
+		try {
+			result = mapper.userWorkshopDataCount(map);
+		} catch (Exception e) {
+			log.info("userWorkshopDataCount : ", e);
+		}
+		return result;
+	}
+	
+	@Override
+	public Workshop findWorkshopDetail(long workshopId) {
+		Workshop dto = null;
+
+		try {
+			dto = mapper.findWorkshopDetail(workshopId);
+		} catch (Exception e) {
+			log.info("findWorkshopDetail : ", e);
+		}
+		return dto;
+	}
+
+	@Override
+	public Workshop findWorkshopStatusAndCapacity(long workshopId) throws Exception {
+		Workshop dto = null;
+
+		try {
+			dto = mapper.findWorkshopStatusAndCapacity(workshopId);
+		} catch (Exception e) {
+			log.info("findWorkshopStatusAndCapacity : ", e);
+		}
+		return dto;
+	}
+
+	@Override
+	public void applyWorkshop(Map<String, Object> map) throws Exception {
+		try {
+			mapper.applyWorkshop(map);
+		} catch (Exception e) {
+			log.info("applyWorkshop : ", e);
+
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public void cancelApplication(Map<String, Object> map) throws Exception {
+		try {
+			mapper.cancelApplication(map);
+		} catch (Exception e) {
+			log.info("cancelApplication : ", e);
+
+			throw e;
+		}
+		
+	}
+	
+
+	@Override
+	public List<WorkshopReview> listUserReview(Map<String, Object> map) {
+		try {
+			return mapper.listUserReview(map);
+		} catch (Exception e) {
+			log.info("listUserReview : ", e);
+			
+			throw e;
+		}
+	}
+	
+	@Override
+	public List<Workshop> listUserFaq(Map<String, Object> map) {
+		try {
+			return mapper.listUserFaq(map);
+		} catch (Exception e) {
+			log.info("listUserFaq : ", e);
+			
+			throw e;
+		}
+	}
+
+	@Override
+	public int reviewDataCount(Map<String, Object> map) {
+		int result = 0;
+
+		try {
+			result = mapper.reviewDataCount(map);
+		} catch (Exception e) {
+			log.info("reviewDataCount : ", e);
+		}
+		return result;
+	}
+
+	@Override
+	public void insertReview(WorkshopReview dto) throws Exception {
+		try {
+			mapper.insertReview(dto);
+		} catch (Exception e) {
+			log.info("insertReview : ", e);
+
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public void updateReview(WorkshopReview dto) throws Exception {
+		try {
+			mapper.updateReview(dto);
+		} catch (Exception e) {
+			log.info("updateReview : ", e);
+
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public void deleteReview(long num) throws Exception {
+		try {
+			mapper.deleteReview(num);
+		} catch (Exception e) {
+			log.info("deleteReview : ", e);
+
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public int faqDataCount(Map<String, Object> map) {
+		int result = 0;
+
+		try {
+			result = mapper.faqDataCount(map);
+		} catch (Exception e) {
+			log.info("faqDataCount : ", e);
+		}
+		return result;
+	}
+
+	@Override
+	public boolean isParticipantOfMember(long participantId, long memberId) {
+		return mapper.isParticipantOfMember(participantId, memberId);
+	}
+
 
 }
