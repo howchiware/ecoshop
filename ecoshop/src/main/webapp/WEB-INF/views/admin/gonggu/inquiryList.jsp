@@ -23,7 +23,12 @@
 						<td>${dto.content}</td>
 						<td>${dto.userName}</td>
 						<td><fmt:formatDate value="${dto.regDate}" pattern="yyyy-MM-dd" /></td>
-						<td>${dto.answerName}</td>
+						<td>
+							<c:choose>
+		                        <c:when test="${dto.status eq 1}">답변완료</c:when>
+		                        <c:otherwise>미답변</c:otherwise>
+		                    </c:choose>
+						</td>
 						<c:if test="${empty answer}">
 							<td>
 								<button type="button" class="small-btn">답변</button>
