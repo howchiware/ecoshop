@@ -6,34 +6,33 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.sp.app.model.Participant;
 import com.sp.app.model.Workshop;
+import com.sp.app.model.WorkshopReview;
 
 @Mapper
 public interface WorkshopMapper {
+	/* ──────────────── 관리자 ──────────────── */
+	// 카테고리
 	public void insertProgramCategory(Workshop dto);
 	public void updateProgramCategory(Workshop dto) throws SQLException;
 	public void deleteProgramCategory(long num) throws SQLException;
-	
 	public List<Workshop> listProgramCategory(Map<String, Object> map);
 	
 	// 프로그램
 	public void insertProgram(Workshop dto);
 	public void updateProgram(Workshop dto);
 	public void deleteProgram(long num);
-	
 	public int programDataCount(Map<String, Object> map);
 	public List<Workshop> listProgram(Map<String, Object> map);
-	
 	public Workshop findProgramById(long num);
 	
 	// 워크샵
 	public void insertWorkshop(Workshop dto) throws SQLException;
 	public void updateWorkshop(Workshop dto) throws SQLException;
 	public void deleteWorkshop(long num) throws SQLException;
-	
 	public int workshopDataCount(Map<String, Object> map);
 	public List<Workshop> listWorkshop(Map<String, Object> map);
-	
 	public Workshop findWorkshopById(long num);
 	
 	// 워크샵 사진
@@ -41,7 +40,6 @@ public interface WorkshopMapper {
 	public Workshop findWorkshopPhotoById(long num) throws SQLException;
 	public void deleteWorkshopPhotoById(long num) throws SQLException;
 	public void deleteWorkshopPhotosByWorkshopId(long num) throws SQLException;
-	
 	public List<Workshop> listWorkshopPhoto(Map<String, Object> map);
 	public int workshopPhotoDataCount(Map<String, Object> map);
 	
@@ -49,29 +47,48 @@ public interface WorkshopMapper {
 	public void insertManager(Workshop dto) throws SQLException;
 	public void updateManager(Workshop dto) throws SQLException;
 	public void deleteManager(long num) throws SQLException;
-	
 	public int managerDataCount(Map<String, Object> map);
 	public List<Workshop> listManager(Map<String, Object> map);
-	
 	public Workshop findManagerById(long num);
-	
-	// 후기
-	public void insertReview(Workshop dto) throws SQLException;
-	public void updateReview(Workshop dto) throws SQLException;
-	public void deleteReview(long num) throws SQLException;
-	
-	public int reviewDataCount(Map<String, Object> map);
-	public List<Workshop> listReview(Map<String, Object> map);
-	
-	public Workshop findReviewById(long num);
 	
 	// FAQ
 	public void insertFaq(Workshop dto) throws SQLException;
 	public void updateFaq(Workshop dto) throws SQLException;
 	public void deleteFaq(long num) throws SQLException;
-	
 	public int faqDataCount(Map<String, Object> map);
-	public List<Workshop> listFaq(Map<String, Object> map);
-	
+	public List<Workshop> listAdminFaq(Map<String, Object> map);
 	public Workshop findFaqById(long num);
+	
+	// 참가자
+	public List<Participant> listParticipant(Map<String, Object> map);
+	public int participantDataCount(Map<String, Object> map);
+	public int markAttendance(Map<String, Object> map);
+	public boolean isParticipantOfMember(long participantId, long memberId);
+	
+	/* ──────────────── 사용자 ──────────────── */
+	// 워크샵 목록/상세
+	public List<Workshop> listUserWorkshop(Map<String, Object> map);
+	public int userWorkshopDataCount(Map<String, Object> map);
+	public Workshop findWorkshopDetail(long workshopId);
+	
+	// 워크샵 신청/취소
+	public int hasApplied(Map<String, Object> map);
+	public int countAppliedByWorkshop(long workshopId);
+	public void applyWorkshop(Map<String, Object> map);
+	public int cancelApplication(Map<String, Object> map);
+	
+	// 워크샵 후기
+	public void insertReview(WorkshopReview dto) throws SQLException;
+	public void updateReview(WorkshopReview dto) throws SQLException;
+	public void deleteReview(long num) throws SQLException;
+	public int reviewDataCount(Map<String, Object> map);
+	public List<WorkshopReview> listUserReview(Map<String, Object> map);
+	public Workshop findReviewById(long num);
+	
+	// FAQ
+	public List<Workshop> listUserFaq(Map<String, Object> map);
+	
+	// 워크샵 상태 검증
+	public Workshop findWorkshopStatusAndCapacity(long workshopId);
+	
 }

@@ -76,7 +76,7 @@ public class WorkshopManageController {
 	@PostMapping("/program/write")
 	public String writeSubmitProgram(Workshop dto, HttpSession session) throws Exception {
 		try {
-			service.insertProgram(dto, dto.getCategoryId(), dto.getProgramTitle(), dto.getProgramContent());
+			service.insertProgram(dto);
 		} catch (Exception e) {
 			log.info("program writeSubmit : ", e);
 		}
@@ -86,10 +86,8 @@ public class WorkshopManageController {
 	// 프로그램 목록
 	@GetMapping("/program/list")
 	public String programList(@RequestParam(name = "page", defaultValue = "1") int current_page,
-			@RequestParam(name = "schType", defaultValue = "all") String schType,
 			@RequestParam(name = "kwd", defaultValue = "") String kwd,
-			@RequestParam(name = "categoryId", required = false) Long categoryId, Model model, HttpServletRequest req)
-			throws Exception {
+			@RequestParam(name = "categoryId", required = false) Long categoryId, Model model) {
 
 		try {
 			kwd = myUtil.decodeUrl(kwd);
@@ -100,7 +98,6 @@ public class WorkshopManageController {
 				offset = 0;
 
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("schType", schType);
 			map.put("offset", offset);
 			map.put("size", size);
 
@@ -112,10 +109,10 @@ public class WorkshopManageController {
 			List<Workshop> list = service.listProgram(map);
 
 			// 카테고리 드롭다운
-			Map<String, Object> m = new HashMap<String, Object>();
-			m.put("offset", 0);
-			m.put("size", 200);
-			List<Workshop> category = service.listCategory(m);
+			Map<String, Object> cmap = new HashMap<String, Object>();
+			cmap.put("offset", 0);
+			cmap.put("size", 200);
+			List<Workshop> category = service.listCategory(cmap);
 
 			model.addAttribute("list", list);
 			model.addAttribute("page", current_page);
@@ -125,7 +122,7 @@ public class WorkshopManageController {
 			model.addAttribute("category", category);
 
 		} catch (Exception e) {
-			log.info("program list : ", e);
+			log.info("programList : ", e);
 		}
 
 		return "admin/workshop/programList";
@@ -441,20 +438,16 @@ public class WorkshopManageController {
 	@GetMapping("/detail")
 	public String workshopDetail(@RequestParam(name = "num") long num,
             @RequestParam(name = "page", defaultValue = "1") String page,
-            @RequestParam(name = "schType", defaultValue = "all") String schType,
-            @RequestParam(name = "kwd", defaultValue = "") String kwd,
-            Model model, HttpSession session)
+            Model model)
 			throws Exception {
 
 		String query = "page=" + page;
 		try {
-			kwd = myUtil.decodeUrl(kwd);
-			if (!kwd.isBlank()) {
-				query += "&schType=" + schType + "&kwd=" + myUtil.encodeUrl(kwd);
-			}
-
 			// 기본 정보
-			Workshop dto = Objects.requireNonNull(service.findWorkshopById(num));
+	        Workshop dto = service.findWorkshopById(num);
+	        if (dto == null) {
+	            return "redirect:/admin/workshop/list?" + query;
+	        }
 			
 			// 상세 이미지
 			Map<String, Object> map = new HashMap<>();
@@ -542,17 +535,6 @@ public class WorkshopManageController {
 		}
 
 		return "redirect:/admin/workshop/list?" + query;
-	}
-
-	// 사진 목록
-	@GetMapping("/photo/list")
-	public String workshopPhotoList(@RequestParam long workshopId, Model model) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("workshopId", workshopId);
-		List<Workshop> photo = service.listWorkshopPhoto(map);
-		model.addAttribute("photo", photo);
-
-		return "admin/workshop/photoList";
 	}
 
 	// 사진 업로드

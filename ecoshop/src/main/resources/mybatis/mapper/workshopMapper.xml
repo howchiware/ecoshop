@@ -45,7 +45,7 @@
 		<where>
 			<include refid="where-list" />
 		</where>
-		ORDER BY regDate DESC, programId DESC
+		ORDER BY p.regDate DESC, p.programId DESC
 		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
 
@@ -57,13 +57,13 @@
 				OR LOWER(programContent) LIKE '%' || LOWER(#{kwd}) || '%')
 			</if>
 			<if test="categoryId != null">
-				AND categoryId = #{categoryId}
+				AND p.categoryId = #{categoryId}
 			</if>
 		</trim>
 	</sql>
 
 	<!-- 총 개수 -->
-	<select id="programDataCount">
+	<select id="programDataCount" parameterType="map" resultType="int">
 		SELECT NVL(COUNT(*), 0)
 		FROM program
 		<where>
@@ -118,7 +118,7 @@
 		</trim>
 	</sql>
 	
-	<select id="managerDataCount">
+	<select id="managerDataCount" parameterType="map" resultType="int">
 	SELECT NVL(COUNT(*), 0)
 	FROM workshopManager
 		<where>
@@ -162,29 +162,32 @@
 	<where>
 		<include refid="where-list-workshop"/>
 	</where>
-	ORDER BY regDate DESC
+	ORDER BY w.regDate DESC, w.workshopId DESC
 	OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
 	
 	<sql id="where-list-workshop">
-		<trim prefixOverrides="AND">
+	<trim prefixOverrides="AND">
 		<if test="kwd != null and kwd != ''">
-            AND (LOWER(workshopTitle) LIKE '%' || LOWER(#{kwd}) || '%'
-                 OR LOWER(workshopContent) LIKE '%' || LOWER(#{kwd}) || '%')
-        </if>
-		<if test="workshopId != null">
-		AND workshopId = #{workshopId}
+			AND (LOWER(w.workshopTitle) LIKE '%' || LOWER(#{kwd}) || '%'
+			OR LOWER(w.workshopContent) LIKE '%' || LOWER(#{kwd}) || '%')
 		</if>
-		</trim>
+		<if test="workshopId != null">
+			AND w.workshopId = #{workshopId}
+		</if>
+	</trim>
 	</sql>
-	
-	<select id="workshopDataCount">
+
+	<select id="workshopDataCount" parameterType="map"
+	resultType="int">
 	SELECT NVL(COUNT(*), 0)
-	FROM workshop
-		<where>
-			<include refid="where-list-workshop"/>
-		</where>
-	</select>
+	FROM workshop w
+	LEFT JOIN program p ON w.programId = p.programId
+	<where>
+		<include refid="where-list-workshop" />
+	</where>
+</select>
+
 	
 	<select id="findWorkshopById" parameterType="Long" resultType="com.sp.app.model.Workshop">
 	SELECT workshopId, programId, managerId, workshopTitle, scheduleDate, applyDeadline, location,
@@ -195,7 +198,7 @@
 	
 	<update id="updateWorkshop" parameterType="com.sp.app.model.Workshop">
 	UPDATE workshop
-	SET workshopTitle = #{workshopTitle}, #{scheduleDate, jdbcType=TIMESTAMP}, #{applyDeadline, jdbcType=TIMESTAMP}, 
+	SET workshopTitle = #{workshopTitle}, scheduleDate = #{scheduleDate, jdbcType=TIMESTAMP}, applyDeadline = #{applyDeadline, jdbcType=TIMESTAMP}, 
 	location = #{location}, workshopStatus = #{workshopStatus}, capacity = #{capacity}, thumbnailPath = #{thumbnailPath}, 
 	workshopContent = #{workshopContent}, updDate = SYSDATE
 	WHERE workshopId = #{workshopId}
@@ -242,5 +245,153 @@
 	DELETE FROM workshopPhoto
 	WHERE workshopId = #{value}
 	</delete>
+	
+	<!-- 참가자 목록 -->
+	<select id="listParticipant" parameterType="map" resultType="com.sp.app.model.Participant">
+	SELECT participantId, workshopId, memberId, participantStatus,
+	isAttended, appliedDate
+	FROM participant
+	<where>
+		<if test="workshopId != null">AND workshopId = #{workshopId}</if>
+		<if test="participantStatus != null">AND participantStatus = #{participantStatus}</if>
+	</where>
+	ORDER BY participantId DESC
+	OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+	
+	<select id="participantDataCount" parameterType="map" resultType="int">
+	SELECT NVL(COUNT(*), 0)
+	FROM participant
+	<where>
+		<if test="workshopId != null">AND workshopId = #{workshopId}</if>
+		<if test="participantStatus != null">AND participantStatus = #{participantStatus}</if>
+	</where>
+	</select>
+	
+	<!-- 출석체크 -->
+	<update id="markAttendance" parameterType="map">
+	UPDATE participant
+	SET isAttended = #{isAttended}
+	WHERE participantId = #{participantId}
+	</update>
+	
+	<!-- 사용자 -->
+	<!-- 워크샵 목록 -->
+	<select id="listUserWorkshop" parameterType="map" resultType="com.sp.app.model.Workshop">
+	SELECT w.workshopId, w.workshopTitle, w.scheduleDate, w.applyDeadline, w.location,
+		w.workshopStatus, w.capacity, w.thumbnailPath, pc.categoryName
+	FROM workshop w
+	JOIN program p ON w.programId = p.programId
+	JOIN programCategory pc ON p.categoryId = pc.categoryId
+	<where>
+		<if test="categoryId != null">
+			AND pc.categoryId = #{categoryId}
+		</if>
+		
+		<if test="onlyRecruiting == true">
+			AND w.workshopStatus = 1
+		</if>
+	</where>
+	<choose>
+		<when test="sort == 'deadline'">
+			ORDER BY w.applyDeadline ASC NULLS LAST
+		</when>
+		<otherwise>
+			ORDER BY w.regDate DESC, w.workshopId DESC
+		</otherwise>
+	</choose>
+	OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+	
+	<select id="userWorkshopDataCount" parameterType="map" resultType="int">
+	SELECT NVL(COUNT(*), 0)
+	FROM workshop w
+	JOIN program p ON w.programId = p.programId
+	JOIN programCategory pc ON p.categoryId = pc.categoryId
+	<where>
+		<if test="categoryId != null">
+		AND pc.categoryId = #{categoryId}
+		</if>
+		<if test="onlyRecruiting == true">
+		AND w.workshopStatus = 1
+		</if>
+	</where>
+	</select>
+	
+	<!-- 워크샵 상세 -->
+	<select id="findWorkshopDetail" parameterType="long" resultType="com.sp.app.model.Workshop">
+	SELECT w.workshopId, w.workshopTitle, w.scheduleDate, w.applyDeadline, w.location,
+		w.workshopStatus, w.capacity, w.workshopContent, w.thumbnailPath, pc.categoryName
+	FROM workshop w
+	JOIN program p ON w.programId = p.programId
+	JOIN programCategory pc ON p.categoryId = pc.categoryId
+	WHERE w.workshopId = #{value}
+	</select>
+	
+	<!-- 문의 목록 -->
+	<select id="listUserFaq" parameterType="map" resultType="com.sp.app.model.Workshop">
+	SELECT faqId, workshopId, question, answer, regDate
+	FROM workshopFaq
+	<where><if test="workshopId != null">AND workshopId = #{workshopId}</if></where>
+	ORDER BY regDate DESC
+	OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+	
+	<!-- 리뷰 목록 -->
+	<select id="listUserReview" parameterType="map" resultType="com.sp.app.model.WorkshopReview">
+	SELECT workshopReviewId, participantId, reviewContent, regDate, workshopId
+	FROM workshopReview
+	<where><if test="workshopId != null">AND workshopId = #{workshopId}</if></where>
+	ORDER BY regDate DESC
+	OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+	
+	<!-- 신청 여부 -->
+	<select id="hasApplied" parameterType="map" resultType="int">
+	SELECT NVL(COUNT(*), 0)
+	FROM participant
+	WHERE memberId = #{memberId}
+		AND workshopId = #{workshopId}
+		AND participantStatus = 1
+	</select>
+	
+	<select id="countParticipantofMember" parameterType="map" resultType="int">
+	SELECT COUNT(*)
+	FROM Participant
+	WHERE participantId = #{participantId}
+      AND memberId = #{memberId}
+      AND isAttended = 'Y'
+	</select>
+	
+	<!-- 신청 인원 -->
+	<select id="countAppliedByWorkshop" parameterType="long" resultType="int">
+	SELECT NVL(COUNT(*), 0)
+	FROM participant
+	WHERE workshopId = #{value}
+	AND participantStatus = 1
+	</select>
+	
+	<!-- 워크샵 상태 -->
+	<select id="findWorkshopStatusAndCapacity" parameterType="long" resultType="com.sp.app.model.Workshop">
+	SELECT workshopStatus, capacity, applyDeadline
+	FROM workshop
+	WHERE workshopId = #{value}
+	</select>
+	
+	<!-- 참가 신청 -->
+	<insert id="applyWorkshop" parameterType="map">
+	INSERT INTO participant (participantId, workshopId, memberId, participantStatus,
+	isAttended, appliedDate)
+	VALUES (participant_seq.NEXTVAL, #{workshopId}, #{memberId}, 1, 'N', SYSDATE)
+	</insert>
+	
+	<!-- 신청 취소 -->
+	<update id="cancelApplication" parameterType="map">
+	UPDATE participant
+	SET participantStatus = 0
+	WHERE memberId = #{memberId}
+		AND workshopId = #{workshopId}
+		AND participantStatus = 1
+	</update>
 
 </mapper>

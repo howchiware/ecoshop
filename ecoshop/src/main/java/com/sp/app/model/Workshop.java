@@ -39,17 +39,6 @@ public class Workshop {
 	private long photoId;
 	private String workshopImagePath;
 
-	private long participantId;
-	private int participantStatus;
-	private String isAttended;
-	private Date appliedDate;
-
-	private long workshopReviewId;
-	private String reviewContent;
-
-	private long reviewImgId;
-	private String reviewImagePath;
-
 	public long getCategoryId() {
 		return categoryId;
 	}
@@ -256,70 +245,6 @@ public class Workshop {
 
 	public void setWorkshopImagePath(String workshopImagePath) {
 		this.workshopImagePath = workshopImagePath;
-	}
-
-	public long getParticipantId() {
-		return participantId;
-	}
-
-	public void setParticipantId(long participantId) {
-		this.participantId = participantId;
-	}
-
-	public int getParticipantStatus() {
-		return participantStatus;
-	}
-
-	public void setParticipantStatus(int participantStatus) {
-		this.participantStatus = participantStatus;
-	}
-
-	public String getIsAttended() {
-		return isAttended;
-	}
-
-	public void setIsAttended(String isAttended) {
-		this.isAttended = isAttended;
-	}
-
-	public Date getAppliedDate() {
-		return appliedDate;
-	}
-
-	public void setAppliedDate(Date appliedDate) {
-		this.appliedDate = appliedDate;
-	}
-
-	public long getWorkshopReviewId() {
-		return workshopReviewId;
-	}
-
-	public void setWorkshopReviewId(long workshopReviewId) {
-		this.workshopReviewId = workshopReviewId;
-	}
-
-	public String getReviewContent() {
-		return reviewContent;
-	}
-
-	public void setReviewContent(String reviewContent) {
-		this.reviewContent = reviewContent;
-	}
-
-	public long getReviewImgId() {
-		return reviewImgId;
-	}
-
-	public void setReviewImgId(long reviewImgId) {
-		this.reviewImgId = reviewImgId;
-	}
-
-	public String getReviewImagePath() {
-		return reviewImagePath;
-	}
-
-	public void setReviewImagePath(String reviewImagePath) {
-		this.reviewImagePath = reviewImagePath;
 	}
 
 }
