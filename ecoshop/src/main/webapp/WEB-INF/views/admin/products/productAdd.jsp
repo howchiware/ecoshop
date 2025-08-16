@@ -234,7 +234,7 @@ body {
 									<select name="categoryId" class="st">
 										<option value="">::카테고리 선택::</option>
 										<c:forEach var="vo" items="${listCategory}">
-											<option value="${vo.categoryId}">${vo.categoryName}</option>
+											<option value="${vo.categoryId}" ${dto.categoryId==vo.categoryId?"selected":""}>${vo.categoryName}</option>
 										</c:forEach>
 									</select>
 								</td>
@@ -248,7 +248,7 @@ body {
 							<tr>
 								<th>상품명</th>
 								<td><input type="text" name="productName"
-									placeholder="상품명을 입력하세요"></td>
+									placeholder="상품명을 입력하세요" value="${dto.productName}"></td>
 							</tr>
 							<tr>
 								<th>상품 사진</th>
@@ -287,7 +287,7 @@ body {
 											<div class="image-upload-list">
 												<!-- 클래스 -> image-item:새로추가된이미지, image-uploaded:수정에서 등록된이미지 -->
 												<!-- 수정일때 등록된 이미지 -->
-												<c:forEach var="vo" items="${listFile}">
+												<c:forEach var="vo" items="${listPhoto}">
 													<img class="image-uploaded" src="${pageContext.request.contextPath}/uploads/products/${vo.photoName}"
 														data-fileNum="${vo.productPhotoNum}" data-filename="${vo.photoName}">
 												</c:forEach>
@@ -300,7 +300,7 @@ body {
 							<tr>
 								<th>상품 소개글</th>
 								<td><textarea name="content" rows="4"
-										placeholder="상품 소개글을 입력하세요" style="resize: none"></textarea></td>
+										placeholder="상품 소개글을 입력하세요" style="resize: none">${dto.content}</textarea></td>
 							</tr>
 						</table>
 					</div>
@@ -313,7 +313,7 @@ body {
 								<td>
 									<div class="input-flex">
 										<input type="text" name="price"
-											placeholder="판매가를 입력하세요"> <span>원</span>
+											placeholder="판매가를 입력하세요" value="${dto.price}"> <span>원</span>
 									</div>
 								</td>
 							</tr>
@@ -369,7 +369,7 @@ body {
 											<c:forEach var="vo" items="${listOptionDetail}">
 												<div class="input-group pe-1">
 													<input type="text" name="optionValues" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" value="${vo.optionValue}">
-													<input type="hidden" name="detailNums" value="${vo.detailNum}">
+													<input type="hidden" name="optionDetailNums" value="${vo.optionDetailNum}">
 													<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus"></i>
 												</div>
 											</c:forEach>
@@ -402,7 +402,7 @@ body {
 											<c:forEach var="vo" items="${listOptionDetail2}">
 												<div class="input-group pe-1">
 													<input type="text" name="optionValues2" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" value="${vo.optionValue}">
-													<input type="hidden" name="detailNums2" value="${vo.detailNum}">
+													<input type="hidden" name="optionDetailNum2" value="${vo.optionDetailNum}">
 													<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus2"></i>
 												</div>
 											</c:forEach>
@@ -447,13 +447,31 @@ body {
 							<tr>
 								<th>상품 상세 내용</th>
 								<td>
-									<div id="editor">${dto.content}</div> <input type="hidden"
+									<div id="editor">${dto.detailInfo}</div> <input type="hidden"
 									name="detailInfo">
 								</td>
 							</tr>
 						</table>
 					</div>
-					<button type="button" class="submit-btn" onclick="sendOk();">등록</button>
+					<div class="text-center">
+						<c:url var="url" value="/admin/products/listProduct">
+							<c:if test="${not empty page}">
+								<c:param name="page" value="${page}"/>
+							</c:if>
+						</c:url>							
+						<button type="button" class="btn-accent btn-md submit-btn" onclick="sendOk();">${mode=='update'?'수정완료':'등록완료'}</button>
+						<button type="reset" class="btn-default btn-md">다시입력</button>
+						<button type="button" class="btn-default btn-md" onclick="location.href='${url}';">${mode=='update'?'수정취소':'등록취소'}</button>
+						<c:if test="${mode=='update'}">
+							<input type="hidden" name="productCode" value="${dto.productCode}">
+							<input type="hidden" name="productId" value="${dto.productId}">
+							<input type="hidden" name="thumbnail" value="${dto.thumbnail}">
+							<input type="hidden" name="page" value="${page}">
+							
+							<input type="hidden" name="prevOptionNum" value="${empty dto.optionNum ? 0 : dto.optionNum}">
+							<input type="hidden" name="prevOptionNum2" value="${empty dto.optionNum2 ? 0 : dto.optionNum2}">
+						</c:if>
+					</div>
 				</form>
 			</div>
 		</div>
@@ -499,7 +517,7 @@ function sendOk() {
 
 	if(! f.categoryId.value) {
 		alert('카테고리를 선택하세요.');
-		f.categoryNum.focus();
+		f.categoryId.focus();
 		return;
 	}
 	
@@ -508,6 +526,12 @@ function sendOk() {
 		f.productName.focus();
 		return;
 	}	
+	
+	if(! f.content.value.trim()) {
+		alert('상품 소개글을 입력하세요.');
+		f.content.focus();
+		return;
+	}
 	
 	if(!/^(\d){1,8}$/.test(f.price.value)) {
 		alert('상품가격을 입력 하세요.');
@@ -518,7 +542,7 @@ function sendOk() {
 	
 	if(!/^(\d){1,7}$/.test(f.point.value)) {
 		alert('적립금을 입력 하세요.');
-		f.savedMoney.focus();
+		f.point.focus();
 		return;
 	}
 	
@@ -589,7 +613,7 @@ function sendOk() {
 		}
 		return;
 	}
-	f.content.value = htmlContent;
+	f.detailInfo.value = htmlContent;
 	
 	if(mode === 'write' && ! f.thumbnailFile.value) {
 		alert('대표 이미지를 등록하세요.');
@@ -600,6 +624,159 @@ function sendOk() {
 	f.action = '${pageContext.request.contextPath}/admin/products/${mode}';
 	f.submit();
 }
+</script>
+
+<script type="text/javascript">
+$(function(){
+	// 옵션의 개수가 변경된 경우
+	$('select[name=optionCount]').change(function(){
+		let count = parseInt($(this).val());
+		let mode = '${mode}';
+		let savedCount = '${dto.optionCount}';
+		let totalStock = '${dto.totalStock}';
+		
+		if(mode === 'update' && totalStock !== '0') {
+			alert('옵션 변경이 불가능 합니다.');
+			$(this).val(savedCount);
+			return false;
+		}
+		
+		if(count === 0) {
+			$('.product-option-1').hide();
+			$('.product-option-2').hide();
+			
+			
+		} else if(count === 1) {
+			$('.product-option-1').show();
+			$('.product-option-2').hide();
+			
+			
+		} else if(count === 2) {
+			$('.product-option-1').show();
+			$('.product-option-2').show();
+		}
+	});
+});
+
+$(function(){
+	// 옵션 1 추가 버튼을 클릭한 경우	
+	$('.btnOptionAdd').click(function(){
+		let $el = $(this).closest('.option-area').find('.optionValue-area');
+		if($el.find('.input-group').length >= 5) {
+			alert('옵션은 최대 5개까지 가능합니다.');
+			return false;
+		}
+		
+		let $option = $('.option-area .optionValue-area .input-group:first-child').clone();
+		
+		$option.find('input[type=hidden]').remove();
+		$option.find('input[name=optionValues]').removeAttr('value');
+		$option.find('input[name=optionValues]').val('');
+		$el.append($option);
+	});
+	
+	// 옵션 1의 옵션값 제거를 클릭한 경우
+	$('.option-area').on('click', '.option-minus', function(){
+		let $minus = $(this);
+		let $el = $minus.closest('.option-area').find('.optionValue-area');
+		
+		// 수정에서 등록된 자료 삭제
+		let mode = '${mode}';
+		if(mode === 'update' && $minus.parent('.input-group').find('input[name=detailNums]').length === 1) {
+			// 저장된 옵션값중 최소 하나는 삭제되지 않도록 설정
+			if($el.find('.input-group input[name=detailNums]').length <= 1) {
+				alert('옵션값은 최소 하나이상 필요합니다.');	
+				return false;
+			}
+			
+			if(! confirm('옵션값을 삭제 하시겠습니까 ? ')) {
+				return false;
+			}
+			
+			let detailNum = $minus.parent('.input-group').find('input[name=detailNums]').val();
+			let url = '${pageContext.request.contextPath}/admin/products/deleteOptionDetail';
+			
+			$.ajaxSetup({ beforeSend: function(e) { e.setRequestHeader('AJAX', true); } });
+			$.post(url, {detailNum:detailNum}, function(data){
+				if(data.state === 'true') {
+					$minus.closest('.input-group').remove();
+				} else {
+					alert('옵션값을 삭제할 수 없습니다.');
+				}
+			}, 'json').fail(function(jqXHR){
+				console.log(jqXHR.responseText);
+			});
+			
+			return false;			
+		}
+		
+		if($el.find('.input-group').length <= 1) {
+			$el.find('input[name=optionValues]').val('');
+			return false;
+		}
+		
+		$minus.closest('.input-group').remove();
+	});
+});
+
+$(function(){
+	// 옵션 2 추가 버튼을 클릭한 경우	
+	$('.btnOptionAdd2').click(function(){
+		let $el = $(this).closest('.option-area2').find('.optionValue-area2');
+		if($el.find('.input-group').length >= 5) {
+			alert('옵션 값은 최대 5개까지 가능합니다.');
+			return false;
+		}
+		let $option = $('.option-area2 .optionValue-area2 .input-group:first-child').clone();
+		
+		$option.find('input[type=hidden]').remove();
+		$option.find('input[name=optionValues2]').removeAttr('value');
+		$option.find('input[name=optionValues2]').val('');
+		$el.append($option);
+	});
+	
+	// 옵션 2의 옵션값 제거를 클릭한 경우
+	$('.option-area2').on('click', '.option-minus2', function(){
+		let $minus = $(this);
+		let $el = $minus.closest('.option-area2').find('.optionValue-area2');
+		
+		// 수정에서 등록된 자료 삭제
+		let mode = '${mode}';
+		if(mode === 'update' && $minus.parent('.input-group').find('input[name=detailNums2]').length === 1) {
+			// 저장된 옵션값중 최소 하나는 삭제되지 않도록 설정
+			if($el.find('.input-group input[name=detailNums2]').length <= 1) {
+				alert('옵션값은 최소 하나이상 필요합니다.');	
+				return false;
+			}
+			
+			if(! confirm('옵션값을 삭제 하시겠습니까 ? ')) {
+				return false;
+			}
+			
+			let detailNum = $minus.parent('.input-group').find('input[name=detailNums2]').val();
+			let url = '${pageContext.request.contextPath}/admin/products/deleteOptionDetail';
+			
+			$.ajaxSetup({ beforeSend: function(e) { e.setRequestHeader('AJAX', true); } });
+			$.post(url, {detailNum:detailNum}, function(data){
+				if(data.state === 'true') {
+					$minus.closest('.input-group').remove();
+				} else {
+					alert('옵션값을 삭제할 수 없습니다.');
+				}
+			}, 'json').fail(function(jqXHR){
+				console.log(jqXHR.responseText);
+			});
+		}
+		
+		if($el.find('.input-group').length <= 1) {
+			$el.find('input[name=optionValues2]').val('');
+			return false;
+		}
+		
+		$minus.closest('.input-group').remove();
+	});
+});
+
 </script>
 
 <script type="text/javascript">

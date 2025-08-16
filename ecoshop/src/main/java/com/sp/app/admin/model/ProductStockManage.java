@@ -11,9 +11,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProductStockManage {
 	private long stockNum;
-	private long productCode;
+	private long productId;
+	private String productCode;
 	private Long optionDetailNum;
-	private Long detailNum2;
+	private Long optionDetailNum2;
 	private int totalStock;
 	
 	private List<Long> stockNums;

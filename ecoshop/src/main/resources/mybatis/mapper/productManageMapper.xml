@@ -18,7 +18,7 @@
 	</insert>
 	
 	<!-- 추가 이미지 등록 -->
-	<insert id="insertProductFile" parameterType="com.sp.app.admin.model.ProductManage">
+	<insert id="insertProductPhoto" parameterType="com.sp.app.admin.model.ProductManage">
 		INSERT INTO productPhoto(productPhotoNum, productCode, photoName)
 		VALUES(productPhoto_seq.NEXTVAL, #{productCode}, #{photoName})
 	</insert>
@@ -45,12 +45,249 @@
 		VALUES(#{optionDetailNum}, #{optionNum}, #{optionValue})
 	</insert>
 	
+	<!-- 상품 카테고리 -->
+	<select id="findByCategory" parameterType="Long" resultType="com.sp.app.admin.model.CategoryManage">
+		SELECT categoryId, categoryName, enabled, orderNo
+		FROM productCategory
+		WHERE categoryId = #{categoryId}
+	</select>
+	
 	<!-- 카테고리 리스트 -->
 	<select id="listCategory" resultType="com.sp.app.admin.model.CategoryManage">
 		SELECT categoryId, categoryName
 		FROM productCategory
 		ORDER BY orderNo ASC
 	</select>
+	
+	<!-- 상품 리스트 -->
+	<!-- 기본 검색 -->
+	<sql id="where-list-schType">
+		<if test="schType=='all'">
+			INSTR(p.productName, #{kwd}) > 0 || INSTR(p.productCode, LTRIM(#{kwd}, '0')) = 1
+		</if>
+		<if test="schType=='productCode'">
+			INSTR(p.productCode, LTRIM(#{kwd}, '0')) = 1
+		</if>
+		<if test="schType=='productName'">
+			INSTR(p.productName, #{kwd}) > 0
+		</if>
+	</sql>
 
+	<!-- 카테고리 검색 -->
+	<sql id="where-list-categoryId">
+			p.categoryId = #{categoryId}
+	</sql>
+	
+	<!-- 날짜 검색 -->
+	<sql id="where-list-period">
+			#{period} 
+			BETWEEN TO_DATE(DBMS_LOB.INSTR(REGEXP_REPLACE(COLUMN, <![CDATA['[-|.|\s|/]']]>, ''), #{periodStart}), 'YYYY-MM-DD')
+					AND TO_DATE(DBMS_LOB.INSTR(REGEXP_REPLACE(COLUMN, <![CDATA['[-|.|\s|/]']]>, ''), #{periodEnd}), 'YYYY-MM-DD')
+	</sql>
+	
+	<!-- 판매가 검색 -->
+	<sql id="where-list-price">
+			price BETWEEN #{priceLowest} AND #{priceHighest} 
+	</sql>
 
+	<!-- 재고 검색 -->
+	<sql id="where-list-stock">
+			totalStock BETWEEN #{stockLowest} AND #{stockHighest}
+	</sql>
+		
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM product p
+
+	</select>
+		
+	<select id="listProduct" parameterType="map" resultType="com.sp.app.admin.model.ProductManage">
+		SELECT p.productId, p.productCode, p.categoryId, p.productName, price, optionCount,
+			thumbnail, productShow, TO_CHAR(reg_date, 'YYYY-MM-DD') reg_date, TO_CHAR(update_date, 'YYYY-MM-DD') update_date, 
+			NVL(totalStock, 0) totalStock
+		FROM product p
+		LEFT OUTER JOIN (
+			SELECT productCode, NVL(SUM(totalStock), 0) totalStock
+			FROM productStock
+			GROUP BY productCode
+		) t ON p.productCode = t.productCode
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				AND <include refid="where-list-schType"/>
+			</if>
+			<if test="categoryId != 0">
+				AND <include refid="where-list-categoryId"/>
+			</if>
+			<if test="periodStart!=null and periodStart!='' and periodEnd!=null and periodEnd!=''">
+				AND <include refid="where-list-period"/>
+			</if>
+			<if test="priceLowest!=null and priceHighest!=null and priceLowest!=null and priceHighest!=''">
+				AND <include refid="where-list-price"/>
+			</if>
+			<if test="stockLowest!=null and stockHighest!=null and stockLowest!=null and stockHighest!=''">
+				AND <include refid="where-list-stock"/>
+			</if>
+		</where>
+		ORDER BY p.productCode DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<!-- 상품 재고 -->
+	<!-- 상품 재고 등록 -->
+	<insert id="insertProductStock" parameterType="com.sp.app.admin.model.ProductStockManage">
+		INSERT INTO productStock(stockNum, productCode, optionDetailNum, optionDetailNum2, totalStock)
+		VALUES (productStock_seq.NEXTVAL, #{productCode},
+				 #{optionDetailNum, jdbcType=BIGINT}, #{optionDetailNum2, jdbcType=BIGINT}, 
+				 #{totalStock})
+	</insert>
+	
+	<!-- 상품 재고 수정 -->
+	<update id="updateProductStock" parameterType="com.sp.app.admin.model.ProductStockManage">
+		UPDATE productStock SET totalStock = #{totalStock}
+		WHERE stockNum = #{stockNum}
+	</update>
+	
+	<delete id="deleteProductStock" parameterType="Long">
+		DELETE FROM productStock
+		WHERE productCode = #{productCode}
+	</delete>
+	
+	<!-- 상품 재고 리스트 -->
+	<select id="listProductStock" parameterType="map" resultType="com.sp.app.admin.model.ProductStockManage">
+		SELECT p.productId, p.productName, 
+			po1.optionNum, po1.optionName,
+			po2.optionNum optionNum2, po2.optionName optionName2,
+			d1.optionDetailNum, d1.optionValue, 
+			d2.optionDetailNum optionDetailNum2, d2.optionValue optionValue2,
+		 	ps.stockNum, NVL(ps.totalStock, 0) totalStock
+		FROM product p 
+		LEFT OUTER JOIN productOption po1 ON p.productCode = po1.productCode AND parentOption IS NULL
+		LEFT OUTER JOIN productOption po2 ON po1.optionNum = po2.parentOption
+        LEFT OUTER JOIN optionDetail d1 ON po1.optionNum = d1.optionNum
+        LEFT OUTER JOIN optionDetail d2 ON po2.optionNum = d2.optionNum
+        <choose>
+        	<when test="optionCount == 0">
+        		LEFT OUTER JOIN productStock ps ON p.productCode = ps.productCode
+        	</when>
+        	<when test="optionCount == 1">
+        		LEFT OUTER JOIN productStock ps ON d1.optionDetailNum = ps.optionDetailNum
+        	</when>
+        	<otherwise>
+        		LEFT OUTER JOIN productStock ps ON d1.optionDetailNum = ps.optionDetailNum AND d2.optionDetailNum = ps.optionDetailNum2
+        	</otherwise>
+        </choose>
+		WHERE p.productId = #{productId}
+        ORDER BY optionDetailNum, optionDetailNum2
+	</select>
+	
+	<!-- 상품 상세 정보 -->
+	<select id="findById" parameterType="Long" resultType="com.sp.app.admin.model.ProductManage">
+		SELECT p.productId, p.productCode, p.categoryId, c.categoryName, p.productName, p.price, 
+			p.point, p.content, p.optionCount, p.detailInfo, 
+			p.thumbnail, p.productShow, p.reg_date, p.update_date,
+			NVL(t.totalStock, 0) totalStock
+		FROM product p
+		JOIN productCategory c ON p.categoryId = c.categoryId
+		LEFT OUTER JOIN (
+			SELECT productCode, NVL(SUM(totalStock), 0) totalStock
+			FROM productStock
+			GROUP BY productCode
+		) t ON p.productCode = t.productCode		
+		WHERE p.productCode = #{productCode}
+	</select>
+	
+	<select id="listProductPhoto" parameterType="Long" resultType="com.sp.app.admin.model.ProductManage">
+		SELECT productPhotoNum, productCode, photoName
+		FROM productPhoto
+		WHERE productCode = #{productCode}
+	</select>
+
+	<!-- 옵션1, 옵션2 -->
+	<select id="listProductOption" parameterType="Long" resultType="com.sp.app.admin.model.ProductManage">
+		SELECT optionNum, optionName, parentOption, productCode
+		FROM productOption
+		WHERE productCode = #{productCode}
+		ORDER BY parentOption NULLS FIRST, parentOption
+	</select>
+
+	<!-- 옵션 상세 정보 -->	
+	<select id="listOptionDetail" parameterType="Long" resultType="com.sp.app.admin.model.ProductManage">
+		SELECT optionDetailNum, optionNum, optionValue
+		FROM optionDetail
+		WHERE optionNum = #{optionNum}
+		ORDER BY optionDetailNum
+	</select>
+
+	<update id="updateProduct" parameterType="com.sp.app.admin.model.ProductManage">
+		UPDATE product SET categoryId = #{categoryId}, productName = #{productName},
+			price = #{price}, point = #{point},
+			optionCount = #{optionCount}, content = #{content}, detailInfo = #{detailInfo},
+			thumbnail = #{thumbnail}, productShow = #{productShow}, update_date = SYSDATE
+		WHERE productCode = #{productCode}
+	</update>
+	
+	<delete id="deleteProduct" parameterType="Long">
+		DELETE FROM product
+		WHERE productCode = #{productCode}
+	</delete>
+	
+	<delete id="deleteProductPhoto" parameterType="Long">
+		DELETE FROM productPhoto
+		WHERE productPhotoNum = #{productPhotoNum}
+	</delete>
+	
+	<update id="updateProductOption" parameterType="com.sp.app.admin.model.ProductManage">
+		UPDATE productOption SET optionName = #{optionName}
+		WHERE optionNum = #{optionNum}
+	</update>
+	
+	<delete id="deleteProductOption" parameterType="Long">
+		DELETE FROM productOption
+		WHERE optionNum = #{optionNum}
+	</delete>
+
+	<update id="updateOptionDetail" parameterType="com.sp.app.admin.model.ProductManage">
+		UPDATE optionDetail SET optionValue = #{optionValue}
+		WHERE optionDetailNum = #{optionDetailNum}
+	</update>
+	
+	<delete id="deleteOptionDetail" parameterType="Long">
+		DELETE FROM optionDetail
+		WHERE optionDetailNum = #{optionDetailNum}
+	</delete>
+
+	<delete id="deleteOptionDetail2" parameterType="Long">
+		DELETE FROM optionDetail
+		WHERE optionNum = #{optionNum}
+	</delete>
+	
+	<!-- 배송정책 -->
+	<select id="listDeliveryRefundInfo" resultType="com.sp.app.admin.model.ProductDeliveryRefundInfo">
+	    SELECT deliveryInfo, refundInfo
+	    FROM deliveryRefundInfo
+	</select>
+
+	<select id="listDeliveryFee" resultType="com.sp.app.admin.model.ProductDeliveryRefundInfo">
+	    SELECT fee, deliveryLocation
+	    FROM deliveryFee
+	</select>
+	
+	<insert id="insertProductDeliveryRefundInfo" parameterType="com.sp.app.admin.model.ProductDeliveryRefundInfo">
+		INSERT INTO deliveryRefundInfo(deliveryRefundInfoNum, deliveryInfo, refundInfo)
+		VALUES (deliveryRefundInfo_seq.NEXTVAL, #{deliveryInfo}, #{refundInfo})
+	</insert>
+
+	<insert id="insertProductDeliveryFee" parameterType="map">
+		INSERT INTO deliveryFee(deliveryFeeNum, fee, deliveryLocation)
+		VALUES (deliveryFee_seq.NEXTVAL, #{fee}, #{deliveryLocation})
+	</insert>
+	
+	<update id="updateProductDeliveryRefundInfo" parameterType="com.sp.app.admin.model.ProductDeliveryRefundInfo">
+		UPDATE deliveryRefundInfo SET deliveryInfo = #{deliveryInfo}, refundInfo = #{refundInfo}
+	</update>
+
+	<update id="deleteProductDeliveryFee">
+		DELETE FROM deliveryFee
+	</update>
+	
 </mapper>

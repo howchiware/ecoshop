@@ -3,13 +3,15 @@ package com.sp.app.admin.service;
 import java.util.List;
 import java.util.Map;
 
+import com.sp.app.admin.model.CategoryManage;
+import com.sp.app.admin.model.ProductDeliveryRefundInfo;
 import com.sp.app.admin.model.ProductManage;
 import com.sp.app.admin.model.ProductStockManage;
 
 public interface ProductManageService {
 	public void insertProduct(ProductManage dto, String uploadPath) throws Exception;
 	public void updateProduct(ProductManage dto, String uploadPath) throws Exception;
-	public void deleteProduct(long productId, String uploadPath) throws Exception;
+	public void deleteProduct(List<Long> productId, String uploadPath) throws Exception;
 	public void deleteProductPhoto(long productPhotoNum, String uploadPath) throws Exception;
 	public void deleteOptionDetail(long optionDetailNum) throws Exception;
 	
@@ -25,8 +27,8 @@ public interface ProductManageService {
 	public List<ProductManage> listOptionDetail(long optionNum);
 
 	// 상품 상위 카테고리 목록
-	public ProductManage findByCategory(long categoryNum);
-	public List<ProductManage> listCategory();
+	public CategoryManage findByCategory(long categoryId);
+	public List<CategoryManage> listCategory();
 	
 	// 상품 재고
 	public void updateProductStock(ProductStockManage dto) throws Exception;
@@ -34,4 +36,11 @@ public interface ProductManageService {
 	
 	public boolean deleteUploadPhoto(String uploadPath, String photoName);
 	
+	public ProductDeliveryRefundInfo listDeliveryRefundInfo();
+	public List<ProductDeliveryRefundInfo> listDeliveryFee();
+	
+	public void insertProductDeliveryFee(Map<String, Object> map);
+	public void insertProductDeliveryRefundInfo(ProductDeliveryRefundInfo dto);
+	public void updateProductDeliveryRefundInfo(ProductDeliveryRefundInfo dto);
+	public void deleteProductDeliveryFee();
 }

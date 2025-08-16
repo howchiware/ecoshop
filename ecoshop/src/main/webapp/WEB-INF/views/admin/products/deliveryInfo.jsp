@@ -100,7 +100,7 @@ text-align: center;
 	color: black; 
 }
 
-textarea[name=deliveryInfoContent], textarea[name=refundInfoContent] {
+textarea[name=deliveryInfo], textarea[name=refundInfo] {
 	resize: none;
 	width: 700px;
 	height: 150px;
@@ -113,6 +113,15 @@ textarea[name=deliveryInfoContent], textarea[name=refundInfoContent] {
 .input-table td:first-child {
 	padding: 20px;
 	width: 150px;
+}
+
+.minus-deliveryFee {
+	margin-left: 50px;
+}
+
+.minus-deliveryFee:hover, .minus-deliveryFee:active {
+	cursor: pointer;
+	
 }
 
 </style>
@@ -134,7 +143,7 @@ textarea[name=deliveryInfoContent], textarea[name=refundInfoContent] {
 		<hr>
 		
 		<div class="outside">
-			<form name="deliveryAllInfo">
+			<form name="deliveryAllInfo" method="post">
 				<div class="section ps-5 pe-5">
 					<div>
 						<div class="row gy-4 m-0">
@@ -148,12 +157,8 @@ textarea[name=deliveryInfoContent], textarea[name=refundInfoContent] {
 										<tr>
 											<td>배송 정보</td>
 											<td>
-												<textarea name="deliveryInfoContent">
-ex) 
-- 모든 제품 배송은 종이재질로 발송됩니다.       
-- 수령하신 택배박스는 운송장을 제거한 후 종이로 분리배출해주세요.
-- 결제완료 후 제품을 수령하시기까지 약 2~5일 소요됩니다.      
-- 배송이 늦어지거나 일부 제품이 품절인 경우 개별적으로 연락을 드리겠습니다.
+												<textarea name="deliveryInfo" id="deliveryInfoContent">
+													${listDeliveryRefundInfo.deliveryInfo}
 												</textarea>
 											</td>
 										</tr>
@@ -177,10 +182,8 @@ ex)
 										<tr>
 											<td>환불 안내</td>
 											<td>
-												<textarea name="refundInfoContent">
-ex) 
-- 공동구매 상품은 교환 및 환불이 불가합니다.
-- 상품에 문제가 있을경우 문의를 남겨주시기 바랍니다.
+												<textarea name="refundInfo" id="refundInfoContent">
+													${listDeliveryRefundInfo.refundInfo}
 												</textarea>
 											</td>
 										</tr>
@@ -205,39 +208,59 @@ ex)
 										<tr>
 											<td>배송비</td>
 											<td colspan="2">
-												<input type="text" name="deliveryFee"> 원
+												<input type="text" id="deliveryFee"> 원
 											</td>
 										</tr>
 										<tr>
 											<td>배송 가능 지역</td>
 											<td colspan="2">
-												<select name="deliveryArea" id="deliveryArea" onclick="changeDeliveryArea();">
-											        <option value="전국">전국</option>
-											        <option value="도서산간지역">도서산간지역</option>
-											        <option value="direct">직접 입력</option>
+												<select id="deliveryLocation" onclick="changeDeliveryArea();">
+											        <option value="">:: 선택 ::</option>
+													<c:forEach var="dto" items="${listDeliveryFee}">
+												        <option value="${dto.deliveryLocation}">${dto.deliveryLocation}</option>
+													</c:forEach>
 										    	</select>
-										    	<input name="deliveryAreaRs" id="deliveryAreaRs" readonly>
+										    	<input id="deliveryAreaRs" readonly>
 											</td>
 										</tr>
 										<tr>
-											<td>추가 설명</td>
+											<td>배송 지역</td>
 											<td>
-												<input type="text" name="deliveryDetailInfo">
+												<input type="text" id="deliveryLocationAdd">
 											</td>
 											<td>
-												<button type="button" class="addBtn">추가</button>
+												<button type="button" class="locationAddBtn" onclick="locationAdd();">추가</button>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<button type="button" class="feeAddBtn" onclick="feeAdd();">추가</button>
 											</td>
 										</tr>
 									</table>
 								</div>
 								<hr>
-								<div class="deliveryAreaResult"></div>
+								<div class="deliveryAreaResult" id="deliveryAreaResult">
+									<div id="deliveryFee-div">
+										<c:forEach var="dto" items="${listDeliveryFee}">	
+											<p>
+												<input class="border-none" name="deliveryLocation" value="${dto.deliveryLocation}">
+												<span> | </span> 
+												<input class="border-none" name="fee" value="${dto.fee}">
+												<span class="minus-deliveryFee">X</span>
+											</p>
+										</c:forEach>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
 					
 					<div style="text-align: center">
-						<button type="button" class="saveInfo">저장</button>
+						<c:if test="${mode == 'update' }">
+							<button type="button" class="udBtn updateBtn">수정</button>
+						</c:if>
+						<button type="button" class="saveInfo" onclick="sendOk();">저장</button>
 					</div>
 					
 				</div>
@@ -248,24 +271,222 @@ ex)
 </main>
 
 <script type="text/javascript">
+const divEl = document.getElementById('deliveryFee-div');
+let cloneNode = divEl.cloneNode(true);
+
 function changeDeliveryArea(){
-	const f = document.deliveryAllInfo;
-	let s = f.deliveryArea.value;
 	
-	if( !s ){
-		f.deliveryArea.value = '';
-		f.deliveryAreaRs.value = '';
-		f.deliveryAreaRs.readOnly = true;
-	} else if(s !== 'direct'){
-		f.deliveryAreaRs.value = s;
-		f.deliveryAreaRs.readOnly = true;
-		f.deliveryArea.focus();
+	const deliveryLocationEl = document.getElementById('deliveryLocation');
+	const deliveryAreaRsEl = document.getElementById('deliveryAreaRs');
+	console.log(deliveryLocationEl);
+	console.log(deliveryAreaRsEl);
+	
+	if( ! deliveryLocationEl.value ){
+		deliveryLocationEl.value = '';
+		deliveryAreaRsEl.value = '';
+		deliveryAreaRsEl.setAttribute('readonly', 'readonly');
+	} else if(deliveryLocationEl.value !== 'direct'){
+		deliveryAreaRsEl.value = deliveryLocationEl.value;
+		deliveryAreaRsEl.setAttribute('readonly', 'readonly');
+		deliveryLocationEl.focus();
 	} else {
-		f.deliveryAreaRs.value = '';
-		f.deliveryAreaRs.readOnly = false;
-		f.deliveryArea.focus();
+		deliveryAreaRsEl.value = '';
+		deliveryAreaRsEl.setAttribute('readonly', false);
+		deliveryLocationEl.focus();
 	}
 }
+
+$(function(){
+	let mode = '${mode}';
+	
+	if(mode === 'update') {
+		// 수정인 경우
+		$('#deliveryInfoContent').prop('readonly', 'readonly');
+		$('#refundInfoContent').prop('readonly', 'readonly');
+		$('#deliveryLocation').prop('readonly', 'readonly');
+		$('#deliveryLocationAdd').prop('readonly', 'readonly');
+		$('#deliveryFee').prop('readonly', 'readonly');
+		$('.minus-deliveryFee').removeClass('minus-deliveryFee-enabled');
+	}
+});
+
+$(function(){
+	$('.udBtn').click(function(){
+		if($(this).hasClass('updateBtn')){
+			$('#deliveryInfoContent').removeAttr('readonly');
+			$('#refundInfoContent').removeAttr('readonly');
+			$('#deliveryLocation').removeAttr('readonly');
+			$('#deliveryLocationAdd').removeAttr('readonly');
+			$('#deliveryFee').removeAttr('readonly');
+			$('.minus-deliveryFee').addClass('minus-deliveryFee-enabled');
+			
+			$('.udBtn').html('수정취소');
+			$('.udBtn').addClass('updateCancelBtn');
+			$('.udBtn').removeClass('updateBtn');
+			
+		} else if($(this).hasClass('updateCancelBtn')){
+			$('#deliveryInfoContent').prop('readonly', 'readonly');
+			$('#refundInfoContent').prop('readonly', 'readonly');
+			$('#deliveryLocation').prop('readonly', 'readonly');
+			$('#deliveryLocationAdd').prop('readonly', 'readonly');
+			$('#deliveryFee').prop('readonly', 'readonly');
+			
+			console.log(1111);
+			$('.minus-deliveryFee').removeClass('minus-deliveryFee-enabled');
+			
+			$('.udBtn').html('수정');
+			$('.udBtn').addClass('updateBtn');
+			$('.udBtn').removeClass('updateCancelBtn');
+			
+			$('.deliveryAreaResult').html(cloneNode);
+		}
+	});
+});
+/*
+function updateBtn(){
+	$('#deliveryInfoContent').removeAttr('readonly');
+	$('#refundInfoContent').removeAttr('readonly');
+	$('#deliveryLocation').removeAttr('readonly');
+	$('#deliveryLocationAdd').removeAttr('readonly');
+	$('#deliveryFee').removeAttr('readonly');
+	$('.minus-deliveryFee').addClass('minus-deliveryFee-enabled');
+	
+	$('.udBtn').html('수정취소');
+	$('.udBtn').addClass('updateCancelBtn');
+	$('.udBtn').removeClass('updateBtn');
+	
+	$('.updateCancelBtn').click(function(){
+		$('#deliveryInfoContent').prop('readonly', 'readonly');
+		$('#refundInfoContent').prop('readonly', 'readonly');
+		$('#deliveryLocation').prop('readonly', 'readonly');
+		$('#deliveryLocationAdd').prop('readonly', 'readonly');
+		$('#deliveryFee').prop('readonly', 'readonly');
+		$('.minus-deliveryFee').removeClass('minus-deliveryFee-enabled');
+		
+		$('.udBtn').html('수정');
+		$('.udBtn').addClass('updateBtn');
+		$('.udBtn').removeClass('updateCancelBtn');
+		
+		//$('.deliveryAreaResult').html(cloneNode);
+		
+	});
+}
+*/
+
+// 지역 옵션 추가
+function locationAdd(){
+	const deliveryAreaEl = document.getElementById('deliveryLocation');
+	const textEl = document.getElementById('deliveryLocationAdd');
+	const locationText = textEl.value.trim();
+	
+	if(! locationText){
+		textEl.focus();
+		return false;
+	}
+	
+	let optionTag = document.createElement("option");
+	optionTag.textContent = locationText;
+	deliveryAreaEl.appendChild(optionTag);
+
+	textEl.value = '';	
+}
+
+function feeAdd(){
+	const feeEl = document.getElementById('deliveryFee');
+	const locationEl = document.getElementById('deliveryLocation');
+	const locationRsEl = document.getElementById('deliveryAreaRs');
+	const deliveryAreaResultEl = document.getElementById('deliveryAreaResult');
+	
+	if(! feeEl.value.trim()){
+		feeEl.focus();
+		return false;
+	}
+	
+	if(! locationRsEl.value.trim()){
+		alert('배송 지역 옵션을 선택해주세요.');
+		return false;
+	}
+	
+	locationText = locationEl.value.trim();
+	fee = feeEl.value.trim();
+	
+	let pTag = document.createElement("p");
+	let locationInputTag = document.createElement("input");
+	locationInputTag.classList.add('border-none');
+	locationInputTag.setAttribute('name', 'deliveryLocation');
+	locationInputTag.setAttribute('readonly', 'readonly');
+	locationInputTag.value = locationText;
+	
+	let feeInputTag = document.createElement("input");
+	feeInputTag.classList.add('border-none');
+	feeInputTag.setAttribute('name', 'fee');
+	feeInputTag.setAttribute('readonly', 'readonly');
+	feeInputTag.value = fee;
+	
+	let spanTag = document.createElement("span");
+	spanTag.innerText = ' | ';
+
+	let minusSpanTag = document.createElement("span");
+	minusSpanTag.innerText = ' X ';
+	minusSpanTag.classList.add('minus-deliveryFee');
+
+	pTag.appendChild(locationInputTag);
+	pTag.appendChild(spanTag);
+	pTag.appendChild(feeInputTag);
+	pTag.appendChild(minusSpanTag);
+
+	// pTag.innerHtml = locationSpanTag + ' | ' + feeSpanTag + '원';
+	console.log(pTag);
+
+	deliveryAreaResultEl.appendChild(pTag);
+	feeEl.value = '';
+
+}
+
+function sendOk(){
+	const deliveryInfoEl = document.getElementById('deliveryInfoContent');
+	const refundInfoEl = document.getElementById('refundInfoContent');
+	const deliveryAreaEl = document.getElementById('deliveryAreaResult');
+	
+	if(! deliveryInfoEl.value.trim()){
+		deliveryInfoEl.focus();
+		return;
+	}
+	
+	if(! refundInfoEl.value.trim()){
+		refundInfoEl.focus();
+		return;
+	}
+
+	if(! deliveryAreaEl.innerHTML.trim()){
+		alert('배송비 정보를 입력해주세요.');
+		return false;
+	}
+
+	let mode = '${mode}';
+	let url = '${pageContext.request.contextPath}/admin/products/';
+	if(mode === 'write'){
+		url += 'deliveryWrite';
+	} else if(mode === 'update'){
+		url += 'deliveryUpdate';
+	}
+	
+	console.log(url);
+
+	const f = document.deliveryAllInfo;
+	f.action = url;
+	f.submit();
+}
+
+
+$(function(){	
+	$('.deliveryAreaResult').on('click', '.minus-deliveryFee-enabled', function(){
+		let $el = $(this).closest('p');
+		
+		$el.remove();
+	});
+});
+
 </script>
 
 <footer>
