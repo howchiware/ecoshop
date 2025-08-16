@@ -15,10 +15,15 @@ public interface MemberManageMapper {
 	
 	public MemberManage findById(Long memberId);
 	
-	public void insertMember(MemberManage dto) throws SQLException;
-	
 	public void updateMember1(Map<String, Object> map) throws SQLException;
 	public void updateMember2(Map<String, Object> map) throws SQLException;
 	
 	public void deleteNoticeFile(Map<String, Object> map) throws SQLException;
+	
+	public long selectMemberId();
+	public void insertMember3(MemberManage dto) throws SQLException;
+	public void insertMember4(MemberManage dto) throws SQLException;
+	
+	public MemberManage findById1(String userId);
+	public MemberManage findByNickname(String nickname);
 }

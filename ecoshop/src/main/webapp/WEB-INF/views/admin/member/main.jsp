@@ -10,87 +10,99 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style type="text/css">
+
+.content-box {
+    margin-left: 220px; 
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px; 
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05); /* 부드러운 그림자 */
+}
+
+/* --- 탭 스타일 --- */
+.nav-tabs {
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 15px;
+}
+
+.nav-tabs .nav-link {
+    border: 1px solid transparent;
+    border-radius: 0;
+    color: #666;              
+    background-color: #f9f9f9; 
+    padding: 8px 16px;
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.nav-tabs .nav-link.active {
+    border-color: #e0e0e0 #e0e0e0 #fff; 
+    background-color: #fff;
+    color: #007bff; 
+    font-weight: 600;
+}
+
+.nav-tabs .nav-link:hover {
+    background-color: #f1f1f1;
+    color: #333;
+}
+
+.nav-tabs .nav-link.active {
+    border-color: #e0e0e0 #e0e0e0 #fff;
+    background-color: #fff;
+    color: #007bff;
+    font-weight: 600;
+}
+
+/* --- 흰색 컨텐츠 박스 --- */
+.section {
+  border: 1px solid #e0e0e0;   
+  border-radius: 0 6px 6px 6px;
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* 페이지네이션 스타일 (기존 유지) */
 .page-navigation {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 6px;
   margin: 20px 0;
   font-family: 'Noto Sans KR', sans-serif;
-  gap: 10px;
 }
 
 .page-navigation a,
 .page-navigation span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 2px solid #7ecf98;
-  color: #4caf50;
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  color: #555;
+  font-size: 0.95rem;
   text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+
+.page-navigation span.current {
+  background: #007bff;
+  color: #fff;
+  border-color: #007bff;
   font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(126, 207, 152, 0.4);
-  transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
-  font-size: 1rem;
 }
 
 .page-navigation a:hover {
-  background-color: #a4d7a7;
-  color: white;
-  box-shadow: 0 4px 12px rgba(126, 207, 152, 0.6);
-}
-
-.paginate span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 2px solid #4caf50;
-  background-color: #4caf50;
-  color: #fff;
-  font-weight: 700;
-  cursor: default;
-  box-shadow: 0 2px 5px rgba(76, 175, 80, 0.6);
-  font-size: 1rem;
-}
-
-.paginate a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 2px solid #4caf50;
-  color: #4caf50;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background-color 0.3s, color 0.3s;
-  font-size: 1rem;
-}
-
-.paginate a:hover {
-  background-color: #81c784;
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(129, 199, 132, 0.6);
-}
-
-.page-navigation .disabled {
-  color: #cde5d4;
-  border-color: #cde5d4;
-  cursor: default;
-  pointer-events: none;
-  box-shadow: none;
+  background: #f2f2f2;
+  border-color: #bbb;
+  color: #000;
 }
 
 .modal-backdrop { z-index: 9998 !important; }
-  .modal { z-index: 9999 !important; }
-  body.modal-open { overflow: hidden; padding-right: 0 !important; }
+.modal { z-index: 9999 !important; }
+body.modal-open { overflow: hidden; padding-right: 0 !important; }
 </style>
 </head>
 <body>
@@ -100,23 +112,27 @@
 <main class="main-container">
   <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
 
-  <div class="container-md">회원 목록</div>
   <div class="container">
     <div class="row">
-      <!-- 탭 -->
       <div class="col">
-        <div class="section p-5">
-         <ul class="nav nav-tabs" id="myTab" role="tablist">
-				<li class="nav-item" userLevel="presentation">
-					<button class="nav-link active" id="tab-1" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" userLevel="tab" aria-selected="true" data-tab="1"> <i class="bi bi-person-fill"></i> 회원</button>
-				</li>
-				<li class="nav-item" role="presentation">
-					<button class="nav-link" id="tab-2" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" userLevel="tab" aria-selected="true" data-tab="2"> <i class="bi bi-mortarboard-fill"></i>직원</button>
-				</li>
-          </ul>
-          
+        <!-- 탭 -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="tab-1" role="tab" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" aria-selected="true" data-tab="1">
+              <i class="bi bi-person-fill"></i> 회원
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tab-2" role="tab" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" aria-selected="false" data-tab="2">
+              <i class="bi bi-mortarboard-fill"></i> 직원
+            </button>
+          </li>
+        </ul>
+
+        <!-- 흰색 박스 -->
+        <div class="section">
           <div class="tab-content pt-3" id="nav-tabContent"></div>
-          
+
           <form name="memberSearchForm">
             <input type="hidden" name="schType">
             <input type="hidden" name="kwd">
@@ -126,46 +142,61 @@
           </form>
         </div>
       </div>
-     </div>
+    </div>
   </div>
 </main>
 
+<!-- 회원 등록 모달 -->
 <div class="modal fade" id="myDialogModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="myDialogModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="myDialogModalLabel">직원 등록</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body p-2">
-			</div>
-		</div>
-	</div>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myDialogModalLabel">회원 등록</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-2"></div>
+    </div>
+  </div> 	
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.6.0/echarts.min.js"></script>
 
+
 <script type="text/javascript">
 $(function(){
     $('#tab-1').addClass('active');
 	
     $('button[role="tab"]').on('click', function(e){
+    	$('button[role="tab"]').removeClass('active');
+        $(this).addClass('active');
+        
     	const tab = $(this).attr('data-tab');
     	
-		if(tab !== '3') {
-			resetList();
-		}else{
-			
+    	if (tab !== '3') {
+            resetList();
 		}
-		
+
     });	
+    listMember(1);
 });
 
 $(function(){
-	listMember(1);
+    $('#btnMemberWrite').hide();
+
+    $('button[role="tab"]').on('click', function(){
+        $('button[role="tab"]').removeClass('active');
+        $(this).addClass('active');
+
+        const tab = $(this).attr('data-tab');
+
+        if (tab !== '3') {
+            resetList();
+        }
+    });
 });
+
 
 function listMember(page) {
 	let url = '${pageContext.request.contextPath}/admin/member/list';		
@@ -177,6 +208,22 @@ function listMember(page) {
 	};
 	
 	ajaxRequest(url, 'get', params, 'text', fn);
+}
+
+function listPage(page) {
+    const $tab = $('button[role="tab"].active');
+    let role = $tab.attr('data-tab');
+    let schType = $('input[name=schType]').val();
+    let kwd = $('input[name=kwd]').val();
+
+    let url = '${pageContext.request.contextPath}/admin/member/list';
+    let params = 'pageNo=' + page + '&role=' + role;
+
+    if (kwd) params += '&schType=' + schType + '&kwd=' + encodeURIComponent(kwd);
+
+    ajaxRequest(url, 'get', params, 'text', function(data) {
+        $('#nav-tabContent').html(data);
+    });
 }
 
 // 초기화
@@ -252,16 +299,72 @@ function writeForm(){
 	}
 	
 	ajaxRequest(url, 'get', null, 'text', fn);
+	
+}
+
+function sendOk(mode = 'write', page = 1) {
+    const url = '${pageContext.request.contextPath}/admin/member/write';
+    const params = $('form[name=memberForm]').serialize();
+    
+    const fn = function(data) {
+        if (data.state == true || data.state === "true") {
+        	
+            listMember(page);
+
+            $('#myDialogModal .btn-close').click();
+
+            $('#myDialogModal .modal-body').empty();
+        } else {
+            alert("등록에 실패했습니다.");
+        }
+    };
+
+    ajaxRequest(url, 'post', params, 'json', fn);
+}
+
+function sendCancel() {
+    const modalEl = document.getElementById('myDialogModal');
+    const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+    modalInstance.hide();
+    $('#myDialogModal .modal-body').empty();
 }
 
 
 
 function deleteMember(memberIdx) {
-	// 회원 삭제
-	
+
 }
 
+function daumPostcode() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+            var fullAddr = ''; 
+            var extraAddr = ''; 
 
+            if (data.userSelectedType === 'R') { 
+                fullAddr = data.roadAddress;
+            } else {
+                fullAddr = data.jibunAddress;
+            }
+
+            if(data.userSelectedType === 'R'){
+                if(data.bname !== ''){
+                    extraAddr += data.bname;
+                }
+                if(data.buildingName !== ''){
+                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+            }
+
+            document.getElementById('zip').value = data.zonecode;
+            document.getElementById('addr1').value = fullAddr;
+            document.getElementById('addr2').focus();
+        }
+    }).open();
+}
 </script>
+
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 </body>
 </html>

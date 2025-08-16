@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
     <!-- 회원 목록 -->
     
-    <div class="col-md-6 text-end">
+    <div class="row-md-6 text-end">
 		<div class="form-search">
 			<select id="searchType" name="schType">
 				<option value="memberId"  ${schType=="memberId" ? "selected":""}>아이디</option>
@@ -12,11 +12,13 @@
 			</select>
 			<input type="text" id="keyword" name="kwd" value="${kwd}">
 			<button type="button" class="btn-default" onclick="searchList()"> <i class="bi bi-search"></i> </button>
-			<button type="button" class="btn-default btnMemberAddOk">등록</button> 		
+				 <c:if test="${role == 2}">
+				    <button id="btnMemberWrite" type="button" class="btn-accent" onclick="writeForm()">직원등록</button>
+				</c:if>
 		</div>
 		
 	</div>
-	<span class="dataCount">${dataCount}개(${page}/${total_page} 페이지)</span>
+	<span class="dataCount">${dataCount}개(${pageNo}/${total_page} 페이지)</span>
 		<div class="col-md-3 text-end">
 			&nbsp;
 		</div>

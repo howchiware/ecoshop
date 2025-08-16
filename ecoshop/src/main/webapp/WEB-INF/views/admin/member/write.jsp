@@ -1,8 +1,8 @@
-<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
-
-   <form name="memberForm" method="post">
+        <div class="form-section">
+            <form name="memberForm" method="post">
                 <div class="row">
                     <div class="col-md-6">
                         <label for="userId" class="form-label">아이디</label>
@@ -104,15 +104,16 @@
                     </div>
                 </div>
 
-                <div class="row mt-4">
-                    <div class="col-12 text-center">
-                        <div class="text-center mb-3">
-						<button type="button" class="btn-accent btn-md" onclick="sendOk();">등록완료</button>
-						<button type="button" class="btn-default btn-md"  onclick="sendCancel();">등록 취소</button>
-					</div>
+	               <div class="row mt-4">
+	                    <div class="col-12 text-center">
+	                        <div class="text-center mb-3">
+	                  <button type="button" class="btn-accent btn-md" onclick="sendOk('write', 1);">등록완료</button>
+	                  <button type="button" class="btn-default btn-md"  onclick="sendCancel();">등록취소</button>
+	               </div>
                         <input type="hidden" name="loginIdValid" id="loginIdValid" value="false">
                         <input type="hidden" name="nicknameValid" id="nicknameValid" value="false">
                     </div>
                 </div>
             </form>
-	
+        </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

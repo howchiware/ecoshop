@@ -20,20 +20,10 @@
         </choose>
     </sql>
     
-  	<insert id="insertMember3" parameterType="com.sp.app.admin.model.MemberManage">
-	    INSERT INTO member1(memberId, userId, password, userLevel, regDate, regUpdate)
-	    VALUES (#{memberId}, #{userId}, #{password}, 51, SYSDATE, SYSDATE)
-	</insert>
-	
-	<insert id="insertMember4" parameterType="com.sp.app.admin.model.MemberManage">
-	    INSERT INTO member2(memberId, name, nickname, birth, tel, zip, addr1, addr2, email)
-	    VALUES (#{memberId}, #{name}, #{nickname}, TO_DATE(#{birth}, 'YYYY-MM-DD'), #{tel}, #{zip}, #{addr1}, #{addr2}, #{email})
-	</insert>
-
     <!-- 회원 목록 -->
     <select id="listMember" parameterType="map" resultType="com.sp.app.admin.model.MemberManage">
     SELECT m1.memberId, m1.userId, userLevel, m1.regUpdate,
-	        TO_CHAR(m1.regDate, 'YYYY-MM-DD') regDate, m2.name, m2.nickname, m2.tel , 
+	        TO_CHAR(m1.regDate, 'YYYY-MM-DD') regDate, m2.name, m2.nickname, m2.tel ,
 	        TO_CHAR(m2.birth, 'YYYY-MM-DD') birth, m2.zip, m2.email, m2.addr1, m2.addr2
 	    FROM member1 m1
     LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
@@ -66,9 +56,6 @@
             <if test="kwd != null and kwd != ''">
                 <include refid="where-list"/>
             </if>
-            <if test="enabled != ''">
-				AND enabled = #{enabled}
-			</if>
             <choose>
                 <when test="role == 2">
                     AND userLevel = 51
@@ -100,21 +87,16 @@
 		UPDATE member2 SET name = #{name}, birth = TO_DATE(#{birth}, 'YYYY-MM-DD')
 		WHERE memberId = #{memberId}
     </update>
-   <update id="updateMember3" parameterType="map">
-		UPDATE member2 SET name = #{name}, birth = TO_DATE(#{birth}, 'YYYY-MM-DD')
-		WHERE memberId = #{memberId}
-    </update>
     <delete id="deleteMember2" parameterType="map">
 		DELETE FROM member2
 		WHERE memberId = #{memberId}
     </delete>
-    
     <update id="updateMemberEnabled" parameterType="map">
 		UPDATE member1 SET enabled = #{enabled}
 		WHERE memberId = #{memberId}
     </update>
     
-    <select id="selectMemberId1" resultType="long">
+    <select id="selectMemberId" resultType="long">
 	    SELECT
 	        (
 	            SELECT r FROM (
@@ -144,6 +126,17 @@
 		LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
 		WHERE m2.nickname = #{nickname}
 	</select>
+	
+	  	<insert id="insertMember3" parameterType="com.sp.app.admin.model.MemberManage">
+	    INSERT INTO member1(memberId, userId, password, userLevel, regDate, regUpdate)
+	    VALUES (#{memberId}, #{userId}, #{password}, 51, SYSDATE, SYSDATE)
+	</insert>
+	
+	<insert id="insertMember4" parameterType="com.sp.app.admin.model.MemberManage">
+	    INSERT INTO member2(memberId, name, nickname, birth, tel, zip, addr1, addr2, email)
+	    VALUES (#{memberId}, #{name}, #{nickname}, TO_DATE(#{birth}, 'YYYY-MM-DD'), #{tel}, #{zip}, #{addr1}, #{addr2}, #{email})
+	</insert>
+	
 	
 	
 

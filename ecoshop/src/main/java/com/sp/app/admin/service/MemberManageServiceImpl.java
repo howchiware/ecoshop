@@ -5,9 +5,11 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sp.app.admin.mapper.MemberManageMapper;
 import com.sp.app.admin.model.MemberManage;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -60,25 +62,13 @@ public class MemberManageServiceImpl implements MemberManageService {
 
 
 	@Override
-	public void insertMember(MemberManage dto) throws Exception {
-		try {
-			mapper.insertMember(dto);
-		} catch (Exception e) {
-			log.info("insertFaq : ", e);
-			
-			throw e;
-		}
-		
-	}
-
-	@Override
-	public List<MemberManage> listMemberStatus(Long member_id) {
+	public List<MemberManage> listMemberStatus(Long memerId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public MemberManage findByStatus(Long member_id) {
+	public MemberManage findByStatus(Long memerId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -99,6 +89,64 @@ public class MemberManageServiceImpl implements MemberManageService {
 
 	@Override
 	public void updateMemberEnabled(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Transactional(rollbackFor = {Exception.class})
+	@Override
+	public void insertMember(MemberManage dto) throws Exception {
+		try {
+			
+			long memberId = mapper.selectMemberId();
+	        dto.setMemberId(memberId);
+	        
+	        
+			mapper.insertMember3(dto);
+			mapper.insertMember4(dto);
+		} catch (Exception e) {
+			log.info("insertMember : " , e);
+			
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public MemberManage findById1(String userId) {
+		MemberManage dto = null;
+		
+		try {
+			dto = Objects.requireNonNull(mapper.findById1(userId));
+			
+		} catch (NullPointerException e) {
+		} catch (ArrayIndexOutOfBoundsException e) {
+		} catch (Exception e) {
+			log.info("findById1 : ", e);
+		}
+		
+		return dto;
+	}
+
+	@Override
+	public MemberManage findByNickname(String nickname) {
+		
+		MemberManage dto = null;
+		
+		try {
+			dto = Objects.requireNonNull(mapper.findByNickname(nickname));
+			
+		} catch (NullPointerException e) {
+		} catch (ArrayIndexOutOfBoundsException e) {
+		} catch (Exception e) {
+			log.info("findByNickname : ", e);
+		}
+		
+		return dto;
+	}
+
+	@Override
+	public void generatePwd(MemberManage dto) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
