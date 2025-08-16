@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.sp.app.admin.model.GongguManage;
-import com.sp.app.admin.model.GongguReviewManage;
 
 public interface GongguManageService {
 	public void insertGongguProduct(GongguManage dto, String uploadPath) throws Exception;
@@ -15,5 +14,4 @@ public interface GongguManageService {
 	public int dataCount(Map<String, Object> map);
 	public List<GongguManage> listProduct(Map<String, Object> map);
 	public GongguManage findById(long gongguProductId);
-	public List<GongguReviewManage> getReviewList();
 }

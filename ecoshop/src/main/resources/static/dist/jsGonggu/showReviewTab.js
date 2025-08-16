@@ -12,7 +12,7 @@
 			if (contentArea) {
 				contentArea.innerHTML = data;
 			}
-		}, false);
+		});
 	}
 	
 	$(document).ready(function() {

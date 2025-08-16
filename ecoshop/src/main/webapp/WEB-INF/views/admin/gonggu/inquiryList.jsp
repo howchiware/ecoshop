@@ -16,22 +16,31 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:if test="${not empty list}">
-				<c:forEach var="dto" items="${list}">
+			<c:if test="${not empty inquiryList}">
+				<c:forEach var="dto" items="${inquiryList}">
 					<tr class="border-bottom">
 						<td>${dto.gongguProductName}</td>
 						<td>${dto.content}</td>
-						<td>${dto.rate}</td>
-						<td>${dto.name}</td>
+						<td>${dto.userName}</td>
 						<td><fmt:formatDate value="${dto.regDate}" pattern="yyyy-MM-dd" /></td>
-						<td>
-							<button type="button" class="btn btn-primary">삭제</button>
-						</td>
+						<td>${dto.answerName}</td>
+						<c:if test="${empty answer}">
+							<td>
+								<button type="button" class="small-btn">답변</button>
+								<button type="button" class="small-btn">삭제</button>
+							</td>
+						</c:if>
+						<c:if test="${not empty answer}">
+						    <td>
+						        <button type="button" class="btn btn-primary">수정</button>
+						        <button type="button" class="btn btn-secondary">삭제</button>
+						    </td>
+						</c:if>
 					</tr>
 				</c:forEach>
 			</c:if>
 
-			<c:if test="${empty list}">
+			<c:if test="${empty inquiryList}">
 				<tr>
 					<td colspan="6" style="text-align: center;">등록된 내용이 없습니다.</td>
 				</tr>

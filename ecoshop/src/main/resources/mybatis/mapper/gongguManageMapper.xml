@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sp.app.admin.mapper.GongguManageMapper">
+<mapper namespace="com.sp.app.admin.mapper.GongguReviewInquiryManageMapper">
 	<select id="findAllReviews" resultType="com.sp.app.admin.model.GongguReviewManage">
 		SELECT gongguReviewId, m2.name, g.content, g.regDate, g.gongguProductId, g.memberId, g.showReview, g.answerId, g.answerDate, g.answer, p.gongguProductName, g.rate
 		FROM gongguReview g
@@ -11,4 +11,14 @@
 		ORDER BY g.regDate DESC
 	</select>
 	
+	<select id="findAllInquirys" resultType="com.sp.app.admin.model.GongguInquiryManage">
+	 	SELECT g.gongguProductName, i.content, i.regDate, (CASE WHEN i.answer IS NOT NULL THEN 1 ELSE 0 END) AS status, m2.name AS userName, m1.userId, m1.userLevel, c.categoryId,
+	 		 c.categoryName, i.gongguInquiryId, i.answerId, i.answer, i.answerDate, m2.name AS answerName
+	 	FROM gongguInquiry i
+	 	LEFT JOIN gongguProduct g ON i.gongguProductId = g.gongguProductId
+		LEFT JOIN member1 m1 ON i.memberId = m1.memberId
+		LEFT JOIN member2 m2 ON m1.memberId = m2.memberId
+		LEFT JOIN productCategory c ON g.categoryId = c.categoryId
+		ORDER BY i.regDate DESC
+	</select>
 </mapper>

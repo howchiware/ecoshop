@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sp.app.admin.model.CategoryManage;
+import com.sp.app.admin.model.GongguInquiryManage;
 import com.sp.app.admin.model.GongguManage;
 import com.sp.app.admin.model.GongguReviewManage;
 import com.sp.app.admin.service.CategoryManageService;
 import com.sp.app.admin.service.GongguManageService;
+import com.sp.app.admin.service.GongguReviewInquiryManageService;
 import com.sp.app.common.StorageService;
 
 import jakarta.annotation.PostConstruct;
@@ -28,6 +30,7 @@ public class GongguManageController {
     private final GongguManageService gongguManageService;
     private final StorageService storageService;
     private final CategoryManageService categoryManageService;
+    private final GongguReviewInquiryManageService gongguReviewInquiryManageService;
     
     private String uploadPath;
 
@@ -76,15 +79,17 @@ public class GongguManageController {
     
     @GetMapping(value = "reviewList")
     public String getProductReviewList(Model model) {
-        List<GongguReviewManage> reviewList = gongguManageService.getReviewList();
+        List<GongguReviewManage> reviewList = gongguReviewInquiryManageService.getReviewList();
       
-        model.addAttribute("list", reviewList);
+        model.addAttribute("reviewList", reviewList);
         return "admin/gonggu/reviewList";
     }
     
     @GetMapping(value = "inquiryList")
     public String getInquiryList(Model model) {
+        List<GongguInquiryManage> inquiryList = gongguReviewInquiryManageService.getInquiryList();
         
+        model.addAttribute("inquiryList", inquiryList);
         return "admin/gonggu/inquiryList";
     }
 
@@ -92,7 +97,9 @@ public class GongguManageController {
     public String category(@RequestParam(value="categoryId", required = false) Long categoryId, Model model) throws Exception {
     	List<CategoryManage> categoryList = categoryManageService.listCategory();
     	
+    	model.addAttribute("categoryList", categoryList);
     	return "admin/category/category";
     }
+
 
 }
