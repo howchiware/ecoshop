@@ -18,7 +18,7 @@
 		<tbody>
 			<c:if test="${not empty list}">
 				<c:forEach var="dto" items="${list}">
-					<tr>
+					<tr class="border-bottom">
 						<td>${dto.gongguProductName}</td>
 						<td>${dto.content}</td>
 						<td>${dto.rate}</td>

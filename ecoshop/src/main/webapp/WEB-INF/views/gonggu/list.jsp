@@ -13,8 +13,6 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css_gonggu/productList_view.css" type="text/css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 </head>
 <body>
 	<header>
@@ -62,10 +60,12 @@
 				</div>
 			</div>
 	</main>
-	<header>
+	<footer>
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
-	</header>	
-
-	<script src="${pageContext.request.contextPath}/dist/jsGonggu/showTab.js"></script>
+	</footer>	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+	<script src="${pageContext.request.contextPath}/dist/jsGonggu/sendAjaxRequest.js"></script>
+	<script src="${pageContext.request.contextPath}/dist/jsGonggu/showCategoryTab.js"></script>
 </body>
 </html>

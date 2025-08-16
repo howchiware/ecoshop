@@ -145,4 +145,8 @@
     background-color: #87A78D;
 }
 
+table.board-list thead th {
+    background-color: #f2f2f2 !important; 
+    color: #333 !important;
+}
 
