@@ -88,6 +88,20 @@
     JOIN specialChallenge s ON s.challengeId = c.challengeId
     WHERE c.challengeId = #{challengeId}
   </select>
+  
+  <!-- 해당 요일 1건 조회 -->
+<select id="selectDailyByWeekday" parameterType="int" resultType="com.sp.app.model.Challenge">
+  SELECT
+    <include refid="baseColumns"/>,
+    d.weekday
+  FROM dailyChallenge d
+  JOIN challenge c ON c.challengeId = d.challengeId
+  WHERE c.challengeType = 'DAILY'
+    AND d.weekday = #{weekday}
+  FETCH FIRST 1 ROWS ONLY
+</select>
+  
+  
 
   <!-- 4) 오늘 참여 여부(요일: 당일 1회 제한) -->
   <!-- params: {memberId, challengeId} -->

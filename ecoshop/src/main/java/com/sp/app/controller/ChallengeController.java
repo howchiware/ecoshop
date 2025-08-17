@@ -36,14 +36,24 @@ public class ChallengeController {
 	// 메인(사용자 목록) : 데일리 + 스페셜(첫 로드) 
     @GetMapping("list")
     public String list(
+    		@RequestParam(name = "weekday", required = false) Integer weekday,
             @RequestParam(name = "size", required = false) Integer size,
             @RequestParam(name = "sort", defaultValue = "RECENT") String sort,
             Model model
     ) {
         try {
-            // 데일리
+            // 데일리, 요일버튼 목록(weekday, challengeUd 포함)
             List<Challenge> weekly = service.listDailyAll();
-            Challenge today = service.getTodayDaily();
+            
+            
+            // 파라미터 없으면 '오늘'로
+            int javaDow = java.time.LocalDate.now().getDayOfWeek().getValue(); // // 1=Mon..7=Sun
+            int todayDow0to6 = javaDow % 7; // 0=Sun..6=Sat
+            int targetWeekday = (weekday != null ? weekday : todayDow0to6);
+            
+            
+            // 해당 요일 카드 1건 
+            Challenge today = service.getDailyByWeekday(targetWeekday);
 
             // 스페셜(더보기 첫 로드)
             List<Challenge> special = service.listSpecialMore(null, size, sort);
@@ -51,8 +61,11 @@ public class ChallengeController {
             model.addAttribute("weekly", weekly);
             model.addAttribute("today", today);
             model.addAttribute("list", special);
-            model.addAttribute("sort", sort);
+            
+         // 뷰에서 버튼 활성화/스크롤용
+            model.addAttribute("targetWeekday", targetWeekday); // 버튼 활성화용
             model.addAttribute("size", (size == null ? 6 : size));
+            model.addAttribute("sort", sort);
         } catch (Exception e) {
             log.info("challenge list :", e);
         }

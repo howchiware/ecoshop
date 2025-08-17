@@ -148,6 +148,18 @@ public class ChallengeServiceImpl implements ChallengeService {
 		}
 		return List.of();
 	}
+
+
+
+	@Override
+	public Challenge getDailyByWeekday(int weekday) {
+		try {
+			return mapper.selectDailyByWeekday(weekday);
+		} catch (Exception e) {
+			log.info("getDailyByWeekday : ", e);
+		}
+		return null;
+	}
 	
 	
 	

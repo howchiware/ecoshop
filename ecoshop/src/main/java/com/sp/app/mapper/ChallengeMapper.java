@@ -63,5 +63,6 @@ public interface ChallengeMapper {
             @Param("participationId") long participationId
     ) throws SQLException;
 	
-	
+	public Challenge selectDailyByWeekday(@Param("weekday") int weekday);
+    
 }
