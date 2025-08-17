@@ -17,7 +17,7 @@ import lombok.Setter;
 @Builder
 public class GongguReview {
     private long gongguReviewId;
-    private String name;
+    private String Username;
     private int rate;
     private String content;
     private String regDate;
@@ -27,7 +27,8 @@ public class GongguReview {
     private boolean deletePermit;
     private long answerId; 
     private String answerDate;
-    private String answer;   
+    private String answer;  
+    private String AnswerName;
     
     private long reviewPhotoId;
     private String reviewImg;

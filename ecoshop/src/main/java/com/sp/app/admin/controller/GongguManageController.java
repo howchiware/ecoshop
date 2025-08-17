@@ -1,6 +1,8 @@
 package com.sp.app.admin.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -78,18 +80,39 @@ public class GongguManageController {
     }
     
     @GetMapping(value = "reviewList")
-    public String getProductReviewList(Model model) {
-        List<GongguReviewManage> reviewList = gongguReviewInquiryManageService.getReviewList();
+    public String getProductReviewList(
+    		@RequestParam(value = "gongguProductName", required = false) String gongguProductName, 
+    		@RequestParam(value = "kwd", required = false) String kwd, 
+    		Model model) {
+    	Map<String, Object> map = new HashMap<>();
+        map.put("gongguProductName", gongguProductName);
+        map.put("kwd", kwd);
+    	
+        List<GongguReviewManage> reviewList = gongguReviewInquiryManageService.searchReviews(map);
       
         model.addAttribute("reviewList", reviewList);
+        model.addAttribute("gongguProductName", gongguProductName);
+        model.addAttribute("kwd", kwd);
+        
         return "admin/gonggu/reviewList";
     }
     
     @GetMapping(value = "inquiryList")
-    public String getInquiryList(Model model) {
-        List<GongguInquiryManage> inquiryList = gongguReviewInquiryManageService.getInquiryList();
+    public String getInquiryList(
+    		@RequestParam(value = "gongguProductName", required = false) String gongguProductName, 
+    		@RequestParam(value = "kwd", required = false) String kwd, 
+    		Model model) {
+    	
+    	Map<String, Object> map = new HashMap<>();
+        map.put("gongguProductName", gongguProductName);
+        map.put("kwd", kwd);
+        
+        List<GongguInquiryManage> inquiryList = gongguReviewInquiryManageService.searchInquirys(map);
         
         model.addAttribute("inquiryList", inquiryList);
+        model.addAttribute("gongguProductName", gongguProductName);
+        model.addAttribute("kwd", kwd);
+        
         return "admin/gonggu/inquiryList";
     }
 

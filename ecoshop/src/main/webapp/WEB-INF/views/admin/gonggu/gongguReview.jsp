@@ -27,26 +27,27 @@
 			<hr>
 			<div class="outside review-manage">
 				<div class="review-manage-nav">
-					<button class="nav-tab active" data-url="${pageContext.request.contextPath}/admin/gonggu/reviewList" onclick="showReviewTab(this)">상품리뷰</button>
-					<button class="nav-tab" data-url="${pageContext.request.contextPath}/admin/gonggu/inquiryList" onclick="showReviewTab(this)">상품문의</button>
+					<button class="nav-tab active" data-url="/admin/gonggu/reviewList" onclick="showReviewTab(this)">상품리뷰</button>
+					<button class="nav-tab" data-url="/admin/gonggu/inquiryList" onclick="showReviewTab(this)">상품문의</button>
 				</div>
 			
 			<div class="row select-two">
-					<div class="col input-group mb-3">
-						<input type="text" class="form-control" placeholder="상품명"
-							aria-label="productName" aria-describedby="searching"
-							style="width: 50%">
-						<button class="btn btn-outline-secondary" type="button"
-							id="searching">🔍</button>
-					</div>
-					<div class="col input-group mb-3">
-						<input type="text" class="form-control" placeholder="내용, 작성자"
-							aria-label="content" aria-describedby="searching"
-							style="width: 50%">
-						<button class="btn btn-outline-secondary" type="button"
-							id="searching">🔍</button>
-					</div>
+				<div class="row d-flex justify-content-center">
+				    <div class="searchSelect col-2">
+				        <select id="searchType" class="form-control search-select">
+				            <option value="gongguProductName">상품명</option>
+				            <option value="kwd">내용 + 작성자</option>
+				        </select>
+				    </div>
+				    <div class="searchContainer col-6">
+				        <div class="col input-group mb-3">
+				            <input type="text" id="searchValue" class="form-control search-input" placeholder="검색어 입력" aria-label="search">
+				            <button class="btn btn-outline-secondary" type="button" id="searchBtn">🔍</button>
+				            <button class="btn btn-outline-secondary" type="button" id="resetBtn"><i class="bi bi-arrow-counterclockwise"></i></button>
+				        </div>	
+				    </div>
 				</div>
+			</div>
 			<div id="content-area"></div>
 			</div>
 		</div>

@@ -1,6 +1,7 @@
 package com.sp.app.admin.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -39,5 +40,27 @@ public class GongguReviewInquiryServiceImpl implements GongguReviewInquiryManage
 		return list;
 	}
 
+	@Override
+	public List<GongguReviewManage> searchReviews(Map<String, Object> map) {
+		List<GongguReviewManage> list = null;
+		
+		try {
+			list = gongguReviewInquiryManageMapper.findReviewsBySearch(map);
+		} catch (Exception e) {
+			log.info("gongguReviewKwd: ", e);
+		}
+		return list;   
+	}
+	
+	@Override
+	public List<GongguInquiryManage> searchInquirys(Map<String, Object> map) {
+		List<GongguInquiryManage> list = null;
+		try {
+			list = gongguReviewInquiryManageMapper.findInquirysBySearch(map);
+		} catch (Exception e) {
+			log.info("gongguReviewKwd: ", e);
+		}
+		return list;  
+	}
 	
 }

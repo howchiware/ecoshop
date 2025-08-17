@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class GongguReviewManage {
     private long gongguReviewId;
-    private String name;
+    private String userName;
     private String content;
     private Date regDate;
     private long gongguProductId; 
