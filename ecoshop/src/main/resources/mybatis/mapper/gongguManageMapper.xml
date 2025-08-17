@@ -53,7 +53,7 @@
 	            AND g.gongguProductName LIKE '%' || #{gongguProductName} || '%'
 	        </if>
 	        <if test="kwd != null and !kwd.isEmpty()">
-	            AND (g.content LIKE '%' || #{kwd} || '%' OR m2.name LIKE '%' || #{kwd} || '%')
+	            AND (i.content LIKE '%' || #{kwd} || '%' OR m2.name LIKE '%' || #{kwd} || '%')
 	        </if>
 	    </where>
 	    ORDER BY i.regDate DESC
