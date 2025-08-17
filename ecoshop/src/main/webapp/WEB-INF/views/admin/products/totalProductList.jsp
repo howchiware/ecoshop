@@ -311,12 +311,14 @@ text-align: center;
 											</td>
 										</tr>
 									</c:forEach>
+									<!-- 
 									<tr>
 										<td colspan="10" style="text-align: right; border-bottom: none;">
 											<button type="button" onclick="deleteProductSelect();">선택상품삭제</button>
 											<button type="button">전체상품삭제</button>
 										</td>
 									</tr>
+									 -->
 								</tbody>
 							</table>
 						</form>
