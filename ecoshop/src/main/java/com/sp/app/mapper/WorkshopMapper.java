@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.sp.app.model.Participant;
 import com.sp.app.model.Workshop;
+import com.sp.app.model.WorkshopFaq;
 import com.sp.app.model.WorkshopReview;
 
 @Mapper
@@ -52,18 +53,17 @@ public interface WorkshopMapper {
 	public Workshop findManagerById(long num);
 	
 	// FAQ
-	public void insertFaq(Workshop dto) throws SQLException;
-	public void updateFaq(Workshop dto) throws SQLException;
+	public void insertFaq(WorkshopFaq dto) throws SQLException;
+	public void updateFaq(WorkshopFaq dto) throws SQLException;
 	public void deleteFaq(long num) throws SQLException;
-	public int faqDataCount(Map<String, Object> map);
-	public List<Workshop> listAdminFaq(Map<String, Object> map);
-	public Workshop findFaqById(long num);
+	public List<WorkshopFaq> listFaq(Map<String, Object> map);
+	public Long findProgramIdByWorkshopId(long workshopId);
+	public WorkshopFaq findFaqById(long faqId);
 	
 	// 참가자
 	public List<Participant> listParticipant(Map<String, Object> map);
-	public int participantDataCount(Map<String, Object> map);
-	public int markAttendance(Map<String, Object> map);
-	public boolean isParticipantOfMember(long participantId, long memberId);
+	public int updateParticipantStatus(Map<String, Object> map);
+	public int updateAttendance(Map<String, Object> map);
 	
 	/* ──────────────── 사용자 ──────────────── */
 	// 워크샵 목록/상세
@@ -76,6 +76,7 @@ public interface WorkshopMapper {
 	public int countAppliedByWorkshop(long workshopId);
 	public void applyWorkshop(Map<String, Object> map);
 	public int cancelApplication(Map<String, Object> map);
+	public boolean isParticipantOfMember(long participantId, long memberId);
 	
 	// 워크샵 후기
 	public void insertReview(WorkshopReview dto) throws SQLException;
@@ -84,9 +85,6 @@ public interface WorkshopMapper {
 	public int reviewDataCount(Map<String, Object> map);
 	public List<WorkshopReview> listUserReview(Map<String, Object> map);
 	public Workshop findReviewById(long num);
-	
-	// FAQ
-	public List<Workshop> listUserFaq(Map<String, Object> map);
 	
 	// 워크샵 상태 검증
 	public Workshop findWorkshopStatusAndCapacity(long workshopId);

@@ -16,7 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sp.app.common.MyUtil;
 import com.sp.app.common.StorageService;
+import com.sp.app.model.Participant;
 import com.sp.app.model.Workshop;
+import com.sp.app.model.WorkshopFaq;
 import com.sp.app.service.WorkshopService;
 
 import jakarta.annotation.PostConstruct;
@@ -346,12 +348,12 @@ public class WorkshopManageController {
 			map.put("size", size);
 
 			List<Workshop> list = service.listWorkshop(map);
-			
+
 			Map<String, Object> programMap = new HashMap<>();
-		    programMap.put("offset", 0);
-		    programMap.put("size", 100);
-		    List<Workshop> programList = service.listProgram(programMap);
-		    model.addAttribute("programList", programList);
+			programMap.put("offset", 0);
+			programMap.put("size", 100);
+			List<Workshop> programList = service.listProgram(programMap);
+			model.addAttribute("programList", programList);
 
 			String cp = req.getContextPath();
 			String query = "";
@@ -413,17 +415,17 @@ public class WorkshopManageController {
 				String path = storageService.uploadFileToServer(thumbnail, uploadPath);
 				dto.setThumbnailPath(path);
 			}
-			
+
 			service.insertWorkshop(dto);
-			
+
 			// 상세 이미지
-			for(MultipartFile photo : photos) {
-				if(photo != null && !photo.isEmpty()) {
+			for (MultipartFile photo : photos) {
+				if (photo != null && !photo.isEmpty()) {
 					String path = storageService.uploadFileToServer(photo, uploadPath);
-					
+
 					dto.setWorkshopId(dto.getWorkshopId());
 					dto.setWorkshopImagePath(path);
-					
+
 					service.insertWorkshopPhoto(dto);
 				}
 			}
@@ -437,18 +439,16 @@ public class WorkshopManageController {
 	// 워크샵 상세
 	@GetMapping("/detail")
 	public String workshopDetail(@RequestParam(name = "num") long num,
-            @RequestParam(name = "page", defaultValue = "1") String page,
-            Model model)
-			throws Exception {
+			@RequestParam(name = "page", defaultValue = "1") String page, Model model) throws Exception {
 
 		String query = "page=" + page;
 		try {
 			// 기본 정보
-	        Workshop dto = service.findWorkshopById(num);
-	        if (dto == null) {
-	            return "redirect:/admin/workshop/list?" + query;
-	        }
-			
+			Workshop dto = service.findWorkshopById(num);
+			if (dto == null) {
+				return "redirect:/admin/workshop/list?" + query;
+			}
+
 			// 상세 이미지
 			Map<String, Object> map = new HashMap<>();
 			map.put("workshopId", num);
@@ -474,20 +474,20 @@ public class WorkshopManageController {
 
 		try {
 			Workshop dto = Objects.requireNonNull(service.findWorkshopById(num));
-			
-			// 프로그램 목록
-		    Map<String, Object> programMap = new HashMap<>();
-		    programMap.put("offset", 0);
-		    programMap.put("size", 100);
-		    List<Workshop> programList = service.listProgram(programMap);
 
-		    // 담당자 목록
-		    Map<String, Object> managerMap = new HashMap<>();
-		    managerMap.put("offset", 0);
-		    managerMap.put("size", 100);
-		    List<Workshop> managerList = service.listManager(managerMap);
-			
-		    model.addAttribute("programList", programList);
+			// 프로그램 목록
+			Map<String, Object> programMap = new HashMap<>();
+			programMap.put("offset", 0);
+			programMap.put("size", 100);
+			List<Workshop> programList = service.listProgram(programMap);
+
+			// 담당자 목록
+			Map<String, Object> managerMap = new HashMap<>();
+			managerMap.put("offset", 0);
+			managerMap.put("size", 100);
+			List<Workshop> managerList = service.listManager(managerMap);
+
+			model.addAttribute("programList", programList);
 			model.addAttribute("managerList", managerList);
 			model.addAttribute("dto", dto);
 			model.addAttribute("mode", "update");
@@ -566,6 +566,189 @@ public class WorkshopManageController {
 			log.error("사진 삭제 실패", e);
 		}
 		return "redirect:/admin/workshop/photo/list?workshopId=" + workshopId;
+	}
+
+	// FAQ 작성 폼
+	@GetMapping("/faq/write")
+	public String faqWriteForm(@RequestParam(name = "programId", required = false) Long programId, Model model) {
+		try {
+			Map<String, Object> pmap = new HashMap<>();
+			pmap.put("offset", 0);
+			pmap.put("size", 200);
+
+			List<Workshop> programList = service.listProgram(pmap);
+
+			model.addAttribute("programList", programList);
+			model.addAttribute("programId", programId);
+			model.addAttribute("mode", "write");
+		} catch (Exception e) {
+			log.info("faqWriteForm : ", e);
+		}
+
+		return "admin/workshop/faqWrite";
+	}
+
+	// FAQ 등록
+	@PostMapping("/faq/write")
+	public String writeSubmitFaq(WorkshopFaq dto, HttpSession session,
+			@RequestParam(name = "page", defaultValue = "1") String page) throws Exception {
+		try {
+			service.insertFaq(dto);
+			session.setAttribute("msg", "FAQ가 등록되었습니다.");
+			return "redirect:/admin/workshop/faq/list?programId=" + dto.getProgramId() + "&page=" + page;
+		} catch (Exception e) {
+			log.info("writeSubmitProgram : ", e);
+		}
+		session.setAttribute("msg", "FAQ가 등록에 실패했습니다.");
+		return "redirect:/admin/workshop/faq/write";
+	}
+
+	// FAQ 목록
+	@GetMapping("/faq/list")
+	public String faqList(@RequestParam(name = "programId", required = false) Long programId, Model model) {
+
+		try {
+			Map<String, Object> pmap = new HashMap<String, Object>();
+			pmap.put("offset", 0);
+			pmap.put("size", 300);
+
+			List<Workshop> programList = service.listProgram(pmap);
+			model.addAttribute("programList", programList);
+
+			if (programId == null && programList != null && !programList.isEmpty()) {
+				programId = programList.get(0).getProgramId();
+			}
+			model.addAttribute("programId", programId);
+
+			List<WorkshopFaq> faqList = List.of();
+			if (programId != null) {
+				Map<String, Object> map = new HashMap<>();
+				map.put("programId", programId);
+				faqList = service.listFaq(map);
+			}
+			model.addAttribute("faqList", faqList);
+
+		} catch (Exception e) {
+			log.info("faqList : ", e);
+		}
+
+		return "admin/workshop/faqList";
+	}
+
+	// FAQ 수정
+	@GetMapping("/faq/update")
+	public String updateFormFaq(@RequestParam(name = "faqId") long faqId,
+			@RequestParam(name = "page", defaultValue = "1") String page, Model model) throws Exception {
+		try {
+			WorkshopFaq faq = service.findFaqById(faqId);
+
+			Map<String, Object> map = new HashMap<>();
+			map.put("offset", 0);
+			map.put("size", 200);
+			List<Workshop> programList = service.listProgram(map);
+
+			model.addAttribute("dto", faq);
+			model.addAttribute("programList", programList);
+			model.addAttribute("programId", faq.getProgramId());
+			model.addAttribute("mode", "update");
+			model.addAttribute("page", page);
+
+			return "admin/workshop/faqWrite";
+		} catch (Exception e) {
+			log.info("updateFormFaq : ", e);
+		}
+
+		return "redirect:/admin/workshop/faq/list?page=" + page;
+	}
+
+	@PostMapping("/faq/update")
+	public String updateSubmitFaq(WorkshopFaq dto, @RequestParam(name = "page", defaultValue = "1") String page)
+			throws Exception {
+
+		service.updateFaq(dto);
+
+		return "redirect:/admin/workshop/faq/list?programId=" + dto.getProgramId() + "&page=" + page;
+	}
+
+	// FAQ 삭제
+	@PostMapping("/faq/delete")
+	public String deleteFaq(@RequestParam(name = "faqId") long faqId, @RequestParam(name = "programId") long programId,
+			@RequestParam(name = "page", defaultValue = "1") String page) throws Exception {
+		try {
+			service.deleteFaq(faqId);
+		} catch (Exception e) {
+			log.info("deleteFaq : ", e);
+			throw e;
+		}
+
+		return "redirect:/admin/workshop/faq/list?programId=" + programId + "&page=" + page;
+	}
+
+	// 참여자 목록
+	@GetMapping("/participant/list")
+	public String participantList(@RequestParam(name = "workshopId", required = false) Long workshopId, Model model) {
+
+		try {
+			Map<String, Object> wmap = new HashMap<String, Object>();
+			wmap.put("offset", 0);
+			wmap.put("size", 300);
+
+			List<Workshop> workshopList = service.listWorkshop(wmap);
+			model.addAttribute("workshopList", workshopList);
+
+			if (workshopId == null && workshopList != null && !workshopList.isEmpty()) {
+				workshopId = workshopList.get(0).getWorkshopId();
+			}
+			model.addAttribute("workshopId", workshopId);
+
+			List<Participant> participantList = List.of();
+			if (workshopId != null) {
+				Map<String, Object> map = new HashMap<>();
+				map.put("workshopId", workshopId);
+				participantList = service.listParticipant(map);
+			}
+			model.addAttribute("participantList", participantList);
+
+		} catch (Exception e) {
+			log.info("participantList : ", e);
+		}
+
+		return "admin/workshop/participantList";
+
+	}
+
+	// 출석체크
+	@PostMapping("/participant/attendance")
+	@ResponseBody
+	public Map<String, Object> updateAttendance(@RequestParam(name = "participantId") long participantId,
+			@RequestParam(name = "isAttended") String isAttended) {
+
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("participantId", participantId);
+			map.put("isAttended", isAttended);
+			service.updateAttendance(map);
+			return Map.of("success", true);
+		} catch (Exception e) {
+			return Map.of("success", false, "message", e.getMessage());
+		}
+	}
+
+	// 신청 상태
+	@PostMapping("/participant/status")
+	@ResponseBody
+	public Map<String, Object> updateParticipantStatus(@RequestParam(name = "participantId") long participantId,
+			@RequestParam(name = "participantStatus") String participantStatus) {
+
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("participantId", participantId);
+			map.put("participantStatus", participantStatus);
+			service.updateParticipantStatus(map);
+			return Map.of("success", true);
+		} catch (Exception e) {
+			return Map.of("success", false, "message", e.getMessage());
+		}
 	}
 
 }

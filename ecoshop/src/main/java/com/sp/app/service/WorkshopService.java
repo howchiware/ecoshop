@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.sp.app.model.Participant;
 import com.sp.app.model.Workshop;
+import com.sp.app.model.WorkshopFaq;
 import com.sp.app.model.WorkshopReview;
 
 public interface WorkshopService {
@@ -44,8 +45,8 @@ public interface WorkshopService {
 	
 	// 참가자 관리
 	public List<Participant> listParticipant(Map<String, Object> map);
-	public int participantDataCount(Map<String, Object> map);
-	public int markAttendance(Map<String, Object> map) throws Exception;
+	public int updateParticipantStatus(Map<String, Object> map);
+	public int updateAttendance(Map<String, Object> map);
 	
 	// 신청/취소
 	public int hasApplied(Map<String, Object> map);
@@ -58,9 +59,6 @@ public interface WorkshopService {
 	public int userWorkshopDataCount(Map<String, Object> map);
 	public Workshop findWorkshopDetail(long workshopId);
 	
-	// 사용자 FAQ
-	public List<Workshop> listUserFaq(Map<String, Object> map);
-	
 	// 사용자 리뷰
 	public List<WorkshopReview> listUserReview(Map<String, Object> map);
 	public int reviewDataCount(Map<String,Object> map);
@@ -69,8 +67,15 @@ public interface WorkshopService {
 	public void deleteReview(long num) throws Exception;
 	
 	// 관리자 FAQ
-	public List<Workshop> listAdminFaq(Map<String,Object> map);
-	public int faqDataCount(Map<String,Object> map);
+	public List<WorkshopFaq> listFaq(Map<String,Object> map);
+	public void insertFaq(WorkshopFaq dto) throws Exception;
+	public void updateFaq(WorkshopFaq dto) throws Exception;
+	public void deleteFaq(long num) throws Exception;
+	public Long findProgramIdByWorkshopId(long workshopId);
+	public WorkshopFaq findFaqById(long faqId);
+	
+	
+	
 	public boolean isParticipantOfMember(long participantId, long memberId);
 	
 }

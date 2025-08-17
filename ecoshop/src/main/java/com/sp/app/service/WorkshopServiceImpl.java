@@ -10,6 +10,7 @@ import com.sp.app.common.StorageService;
 import com.sp.app.mapper.WorkshopMapper;
 import com.sp.app.model.Participant;
 import com.sp.app.model.Workshop;
+import com.sp.app.model.WorkshopFaq;
 import com.sp.app.model.WorkshopReview;
 
 import lombok.RequiredArgsConstructor;
@@ -373,32 +374,6 @@ public class WorkshopServiceImpl implements WorkshopService {
 	}
 
 	@Override
-	public int participantDataCount(Map<String, Object> map) {
-		int result = 0;
-
-		try {
-			result = mapper.participantDataCount(map);
-		} catch (Exception e) {
-			log.info("participantDataCount : ", e);
-		}
-		return result;
-	}
-
-	@Override
-	public int markAttendance(Map<String, Object> map) throws Exception {
-		int result = 0;
-
-		try {
-			result = mapper.markAttendance(map);
-		} catch (Exception e) {
-			log.info("markAttendance : ", e);
-			
-			throw e;
-		}
-		return result;
-	}
-
-	@Override
 	public int hasApplied(Map<String, Object> map) {
 		int result = 0;
 
@@ -413,11 +388,11 @@ public class WorkshopServiceImpl implements WorkshopService {
 	}
 	
 	@Override
-	public List<Workshop> listAdminFaq(Map<String, Object> map) {
+	public List<WorkshopFaq> listFaq(Map<String, Object> map) {
 		try {
-			return mapper.listAdminFaq(map);
+			return mapper.listFaq(map);
 		} catch (Exception e) {
-			log.info("listAdminFaq : ", e);
+			log.info("listFaq : ", e);
 			
 			throw e;
 		}
@@ -506,17 +481,6 @@ public class WorkshopServiceImpl implements WorkshopService {
 			throw e;
 		}
 	}
-	
-	@Override
-	public List<Workshop> listUserFaq(Map<String, Object> map) {
-		try {
-			return mapper.listUserFaq(map);
-		} catch (Exception e) {
-			log.info("listUserFaq : ", e);
-			
-			throw e;
-		}
-	}
 
 	@Override
 	public int reviewDataCount(Map<String, Object> map) {
@@ -567,21 +531,84 @@ public class WorkshopServiceImpl implements WorkshopService {
 	}
 
 	@Override
-	public int faqDataCount(Map<String, Object> map) {
+	public boolean isParticipantOfMember(long participantId, long memberId) {
+		return mapper.isParticipantOfMember(participantId, memberId);
+	}
+
+	@Override
+	public void insertFaq(WorkshopFaq dto) throws Exception {
+			mapper.insertFaq(dto);
+		
+	}
+
+	@Override
+	public void updateFaq(WorkshopFaq dto) throws Exception {
+			mapper.updateFaq(dto);
+		
+	}
+
+	@Override
+	public void deleteFaq(long faqId) throws Exception {
+			mapper.deleteFaq(faqId);
+		
+	}
+
+	@Override
+	public Long findProgramIdByWorkshopId(long workshopId) {
+	    try {
+	    	
+	        return mapper.findProgramIdByWorkshopId(workshopId);
+	        
+	    } catch (Exception e) {
+	        log.info("findProgramIdByWorkshopId : ", e);
+	        
+	        return null; 
+	    }
+	}
+
+	@Override
+	public WorkshopFaq findFaqById(long faqId) {
+		WorkshopFaq dto = null;
+
+		try {
+			dto = mapper.findFaqById(faqId);
+
+		} catch (Exception e) {
+			log.info("findFaqById : ", e);
+
+			throw e;
+		}
+		return dto;
+	}
+
+	@Override
+	public int updateParticipantStatus(Map<String, Object> map) {
 		int result = 0;
 
 		try {
-			result = mapper.faqDataCount(map);
+			result = mapper.updateParticipantStatus(map);
 		} catch (Exception e) {
-			log.info("faqDataCount : ", e);
+			log.info("markAttendance : ", e);
+			
+			throw e;
 		}
 		return result;
 	}
 
 	@Override
-	public boolean isParticipantOfMember(long participantId, long memberId) {
-		return mapper.isParticipantOfMember(participantId, memberId);
+	public int updateAttendance(Map<String, Object> map) {
+		int result = 0;
+
+		try {
+			result = mapper.updateAttendance(map);
+		} catch (Exception e) {
+			log.info("markAttendance : ", e);
+			
+			throw e;
+		}
+		return result;
 	}
+
 
 
 }

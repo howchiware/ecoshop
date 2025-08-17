@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.app.model.SessionInfo;
 import com.sp.app.model.Workshop;
+import com.sp.app.model.WorkshopFaq;
 import com.sp.app.model.WorkshopReview;
 import com.sp.app.service.WorkshopService;
 
@@ -97,13 +98,17 @@ public class WorkshopController {
 	// 상세
 	@GetMapping("/detail")
 	public String userWorkshopDetail(@RequestParam(name = "workshopId", required = false) Long workshopId,
-			@RequestParam(name = "page", defaultValue = "1") String page, Model model) {
+			@RequestParam(name = "page", defaultValue = "1") String page, Model model,
+			HttpSession session) {
 
 		if (workshopId == null)
 			return "redirect:/workshop/list?page=" + page;
 
 		try {
 			Workshop dto = service.findWorkshopDetail(workshopId);
+			if (dto == null) {
+			    return "redirect:/workshop/list?page=" + page;
+			}
 			
 			String thumbPath;
 			if (dto.getThumbnailPath() == null || dto.getThumbnailPath().isEmpty()) {
@@ -117,10 +122,20 @@ public class WorkshopController {
 			Map<String, Object> map = new HashMap<>();
 			map.put("workshopId", workshopId);
 			List<Workshop> photoList = service.listWorkshopPhoto(map);
+			
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+	        boolean alreadyApplied = false;
+	        if (info != null) {
+	            Map<String,Object> chk = new HashMap<>();
+	            chk.put("workshopId", workshopId);
+	            chk.put("memberId", info.getMemberId());
+	            alreadyApplied = service.hasApplied(chk) > 0;
+	        }
 
 			model.addAttribute("dto", dto);
 			model.addAttribute("thumbPath", thumbPath);
 			model.addAttribute("photoList", photoList);
+			model.addAttribute("alreadyApplied", alreadyApplied);
 			model.addAttribute("page", page);
 			model.addAttribute("query", "page=" + page);
 			return "workshop/detail";
@@ -209,12 +224,12 @@ public class WorkshopController {
 			log.error("workshop writeSubmit : ", e);
 			session.setAttribute("msg", "신청 처리 중 오류가 발생했습니다.");
 
-			return "redirect:/workshop/apply?workshopId=" + workshopId;
+			return "redirect:/workshop/detail?workshopId=" + workshopId;
 		}
 	}
 
 	// 신청 취소
-	@PostMapping("apply/cancel")
+	@PostMapping("/apply/cancel")
 	public String applyCancelWorkshop(@RequestParam(name = "workshopId") long workshopId, HttpSession session)
 			throws Exception {
 		try {
@@ -244,44 +259,19 @@ public class WorkshopController {
 	// FAQ 목록
 	@GetMapping("/faq/list")
 	@ResponseBody
-	public Map<String, Object> userFaqList(@RequestParam(name = "page", defaultValue = "1") int currentPage,
-			@RequestParam(name = "workshopId", required = false) Long workshopId, Model model) throws Exception {
+	public Map<String, Object> workshopFaqList(
+			@RequestParam(name = "page", defaultValue = "1") int currentPage,
+			@RequestParam(name = "workshopId", required = false) Long workshopId) throws Exception {
 
-		final int size = 9;
-
-		// 총 개수
-		Map<String, Object> pmap = new HashMap<>();
-		pmap.put("workshopId", workshopId);
-		int dataCount = service.faqDataCount(pmap);
-
-		// 페이징 계산
-		int totalPage = (dataCount + size - 1) / size;
-		if (totalPage == 0)
-			totalPage = 1;
-		if (currentPage > totalPage)
-			currentPage = totalPage;
-
-		int offset = (currentPage - 1) * size;
-		if (offset < 0)
-			offset = 0;
-
+		Long programId = service.findProgramIdByWorkshopId(workshopId);
+		
 		// 목록 조회
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("workshopId", workshopId);
-		map.put("offset", offset);
-		map.put("size", size);
+		Map<String, Object> map = new HashMap<>();
+		map.put("programId", programId);
 
-		List<Workshop> list = service.listUserFaq(map);
+		List<WorkshopFaq> list = service.listFaq(map);
 
-		Map<String, Object> result = new HashMap<>();
-
-		result.put("list", list);
-		result.put("page", currentPage);
-		result.put("size", size);
-		result.put("totalPage", totalPage);
-		result.put("dataCount", dataCount);
-
-		return result;
+		return Map.of("list", list, "page", currentPage);
 	}
 
 	// 후기 목록

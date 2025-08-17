@@ -32,10 +32,6 @@ public class Workshop {
 	private String thumbnailPath;
 	private String workshopContent;
 
-	private long faqId;
-	private String question;
-	private String answer;
-
 	private long photoId;
 	private String workshopImagePath;
 
@@ -205,30 +201,6 @@ public class Workshop {
 
 	public void setWorkshopContent(String workshopContent) {
 		this.workshopContent = workshopContent;
-	}
-
-	public long getFaqId() {
-		return faqId;
-	}
-
-	public void setFaqId(long faqId) {
-		this.faqId = faqId;
-	}
-
-	public String getQuestion() {
-		return question;
-	}
-
-	public void setQuestion(String question) {
-		this.question = question;
-	}
-
-	public String getAnswer() {
-		return answer;
-	}
-
-	public void setAnswer(String answer) {
-		this.answer = answer;
 	}
 
 	public long getPhotoId() {
