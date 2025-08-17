@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.admin.mapper.ChallengeManageMapper">
+
+  <select id="nextChallengeId" resultType="long">
+    SELECT challenge_seq.NEXTVAL FROM dual
+  </select>
+
+  <sql id="baseColumns">
+    c.challengeId, c.title, c.description, c.thumbnail,
+    c.rewardPoints, TO_CHAR(c.regDate,'YYYY-MM-DD HH24:MI:SS') AS challengeRegDate,
+    c.challengeType
+  </sql>
+
+  <!-- 등록 -->
+  <insert id="insertChallenge" parameterType="com.sp.app.model.Challenge">
+    INSERT INTO challenge (
+      challengeId, title, description, thumbnail, rewardPoints, regDate, challengeType
+    ) VALUES (
+      #{challengeId}, #{title}, #{description}, #{thumbnail},
+      NVL(#{rewardPoints},0), SYSDATE, #{challengeType}
+    )
+  </insert>
+
+  <insert id="insertDailyChallenge" parameterType="com.sp.app.model.Challenge">
+    INSERT INTO dailyChallenge (challengeId, weekday)
+    VALUES (#{challengeId}, NVL(#{weekday}, 0))
+  </insert>
+
+  <insert id="insertSpecialChallenge" parameterType="com.sp.app.model.Challenge">
+    INSERT INTO specialChallenge (
+      challengeId, startDate, endDate, requireDays, status
+    ) VALUES (
+      #{challengeId},
+      TO_DATE(#{startDate}, 'YYYY-MM-DD'),
+      TO_DATE(#{endDate},   'YYYY-MM-DD'),
+      NVL(#{requireDays},3),
+      NVL(#{specialStatus},0)
+    )
+  </insert>
+
+  <!-- 단건 -->
+  <select id="findById" parameterType="long" resultType="com.sp.app.model.Challenge">
+    SELECT <include refid="baseColumns"/>
+    FROM challenge c
+    WHERE c.challengeId = #{challengeId}
+  </select>
+
+  <select id="findDailyById" parameterType="long" resultType="com.sp.app.model.Challenge">
+    SELECT challengeId, weekday
+    FROM dailyChallenge
+    WHERE challengeId = #{challengeId}
+  </select>
+
+  <select id="findSpecialById" parameterType="long" resultType="com.sp.app.model.Challenge">
+    SELECT
+      challengeId,
+      TO_CHAR(startDate,'YYYY-MM-DD') AS startDate,
+      TO_CHAR(endDate,'YYYY-MM-DD')   AS endDate,
+      requireDays,
+      status AS specialStatus
+    FROM specialChallenge
+    WHERE challengeId = #{challengeId}
+  </select>
+
+  <!-- 목록/검색 -->
+  <sql id="whereList">
+    <if test="kwd != null and kwd != ''">
+      ( INSTR(c.title, #{kwd}) &gt; 0 OR INSTR(c.description, #{kwd}) &gt; 0 )
+    </if>
+    <if test="challengeType != null and challengeType != ''">
+      AND c.challengeType = #{challengeType}
+    </if>
+    <if test="weekday != null">
+      AND EXISTS (
+        SELECT 1 FROM dailyChallenge d
+        WHERE d.challengeId = c.challengeId AND d.weekday = #{weekday}
+      )
+    </if>
+  </sql>
+
+  <select id="dataCount" parameterType="map" resultType="int">
+    SELECT NVL(COUNT(*),0)
+    FROM challenge c
+    <where>
+      <include refid="whereList"/>
+    </where>
+  </select>
+
+  <select id="listChallenge" parameterType="map" resultType="com.sp.app.model.Challenge">
+    SELECT
+      <include refid="baseColumns"/>,
+      d.weekday,
+      TO_CHAR(s.startDate,'YYYY-MM-DD') AS startDate,
+      TO_CHAR(s.endDate,'YYYY-MM-DD')   AS endDate,
+      s.requireDays,
+      s.status AS specialStatus
+    FROM challenge c
+    LEFT JOIN dailyChallenge   d ON d.challengeId = c.challengeId
+    LEFT JOIN specialChallenge s ON s.challengeId = c.challengeId
+    <where>
+      <include refid="whereList"/>
+    </where>
+    ORDER BY c.challengeId DESC
+    OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+  </select>
+
+  <!-- 수정 -->
+  <update id="updateChallenge" parameterType="com.sp.app.model.Challenge">
+    UPDATE challenge
+    <set>
+      <if test="title != null">          title = #{title},</if>
+      <if test="description != null">    description = #{description},</if>
+      <if test="thumbnail != null">      thumbnail = #{thumbnail},</if>
+      <if test="rewardPoints != null">   rewardPoints = #{rewardPoints},</if>
+      <if test="challengeType != null">  challengeType = #{challengeType},</if>
+    </set>
+    WHERE challengeId = #{challengeId}
+  </update>
+
+  <update id="updateDailyChallenge" parameterType="com.sp.app.model.Challenge">
+    UPDATE dailyChallenge
+    SET weekday = NVL(#{weekday}, 0)
+    WHERE challengeId = #{challengeId}
+  </update>
+
+  <update id="updateSpecialChallenge" parameterType="com.sp.app.model.Challenge">
+    UPDATE specialChallenge
+    SET startDate   = TO_DATE(#{startDate}, 'YYYY-MM-DD'),
+        endDate     = TO_DATE(#{endDate},   'YYYY-MM-DD'),
+        requireDays = NVL(#{requireDays}, 3),
+        status      = NVL(#{specialStatus}, 0)
+    WHERE challengeId = #{challengeId}
+  </update>
+
+  <!-- 삭제 -->
+  <delete id="deleteChallenge" parameterType="long">
+    DELETE FROM challenge WHERE challengeId = #{challengeId}
+  </delete>
+
+</mapper>

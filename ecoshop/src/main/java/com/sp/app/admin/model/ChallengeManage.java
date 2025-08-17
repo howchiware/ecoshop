@@ -27,3 +27,5 @@ public class ChallengeManage {
     private Integer requireDays; // 기본 3
     private Integer specialStatus; // 0~3
 }
+
+
