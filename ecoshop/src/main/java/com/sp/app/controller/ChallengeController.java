@@ -38,7 +38,7 @@ public class ChallengeController {
     public String list(
     		@RequestParam(name = "weekday", required = false) Integer weekday,
             @RequestParam(name = "size", required = false) Integer size,
-            @RequestParam(name = "sort", defaultValue = "RECENT") String sort,
+            @RequestParam(name = "sort", defaultValue = "CLOSE_DATE") String sort,
             Model model
     ) {
         try {
@@ -56,7 +56,7 @@ public class ChallengeController {
             Challenge today = service.getDailyByWeekday(targetWeekday);
 
             // 스페셜(더보기 첫 로드)
-            List<Challenge> special = service.listSpecialMore(null, size, sort);
+            List<Challenge> special = service.listSpecialMore(null, size, sort, null);
 
             model.addAttribute("weekly", weekly);
             model.addAttribute("today", today);
@@ -80,10 +80,11 @@ public class ChallengeController {
 	public List<Challenge> specialMore(
 			@RequestParam(name = "lastId", required = false) Long lastId,
 			@RequestParam(name = "size", required = false) Integer size,
-			@RequestParam(name = "sort", defaultValue = "RECENT") String sort
+			@RequestParam(name = "sort", defaultValue = "RECENT") String sort,
+			@RequestParam(name = "lastEndDate", required = false) String lastEndDate
 			) {
 			try {
-				return service.listSpecialMore(lastId, size, sort);
+				return service.listSpecialMore(lastId, size, sort, lastEndDate);
 			} catch (Exception e) {
 				 log.info("specialMore :", e);
 			}

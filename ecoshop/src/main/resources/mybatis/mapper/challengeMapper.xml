@@ -1,39 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.mapper.ChallengeMapper">
-	<!-- 공통 컬럼 -->
-	  <sql id="baseColumns">
-	    c.challengeId, c.title, c.description, c.thumbnail,
-	    c.rewardPoints, TO_CHAR(c.regDate,'YYYY-MM-DD HH24:MI:SS') AS challengeRegDate,
-	    c.challengeType
-	  </sql>
-  
-   <!-- 데일리 - 요일 챌린지 7개 -->
-	  <select id="listDailyAll" resultType="com.sp.app.model.Challenge">
-	    SELECT <include refid="baseColumns"/>, d.weekday
-	    FROM challenge c
-	    JOIN dailyChallenge d ON d.challengeId = c.challengeId
-	    WHERE c.challengeType = 'DAILY'
-	    ORDER BY d.weekday
-	  </select>
-  
-  <!-- 오늘 요일 챌린지 1개 -->
-  <select id="getTodayDaily" parameterType="int" resultType="com.sp.app.model.Challenge">
+
+  <!-- 공통 컬럼 -->
+  <sql id="baseColumns">
+    c.challengeId, c.title, c.description, c.thumbnail,
+    c.rewardPoints, TO_CHAR(c.regDate,'YYYY-MM-DD HH24:MI:SS') AS challengeRegDate,
+    c.challengeType
+  </sql>
+
+  <!-- 데일리 - 요일 챌린지 7개 -->
+  <select id="listDailyAll" resultType="com.sp.app.model.Challenge">
     SELECT <include refid="baseColumns"/>, d.weekday
     FROM challenge c
     JOIN dailyChallenge d ON d.challengeId = c.challengeId
     WHERE c.challengeType = 'DAILY'
-      AND d.weekday = #{todayDow}
-    FETCH FIRST 1 ROWS ONLY
+    ORDER BY d.weekday
   </select>
-	
-	<!-- 스페셜 챌린지 카드 목록 (더보기/스크롤 ) -->
-	 <!-- params:
-		     size    : 한 번에 가져올 개수 (기본 6 또는 9)
-		     lastId  : 이전 페이지의 마지막 challengeId (처음 로드는 null)
-		     sort    : 'POPULAR' | 'CLOSE_DATE' | 'RECENT' (옵션)
-	-->
+
+  <!-- 오늘 요일 챌린지 1개 -->
 <select id="listSpecialMore" parameterType="map" resultType="com.sp.app.model.Challenge">
   SELECT
     c.challengeId, c.title, c.description, c.thumbnail,
@@ -47,27 +32,44 @@
   FROM challenge c
   JOIN specialChallenge s ON s.challengeId = c.challengeId
   WHERE c.challengeType = 'SPECIAL'
-    AND s.status IN (0, 1)  <!-- 진행/대기만 노출 (선택) -->
+    AND s.status IN (0, 1)
     AND (SYSDATE BETWEEN s.startDate AND s.endDate OR SYSDATE &lt; s.startDate)
-    <if test="lastId != null">
-      AND c.challengeId &lt; #{lastId}
-    </if>
+
   <choose>
+    <!-- 종료일 빠른 순 (커서: endDate, challengeId) -->
+    <when test="sort == 'CLOSE_DATE'">
+      <if test="lastEndDate != null and lastEndDate != ''">
+        AND (
+          s.endDate &gt; TO_DATE(#{lastEndDate}, 'YYYY-MM-DD')
+          OR (s.endDate = TO_DATE(#{lastEndDate}, 'YYYY-MM-DD') AND c.challengeId &gt; #{lastId})
+        )
+      </if>
+      ORDER BY s.endDate ASC NULLS LAST, c.challengeId ASC
+    </when>
+
+    <!-- 인기순 -->
     <when test="sort == 'POPULAR'">
+      <if test="lastId != null">
+        AND c.challengeId &lt; #{lastId}
+      </if>
       ORDER BY c.rewardPoints DESC, c.challengeId DESC
     </when>
-    <when test="sort == 'CLOSE_DATE'">
-      ORDER BY s.endDate ASC NULLS LAST, c.challengeId DESC
-    </when>
+
+    <!-- 최신순 -->
     <otherwise>
+      <if test="lastId != null">
+        AND c.challengeId &lt; #{lastId}
+      </if>
       ORDER BY c.challengeId DESC
     </otherwise>
   </choose>
+
   FETCH FIRST #{size} ROWS ONLY
 </select>
 
 
-  <!-- 3) 상세 보기 -->
+
+  <!-- 상세 보기 -->
   <select id="findDailyDetail" parameterType="long" resultType="com.sp.app.model.Challenge">
     SELECT
       <include refid="baseColumns"/>,
@@ -76,7 +78,7 @@
     JOIN dailyChallenge d ON d.challengeId = c.challengeId
     WHERE c.challengeId = #{challengeId}
   </select>
-  
+
   <select id="findSpecialDetail" parameterType="long" resultType="com.sp.app.model.Challenge">
     SELECT
       <include refid="baseColumns"/>,
@@ -88,23 +90,20 @@
     JOIN specialChallenge s ON s.challengeId = c.challengeId
     WHERE c.challengeId = #{challengeId}
   </select>
-  
-  <!-- 해당 요일 1건 조회 -->
-<select id="selectDailyByWeekday" parameterType="int" resultType="com.sp.app.model.Challenge">
-  SELECT
-    <include refid="baseColumns"/>,
-    d.weekday
-  FROM dailyChallenge d
-  JOIN challenge c ON c.challengeId = d.challengeId
-  WHERE c.challengeType = 'DAILY'
-    AND d.weekday = #{weekday}
-  FETCH FIRST 1 ROWS ONLY
-</select>
-  
-  
 
-  <!-- 4) 오늘 참여 여부(요일: 당일 1회 제한) -->
-  <!-- params: {memberId, challengeId} -->
+  <!-- 해당 요일 1건 조회 -->
+  <select id="selectDailyByWeekday" parameterType="int" resultType="com.sp.app.model.Challenge">
+    SELECT
+      <include refid="baseColumns"/>,
+      d.weekday
+    FROM dailyChallenge d
+    JOIN challenge c ON c.challengeId = d.challengeId
+    WHERE c.challengeType = 'DAILY'
+      AND d.weekday = #{weekday}
+    FETCH FIRST 1 ROWS ONLY
+  </select>
+
+  <!-- 오늘 참여 여부(요일: 당일 1회 제한) -->
   <select id="countTodayDailyJoin" parameterType="map" resultType="Integer">
     SELECT NVL(COUNT(*),0)
     FROM challengeParticipation p
@@ -113,18 +112,17 @@
       AND TRUNC(p.participateDate) = TRUNC(SYSDATE)
   </select>
 
-  <!-- 5) 참여 등록 -->
+  <!-- 참여 등록 -->
   <select id="nextParticipationId" resultType="long">
     SELECT participation_seq.NEXTVAL FROM dual
   </select>
 
-  <!-- parameterType: 네 사용자 DTO(Challenge) 내부의 participation 필드 사용 -->
   <insert id="insertParticipation" parameterType="com.sp.app.model.Challenge">
     INSERT INTO challengeParticipation (
       participationId, challengeId, memberId, participateDate, status, cancelAt
     ) VALUES (
       #{participationId}, #{challengeId}, #{memberId}, SYSDATE,
-      NVL(#{participationStatus},0), 
+      NVL(#{participationStatus},0),
       <if test="cancelAt != null and cancelAt != ''">
         TO_DATE(#{cancelAt}, 'YYYY-MM-DD')
       </if>
@@ -134,8 +132,7 @@
     )
   </insert>
 
-  <!-- 6) 스페셜 진행률 (인증글 dayNumber 1~3 카운트) -->
-  <!-- params: {participationId} -->
+  <!-- 스페셜 진행률 (인증글 dayNumber 1~3 카운트) -->
   <select id="selectSpecialProgress" parameterType="long" resultType="map">
     SELECT
       c.dayNumber AS dayNumber,
@@ -149,6 +146,5 @@
     GROUP BY c.dayNumber
     ORDER BY c.dayNumber
   </select>
- 
-  
+
 </mapper>

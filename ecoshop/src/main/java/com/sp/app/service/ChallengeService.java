@@ -16,7 +16,10 @@ public interface ChallengeService {
 
     // SPECIAL (더보기)
     public List<Challenge> listSpecialMore(Long lastId, Integer size, String sort);
-
+    public List<Challenge> listSpecialMore(Long lastId, Integer size, String sort , String lastEndDate);
+    
+    
+    
     // 상세
     public Challenge findDailyDetail(long challengeId);
     public Challenge findSpecialDetail(long challengeId);

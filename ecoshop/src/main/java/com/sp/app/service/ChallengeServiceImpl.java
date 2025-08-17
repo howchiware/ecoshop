@@ -58,15 +58,8 @@ public class ChallengeServiceImpl implements ChallengeService {
 
 	@Override
 	public List<Challenge> listSpecialMore(Long lastId, Integer size, String sort) {
-		try {
-			int pageSize = (size == null || size <= 0 || size > 50) ? 6 : size;
-			String s = (sort == null || sort.isBlank()) ? "RECENT" : sort;
-			return mapper.listSpecialMore(lastId, pageSize, s);
-		} catch (Exception e) {
-			log.info("listSpecialMore :", e);
-            
-		}
-		return List.of();
+		
+		return listSpecialMore(lastId, size, sort, null);
 	}
 
 	@Override
@@ -159,6 +152,27 @@ public class ChallengeServiceImpl implements ChallengeService {
 			log.info("getDailyByWeekday : ", e);
 		}
 		return null;
+	}
+
+
+
+	@Override
+	public List<Challenge> listSpecialMore(Long lastId, Integer size, String sort, String lastEndDate) {
+		try {
+			int pageSize = (size == null || size <= 0 || size > 50) ? 6 : size;
+	        String s = (sort == null || sort.isBlank()) ? "RECENT" : sort;
+	        
+	        Map<String,Object> param = new java.util.HashMap<>();
+	        param.put("lastId", lastId);
+	        param.put("size", pageSize);
+	        param.put("sort", s);
+	        param.put("lastEndDate", lastEndDate);
+
+	        return mapper.listSpecialMore(param);
+		} catch (Exception e) {
+			log.info("listSpecialMore :", e);
+		}
+		return List.of();
 	}
 	
 	

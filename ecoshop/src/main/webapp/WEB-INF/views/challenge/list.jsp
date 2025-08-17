@@ -2,6 +2,8 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
+<c:set var="cp" value="${pageContext.request.contextPath}" />
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,9 +12,8 @@
 <title>Challenge</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
+<link rel="stylesheet" href="${cp}/dist/css/home.css" type="text/css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
 
 <style>
 /*  공통  */
@@ -61,13 +62,10 @@
 <body>
 
 <header>
-	<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+  <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 </header>
 
 <main>
-
-
-
 
   <!-- Page Title - 데일리 -->
   <div class="page-title">
@@ -77,17 +75,12 @@
       <div class="page-title-underline-accent"></div>
     </div>
   </div>
-  
-  
-  
-  
-  
 
   <!-- 데일리 콘텐츠 -->
   <div class="section">
     <div class="container" data-aos="fade-up" data-aos-delay="50">
 
-      <!-- 요일 버튼 DB 넣어야 나오는 부분 -->
+      <!-- 요일 버튼 -->
       <div class="weekday-wrap" id="weekdayWrap">
         <c:forEach var="d" items="${weekly}">
           <button class="weekday-btn"
@@ -106,7 +99,7 @@
         </c:forEach>
       </div>
 
-      <!-- 오늘의 데일리 카드, 썸네일 사진 넣기  -->
+      <!-- 오늘의 데일리 카드 -->
       <div class="row justify-content-center">
         <div class="col-lg-10 my-3">
           <div class="daily-card" id="dailyCard">
@@ -159,7 +152,6 @@
     </div><!-- /.container -->
   </div><!-- /.section -->
 
-
   <!-- Page Title - 스페셜 -->
   <div class="page-title">
     <div class="container align-items-center" data-aos="fade-up">
@@ -174,7 +166,10 @@
     <div class="container" data-aos="fade-up" data-aos-delay="50">
       <div id="specialGrid" class="special-grid">
         <c:forEach var="s" items="${list}">
-          <div class="card" data-id="${s.challengeId}">
+          <!-- 초기 렌더 카드에도 커서 값(data-end-date) 포함 -->
+          <div class="card"
+               data-id="${s.challengeId}"
+               data-end-date="${s.endDate}">
             <div class="card-thumb"
                  style="background-image:url('${empty s.thumbnail ? (cp.concat("/resources/images/add_photo.png")) : s.thumbnail}')"></div>
             <div class="card-body">
@@ -182,7 +177,13 @@
               <p class="card-desc">${s.description}</p>
               <div class="card-foot">
                 <span class="badge-soft">~ ${s.endDate}</span>
-                <a class="btn-ghost" href="${cp}/challenge/detail/${s.challengeId}">상세보기</a>
+                <div class="d-flex gap-2">
+                  <a class="btn-ghost" href="${cp}/challenge/detail/${s.challengeId}">상세보기</a>
+                  <button class="btn-primary-grad btn-join-special"
+                          data-challenge-id="${s.challengeId}">
+                    지금 참가하기
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -201,7 +202,6 @@
   <jsp:include page="/WEB-INF/views/layout/footer.jsp"/>
 </footer>
 
-
 <script>
   const cp = "${cp}";
   const todayWeekday = ${empty targetWeekday ? -1 : targetWeekday};
@@ -214,7 +214,7 @@
       const isToday = Number(btn.dataset.weekday) === Number(todayWeekday);
       btn.dataset.active = isToday ? "true" : "false";
       btn.addEventListener('click', ()=> {
-    	  location.href = cp + "/challenge/list?weekday=" + btn.dataset.weekday;
+        location.href = cp + "/challenge/list?weekday=" + btn.dataset.weekday;
       });
     });
     const active = wrap.querySelector('.weekday-btn[data-active="true"]');
@@ -224,7 +224,7 @@
     }
   })();
 
-  // 오늘 참가
+  // 오늘(데일리) 참가
   (function joinTodayInit(){
     const btn = document.getElementById('btnJoinToday');
     if(!btn || !btn.dataset.challengeId) return;
@@ -237,10 +237,10 @@
           body: new URLSearchParams({ challengeId: btn.dataset.challengeId })
         });
         const data = await res.json();
-        if(data.state==='login') alert('로그인 후 이용해주세요.');
+        if(data.state==='login')       alert('로그인 후 이용해주세요.');
         else if(data.state==='joined') alert('오늘은 이미 참가하셨어요!');
-        else if(data.state==='true') alert('참가 완료! 화이팅 💪');
-        else alert('잠시 후 다시 시도해주세요.');
+        else if(data.state==='true')   alert('참가 완료! 화이팅 💪');
+        else                           alert('잠시 후 다시 시도해주세요.');
       } catch(e){
         alert('네트워크 오류가 발생했습니다.');
       } finally {
@@ -249,58 +249,76 @@
     });
   })();
 
-  // 스페셜 더보기
+  // 스페셜 - 지금 참가하기(상세로 이동)
+  (function joinSpecialInit(){
+    const grid = document.getElementById('specialGrid');
+    grid.addEventListener('click', (e)=>{
+      const btn = e.target.closest('.btn-join-special');
+      if(!btn) return;
+      const id = btn.dataset.challengeId;
+      if(!id) return;
+      location.href = cp + "/challenge/detail/" + id;
+    });
+  })();
+
+  // 더보기 (종료일 빠른 순 + 커서로 중복 방지)
   (function moreInit(){
     const grid = document.getElementById('specialGrid');
-    const btn = document.getElementById('btnMore');
+    const btn  = document.getElementById('btnMore');
     if(!btn) return;
 
-    function getLastId(){
+    function getLastCursor(){
       const cards = grid.querySelectorAll('.card');
       if(cards.length===0) return null;
-      return cards[cards.length-1].dataset.id;
+      const last = cards[cards.length-1];
+      return { id: last.dataset.id, endDate: last.dataset.endDate };
     }
 
     btn.addEventListener('click', async ()=>{
       btn.disabled = true; btn.textContent = "불러오는 중...";
       const params = new URLSearchParams();
-      const lastId = getLastId();
-      if(lastId) params.set('lastId', lastId);
-      params.set('size', '6'); // 필요 시 9
-      params.set('sort', 'RECENT');
+      const cur = getLastCursor();
+      if(cur){
+        params.set('lastId', cur.id);
+        params.set('lastEndDate', cur.endDate); // 종료일 커서
+      }
+      params.set('size', '6');
+      params.set('sort', 'CLOSE_DATE'); // 종료일 빠른 순
 
       try{
         const res = await fetch(cp + "/challenge/special/more?" + params.toString());
         const items = await res.json();
         if(!items || items.length===0){ btn.style.display='none'; return; }
+
         const frag = document.createDocumentFragment();
-        
+
         items.forEach(function(s){
-        	const thumb = (s.thumbnail && s.thumbnail.length>0) ? s.thumbnail : (cp + "/resources/admin/images/add_photo.png");
-            const title = s.title || "";
-            const desc  = s.description || "";
-            const endDt = s.endDate || "";	
-        	
+          const thumb = (s.thumbnail && s.thumbnail.length>0) ? s.thumbnail : (cp + "/resources/admin/images/add_photo.png");
+          const title = s.title || "";
+          const desc  = s.description || "";
+          const endDt = s.endDate || "";
+
           const el = document.createElement('div');
-          
-          
           el.className = 'card';
           el.dataset.id = s.challengeId;
-          el.innerHTML = 
-       	  '<div class="card-thumb" style="background-image:url(\'' + thumb + '\')"></div>' +
-             '<div class="card-body">' +
-               '<h3 class="card-title">' + title + '</h3>' +
-               '<p class="card-desc">' + desc + '</p>' +
-               '<div class="card-foot">' +
-                 '<span class="badge-soft">~ ' + endDt + '</span>' +
-                 '<a class="btn-ghost" href="' + cp + '/challenge/detail/' + s.challengeId + '">상세보기</a>' +
-               '</div>' +
-             '</div>';
+          el.dataset.endDate = endDt; // 다음 커서용
+          el.innerHTML =
+            '<div class="card-thumb" style="background-image:url(\'' + thumb + '\')"></div>' +
+            '<div class="card-body">' +
+              '<h3 class="card-title">' + title + '</h3>' +
+              '<p class="card-desc">' + desc + '</p>' +
+              '<div class="card-foot">' +
+                '<span class="badge-soft">~ ' + endDt + '</span>' +
+                '<div class="d-flex gap-2">' +
+                  '<a class="btn-ghost" href="' + cp + '/challenge/detail/' + s.challengeId + '">상세보기</a>' +
+                  '<button class="btn-primary-grad btn-join-special" data-challenge-id="' + s.challengeId + '">지금 참가하기</button>' +
+                '</div>' +
+              '</div>' +
+            '</div>';
 
-           frag.appendChild(el);
-         });
-        
-        
+          frag.appendChild(el);
+        });
+
         grid.appendChild(frag);
       }catch(e){
         alert('더보기 로딩 중 오류가 발생했어요.');

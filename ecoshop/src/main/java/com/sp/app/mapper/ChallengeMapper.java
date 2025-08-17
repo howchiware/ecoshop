@@ -26,10 +26,7 @@ public interface ChallengeMapper {
      * @param sort   'POPULAR' | 'CLOSE_DATE' | 'RECENT'
      */
     public List<Challenge> listSpecialMore(
-            @Param("lastId") Long lastId,
-            @Param("size") int size,
-            @Param("sort") String sort
-    ) throws SQLException;
+            Map<String, Object> param );
 
 
     // 상세 
