@@ -11,7 +11,8 @@
             <th width="100">평점</th>
             <th width="100">작성자</th>
             <th width="140">일시</th>
-            <th width="100">삭제</th>
+            <th width="140">상태</th>
+            <th width="100">관리</th>
         </tr>
     </thead>
     <tbody>
@@ -24,7 +25,22 @@
                     <td>${dto.userName}</td>
                     <td><fmt:formatDate value="${dto.regDate}" pattern="yyyy-MM-dd" /></td>
                     <td>
-                        <button type="button" class="btn btn-primary">삭제</button>
+                        <c:choose>
+                            <c:when test="${dto.status eq 1}">답변완료</c:when>
+                            <c:otherwise>미답변</c:otherwise>
+                        </c:choose>
+                    </td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${dto.status eq 1}">
+                                <button type="button" class="small-btn">수정</button>
+                                <button type="button" class="small-btn">삭제</button>
+                            </c:when>
+                            <c:otherwise>
+                                <button type="button" class="small-btn">답변</button>
+                                <button type="button" class="small-btn">삭제</button>
+                            </c:otherwise>
+                        </c:choose>
                     </td>
                 </tr>
             </c:forEach>

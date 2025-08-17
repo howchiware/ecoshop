@@ -24,7 +24,7 @@
 	</select>
 	
 	<select id="findReviewsBySearch" parameterType="map" resultType="com.sp.app.admin.model.GongguReviewManage">
-    SELECT gongguReviewId, m2.name AS userName, g.content, g.regDate, g.gongguProductId, g.memberId, g.showReview, g.answerId, g.answerDate, g.answer, p.gongguProductName, g.rate
+    SELECT gongguReviewId, m2.name AS userName, g.content, g.regDate, (CASE WHEN g.answer IS NOT NULL THEN 1 ELSE 0 END) AS status, g.gongguProductId, g.memberId, g.showReview, g.answerId, g.answerDate, g.answer, p.gongguProductName, g.rate
     FROM gongguReview g
     JOIN member1 m1 ON g.memberId = m1.memberId
     JOIN member2 m2 ON m1.memberId = m2.memberId

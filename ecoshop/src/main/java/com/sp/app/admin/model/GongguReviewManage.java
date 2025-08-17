@@ -21,4 +21,5 @@ public class GongguReviewManage {
    
     private String gongguProductName; 
     private Integer rate;
+    private int status;
 }
