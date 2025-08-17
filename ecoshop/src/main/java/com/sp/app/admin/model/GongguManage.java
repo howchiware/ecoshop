@@ -27,20 +27,20 @@ public class GongguManage {
     private Integer limitCount;
     private String deadline;
     private Long categoryId; 
+    private String categoryName;
     private String updateDate;
     private String content;
     private String detailInfo; 
     private String limitInfo;
+    private int productShow;
+    private int delivery;
+    private MultipartFile gongguThumbnailFile;
     private List<String> detailPhotos;
     private List<GongguPackage> packages; 
    
-    private MultipartFile gongguThumbnailFile; 
-	private List<MultipartFile> addPhotoFiles;
-	private long gonggufileId; 
-	private String saveFilename;
-	private String originalFilename;
-	private long fileSize;
-	private int fileCount;
-	private List<MultipartFile> selectFile; 
+    private long gongguProductPhotoNum;
+	private String photoName;
+	private List<MultipartFile> addFiles;
+
 
 }

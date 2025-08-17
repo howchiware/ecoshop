@@ -41,11 +41,7 @@
     
     <li class="menu-title">공동구매</li>
     <li>
-      <a href="#"> 카테고리 관리 > </a>
-      <ul class="submenu">
-        <li><a href="/admin/gonggu/category"> 카테고리 등록 / 수정 / 삭제</a></li>
-        <li><a href="#"> 카테고리 순서</a></li>
-      </ul>
+      <a href="/admin/category/categoryManage"> 카테고리 관리</a>
     </li>
     <li>
       <a href="#"> 상품 관리 > </a>

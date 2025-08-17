@@ -38,13 +38,13 @@ public class GongguManageController {
 
     @PostConstruct
 	public void init() {
-		uploadPath = this.storageService.getRealPath("/uploads/gonggu");		
+		uploadPath = this.storageService.getRealPath("/uploads/gongguProducts");		
 	}	
     
     @GetMapping("productForm")
     public String productForm(@RequestParam(value = "gongguProductId", required = false) Long gongguProductId, Model model) {
         GongguManage gongguManage;
-
+        
         if (gongguProductId != null) {
             try {
                 gongguManage = gongguManageService.findById(gongguProductId);
@@ -56,18 +56,38 @@ public class GongguManageController {
             gongguManage = new GongguManage();
         }
         
-        model.addAttribute("gongguProduct", gongguManage);
+        List<CategoryManage> categoryList = null;
+        try {
+            categoryList = categoryManageService.listCategory();
+        } catch (Exception e) {
+            log.error("categoryList : ", e);
+        }
+        model.addAttribute("categoryList", categoryList);
+        model.addAttribute("dto", gongguManage); 
+        model.addAttribute("mode", gongguProductId == null ? "write" : "update");
         
-        return "admin/gonggu/gongguProduct";
+        return "admin/gonggu/gongguProductAdd";
     }
     
-    @PostMapping("productForm")
-    public String submitProduct(GongguManage dto) {
+    @PostMapping("write")
+    public String writeProduct(GongguManage dto) {
         try {
             gongguManageService.insertGongguProduct(dto, uploadPath);
         } catch (Exception e) {
-            log.error("productForm : ", e);
+            log.error("writeProduct : ", e);
             return "redirect:/admin/gonggu/productForm";
+        }
+        
+        return "redirect:/admin/gonggu/productList";
+    }
+    
+    @PostMapping("update")
+    public String updateProduct(GongguManage dto) {
+        try {
+            gongguManageService.updateGongguProduct(dto, uploadPath);  
+        } catch (Exception e) {
+            log.error("updateProduct : ", e);     
+            return "redirect:/admin/gonggu/productForm?gongguProductId=" + dto.getGongguProductId();
         }
         
         return "redirect:/admin/gonggu/productList";
