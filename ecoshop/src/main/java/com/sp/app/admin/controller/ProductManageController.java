@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.app.admin.model.CategoryManage;
+import com.sp.app.admin.model.GongguInquiryManage;
+import com.sp.app.admin.model.GongguReviewManage;
 import com.sp.app.admin.model.ProductDeliveryRefundInfo;
 import com.sp.app.admin.model.ProductManage;
 import com.sp.app.admin.model.ProductStockManage;
@@ -47,20 +49,6 @@ public class ProductManageController {
 		uploadPath = this.storageService.getRealPath("/uploads/products");		
 	}	
 	
-	/*
-	@GetMapping("totalProductList")
-	public String handleTotaLProductList(
-			@RequestParam(name = "page", defaultValue = "1") int current_page,
-			@RequestParam(name = "schType", defaultValue = "orderNum") String schType,
-			@RequestParam(name = "kwd",defaultValue = "") String kwd,
-			Model model,
-			HttpServletRequest req) throws Exception {
-		
-		return "admin/products/totalProductList";
-	}
-	*/
-
-	
 	@GetMapping("listProduct")
 	public String listProduct(
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
@@ -85,22 +73,6 @@ public class ProductManageController {
 			kwd = URLDecoder.decode(kwd, "UTF-8");
 			
 			List<CategoryManage> listCategory = service.listCategory();
-		
-			/*
-			if(listCategory.size() > 0) {
-				categoryId = listCategory.get(0).getCategoryId();
-			}
-			*/
-			System.out.println(categoryId);
-			System.out.println(schType);
-			System.out.println(kwd);
-			System.out.println(period);
-			System.out.println(periodStart);
-			System.out.println(periodEnd);
-			System.out.println(priceLowest);
-			System.out.println(priceHighest);
-			System.out.println(stockLowest);
-			System.out.println(stockHighest);
 			
 			Map<String, Object> map = new HashMap<>();
 			map.put("categoryId", categoryId);
@@ -273,7 +245,6 @@ public class ProductManageController {
 		
 		try {
 			service.updateProduct(dto, uploadPath);
-			System.out.println("!!!111");
 		} catch (Exception e) {
 			log.info("updateSubmit : ", e);
 		}
@@ -370,11 +341,7 @@ public class ProductManageController {
 			@RequestParam(name = "nums") List<Long> nums,
 			HttpSession session) {
 		
-		try {
-			for(long num : nums) {
-				System.out.println(num);
-			}
-			
+		try {			
 			service.deleteProduct(nums, uploadPath);
 		} catch (Exception e) {
 			log.info("deleteProductSelect : ", e);
@@ -418,23 +385,11 @@ public class ProductManageController {
 		
 		try {
 			Map<String, Object> map = new HashMap<>();
-			
-			for(String dl : deliveryLocation) {
-				System.out.println(dl);
-			}
-			for(int f : fee) {
-				System.out.println(f);
-			}
-			
-			System.out.println(deliveryLocation.size());
-			
+
 			for(int i=0; i<deliveryLocation.size(); i++) {
 				map.put("deliveryLocation", deliveryLocation.get(i));
 				map.put("fee", fee.get(i));
-				
-				System.out.println(deliveryLocation.get(i));
-				System.out.println(fee.get(i));
-				
+
 				service.insertProductDeliveryFee(map);
 			}
 			
@@ -461,9 +416,6 @@ public class ProductManageController {
 				map.put("deliveryLocation", deliveryLocation.get(i));
 				map.put("fee", fee.get(i));
 				
-				System.out.println(deliveryLocation.get(i));
-				System.out.println(fee.get(i));
-				
 				service.insertProductDeliveryFee(map);
 			}
 			
@@ -474,21 +426,4 @@ public class ProductManageController {
 
 		return "redirect:/admin";
 	}
-	
-	
-	
-	@GetMapping("productReview")
-    public String reviewList(@RequestParam(value="memberId", required = false) Long memberId, Model model) {
-    	
-    	
-    	return "admin/product/productReview";
-    }
-	
-	@GetMapping("productInquiry")
-	public String inquiryList(@RequestParam(value="memberId", required = false) Long memberId, Model model) {
-		
-		
-		return "admin/product/productInquiry";
-	}
-
 }

@@ -278,8 +278,6 @@ function changeDeliveryArea(){
 	
 	const deliveryLocationEl = document.getElementById('deliveryLocation');
 	const deliveryAreaRsEl = document.getElementById('deliveryAreaRs');
-	console.log(deliveryLocationEl);
-	console.log(deliveryAreaRsEl);
 	
 	if( ! deliveryLocationEl.value ){
 		deliveryLocationEl.value = '';
@@ -331,7 +329,6 @@ $(function(){
 			$('#deliveryLocationAdd').prop('readonly', 'readonly');
 			$('#deliveryFee').prop('readonly', 'readonly');
 			
-			console.log(1111);
 			$('.minus-deliveryFee').removeClass('minus-deliveryFee-enabled');
 			
 			$('.udBtn').html('수정');
@@ -436,7 +433,6 @@ function feeAdd(){
 	pTag.appendChild(minusSpanTag);
 
 	// pTag.innerHtml = locationSpanTag + ' | ' + feeSpanTag + '원';
-	console.log(pTag);
 
 	deliveryAreaResultEl.appendChild(pTag);
 	feeEl.value = '';
@@ -471,8 +467,6 @@ function sendOk(){
 		url += 'deliveryUpdate';
 	}
 	
-	console.log(url);
-
 	const f = document.deliveryAllInfo;
 	f.action = url;
 	f.submit();

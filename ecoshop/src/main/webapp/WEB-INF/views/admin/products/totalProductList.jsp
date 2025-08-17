@@ -395,7 +395,6 @@ function searchList() {
 	const formData = new FormData(f);
 	let params = new URLSearchParams(formData).toString();
 	
-	console.log(params);
 	let url = '${pageContext.request.contextPath}/admin/products/listProduct';
 	location.href = url + '?' + params;
 }
@@ -520,7 +519,7 @@ productStockModalEl.addEventListener('hidden.bs.modal', function(){
 // 상품 삭제
 $(function(){
 	let listSize = Number('${listProduct.size()}') || 0;
-	console.log(listSize);
+	
 	if(listSize !== 0) {
 		$('.product-chkAll').prop('checked', false);
 		$('form input[name=nums]').prop('checked', false);
