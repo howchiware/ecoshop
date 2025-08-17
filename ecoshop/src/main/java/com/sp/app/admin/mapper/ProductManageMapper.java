@@ -56,4 +56,6 @@ public interface ProductManageMapper {
 	public void updateProductDeliveryRefundInfo(ProductDeliveryRefundInfo dto);
 	public void insertProductDeliveryFee(Map<String, Object> map);
 	public void deleteProductDeliveryFee();
+	
+	public List<Long> optionFindByCode(long id);
 }

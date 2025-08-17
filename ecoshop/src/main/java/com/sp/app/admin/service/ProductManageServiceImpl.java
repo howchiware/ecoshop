@@ -1,7 +1,6 @@
 package com.sp.app.admin.service;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.sp.app.admin.mapper.CategoryManageMapper;
 import com.sp.app.admin.mapper.ProductManageMapper;
 import com.sp.app.admin.model.CategoryManage;
 import com.sp.app.admin.model.ProductDeliveryRefundInfo;
@@ -29,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProductManageServiceImpl implements ProductManageService {
 
-    private final GongguController gongguController;
 	private final ProductManageMapper mapper;
 	private final StorageService storageService;
 	
@@ -284,6 +281,7 @@ public class ProductManageServiceImpl implements ProductManageService {
 				
 				String pathString = uploadPath + File.separator + dto.getPhotoName();
 				
+				List<Long> productOptionNum = mapper.optionFindByCode(dto.getProductId());
 				
 				// 파일 삭제(thumbnail)
 				if (! dto.getThumbnail().isBlank()) {
@@ -291,33 +289,32 @@ public class ProductManageServiceImpl implements ProductManageService {
 				}
 				
 				// 추가 파일 삭제
-				deleteProductPhoto(dto.getProductPhotoNum(), pathString);
+				deleteProductPhoto(dto.getProductId(), pathString);
 				
 				// 재고 삭제
 				mapper.deleteProductStock(dto.getProductId());
 				
 				// 옵션 삭제
-				if(dto.getOptionCount() == 0) {
-					// 기존 옵션1, 옵션2 삭제
-					if(dto.getPrevOptionNum2() != 0) {
-						mapper.deleteOptionDetail2(dto.getPrevOptionNum2());
-						mapper.deleteProductOption(dto.getPrevOptionNum2());
+				if(dto.getOptionCount() == 2) {
+					for(long optionNum : productOptionNum) {
+						mapper.deleteOptionDetail2(optionNum);
 					}
-					
-					if(dto.getPrevOptionNum() != 0) {
-						mapper.deleteOptionDetail2(dto.getPrevOptionNum());
-						mapper.deleteProductOption(dto.getPrevOptionNum());
-					}
-					
-					return;
-				} else if(dto.getOptionCount() == 1) {
-					// 기존 옵션 2 삭제
-					if(dto.getPrevOptionNum2() != 0) {
-						mapper.deleteOptionDetail2(dto.getPrevOptionNum2());
-						mapper.deleteProductOption(dto.getPrevOptionNum2());
+					if(productOptionNum.get(0) > productOptionNum.get(1)) {
+						mapper.deleteProductOption(productOptionNum.get(0));
+						mapper.deleteProductOption(productOptionNum.get(1));
+					} else if(productOptionNum.get(0) < productOptionNum.get(1)) {
+						mapper.deleteProductOption(productOptionNum.get(1));
+						mapper.deleteProductOption(productOptionNum.get(0));
 					}
 				}
-
+				else if(dto.getOptionCount() == 1) {
+					// 기존 옵션1, 옵션2 삭제
+					for(long optionNum : productOptionNum) {
+						mapper.deleteOptionDetail2(optionNum);
+						mapper.deleteProductOption(optionNum);
+					}
+				}
+				
 				// 상품 삭제
 				mapper.deleteProduct(dto.getProductId());
 			}
@@ -331,9 +328,18 @@ public class ProductManageServiceImpl implements ProductManageService {
 	}
 
 	@Override
-	public void deleteProductPhoto(long productPhotoNum, String uploadPath) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void deleteProductPhoto(long productCode, String uploadPath) throws Exception {
+		try {
+			if (uploadPath != null && ! uploadPath.isBlank()) {
+				storageService.deleteFile(uploadPath);
+			}
+
+			mapper.deleteProductPhoto(productCode);
+		} catch (Exception e) {
+			log.info("deleteProductFile : ", e);
+			
+			throw e;
+		}
 	}
 
 	@Override
@@ -513,7 +519,6 @@ public class ProductManageServiceImpl implements ProductManageService {
 		String result;
 		
 		result = String.format("%06d", id);
-		System.out.print(result);
 		 
 		return result;
 	}

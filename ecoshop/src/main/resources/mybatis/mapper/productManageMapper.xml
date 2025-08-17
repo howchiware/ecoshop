@@ -233,7 +233,7 @@
 	
 	<delete id="deleteProductPhoto" parameterType="Long">
 		DELETE FROM productPhoto
-		WHERE productPhotoNum = #{productPhotoNum}
+		WHERE productCode = #{productCode}
 	</delete>
 	
 	<update id="updateProductOption" parameterType="com.sp.app.admin.model.ProductManage">
@@ -289,5 +289,17 @@
 	<update id="deleteProductDeliveryFee">
 		DELETE FROM deliveryFee
 	</update>
+	
+	<select id="optionFindByCode" parameterType="long" resultType="long">
+	    SELECT optionNum
+	    FROM productOption
+	    WHERE productCode = #{productCode}
+	</select>
+	
+	<select id="photoFindByCode" parameterType="long" resultType="long">
+	    SELECT productPhotoNum
+	    FROM productPhoto
+	    WHERE productCode = #{productCode}
+	</select>
 	
 </mapper>
