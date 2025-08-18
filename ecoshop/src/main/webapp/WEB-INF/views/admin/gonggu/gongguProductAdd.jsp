@@ -37,13 +37,21 @@
                     <div class="card-body">
                         <table class="form-table">
                             <tr>
-                                <th>카테고리</th>
+                                <th>패키지 상품구성</th>
                                 <td>
                                     <select name="categoryId" class="st">
                                         <option value="">::카테고리 선택::</option>
                                         <c:forEach var="vo" items="${categoryList}">
                                             <option value="${vo.categoryId}" ${dto.categoryId==vo.categoryId?"selected":""}>${vo.categoryName}</option>
                                         </c:forEach>
+                                    </select>
+                                    <select name="productId" class="st">
+                                        <option value="">::상품 선택::</option>
+                                        <c:if test="dto.categoryId==vo.categoryId">
+	                                        <c:forEach var="vo" items="${productList}">
+	                                        	<option value="${vo.productId}" ${dto.productId==vo.productId?"selected":""}>${vo.productName}</option>
+	                                        </c:forEach>
+                                        </c:if>
                                     </select>
                                 </td>
                             </tr>
