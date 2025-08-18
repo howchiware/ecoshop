@@ -38,6 +38,10 @@ public interface ChallengeManageMapper {
     int updateDailyChallenge(Challenge dto) throws SQLException;     
     int updateSpecialChallenge(Challenge dto) throws SQLException;   
 
-    // 삭제 
+    // 삭제 (챌린지 타입 변경 시 사용)
+    int deleteDaily(@Param("challengeId") long challengeId) throws SQLException;
+    int deleteSpecial(@Param("challengeId") long challengeId) throws SQLException;
+
+    // 삭제 (챌린지 전체 삭제)
     int deleteChallenge(@Param("challengeId") long challengeId) throws SQLException; // CASCADE
 }

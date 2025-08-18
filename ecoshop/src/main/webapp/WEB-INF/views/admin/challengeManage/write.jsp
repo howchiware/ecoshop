@@ -1,4 +1,3 @@
-<!-- /WEB-INF/views/admin/challengeManage/write.jsp -->
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <c:set var="cp" value="${pageContext.request.contextPath}" />
@@ -12,6 +11,7 @@
   <style>
     .page-wrap{max-width:1200px; margin:0 auto;}
     .card{border-radius:14px}
+    /* 썸네일 미리보기 영역 */
     .thumb-preview{width:100%; aspect-ratio:16/9; border:1px dashed #e5e7eb; border-radius:12px;
       background:#f8fafc center/cover no-repeat;}
     .section-title{font-weight:800; font-size:1.05rem}
@@ -37,7 +37,8 @@
   </div>
 
   <!-- 본문 카드 -->
-  <form id="challengeForm" method="post" action="${cp}/admin/challengeManage/${mode}">
+  <!-- 파일 업로드를 위해 enctype 속성을 추가. -->
+  <form id="challengeForm" method="post" action="${cp}/admin/challengeManage/${mode}" enctype="multipart/form-data">
     <c:if test="${mode=='update'}">
       <input type="hidden" name="challengeId" value="${dto.challengeId}">
     </c:if>
@@ -70,11 +71,11 @@
                 <option value="SPECIAL" ${dto.challengeType=='SPECIAL'?'selected':''}>SPECIAL</option>
               </select>
             </div>
+            <!-- 기존 썸네일 URL 입력 필드를 삭제. -->
             <div class="col-md-4">
-              <label class="form-label">썸네일 URL</label>
-              <input id="thumbInput" class="form-control" name="thumbnail" placeholder="https://..."
-                     value="${dto.thumbnail}">
-              <div class="form-text"><small>URL을 입력하면 오른쪽에서 미리보기 됩니다.</small></div>
+              <label class="form-label">썸네일 파일</label>
+              <input id="thumbInput" type="file" class="form-control" name="thumbnailFile" accept="image/*">
+              <div class="form-text"><small>파일을 선택하면 오른쪽에서 미리보기 됩니다.</small></div>
             </div>
           </div>
         </div>
@@ -145,6 +146,10 @@
 
         <!-- 액션 -->
         <div class="sticky-actions mt-3 d-flex gap-2">
+          <c:if test="${mode=='update'}">
+          	<input type="hidden" name="thumbnail" value="${dto.thumbnail}">
+          	<input type="hidden" name="challengeId" value="${dto.challengeId}">
+          </c:if>
           <button class="btn btn-primary px-4">${mode=='update'?'수정':'등록'}</button>
           <a class="btn btn-outline-secondary" href="${cp}/admin/challengeManage/list">목록</a>
         </div>
@@ -153,16 +158,18 @@
       <!-- 오른쪽 : 썸네일 미리보기 & 가이드 -->
       <div class="col-lg-5">
         <div class="card p-4">
-          <div class="section-title mb-2">썸네일 미리보기</div>
-          <div id="thumbPreview" class="thumb-preview"
-               style="background-image:url('${empty dto.thumbnail ? (cp.concat("/resources/admin/images/add_photo.png")) : dto.thumbnail}')"></div>
-          <ul class="mt-3 text-muted small">
+        <div class="section-title mb-2">썸네일 미리보기</div>
+        <c:set var="initialThumb"
+               value="${empty dto.thumbnail ? cp.concat('/resources/admin/images/add_photo.png')
+                                            : cp.concat('/uploads/challenge/').concat(dto.thumbnail)}"/>
+        <div id="thumbPreview" class="thumb-preview"
+             style="background-image:url('${initialThumb}')"></div>
+        <ul class="mt-3 text-muted small">
             <li>권장 비율 <strong>16:9</strong>, 최소 960×540</li>
-            <li>CDN이나 S3 등의 절대경로 URL을 사용하세요.</li>
-            <li>이미지 접근권한이 공개여야 미리보기가 보입니다.</li>
-          </ul>
-        </div>
-
+            <li>이미지 파일만 업로드 가능합니다.</li>
+        </ul>
+    </div>
+        
         <div class="card p-4 mt-3">
           <div class="section-title mb-2">작성 팁</div>
           <ul class="small text-muted mb-0">
@@ -186,18 +193,27 @@
   document.getElementById('typeSel').addEventListener('change', toggleBoxes);
   toggleBoxes();
 
-  // 썸네일 미리보기
-  const thumbInput   = document.getElementById('thumbInput');
+  // 썸네일 미리보기 (파일 업로드 버전)
+  const thumbInput = document.getElementById('thumbInput');
   const thumbPreview = document.getElementById('thumbPreview');
+  
   if (thumbInput) {
-    thumbInput.addEventListener('input', () => {
-      const url = thumbInput.value.trim();
-      thumbPreview.style.backgroundImage =
-        url.length ? `url('${url}')` : "url('${cp}/resources/admin/images/add_photo.png')";
+    thumbInput.addEventListener('change', () => {
+      const file = thumbInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          thumbPreview.style.backgroundImage = `url('${event.target.result}')`;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        // 파일 선택이 취소된 경우 기본 이미지로 되돌림.
+        thumbPreview.style.backgroundImage = "url('${cp}/resources/admin/images/add_photo.png')";
+      }
     });
   }
 
-  // 요일 배지 ↔ select 동기화
+  // 요일 배지 <-> select 동기화
   const weekdaySelect = document.getElementById('weekdaySelect');
   const badges = document.querySelectorAll('.weekday-badges .badge');
   function syncBadges(val){

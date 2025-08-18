@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.sp.app.admin.service.ChallengeManageService;
 import com.sp.app.common.MyUtil;
 import com.sp.app.common.PaginateUtil;
+import com.sp.app.common.StorageService;
 import com.sp.app.model.Challenge;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,12 +29,23 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequestMapping("/admin/challengeManage/*")
 public class ChallengeManagerController {
-	private final ChallengeManageService service;
-	private final PaginateUtil paginateUtil;
-	private final MyUtil myUtil;
-	
-	
-	 // 목록 + 검색/페이징 
+
+    private final ChallengeManageService service;
+    private final PaginateUtil paginateUtil;
+    private final MyUtil myUtil;
+    private final StorageService storageService; // 업로드 실제 경로 계산용
+
+    /** A안 물리 경로: /uploads/challenge */
+    private String uploadPath;
+
+    @PostConstruct
+    public void init() {
+        // 외부 톰캣 + WAR 기준으로 getRealPath() 정상 동작
+        // webapp 루트 기준: /uploads/challenge
+        this.uploadPath = storageService.getRealPath("/uploads/challenge");
+    }
+
+    // 목록 + 검색/페이징
     @GetMapping("list")
     public String list(
             @RequestParam(name = "page", defaultValue = "1") int current_page,
@@ -53,16 +66,13 @@ public class ChallengeManagerController {
             map.put("challengeType", challengeType);
             map.put("weekday", weekday);
 
-            // 총개수
             int dataCount = service.dataCount(map);
             if (dataCount != 0) {
                 total_page = paginateUtil.pageCount(dataCount, size);
             }
 
-            // 현재 페이지 보정
             current_page = Math.min(current_page, Math.max(total_page, 1));
 
-            // 리스트
             int offset = (current_page - 1) * size;
             if (offset < 0) offset = 0;
 
@@ -101,7 +111,7 @@ public class ChallengeManagerController {
         return "admin/challengeManage/list";
     }
 
-    // 작성 폼 
+    // 작성 폼
     @GetMapping("write")
     public String writeForm(Model model) {
         model.addAttribute("mode", "write");
@@ -110,19 +120,21 @@ public class ChallengeManagerController {
 
     /** 작성 처리 (challenge + daily/special 분기) */
     @PostMapping("write")
-    public String writeSubmit(Challenge dto) {
+    public String writeSubmit(
+            Challenge dto) {
         try {
-            service.insertChallenge(dto); // 내부에서 타입 분기 & 제약(NOT NULL) 대응
+            // 파일 저장/DB 저장은 서비스에 위임 (Notice 스타일)
+            service.insertChallenge(dto, uploadPath);
         } catch (Exception e) {
-            log.info("writeSubmit :", e);
+            log.error("writeSubmit :", e);
         }
         return "redirect:/admin/challengeManage/list";
     }
 
-    // 상세 
-    @GetMapping("article/{challengeId}")
+    // 상세
+    @GetMapping("article")
     public String article(
-            @PathVariable long challengeId,
+    		@RequestParam("challengeId") long challengeId,
             @RequestParam(name = "page", defaultValue = "1") String page,
             @RequestParam(name = "kwd", defaultValue = "") String kwd,
             @RequestParam(name = "challengeType", required = false) String challengeType,
@@ -136,7 +148,6 @@ public class ChallengeManagerController {
 
             Challenge dto = Objects.requireNonNull(service.findById(challengeId));
 
-            // 타입별 부가정보 채우기
             if ("DAILY".equalsIgnoreCase(dto.getChallengeType())) {
                 Challenge d = service.findDailyById(challengeId);
                 if (d != null) dto.setWeekday(d.getWeekday());
@@ -163,7 +174,7 @@ public class ChallengeManagerController {
         return "redirect:/admin/challengeManage/list?" + query;
     }
 
-    // 수정 폼 
+    // 수정 폼
     @GetMapping("update")
     public String updateForm(
             @RequestParam("challengeId") long challengeId,
@@ -199,41 +210,30 @@ public class ChallengeManagerController {
         return "redirect:/admin/challengeManage/list?page=" + page;
     }
 
-    // 수정 처리 
+    // 수정 처리
     @PostMapping("update")
     public String updateSubmit(
             Challenge dto,
-            @RequestParam(name = "page", defaultValue = "1") String page
-    ) {
+            @RequestParam(name = "page", defaultValue = "1") String page) {
         try {
-            service.updateChallenge(dto); // challenge + 서브테이블 업데이트
+            // 파일 교체/기존파일 삭제 포함해서 서비스에서 처리
+            service.updateChallenge(dto, uploadPath);
         } catch (Exception e) {
-            log.info("updateSubmit :", e);
+            log.error("updateSubmit :", e);
         }
         return "redirect:/admin/challengeManage/list?page=" + page;
     }
-    
-    // 삭제 
+
+    // 삭제
     @GetMapping("delete")
     public String delete(
             @RequestParam("challengeId") long challengeId,
-            @RequestParam(name = "page", defaultValue = "1") String page,
-            @RequestParam(name = "kwd", defaultValue = "") String kwd,
-            @RequestParam(name = "challengeType", required = false) String challengeType
-    ) {
-        String query = "page=" + page;
+            @RequestParam(name="page", defaultValue="1") String page) {
         try {
-            kwd = myUtil.decodeUrl(kwd);
-            if (!kwd.isBlank()) query += "&kwd=" + myUtil.encodeUrl(kwd);
-            if (challengeType != null && !challengeType.isBlank()) query += "&challengeType=" + challengeType;
-
-            service.deleteChallenge(challengeId); // FK CASCADE
+            service.deleteChallenge(challengeId, uploadPath);
         } catch (Exception e) {
-            log.info("delete :", e);
+            log.error("delete : ", e);
         }
-        return "redirect:/admin/challengeManage/list?" + query;
+        return "redirect:/admin/challengeManage/list?page=" + page;
     }
-    
-    
-	
 }

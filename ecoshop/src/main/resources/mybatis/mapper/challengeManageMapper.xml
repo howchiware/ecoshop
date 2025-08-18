@@ -17,7 +17,7 @@
     INSERT INTO challenge (
       challengeId, title, description, thumbnail, rewardPoints, regDate, challengeType
     ) VALUES (
-      #{challengeId}, #{title}, #{description}, #{thumbnail},
+      #{challengeId}, #{title}, #{description}, #{thumbnail, jdbcType=VARCHAR},
       NVL(#{rewardPoints},0), SYSDATE, #{challengeType}
     )
   </insert>
@@ -34,8 +34,8 @@
       #{challengeId},
       TO_DATE(#{startDate}, 'YYYY-MM-DD'),
       TO_DATE(#{endDate},   'YYYY-MM-DD'),
-      NVL(#{requireDays},3),
-      NVL(#{specialStatus},0)
+      #{requireDays},
+      #{specialStatus}
     )
   </insert>
 
@@ -136,6 +136,14 @@
   <!-- 삭제 -->
   <delete id="deleteChallenge" parameterType="long">
     DELETE FROM challenge WHERE challengeId = #{challengeId}
+  </delete>
+  
+  <delete id="deleteDaily" parameterType="long">
+    DELETE FROM dailyChallenge WHERE challengeId = #{challengeId}
+  </delete>
+
+  <delete id="deleteSpecial" parameterType="long">
+    DELETE FROM specialChallenge WHERE challengeId = #{challengeId}
   </delete>
 
 </mapper>

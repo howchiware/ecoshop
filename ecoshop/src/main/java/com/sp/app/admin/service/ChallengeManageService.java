@@ -10,7 +10,7 @@ public interface ChallengeManageService {
 	public Long nextChallengeId();
 
     // 등록
-    public void insertChallenge(Challenge dto) throws Exception;
+    public void insertChallenge(Challenge dto, String uploadPath) throws Exception;
 
     // 단건
     public Challenge findById(long challengeId);
@@ -22,8 +22,8 @@ public interface ChallengeManageService {
     public List<Challenge> listChallenge(Map<String, Object> map);
 
     // 수정
-    public void updateChallenge(Challenge dto) throws Exception;
+    public void updateChallenge(Challenge dto, String uploadPath) throws Exception;
 
     // 삭제 (CASCADE)
-    public void deleteChallenge(long challengeId) throws Exception;
+    public void deleteChallenge(long challengeId, String uploadPath) throws Exception;
 }
