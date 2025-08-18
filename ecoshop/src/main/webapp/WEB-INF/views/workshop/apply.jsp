@@ -6,9 +6,9 @@
 <head>
 <meta charset="UTF-8">
 <title>프로그램 신청</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-	rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
+	
 <style>
 .page-wrap {
 	background: #f6f7f8;
@@ -208,6 +208,9 @@
 		</div>
 
 	</main>
+	  <footer>
+		<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
+	</footer>
 
 	<script>
 		(function() {
