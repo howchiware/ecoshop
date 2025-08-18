@@ -118,12 +118,12 @@ body.modal-open { overflow: hidden; padding-right: 0 !important; }
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
             <button class="nav-link active" id="tab-1" role="tab" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" aria-selected="true" data-tab="1">
-              <i class="bi bi-person-fill"></i> 반려
+              <i class="bi bi-person-fill"></i> 승인
             </button>
           </li>
           <li class="nav-item" role="presentation">
             <button class="nav-link" id="tab-2" role="tab" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" aria-selected="false" data-tab="2">
-              <i class="bi bi-mortarboard-fill"></i> 승인
+              <i class="bi bi-mortarboard-fill"></i> 반려
             </button>
           </li>
           <li>
