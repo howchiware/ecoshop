@@ -415,22 +415,21 @@ window.addEventListener('DOMContentLoaded', () => {
 $(function(){
 	$('div.detailTabList').on('click', 'tr.inquiryTr', function(){
 		const $inquiryDetailTr = $(this).next();
+		const $table = $(this).closest('table');
 		
 		let isHidden = $inquiryDetailTr.hasClass('d-none');
 		let isSecret = $(this).hasClass('secret-inquiry');
 		let inquiryId = $(this).attr('data-inquiryId');
 		
-		if(! isSecret) {
-			$inquiryDetailTr.toggleClass('d-none');
-		}
-		
-		/*
-		if(isHidden && ! isSecret) {
+		if($inquiryDetailTr.hasClass('d-none') && ! isSecret){
+			$table.children().find('tr.inquiryDetailTr').addClass('d-none');
+			
 			$inquiryDetailTr.removeClass('d-none');
-		} else if(! isHidden && ! isSecret){
+		} else if(! $inquiryDetailTr.hasClass('d-none') && ! isSecret) {
+			$table.children().find('tr.inquiryDetailTr').addClass('d-none');
+			
 			$inquiryDetailTr.addClass('d-none');
 		}
-		*/
 		
 	});
 });
