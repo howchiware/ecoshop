@@ -5,5 +5,6 @@
 	<!-- Footer -->
 	<footer>
 		<p>© 2025 ECOBRAND. 지구를 위한 작은 실천, 여기서 시작됩니다.</p>
+		<a href="${pageContext.request.contextPath}/advertisement/list" title="광고">광고 문의</a>
 	</footer>
 
