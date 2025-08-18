@@ -54,7 +54,7 @@
 							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/event/quiz">퀴즈</a></li>
 						</ul>
 					</li>
-					<li class="nav-item"><a class="nav-link" href="#">워크샵</a></li>
+					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/workshop/list">워크샵</a></li>
 					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/challenge/list">챌린지</a></li>
 					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">콘텐츠</a>
 						<ul class="dropdown-menu">

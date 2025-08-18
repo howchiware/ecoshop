@@ -78,15 +78,15 @@
       <a href="#"> 워크샵 관리 > </a>
       <ul class="submenu">
         <li><a href="/admin/workshop/list"> 워크샵 등록</a></li>
-        <li><a href="#"> 참여자 관리</a></li>
+        <li><a href="/admin/workshop/participant/list"> 참여자 관리</a></li>
         <li><a href="/admin/workshop/manager/list"> 담당자 관리</a></li>
-        <li><a href="#"> FAQ 관리</a></li>
+        <li><a href="/admin/workshop/faq/list"> FAQ 관리</a></li>
       </ul>
     </li>
     <li>
       <a href="#">포인트 관리 ></a>
       <ul class="submenu">
-        <li><a href="#"> 포인트 지급 내역</a></li>
+        <li><a href="#"> 포인트 지급</a></li>
       </ul>
     </li>
 

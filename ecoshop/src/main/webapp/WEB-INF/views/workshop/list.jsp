@@ -9,6 +9,7 @@
 <title>워크샵</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
 
 <style>
 .workshop-card {
@@ -65,7 +66,6 @@
   </header>
 
   <main class="container py-4">
-
     <c:url var="defaultImg" value="/dist/images/noimage.png" />
 
     <c:url var="listAction" value="/workshop/list" />
@@ -237,6 +237,9 @@
     </c:if>
 
   </main>
+  <footer>
+		<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
+	</footer>
 
   <script>
     (function () {
