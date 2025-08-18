@@ -33,7 +33,7 @@
         <li><a href="/admin/products/listProduct"> 전체 상품 관리</a></li>
         <li><a href="/admin/products/write"> 상품 등록</a></li>
         <li><a href="/admin/products/deliveryWrite"> 배송 정책 및 배송비</a></li>
-        <li><a href="/admin/products/productReview"> 리뷰 및 Q&A 관리</a></li>
+        <li><a href="/admin/products/productReviewInquiry"> 리뷰 및 Q&A 관리</a></li>
       </ul>
     </li>
     <li><a href="/admin/order/orderManage"> 주문 상태 관리</a></li>
