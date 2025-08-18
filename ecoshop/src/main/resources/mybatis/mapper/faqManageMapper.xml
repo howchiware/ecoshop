@@ -10,7 +10,7 @@
 	</sql>
 
 	<select id="listFaq" parameterType="map" resultType="com.sp.app.admin.model.FaqManage">
-		SELECT faqId, subject, m2.name, fb.content, m1.memberId, fb.regDate, fb.updateId, fb.regUpdate, fc.categoryId, fc.categoryName, updateName
+		SELECT faqId, subject, m2.name, fb.content, m1.memberId, fb.regDate, fb.updateId, fb.regUpdate, fc.categoryId, fc.categoryName, fb.updateName
 		FROM faqBoard fb 
 		JOIN faqCategory fc ON fb.categoryId = fc.categoryId
 		JOIN member1 m1 ON m1.memberId = fb.memberId

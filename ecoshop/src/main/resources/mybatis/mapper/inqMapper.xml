@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.InqMapper">
+
+	<sql id="where-list">
+		<choose>
+			<when test="schType == 'subject'">
+				INSTR(subject, #{kwd}) &gt; 0
+			</when>
+			<when test="schType == 'question'">
+				INSTR(question, #{kwd}) &gt; 0
+			</when>
+			<otherwise>
+				( INSTR(subject, #{kwd}) &gt; 0 OR INSTR(question, #{kwd}) &gt; 0 )
+			</otherwise>
+		</choose>
+	</sql>
+
+
+	<insert id="insertInq" parameterType="com.sp.app.model.Inquiry">
+		INSERT INTO inquiryBoard(inquiryId, subject, question, memberId, regDate, categoryId, status)
+		VALUES(inquiryBoard_seq.NEXTVAL, #{subject}, #{question}, #{memberId}, SYSDATE, #{categoryId}, 0)
+	</insert>
+
+	<update id="updateInq" parameterType="com.sp.app.model.Inquiry">
+		UPDATE inquiryBoard SET categoryId = #{categoryId}, subject = #{subject}, question = #{question}, regDate = SYSDATE
+		WHERE inquiryId = #{inquiryId}
+	</update>
+	
+	<update id="deleteInq" parameterType="com.sp.app.model.Inquiry">
+		UPDATE inquiryBoard SET subject = '삭제된 게시글입니다.', question = '삭제된 게시글입니다.', status = 2, regDate = SYSDATE
+		WHERE inquiryId = #{inquiryId}
+	</update>
+	
+	<select id="findByInq" parameterType="Long" resultType="com.sp.app.model.Inquiry">
+		SELECT ib.inquiryId, ib.subject, ib.question, m1.memberId, m2.name, ib.regDate, ib.answerId, m4.name AS answerName, ib.questionAnswer, ib.answerDate, ic.categoryId, ic.categoryName, ib.status
+		FROM inquiryBoard ib
+		JOIN inquiryCategory ic ON ib.categoryId = ic.categoryId
+		LEFT OUTER JOIN member1 m1 ON m1.memberId = ib.memberId
+		LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
+		LEFT OUTER JOIN member2 m4 ON ib.answerId = m4.memberId
+		WHERE ib.inquiryId = #{inquiryId}
+	</select>
+	
+	<select id="listInqByMember" parameterType="map" resultType="com.sp.app.model.Inquiry">
+    SELECT ib.inquiryId, ib.subject, ib.question, m1.memberId, m2.name, ib.regDate, 
+           ib.answerId, m4.name AS answerName, ib.questionAnswer, ib.answerDate, 
+           ic.categoryId, ic.categoryName, ib.status
+    FROM inquiryBoard ib
+    JOIN inquiryCategory ic ON ib.categoryId = ic.categoryId
+    LEFT OUTER JOIN member1 m1 ON m1.memberId = ib.memberId
+    LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
+    LEFT OUTER JOIN member2 m4 ON ib.answerId = m4.memberId
+    <where>
+        <if test="kwd != null and kwd != ''">
+            AND <include refid="where-list" />
+        </if>
+        <if test="categoryId != null and categoryId != 0">
+            AND ic.categoryId = #{categoryId}
+        </if>
+        <if test="memberId != null">
+            AND ib.memberId = #{memberId}
+        </if>
+    </where>
+    ORDER BY ib.inquiryId DESC 
+	</select>
+	
+	<select id="dataCount" parameterType="map" resultType="Integer">
+	    SELECT NVL(COUNT(*), 0)
+	    FROM inquiryBoard ib
+	    LEFT OUTER JOIN member1 m1 ON m1.memberId = ib.memberId 
+	    <where>
+	        <if test="memberId != null">
+	            AND ib.memberId = #{memberId}
+	        </if>
+	        <if test="kwd != null and kwd != ''">
+	            AND <include refid="where-list" />
+	        </if>
+	    </where>
+	</select>
+	
+	<!-- 카테고리 구역 -->
+	<select id="listCategory" parameterType="map" resultType="com.sp.app.admin.model.InquiryManage">
+		SELECT categoryId, categoryName
+		FROM inquiryCategory
+		ORDER BY categoryId
+	</select>
+	
+	
+
+
+</mapper>

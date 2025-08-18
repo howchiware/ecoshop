@@ -27,7 +27,7 @@
 	            AND <include refid="where-list"/>
 	        </if>
 	    </where>
-	    ORDER BY regDate DESC
+	    ORDER BY status, ib.regDate
 	    OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 
