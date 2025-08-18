@@ -17,15 +17,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.app.admin.model.CategoryManage;
-import com.sp.app.admin.model.GongguInquiryManage;
-import com.sp.app.admin.model.GongguReviewManage;
 import com.sp.app.admin.model.ProductDeliveryRefundInfo;
+import com.sp.app.admin.model.ProductInquiryManage;
 import com.sp.app.admin.model.ProductManage;
+import com.sp.app.admin.model.ProductReviewManage;
 import com.sp.app.admin.model.ProductStockManage;
 import com.sp.app.admin.service.ProductManageService;
+import com.sp.app.admin.service.ProductReviewInquiryManageService;
 import com.sp.app.common.PaginateUtil;
 import com.sp.app.common.StorageService;
-
+import com.sp.app.model.SessionInfo;
+import com.sp.app.service.WorkshopServiceImpl;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -38,12 +40,15 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/admin/products/*")
 public class ProductManageController {
 
+    private final WorkshopServiceImpl workshopServiceImpl;
+
 	private final ProductManageService service;
 	private final PaginateUtil paginateUtil;
 	private final StorageService storageService;
+    private final ProductReviewInquiryManageService productReviewInquiryManageService;
 	
 	private String uploadPath;
-	
+
 	@PostConstruct
 	public void init() {
 		uploadPath = this.storageService.getRealPath("/uploads/products");		
@@ -426,4 +431,92 @@ public class ProductManageController {
 
 		return "redirect:/admin";
 	}
+	
+	@GetMapping("productReviewInquiry")
+	public String getProductReview(@RequestParam(value="memberId", required = false) Long memberId, Model model) {
+		
+		return "admin/products/productReviewInquiry";
+	}
+	    
+    @GetMapping(value = "reviewList")
+    public String getProductReviewList(
+    		@RequestParam(value = "productName", required = false) String productName, 
+    		@RequestParam(value = "kwd", required = false) String kwd, 
+    		Model model) {
+    	Map<String, Object> map = new HashMap<>();
+        map.put("productName", productName);
+        map.put("kwd", kwd);
+    	
+        List<ProductReviewManage> reviewList = productReviewInquiryManageService.searchReviews(map);
+      
+        model.addAttribute("reviewList", reviewList);
+        model.addAttribute("productName", productName);
+        model.addAttribute("kwd", kwd);
+        
+        return "admin/products/reviewList";
+    }
+    
+    @GetMapping(value = "inquiryList")
+    public String getInquiryList(
+    		@RequestParam(value = "productName", required = false) String productName, 
+    		@RequestParam(value = "kwd", required = false) String kwd, 
+    		Model model,
+    		HttpServletRequest req) {
+    	
+    	HttpSession session = req.getSession();
+    	SessionInfo info = (SessionInfo)session.getAttribute("member");
+    	
+    	long managerId = info.getMemberId();
+    	String managerName = info.getName();
+    	
+    	Map<String, Object> map = new HashMap<>();
+        map.put("productName", productName);
+        map.put("kwd", kwd);
+        
+        List<ProductInquiryManage> inquiryList = productReviewInquiryManageService.searchInquirys(map);
+        
+        for(ProductInquiryManage dto : inquiryList) {
+        	if(dto.getAnswer() != null) {
+        		String answerName = productReviewInquiryManageService.answerNameFindById(dto.getAnswerId());
+        		System.out.println(answerName);
+        		dto.setAnswerName(answerName);        		
+        	}
+        }
+        
+        model.addAttribute("inquiryList", inquiryList);
+        model.addAttribute("productName", productName);
+        model.addAttribute("kwd", kwd);
+        model.addAttribute("managerId", managerId);
+        model.addAttribute("managerName", managerName);
+        
+        return "admin/products/inquiryList";
+    }
+    
+    @PostMapping("writeAnswer")
+    public String writeAnswer(ProductInquiryManage dto,
+    		Model model) {
+    	try {
+    		productReviewInquiryManageService.updateAnswer(dto);
+		} catch (Exception e) {
+			log.info("writeAnswer : ", e);
+		}
+    	
+    	return "redirect:/admin/products/productReviewInquiry";
+    }
+
+    @GetMapping("deleteAnswer")
+    public String deleteAnswer(@RequestParam(name="inquiryId") long inquiryId,
+    		Model model,
+    		HttpServletRequest req) {
+    	try {
+        	
+        	productReviewInquiryManageService.deleteAnswer(inquiryId);        		
+        	
+    	} catch (Exception e) {
+    		log.info("deleteAnswer : ", e);
+    	}
+    	
+    	return "redirect:/admin/products/productReviewInquiry";
+    }
+
 }

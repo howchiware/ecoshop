@@ -21,7 +21,7 @@ public class ProductServiceImpl implements ProductService {
 		try {
 			return productMapper.listProductByCategoryId(categoryId);
 		} catch (Exception e) {
-			log.info("listPackageByCategoryId :", e);
+			log.info("listProductByCategoryId :", e);
 		}
 		
 		return null;

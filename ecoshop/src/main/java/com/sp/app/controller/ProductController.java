@@ -1,8 +1,6 @@
 package com.sp.app.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sp.app.admin.model.CategoryManage;
 import com.sp.app.admin.service.CategoryManageService;
-import com.sp.app.model.GongguProduct;
 import com.sp.app.model.Product;
 import com.sp.app.service.ProductService;
 
@@ -30,7 +27,6 @@ public class ProductController {
 	private final CategoryManageService categoryManageService;
 	private final ProductService productService;
 	
-	
 	@GetMapping("main")
 	public String productsList(Model model) throws Exception {
 		try {
@@ -38,20 +34,30 @@ public class ProductController {
 			model.addAttribute("listCategory", listCategory);
 
 			if (! listCategory.isEmpty()) {
-		        List<Product> list = productService.listProductByCategoryId(listCategory.get(0).getCategoryId());
-		        model.addAttribute("list", list);
-		       	}
+		        List<Product> listProduct = productService.listProductByCategoryId(listCategory.get(0).getCategoryId());
+		        model.addAttribute("listProduct", listProduct);
+		    }
 		} catch (Exception e) {
-			log.error("gongguList: ", e);
+			log.error("productsList: ", e);
 			throw e;
 		}
 		return "products/main";
 	} 
-
-	public String productsList() {
-		return "products/main";
-	} 
 	
+	@GetMapping("products")
+	public String productsByCategory(@RequestParam(value = "categoryId") long categoryId, Model model) throws Exception {
+		try {
+			List<Product> listProduct = productService.listProductByCategoryId(categoryId);
+			model.addAttribute("listProduct", listProduct);
+		} catch (Exception e) {
+			log.error("productsByCategory : ", e);
+			throw e;
+		}
+		
+		return "products/listDetail";
+	}
+
+/*
 	// AJAX - JSON
 	@GetMapping("list")
 	public Map<String, ?> list(
@@ -64,9 +70,10 @@ public class ProductController {
 		
 		return model;
 	}
+ */
 	
-	@GetMapping("{productNum}")
-	public String detailRequest(@PathVariable("productNum") long productNum,
+	@GetMapping("{productId}")
+	public String detailRequest(@PathVariable("productId") long productId,
 			HttpSession session, Model model) throws Exception{
 		
 		try {
