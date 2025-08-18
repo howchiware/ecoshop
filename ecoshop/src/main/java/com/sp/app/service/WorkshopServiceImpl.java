@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
-
 import com.sp.app.common.StorageService;
 import com.sp.app.mapper.WorkshopMapper;
 import com.sp.app.model.Participant;
@@ -20,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class WorkshopServiceImpl implements WorkshopService {
+
 	private final WorkshopMapper mapper;
 	private final StorageService storageService;
 
@@ -56,13 +56,12 @@ public class WorkshopServiceImpl implements WorkshopService {
 
 	// 프로그램
 	@Override
-	public void insertProgram(Workshop dto)
-			throws Exception {
+	public void insertProgram(Workshop dto) throws Exception {
 		try {
 			if (dto.getProgramTitle() != null) {
-	            dto.setProgramTitle(dto.getProgramTitle().trim());
-	        }
-	        mapper.insertProgram(dto);
+				dto.setProgramTitle(dto.getProgramTitle().trim());
+			}
+			mapper.insertProgram(dto);
 
 		} catch (Exception e) {
 			log.info("insertProgram : ", e);
@@ -302,52 +301,54 @@ public class WorkshopServiceImpl implements WorkshopService {
 
 	@Override
 	public void deleteWorkshopPhotoById(long photoId, String uploadPath) throws Exception {
-	    try {
-	        Workshop dto = findWorkshopPhotoById(photoId);
-	        if (dto == null) return;
+		try {
+			Workshop dto = findWorkshopPhotoById(photoId);
+			if (dto == null)
+				return;
 
-	        mapper.deleteWorkshopPhotoById(photoId);
+			mapper.deleteWorkshopPhotoById(photoId);
 
-	        String path = dto.getWorkshopImagePath();
-	        if (path != null && !path.isEmpty()) {
-	            try {
-	                storageService.deleteFile(uploadPath, path);
-	            } catch (Exception fe) {
-	                log.warn("파일 삭제 실패(photoId={}, path={}): {}", photoId, path, fe.getMessage());
-	            }
-	        }
-	    } catch (Exception e) {
-	        log.info("deleteWorkshopPhotoById : ", e);
-	        throw e;
-	    }
+			String path = dto.getWorkshopImagePath();
+			if (path != null && !path.isEmpty()) {
+				try {
+					storageService.deleteFile(uploadPath, path);
+				} catch (Exception fe) {
+					log.warn("파일 삭제 실패(photoId={}, path={}): {}", photoId, path, fe.getMessage());
+				}
+			}
+		} catch (Exception e) {
+			log.info("deleteWorkshopPhotoById : ", e);
+			throw e;
+		}
 	}
 
 	@Override
 	public void deleteWorkshopPhotosByWorkshopId(long workshopId, String uploadPath) throws Exception {
-	    try {
-	        Map<String, Object> map = new HashMap<>();
-	        map.put("workshopId", workshopId);
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("workshopId", workshopId);
 
-	        List<Workshop> listFile = listWorkshopPhoto(map);
-	        
-	        if (listFile != null) {
-	            for (Workshop dto : listFile) {
-	                String p = dto.getWorkshopImagePath();
-	                if (p != null && !p.isEmpty()) {
-	                    try {
-	                        storageService.deleteFile(uploadPath, p);
-	                    } catch (Exception fe) {
-	                        log.warn("파일 삭제 실패(workshopId={}, photoId={}, path={}): {}", workshopId, dto.getPhotoId(), p, fe.getMessage());
-	                    }
-	                }
-	            }
-	        }
+			List<Workshop> listFile = listWorkshopPhoto(map);
 
-	        mapper.deleteWorkshopPhotosByWorkshopId(workshopId);
-	    } catch (Exception e) {
-	        log.info("deleteWorkshopPhotoById : ", e);
-	        throw e;
-	    }
+			if (listFile != null) {
+				for (Workshop dto : listFile) {
+					String p = dto.getWorkshopImagePath();
+					if (p != null && !p.isEmpty()) {
+						try {
+							storageService.deleteFile(uploadPath, p);
+						} catch (Exception fe) {
+							log.warn("파일 삭제 실패(workshopId={}, photoId={}, path={}): {}", workshopId, dto.getPhotoId(),
+									p, fe.getMessage());
+						}
+					}
+				}
+			}
+
+			mapper.deleteWorkshopPhotosByWorkshopId(workshopId);
+		} catch (Exception e) {
+			log.info("deleteWorkshopPhotoById : ", e);
+			throw e;
+		}
 	}
 
 	@Override
@@ -368,7 +369,7 @@ public class WorkshopServiceImpl implements WorkshopService {
 			return mapper.listParticipant(map);
 		} catch (Exception e) {
 			log.info("listParticipant : ", e);
-			
+
 			throw e;
 		}
 	}
@@ -381,23 +382,23 @@ public class WorkshopServiceImpl implements WorkshopService {
 			result = mapper.hasApplied(map);
 		} catch (Exception e) {
 			log.info("hasApplied : ", e);
-			
+
 			throw e;
 		}
 		return result;
 	}
-	
+
 	@Override
 	public List<WorkshopFaq> listFaq(Map<String, Object> map) {
 		try {
 			return mapper.listFaq(map);
 		} catch (Exception e) {
 			log.info("listFaq : ", e);
-			
+
 			throw e;
 		}
 	}
-	
+
 	// ** 사용자 **
 	@Override
 	public List<Workshop> listUserWorkshop(Map<String, Object> map) {
@@ -405,11 +406,11 @@ public class WorkshopServiceImpl implements WorkshopService {
 			return mapper.listUserWorkshop(map);
 		} catch (Exception e) {
 			log.info("listUserWorkshop : ", e);
-			
+
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public int userWorkshopDataCount(Map<String, Object> map) {
 		int result = 0;
@@ -421,7 +422,7 @@ public class WorkshopServiceImpl implements WorkshopService {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public Workshop findWorkshopDetail(long workshopId) {
 		Workshop dto = null;
@@ -455,7 +456,7 @@ public class WorkshopServiceImpl implements WorkshopService {
 
 			throw e;
 		}
-		
+
 	}
 
 	@Override
@@ -467,9 +468,8 @@ public class WorkshopServiceImpl implements WorkshopService {
 
 			throw e;
 		}
-		
+
 	}
-	
 
 	@Override
 	public List<WorkshopReview> listUserReview(Map<String, Object> map) {
@@ -477,7 +477,7 @@ public class WorkshopServiceImpl implements WorkshopService {
 			return mapper.listUserReview(map);
 		} catch (Exception e) {
 			log.info("listUserReview : ", e);
-			
+
 			throw e;
 		}
 	}
@@ -503,67 +503,43 @@ public class WorkshopServiceImpl implements WorkshopService {
 
 			throw e;
 		}
-		
-	}
 
-	@Override
-	public void updateReview(WorkshopReview dto) throws Exception {
-		try {
-			mapper.updateReview(dto);
-		} catch (Exception e) {
-			log.info("updateReview : ", e);
-
-			throw e;
-		}
-		
-	}
-
-	@Override
-	public void deleteReview(long num) throws Exception {
-		try {
-			mapper.deleteReview(num);
-		} catch (Exception e) {
-			log.info("deleteReview : ", e);
-
-			throw e;
-		}
-		
 	}
 
 	@Override
 	public boolean isParticipantOfMember(long participantId, long memberId) {
-		return mapper.isParticipantOfMember(participantId, memberId);
+	    return mapper.isParticipantOfMember(participantId, memberId) > 0;
 	}
 
 	@Override
 	public void insertFaq(WorkshopFaq dto) throws Exception {
-			mapper.insertFaq(dto);
-		
+		mapper.insertFaq(dto);
+
 	}
 
 	@Override
 	public void updateFaq(WorkshopFaq dto) throws Exception {
-			mapper.updateFaq(dto);
-		
+		mapper.updateFaq(dto);
+
 	}
 
 	@Override
 	public void deleteFaq(long faqId) throws Exception {
-			mapper.deleteFaq(faqId);
-		
+		mapper.deleteFaq(faqId);
+
 	}
 
 	@Override
 	public Long findProgramIdByWorkshopId(long workshopId) {
-	    try {
-	    	
-	        return mapper.findProgramIdByWorkshopId(workshopId);
-	        
-	    } catch (Exception e) {
-	        log.info("findProgramIdByWorkshopId : ", e);
-	        
-	        return null; 
-	    }
+		try {
+
+			return mapper.findProgramIdByWorkshopId(workshopId);
+
+		} catch (Exception e) {
+			log.info("findProgramIdByWorkshopId : ", e);
+
+			return null;
+		}
 	}
 
 	@Override
@@ -589,7 +565,7 @@ public class WorkshopServiceImpl implements WorkshopService {
 			result = mapper.updateParticipantStatus(map);
 		} catch (Exception e) {
 			log.info("markAttendance : ", e);
-			
+
 			throw e;
 		}
 		return result;
@@ -603,12 +579,21 @@ public class WorkshopServiceImpl implements WorkshopService {
 			result = mapper.updateAttendance(map);
 		} catch (Exception e) {
 			log.info("markAttendance : ", e);
-			
+
 			throw e;
 		}
 		return result;
 	}
 
+	@Override
+	public Long findParticipantById(long memberId, long workshopId) {
+		try {
 
+			return mapper.findParticipantById(memberId, workshopId);
+		} catch (Exception e) {
+			log.info("findParticipantById : ", e);
+		}
+		return null;
+	}
 
 }

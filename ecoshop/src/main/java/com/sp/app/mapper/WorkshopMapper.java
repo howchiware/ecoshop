@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.sp.app.model.Participant;
 import com.sp.app.model.Workshop;
@@ -76,15 +77,16 @@ public interface WorkshopMapper {
 	public int countAppliedByWorkshop(long workshopId);
 	public void applyWorkshop(Map<String, Object> map);
 	public int cancelApplication(Map<String, Object> map);
-	public boolean isParticipantOfMember(long participantId, long memberId);
+	int isParticipantOfMember(@Param("participantId") long participantId,
+            @Param("memberId") long memberId);
 	
 	// 워크샵 후기
 	public void insertReview(WorkshopReview dto) throws SQLException;
-	public void updateReview(WorkshopReview dto) throws SQLException;
-	public void deleteReview(long num) throws SQLException;
 	public int reviewDataCount(Map<String, Object> map);
 	public List<WorkshopReview> listUserReview(Map<String, Object> map);
 	public Workshop findReviewById(long num);
+	Long findParticipantById(@Param("memberId") long memberId,
+            @Param("workshopId") long workshopId);
 	
 	// 워크샵 상태 검증
 	public Workshop findWorkshopStatusAndCapacity(long workshopId);

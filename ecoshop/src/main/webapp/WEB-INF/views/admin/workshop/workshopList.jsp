@@ -61,6 +61,20 @@
 					</select>
 				</div>
 
+				<div class="col-md-2">
+					<label class="form-label">모집 상태</label> <select class="form-select"
+						name="workshopStatus">
+						<option value="">전체</option>
+						<option value="1"
+							<c:if test="${workshopStatus == '1'}">selected</c:if>>모집
+							중</option>
+						<option value="0"
+							<c:if test="${workshopStatus == '0'}">selected</c:if>>마감</option>
+						<option value="2"
+							<c:if test="${workshopStatus == '2'}">selected</c:if>>취소</option>
+					</select>
+				</div>
+
 				<div class="col-md-4">
 					<label class="form-label">키워드</label> <input type="text"
 						class="form-control" name="kwd" value="${kwd}"
@@ -116,7 +130,7 @@
 											</c:choose></td>
 
 										<td class="text-center"><a
-											href="${ctx}/admin/workshop/workshop/update?num=${row.workshopId}&page=${page}"
+											href="${ctx}/admin/workshop/update?num=${row.workshopId}&page=${page}"
 											class="btn btn-sm btn-primary">수정</a>
 											<form action="${ctx}/admin/workshop/delete" method="post"
 												style="display: inline;">

@@ -1,13 +1,18 @@
 package com.sp.app.model;
 
+import java.util.Date;
+
 public class WorkshopReview {
 
+	private String writerName;
 	private long workshopReviewId;
 	private String reviewContent;
 	private long reviewImgId;
 	private String reviewImagePath;
 	private long participantId;
 	private long workshopId;
+	private Date regDate;
+	private String regDateStr;
 
 	public long getWorkshopReviewId() {
 		return workshopReviewId;
@@ -56,4 +61,29 @@ public class WorkshopReview {
 	public void setWorkshopId(long workshopId) {
 		this.workshopId = workshopId;
 	}
+
+	public Date getRegDate() {
+		return regDate;
+	}
+
+	public void setRegDate(Date regDate) {
+		this.regDate = regDate;
+	}
+
+	public String getWriterName() {
+		return writerName;
+	}
+
+	public void setWriterName(String writerName) {
+		this.writerName = writerName;
+	}
+
+	public String getRegDateStr() {
+		return regDateStr;
+	}
+
+	public void setRegDateStr(String regDateStr) {
+		this.regDateStr = regDateStr;
+	}
+
 }

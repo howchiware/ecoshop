@@ -60,11 +60,11 @@ public interface WorkshopService {
 	public Workshop findWorkshopDetail(long workshopId);
 	
 	// 사용자 리뷰
+	public Long findParticipantById(long memberId, long workshopId);
 	public List<WorkshopReview> listUserReview(Map<String, Object> map);
 	public int reviewDataCount(Map<String,Object> map);
 	public void insertReview(WorkshopReview dto) throws Exception;
-	public void updateReview(WorkshopReview dto) throws Exception;
-	public void deleteReview(long num) throws Exception;
+	public boolean isParticipantOfMember(long participantId, long memberId);
 	
 	// 관리자 FAQ
 	public List<WorkshopFaq> listFaq(Map<String,Object> map);
@@ -76,6 +76,5 @@ public interface WorkshopService {
 	
 	
 	
-	public boolean isParticipantOfMember(long participantId, long memberId);
 	
 }

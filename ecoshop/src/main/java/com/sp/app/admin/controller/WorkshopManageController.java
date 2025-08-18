@@ -318,6 +318,7 @@ public class WorkshopManageController {
 	@GetMapping("/list")
 	public String workshopList(@RequestParam(name = "page", defaultValue = "1") int current_page,
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
+			@RequestParam(name = "workshopStatus", required = false) String workshopStatus,
 			@RequestParam(name = "kwd", defaultValue = "") String kwd, Model model, HttpServletRequest req)
 			throws Exception {
 		try {
@@ -330,6 +331,10 @@ public class WorkshopManageController {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("schType", schType);
 			map.put("kwd", kwd);
+			
+			if (workshopStatus != null && !workshopStatus.isBlank()) {
+		        map.put("workshopStatus", workshopStatus);
+		    }
 
 			dataCount = service.workshopDataCount(map);
 			if (dataCount > 0) {
@@ -468,10 +473,9 @@ public class WorkshopManageController {
 	}
 
 	// 워크샵 수정
-	@GetMapping("/workshop/update")
+	@GetMapping("/update")
 	public String updateFormWorkshop(@RequestParam(name = "num") long num, @RequestParam(name = "page") String page,
 			Model model) throws Exception {
-
 		try {
 			Workshop dto = Objects.requireNonNull(service.findWorkshopById(num));
 
@@ -501,16 +505,25 @@ public class WorkshopManageController {
 		return "redirect:/admin/workshop/list?page=" + page;
 	}
 
-	@PostMapping("/workshop/update")
-	public String updateSubmitWorkshop(Workshop dto, @RequestParam(name = "page", defaultValue = "1") String page)
+	@PostMapping("/update")
+	public String updateSubmitWorkshop(Workshop dto, @RequestParam(name = "page", defaultValue = "1") String page,
+			@RequestParam(name = "thumbnail", required = false) MultipartFile newThumbnail)
 			throws Exception {
 		try {
+			Workshop workshop = service.findWorkshopById(dto.getWorkshopId());
+			
+			if(newThumbnail != null && !newThumbnail.isEmpty()) {
+				String path = storageService.uploadFileToServer(newThumbnail, uploadPath);
+				dto.setThumbnailPath(path);
+			} else {
+				dto.setThumbnailPath(workshop.getThumbnailPath());
+			}
+			
 			service.updateWorkshop(dto);
 		} catch (Exception e) {
 			log.info("update Workshop : ", e);
 			throw e;
 		}
-
 		return "redirect:/admin/workshop/list?page=" + page;
 	}
 

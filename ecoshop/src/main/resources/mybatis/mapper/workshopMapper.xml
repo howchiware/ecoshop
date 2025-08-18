@@ -212,6 +212,9 @@
 				'%'
 				OR LOWER(w.workshopContent) LIKE '%' || LOWER(#{kwd}) || '%')
 			</if>
+			<if test="workshopStatus != null and workshopStatus != ''">
+				AND w.workshopStatus = #{workshopStatus}
+			</if>
 			<if test="workshopId != null">
 				AND w.workshopId = #{workshopId}
 			</if>
@@ -240,7 +243,7 @@
 		workshopContent, regDate, updDate
 		FROM workshop
 		WHERE
-		workshopId = #{value}
+		workshopId = #{num}
 	</select>
 
 	<update id="updateWorkshop"
@@ -313,11 +316,13 @@
 	</delete>
 
 	<!-- 출석체크 -->
-	<update id="markAttendance" parameterType="com.sp.app.model.Participant">
+	<update id="markAttendance"
+		parameterType="com.sp.app.model.Participant">
 		UPDATE participant
 		SET
 		isAttended = #{isAttended}
-		WHERE participantId = #{participantId}
+		WHERE
+		participantId = #{participantId}
 	</update>
 
 	<!-- 사용자 -->
@@ -339,6 +344,8 @@
 
 			<if test="onlyRecruiting == true">
 				AND w.workshopStatus = 1
+				AND w.applyDeadline >= SYSDATE
+
 			</if>
 		</where>
 		<choose>
@@ -434,17 +441,64 @@
 		WHERE faqId = #{value}
 	</select>
 
-	<select id="listUserReview" parameterType="map"
-		resultType="com.sp.app.model.WorkshopReview">
-		SELECT workshopReviewId, participantId, reviewContent, regDate,
-		workshopId
+	<select id="reviewDataCount" parameterType="map"
+		resultType="int">
+		SELECT NVL(COUNT(*), 0)
 		FROM workshopReview
 		<where>
 			<if test="workshopId != null">AND workshopId = #{workshopId}</if>
+			<if test="participantId != null">AND participantId = #{participantId}</if>
 		</where>
-		ORDER BY regDate DESC
+	</select>
+
+	<select id="listUserReview" parameterType="map"
+		resultType="com.sp.app.model.WorkshopReview">
+		SELECT w.workshopReviewId, w.participantId,
+		w.reviewContent,
+		w.regDate, TO_CHAR(w.regDate, 'YYYY-MM-DD') AS
+		regDateStr, w.workshopId,
+		m.name AS writerName
+		FROM workshopReview w
+		JOIN participant p ON w.participantId = p.participantId
+		LEFT JOIN
+		member2 m ON p.memberId = m.memberId
+		WHERE w.workshopId = #{workshopId}
+		ORDER BY w.regDate DESC
 		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS
 		ONLY
+	</select>
+
+	<insert id="insertReview"
+		parameterType="com.sp.app.model.WorkshopReview">
+		INSERT INTO workshopReview (
+		workshopReviewId,
+		participantId, reviewContent, regDate, workshopId
+		) VALUES (
+		workshopReview_seq.NEXTVAL, #{participantId}, #{reviewContent},
+		SYSDATE, #{workshopId}
+		)
+	</insert>
+
+	<select id="isParticipantOfMember" resultType="int">
+		SELECT COUNT(*)
+		FROM participant
+		WHERE participantId = #{participantId}
+		AND memberId =
+		#{memberId}
+		AND participantStatus = 1
+		AND isAttended = 'Y'
+	</select>
+
+	<select id="findParticipantById" resultType="long">
+		SELECT participantId
+		FROM participant
+		WHERE memberId = #{memberId}
+		AND workshopId =
+		#{workshopId}
+		AND participantStatus = 1
+		AND isAttended = 'Y'
+		FETCH FIRST
+		1 ROWS ONLY
 	</select>
 
 	<!-- 신청 여부 -->
@@ -533,4 +587,6 @@
 		SET isAttended = #{isAttended}
 		WHERE participantId = #{participantId}
 	</update>
+
+
 </mapper>
