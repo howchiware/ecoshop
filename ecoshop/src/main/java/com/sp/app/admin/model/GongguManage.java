@@ -18,17 +18,17 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class GongguManage {
-    private Long gongguProductId;
+    private long gongguProductId;
     private String gongguProductName;
     private String gongguThumbnail;
-    private Long originalPrice;
-    private Long gongguPrice;
-    private String regDate;
+    private long originalPrice;
+    private long gongguPrice;
+    private String reg_date;
     private Integer limitCount;
     private String deadline;
-    private Long categoryId; 
+    private long categoryId; 
     private String categoryName;
-    private String updateDate;
+    private String update_date;
     private String content;
     private String detailInfo; 
     private String limitInfo;
@@ -39,8 +39,13 @@ public class GongguManage {
     private List<GongguPackage> packages; 
    
     private long gongguProductPhotoNum;
-	private String photoName;
+	private String gongguPhotoName;
 	private List<MultipartFile> addFiles;
+	private List<Long> gongguProductIds;
+	
+	private String productCode;
+	private String productName;
+	private int totalStock;
 
 
 }

@@ -205,20 +205,7 @@ text-align: center;
 									<div class="btn-area">
 										<button class="btn-accent" type="button" onclick="searchList();">조회</button>
 										<button class="btn-accent" type="reset">초기화</button>
-										<!-- 
-										<input type="hidden" name="size" value="${size}">
-										<input type="hidden" name="categoryId" value="${categoryId}">
-										<input type="hidden" name="schType" value="${schType}">
-										<input type="hidden" name="kwd" value="${kwd}">
-										<input type="hidden" name="period" value="${period}">
-										<input type="hidden" name="periodStart" value="${periodStart}">
-										<input type="hidden" name="periodEnd" value="${periodEnd}">
-										<input type="hidden" name="priceLowest" value="${priceLowest}">
-										<input type="hidden" name="priceHighest" value="${priceHighest}">
-										<input type="hidden" name="stockLowest" value="${stockLowest}">
-										<input type="hidden" name="stockHighest" value="${stockHighest}">
-										 -->
-									</div>
+										</div>
 								</form>
 							</div>
 						</div>
@@ -240,7 +227,7 @@ text-align: center;
 									<span class="small-title">전체</span> <span class="dataCount">${dataCount}건 조회</span>
 								</div>	
 								<div class="col-md-6 align-self-center text-end">
-									<button type="button" class="addBtn" onclick="location.href='${pageContext.request.contextPath}/admin/products/write';">상품 등록</button>
+									<button type="button" class="addBtn" onclick="location.href='${pageContext.request.contextPath}/admin/gonggu/write';">상품 등록</button>
 								</div>
 							</div>
 							
@@ -254,7 +241,7 @@ text-align: center;
 										<th width="35" rowspan="2">
 											<input type="checkbox" class="form-check-input product-chkAll" name="chkAll">
 										</th>
-										<th rowspan="2" width="30">상품코드</th>
+										<th rowspan="2" width="30">공동구매번호</th>
 										<th rowspan="2" width="70">상품사진</th>
 										<th width="80">카테고리</th>
 										<th width="80">최초 등록일</th>
@@ -272,16 +259,16 @@ text-align: center;
 									<c:forEach var="dto" items="${listProduct}">
 										<tr class="text-center" valign="middle">
 											<td rowspan="2">
-												<input type="checkbox" class="form-check-input" name="nums" data-productId="${dto.productId}" value="${dto.productId}" 
+												<input type="checkbox" class="form-check-input" name="nums" data-productId="${dto.gongguProductId}" value="${dto.gongguProductId}" 
 														data-totalStock="${dto.totalStock}" ${dto.totalStock == 0 ? "disabled":""}>
 											</td>
-											<td rowspan="2">${dto.productCode}</td>
+											<td rowspan="2">${dto.gongguProductId}</td>
 											<td rowspan="2" width="55">
-												<img class="border rounded" width="50" height="50" src="${pageContext.request.contextPath}/uploads/products/${dto.thumbnail}">
+												<img class="border rounded" width="50" height="50" src="${pageContext.request.contextPath}/uploads/gongguProducts/${dto.gongguThumbnail}">
 											</td>
 											<td>${dto.categoryName}</td>
 											<td>${dto.reg_date}</td>
-											<td rowspan="2">${dto.price} 원</td>
+											<td rowspan="2">${dto.gongguPrice} 원</td>
 											<td rowspan="2">2</td>
 											<td rowspan="2">
 												<c:if test="${dto.productShow == 1}">
@@ -292,34 +279,23 @@ text-align: center;
 												</c:if>
 											</td>
 											<td rowspan="2">
-												<c:url var="updateUrl" value="/admin/products/update">
-													<c:param name="productId" value="${dto.productId}"/>
-													<c:param name="productCode" value="${dto.productCode}"/>
+												<c:url var="updateUrl" value="/admin/gonggu/update">
+													<c:param name="gongguProductId" value="${dto.gongguProductId}"/>
 													<c:param name="categoryId" value="${categoryId}"/>
 													<c:param name="page" value="${page}"/>
 												</c:url>
-												<button type="button" class="btn-productStock" data-productId="${dto.productId}" data-productCode="${dto.productCode}" data-optionCount="${dto.optionCount}">재고</button>
-												<button type="button" onclick="location.href='${updateUrl}';">수정</button>
 											</td>
 										</tr>
 										<tr>
 											<td>
-												${dto.productName}
+												${dto.gongguProductName}
 											</td>
 											<td>
 												${dto.update_date}
 											</td>
 										</tr>
 									</c:forEach>
-									<!-- 
-									<tr>
-										<td colspan="10" style="text-align: right; border-bottom: none;">
-											<button type="button" onclick="deleteProductSelect();">선택상품삭제</button>
-											<button type="button">전체상품삭제</button>
-										</td>
-									</tr>
-									 -->
-								</tbody>
+									</tbody>
 							</table>
 						</form>
 							
@@ -335,7 +311,6 @@ text-align: center;
 	</div>
 </main>
 
-<!-- 재고 관리 대화상자  -->
 <div class="modal fade" id="productStockDialogModal" tab-index="-1" aria-labelledby="productStockDialogModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
@@ -395,114 +370,9 @@ function searchList() {
 	const formData = new FormData(f);
 	let params = new URLSearchParams(formData).toString();
 	
-	let url = '${pageContext.request.contextPath}/admin/products/listProduct';
+	let url = '${pageContext.request.contextPath}/admin/gonggu/listProduct';
 	location.href = url + '?' + params;
 }
-
-$(function(){	
-	// 재고 관리 대화상자
-	$('.btn-productStock').click(function(){
-		let productId = $(this).attr('data-productId');
-		let productCode = $(this).attr('data-productCode');
-		let optionCount = $(this).attr('data-optionCount');
-		let url = '${pageContext.request.contextPath}/admin/products/listProductStock?productId=' + productId + '&productCode=' + productCode + '&optionCount=' + optionCount;
-		
-		$('.modal-productStock').load(url);
-		
-		$('#productStockDialogModal').modal('show');
-	});
-	
-	// 재고 일괄 변경
-	$('.modal-productStock').on('click', '.btn-allStockUpdate', function(){
-		if(! confirm('재고를 일괄 변경 하시겠습니까 ? ')) {
-			return false;
-		}
-		
-		let productId = $(this).attr('data-productId');
-		let productCode = $(this).attr('data-productCode');
-		let optionCount = $(this).attr('data-optionCount');
-		let url = '${pageContext.request.contextPath}/admin/products/updateProductStock';
-		let formData = 'productId=' + productId +'&productCode=' + productCode;
-		
-		let isValid = true;
-		$('.productStcok-list tr').each(function(){
-			let $input = $(this).find('input[name=totalStock]');
-			let $btn = $(this).find('.btn-stockUpdate');
-			
-			if(!/^\d+$/.test($input.val())) {
-				alert('재고량은 숫자만 가능합니다.');
-				$input.focus();
-				isValid = false;
-				return false;
-			}
-			
-			let stockNum = $btn.attr('data-stockNum');
-			let optionDetailNum = $btn.attr('data-optionDetailNum');
-			optionDetailNum = optionDetailNum ? optionDetailNum : 0;
-			let optionDetailNum2 = $btn.attr('data-optionDetailNum2');
-			optionDetailNum2 = optionDetailNum2 ? optionDetailNum2 : 0;
-			let totalStock = $input.val().trim();
-			
-			formData += '&stockNums=' + stockNum;
-			formData += '&optionDetailNums=' + optionDetailNum;
-			formData += '&optionDetailNums2=' + optionDetailNum2;
-			formData += '&totalStocks=' + totalStock;
-		});
-		
-		if( ! isValid ) {
-			return false;
-		}
-		
-		const fn = function(data) {
-			if(data.state === 'true') {
-				alert('재고가 일괄 변경 되었습니다.');
-			} else {
-				alert('재고 일괄 변경이 실패 했습니다.');
-			}
-			
-
-			let url = '${pageContext.request.contextPath}/admin/products/listProductStock?productId=' + productId + '&productCode=' + productCode + '&optionCount=' + optionCount;
-			
-			$('.modal-productStock').load(url);
-			
-			$('#productStockDialogModal').modal('show');
-		};
-		
-		ajaxRequest(url, 'post', formData, 'json', fn);
-	});
-	
-	// 재고 변경	
-	$('.modal-productStock').on('click', '.btn-stockUpdate', function(){
-		let productId = $(this).attr('data-productId');
-		let productCode = $(this).attr('data-productCode');
-		let stockNum = $(this).attr('data-stockNum');
-		let optionDetailNum = $(this).attr('data-optionDetailNum');
-		optionDetailNum = optionDetailNum ? optionDetailNum : 0;
-		let optionDetailNum2 = $(this).attr('data-optionDetailNum2');
-		optionDetailNum2 = optionDetailNum2 ? optionDetailNum2 : 0;
-		let totalStock = $(this).closest('tr').find('input[name=totalStock]').val();
-		
-		if(!/^\d+$/.test(totalStock)) {
-			alert('재고량은 숫자만 가능합니다.');
-			$(this).closest('tr').find('input[name=totalStock]').focus();
-			return false;
-		}
-	
-		let url = '${pageContext.request.contextPath}/admin/products/updateProductStock';
-		let formData = {productId:productId, productCode:productCode, stockNums:stockNum, optionDetailNums:optionDetailNum, 
-				optionDetailNums2:optionDetailNum2, totalStocks:totalStock};
-		
-		const fn = function(data) {
-			if(data.state === 'true') {
-				alert('재고가 변경 되었습니다.');
-			} else {
-				alert('재고 변경이 실패 했습니다.');
-			}
-		};
-		
-		ajaxRequest(url, 'post', formData, 'json', fn);
-	});
-});
 
 const productStockModalEl = document.getElementById('productStockDialogModal');
 productStockModalEl.addEventListener('show.bs.modal', function(){
@@ -547,7 +417,7 @@ function deleteProductSelect() {
 	}
 	
 	const f = document.productManageForm;
-	f.action = '${pageContext.request.contextPath}/admin/products/deleteProductSelect;';
+	f.action = '${pageContext.request.contextPath}/admin/gonggu/deleteProductSelect';
 	f.submit();
 }
 

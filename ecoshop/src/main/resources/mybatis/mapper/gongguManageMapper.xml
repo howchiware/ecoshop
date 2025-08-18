@@ -1,61 +1,192 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sp.app.admin.mapper.GongguReviewInquiryManageMapper">
-
-	<select id="findAllReviews" resultType="com.sp.app.admin.model.GongguReviewManage">
-	SELECT gongguReviewId, m2.name AS userName, g.content, g.regDate, g.gongguProductId, g.memberId, g.showReview, g.answerId, g.answerDate, g.answer, p.gongguProductName, g.rate
-	FROM gongguReview g
-	JOIN member1 m1 ON g.memberId = m1.memberId
-	JOIN member2 m2 ON m1.memberId = m2.memberId
-	JOIN gongguProduct p ON g.gongguProductId = p.gongguProductId
-	ORDER BY g.regDate DESC
+<mapper namespace="com.sp.app.admin.mapper.GongguManageMapper">
+	<select id="gongguProductSeq" resultType="Long">
+		SELECT gongguProduct_seq.NEXTVAL FROM dual
 	</select>
 	
-	<select id="findAllInquirys" resultType="com.sp.app.admin.model.GongguInquiryManage">
-	 	SELECT g.gongguProductName, i.content, i.regDate, (CASE WHEN i.answer IS NOT NULL THEN 1 ELSE 0 END) AS status, m2.name AS userName, m1.userId, m1.userLevel, c.categoryId,
-	 		 c.categoryName, i.gongguInquiryId, i.answerId, i.answer, i.answerDate, m2.name AS answerName
-	 	FROM gongguInquiry i
-	 	LEFT JOIN gongguProduct g ON i.gongguProductId = g.gongguProductId
-		LEFT JOIN member1 m1 ON i.memberId = m1.memberId
-		LEFT JOIN member2 m2 ON m1.memberId = m2.memberId
-		LEFT JOIN productCategory c ON g.categoryId = c.categoryId
-		ORDER BY i.regDate DESC
+	<insert id="insertGongguPackage" parameterType="com.sp.app.admin.model.GongguPackage">
+		INSERT INTO gongguPackage (packageNum, stock, productCode, gongguProductId, price, optionDetailNum)
+		VALUES (gongguPackage_seq.NEXTVAL, #{stock}, #{productCode}, #{gongguProductId}, #{price}, #{optionDetailNum})
+	</insert>
+	
+	<insert id="insertProduct" parameterType="com.sp.app.admin.model.GongguManage">
+		INSERT INTO gongguProduct(gongguProductId, categoryId, gongguProductName, originalPrice, gongguPrice,
+				gongguThumbnail, regDate, productShow, content, detailInfo, limitCount)
+		VALUES (#{gongguProductId}, #{categoryId}, #{gongguProductName}, #{originalPrice}, #{gongguPrice}, #{gongguThumbnail}, 
+				 SYSDATE, #{productShow}, #{content}, #{detailInfo}, #{limitCount})
+	</insert>
+	
+	<insert id="insertProductPhoto" parameterType="com.sp.app.admin.model.GongguManage">
+		INSERT INTO gongguProductDetail(gongguProductDetailId, gongguProductId, detailPhoto)
+		VALUES(gongguProductDetail_seq.NEXTVAL, #{gongguProductId}, #{detailPhoto})
+	</insert>
+	
+	<select id="findById" parameterType="Long" resultType="com.sp.app.admin.model.GongguManage">
+		SELECT g.gongguProductId, g.categoryId, c.categoryName, p.productId, p.productCode, p.productName,
+			g.gongguProductName, g.originalPrice, g.gongguPrice, g.gongguThumbnail, g.regDate AS reg_date,
+			g.productShow, g.content, g.detailInfo, g.updateDate AS update_date, NVL(g.limitCount, 0) limitCount
+		FROM gongguProduct g
+		JOIN gongguPackage k ON g.gongguProductId = k.gongguProductId
+		JOIN product p ON k.productCode = p.productCode
+		JOIN productCategory c ON g.categoryId = c.categoryId
+		WHERE g.gongguProductId = #{gongguProductId}
 	</select>
 	
-	<select id="findReviewsBySearch" parameterType="map" resultType="com.sp.app.admin.model.GongguReviewManage">
-    SELECT gongguReviewId, m2.name AS userName, g.content, g.regDate, (CASE WHEN g.answer IS NOT NULL THEN 1 ELSE 0 END) AS status, g.gongguProductId, g.memberId, g.showReview, g.answerId, g.answerDate, g.answer, p.gongguProductName, g.rate
-    FROM gongguReview g
-    JOIN member1 m1 ON g.memberId = m1.memberId
-    JOIN member2 m2 ON m1.memberId = m2.memberId
-    JOIN gongguProduct p ON g.gongguProductId = p.gongguProductId
-    <where>
-        <if test="gongguProductName != null and !gongguProductName.isEmpty()">
-            AND p.gongguProductName LIKE '%' || #{gongguProductName} || '%'
-        </if>
-        <if test="kwd != null and !kwd.isEmpty()">
-            AND (g.content LIKE '%' || #{kwd} || '%' OR m2.name LIKE '%' || #{kwd} || '%')
-        </if>
-    </where>
-    ORDER BY g.regDate DESC
+	<select id="listProductPhoto" parameterType="Long" resultType="com.sp.app.admin.model.GongguManage">
+		SELECT gongguProductDetailId, gongguProductId, detailPhoto
+		FROM gongguProductDetail
+		WHERE gongguProductId = #{gongguProductId}
 	</select>
 	
-	<select id="findInquirysBySearch" parameterType="map" resultType="com.sp.app.admin.model.GongguInquiryManage">
-		SELECT g.gongguProductName, i.content, i.regDate, (CASE WHEN i.answer IS NOT NULL THEN 1 ELSE 0 END) AS status, m2.name AS userName, m1.userId, m1.userLevel, c.categoryId,
-	 		 c.categoryName, i.gongguInquiryId, i.answerId, i.answer, i.answerDate, m2.name AS answerName
-	 	FROM gongguInquiry i
-	 	LEFT JOIN gongguProduct g ON i.gongguProductId = g.gongguProductId
-		LEFT JOIN member1 m1 ON i.memberId = m1.memberId
-		LEFT JOIN member2 m2 ON m1.memberId = m2.memberId
-		LEFT JOIN productCategory c ON g.categoryId = c.categoryId
+	<update id="updateProduct" parameterType="com.sp.app.admin.model.GongguManage">
+		UPDATE gongguProduct SET categoryId = #{categoryId}, gongguProductName = #{gongguProductName},
+			gongguThumbnail = #{gongguThumbnail}, originalPrice = #{originalPrice}, gongguPrice = #{gongguPrice},
+			productShow = #{productShow}, content = #{content}, detailInfo= #{detailInfo}, update_date = SYSDATE,
+			limitCount = #{limitCount}
+		WHERE gongguProductId = #{gongguProductId}
+	</update>
+	
+	<delete id="deleteProduct" parameterType="Long">
+		DELETE FROM gongguProduct
+		WHERE gongguProductId = #{gongguProductId}
+	</delete>
+	
+	<delete id="deleteProductPhoto" parameterType="Long">
+		DELETE FROM gongguProductDetail
+		WHERE gongguProductId = #{gongguProductId}
+	</delete>
+	
+	<select id="photoFindByCode" parameterType="long" resultType="long">
+	    SELECT gongguProductDetailId
+	    FROM gongguProductDetail
+	    WHERE gongguProductDetailId = #{gongguProductDetailId}
+	</select>
+	
+	<select id="listProduct" parameterType="map" resultType="com.sp.app.admin.model.GongguManage">
+	SELECT g.gongguProductId, g.categoryId, g.gongguProductName, g.originalPrice, g.gongguPrice,
+		g.gongguThumbnail, g.regDate AS reg_date, g.productShow, g.content, g.detailInfo, g.updateDate AS update_date, NVL(g.limitCount, 0) limitCount,
+		c.categoryName, p.productCode, p.productName, t.totalStock
+	FROM gongguProduct g
+	LEFT OUTER JOIN gongguPackage k ON g.gongguProductId = k.gongguProductId
+	LEFT OUTER JOIN product p ON k.productCode = p.productCode
+	LEFT OUTER JOIN productCategory c ON g.categoryId = c.categoryId
+	LEFT OUTER JOIN (
+		SELECT productCode, NVL(SUM(totalStock), 0) totalStock
+		FROM productStock
+		GROUP BY productCode
+	) t ON p.productCode = t.productCode
 		<where>
-	        <if test="gongguProductName != null and !gongguProductName.isEmpty()">
-	            AND g.gongguProductName LIKE '%' || #{gongguProductName} || '%'
-	        </if>
-	        <if test="kwd != null and !kwd.isEmpty()">
-	            AND (i.content LIKE '%' || #{kwd} || '%' OR m2.name LIKE '%' || #{kwd} || '%')
-	        </if>
-	    </where>
-	    ORDER BY i.regDate DESC
+			<if test="kwd != null and kwd != '' ">
+				AND <include refid="where-list-schType"/>
+			</if>
+			<if test="categoryId != 0">
+				AND <include refid="where-list-categoryId"/>
+			</if>
+			<if test="periodStart != null and periodStart != '' and periodEnd != null and periodEnd != ''">
+				AND <include refid="where-list-period"/>
+			</if>
+			<if test="priceLowest != null and priceHighest != null and priceLowest != '' and priceHighest != ''">
+				AND <include refid="where-list-price"/>
+			</if>
+			<if test="stockLowest != null and stockHighest != null and stockLowest != '' and stockHighest != ''">
+				AND <include refid="where-list-stock"/>
+			</if>
+		</where>
+		ORDER BY g.gongguProductId DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
+	
+	<select id="findByCategory" parameterType="Long" resultType="com.sp.app.admin.model.CategoryManage">
+	SELECT categoryId, categoryName, enabled
+	FROM productCategory
+	WHERE categoryId = #{categoryId}
+	</select>
+	
+	<sql id="where-list-schType">
+		<if test="schType=='all'">
+			INSTR(p.productName, #{kwd}) > 0 OR INSTR(p.productCode, #{kwd}) > 0 OR INSTR(g.gongguProductName, #{kwd}) > 0
+		</if>
+		<if test="schType=='productCode'">
+			INSTR(p.productCode, #{kwd}) > 0
+		</if>
+		<if test="schType=='productName'">
+			INSTR(p.productName, #{kwd}) > 0 OR INSTR(g.gongguProductName, #{kwd}) > 0
+		</if>
+	</sql>
+
+	<sql id="where-list-categoryId">
+			g.categoryId = #{categoryId}
+	</sql>
+	
+	<sql id="where-list-period">
+		g.regDate AS reg_date BETWEEN TO_DATE(#{periodStart}, 'YYYY-MM-DD') AND TO_DATE(#{periodEnd}, 'YYYY-MM-DD')
+	</sql>
+	
+	<sql id="where-list-price">
+			g.gongguPrice BETWEEN #{priceLowest} AND #{priceHighest} 
+	</sql>
+
+	<sql id="where-list-stock">
+		totalStock BETWEEN #{stockLowest} AND #{stockHighest}
+	</sql>
+		
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(g.gongguProductId), 0)
+		FROM gongguProduct g
+		LEFT OUTER JOIN gongguPackage k ON g.gongguProductId = k.gongguProductId
+		LEFT OUTER JOIN product p ON k.productCode = p.productCode
+		LEFT OUTER JOIN productCategory c ON g.categoryId = c.categoryId
+		LEFT OUTER JOIN (
+			SELECT productCode, NVL(SUM(totalStock), 0) totalStock
+			FROM productStock
+			GROUP BY productCode
+		) t ON p.productCode = t.productCode
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				AND <include refid="where-list-schType"/>
+			</if>
+			<if test="categoryId != 0">
+				AND <include refid="where-list-categoryId"/>
+			</if>
+			<if test="periodStart != null and periodStart != '' and periodEnd != null and periodEnd != ''">
+				AND <include refid="where-list-period"/>
+			</if>
+			<if test="priceLowest != null and priceHighest != null and priceLowest != '' and priceHighest != ''">
+				AND <include refid="where-list-price"/>
+			</if>
+			<if test="stockLowest != null and stockHighest != null and stockLowest != '' and stockHighest != ''">
+				AND <include refid="where-list-stock"/>
+			</if>
+		</where>
+	</select>	
+	
+	<select id="listDeliveryRefundInfo" resultType="com.sp.app.admin.model.GongguDeliveryRefundInfo">
+	    SELECT deliveryInfo, refundInfo
+	    FROM deliveryRefundInfo
+	</select>
+
+	<select id="listDeliveryFee" resultType="com.sp.app.admin.model.GongguDeliveryRefundInfo">
+	    SELECT fee, deliveryLocation
+	    FROM deliveryFee
+	</select>
+	
+	<insert id="insertProductDeliveryRefundInfo" parameterType="com.sp.app.admin.model.GongguDeliveryRefundInfo">
+		INSERT INTO deliveryRefundInfo(deliveryRefundInfoNum, deliveryInfo, refundInfo)
+		VALUES (deliveryRefundInfo_seq.NEXTVAL, #{deliveryInfo}, #{refundInfo})
+	</insert>
+
+	<insert id="insertProductDeliveryFee" parameterType="map">
+		INSERT INTO deliveryFee(deliveryFeeNum, fee, deliveryLocation)
+		VALUES (deliveryFee_seq.NEXTVAL, #{fee}, #{deliveryLocation})
+	</insert>
+	
+	<update id="updateProductDeliveryRefundInfo" parameterType="com.sp.app.admin.model.GongguDeliveryRefundInfo">
+		UPDATE deliveryRefundInfo SET deliveryInfo = #{deliveryInfo}, refundInfo = #{refundInfo}
+	</update>
+
+	<delete id="deleteProductDeliveryFee">
+	    DELETE FROM deliveryFee
+	</delete>
 </mapper>

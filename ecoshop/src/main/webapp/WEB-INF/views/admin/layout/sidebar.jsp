@@ -46,9 +46,9 @@
     <li>
       <a href="#"> 상품 관리 > </a>
       <ul class="submenu">
-        <li><a href="#"> 전체 상품 관리</a></li>
-        <li><a href="/admin/gonggu/productForm"> 상품 등록</a></li>
-        <li><a href="#"> 배송 정책 및 배송비</a></li>
+        <li><a href="/admin/gonggu/listProduct"> 전체 상품 관리</a></li>
+        <li><a href="/admin/gonggu/write"> 상품 등록</a></li>
+        <li><a href="/admin/gonggu/deliveryWrite"> 배송 정책 및 배송비</a></li>
         <li><a href="/admin/gonggu/productReview"> 리뷰 및 Q&A 관리</a></li>
       </ul>
     </li>
