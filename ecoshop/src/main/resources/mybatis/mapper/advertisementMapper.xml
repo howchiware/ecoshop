@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sp.app.admin.mapper.AdvertisementMapper">
+<mapper namespace="com.sp.app.mapper.AdvertisementMapper">
+	<select id="advertisingSeq" resultType="Long">
+		SELECT advertising_seq.NEXTVAL FROM dual
+	</select>
+	
 	<insert id="insertAdvertisement" parameterType="com.sp.app.model.Advertisement">
 		INSERT INTO advertising(advertisingId, username, subject, content, regDate, inquiryType, status, postingStatus, email, tel, adverStart, adverEnd)
-		VALUES(advertising_seq.NEXTVAL, #{username}, #{subject}, #{content}, SYSDATE, #{inquiryType}, 3 , 0 , #{email}, #{tel}, #{adverStart}, #{adverEnd})
+		VALUES(#{advertisingId}, #{username}, #{subject}, #{content}, SYSDATE, #{inquiryType}, 3 , 0 , #{email}, #{tel}, #{adverStart}, #{adverEnd})
 	</insert>
 	
-	<insert id="advertisementFile" parameterType="com.sp.app.model.Advertisement">
+	<insert id="insertAdvertisementFile" parameterType="com.sp.app.model.Advertisement">
 		INSERT INTO advertisingFile(advertisingFileNum, advertisingId, saveFilename, originalFilename, fileSize)
 		VALUES(advertisingFile_seq.NEXTVAL, #{advertisingId}, #{saveFilename}, #{originalFilename}, #{fileSize})
 	</insert>
-
 </mapper>

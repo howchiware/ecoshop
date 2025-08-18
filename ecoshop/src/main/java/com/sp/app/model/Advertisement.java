@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Advertisement {
 	private long advertisingId;
-	private String username ;
+	private String username;
 	private String subject;
 	private String content;
 	private String regDate;
@@ -37,12 +37,8 @@ public class Advertisement {
 	private String saveFilename;
 	private String originalFilename;
 	private long fileSize;
-	private String zip;
-	
 	private int fileCount;
+	
 	private List<MultipartFile> selectFile;
 	private long gap;
-	
-	private long promotionId;
-	private String imageFilename;
 }

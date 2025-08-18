@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.sp.app.common.StorageService;
 import com.sp.app.model.Advertisement;
 import com.sp.app.service.AdvertisementService;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,12 @@ import lombok.extern.slf4j.Slf4j;
 public class AdvertisementController {
 	private final AdvertisementService service;
 	private String uploadPath;
+	private final StorageService storageService;
+	
+	@PostConstruct
+	public void init() {
+		uploadPath = this.storageService.getRealPath("/uploads/advertisement");
+	}	
 	
 	
 	@GetMapping("list")

@@ -27,10 +27,6 @@
 	font-style: normal;
 }
 
- .container {
-        width: 900px;
-        margin: 0 auto;
-    }
     h2 {
         font-size: 28px;
         font-weight: bold;

@@ -8,7 +8,10 @@ import com.sp.app.model.Advertisement;
 
 @Mapper
 public interface AdvertisementMapper {
+	public long advertisingSeq();
 	public void insertAdvertisement(Advertisement dto) throws SQLException;
 	public void insertAdvertisementFile(Advertisement dto) throws SQLException;
+	
+	
 		
 }
