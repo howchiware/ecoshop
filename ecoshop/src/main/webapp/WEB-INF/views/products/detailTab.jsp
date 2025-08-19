@@ -43,15 +43,26 @@
 	<div class="tab-pane fade" id="tab-pane-2" role="tabpanel" aria-labelledby="tab-2" tabindex="0">
 	    <div class="row mt-3 pt-3">
 	        <p class="fs-6">구매평(${dto.reviewCount})</p>
-	        <div class="col">
-	            <i class="bi bi-star-fill fs-4 text-warning"></i>
-	            <i class="bi bi-star-fill fs-4 text-warning"></i>
-	            <i class="bi bi-star-fill fs-4 text-warning"></i>
-	            <i class="bi bi-star-fill fs-4 text-warning"></i>
-	            <i class="bi bi-star-half fs-4 text-warning"></i>
+	        <div class="col" style="display: inline-flex">
+				<div class="rate-star review-rate-star" style="font-size: 30px;">
+					<fmt:parseNumber var="intRate" value="${dto.rate}" integerOnly="true" type="number"/>
+					<c:forEach var="i" begin="1" end="${intRate}">
+						<i class="bi bi-star-fill text-warning"></i>
+					</c:forEach>
+					<c:if test="${dto.rate -  intRate >= 0.5}">
+						<i class="bi bi bi-star-half text-warning"></i>
+						<c:set var="intRate" value="${intRate+1}"/>
+					</c:if>
+					<c:forEach var="i" begin="${intRate + 1}" end="5">
+						<i class="bi bi-star text-warning"></i>
+					</c:forEach>
+				</div>
+				<div class="fs-2">
+					<label class="review-rate">${dto.rate} / 5</label> 
+				</div>
 	        </div>
 	        <div class="col">
-	            <p style="text-align: right; text-decoration: underline;">구매평 작성하기</p>
+	            <p style="text-align: right; text-decoration: underline;" onclick="reviewWrite();">구매평 작성하기</p>
 	        </div>
 	    </div>
 	
@@ -135,19 +146,7 @@
 	        </div>
 	    </div>
 	    <hr>
-	    <div>
-	        <i class="bi bi-star-fill text-warning"></i>
-	        <i class="bi bi-star-fill text-warning"></i>
-	        <i class="bi bi-star-fill text-warning"></i>
-	        <i class="bi bi-star-fill text-warning"></i>
-	        <i class="bi bi-star-fill text-warning"></i>
-	        <p style="padding-top:10px;">너무 부드러운 비누! 또 구매할거에요.</p>
-	        <img alt="" src="${pageContext.request.contextPath}/dist/images/sample1.jpg" style="width:100px; height:100px;">
-	        <p>3명에게 도움된 리뷰</p>
-	        <button type="button"><i class="bi bi-hand-thumbs-up"></i>도움이 돼요</button>
-	        <button type="button"><i class="bi bi-hand-thumbs-down"></i>도움이 안돼요</button>
-	        <hr>
-	    </div>
+	    <div class="list-review"></div>
 	</div>
 	
 	<!-- 상품 문의 탭 Content -->

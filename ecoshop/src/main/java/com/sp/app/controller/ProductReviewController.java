@@ -3,9 +3,9 @@ package com.sp.app.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +14,7 @@ import com.sp.app.common.PaginateUtil;
 import com.sp.app.common.StorageService;
 import com.sp.app.model.ProductReview;
 import com.sp.app.model.SessionInfo;
+import com.sp.app.model.Summary;
 import com.sp.app.service.ProductReviewService;
 
 import jakarta.annotation.PostConstruct;
@@ -24,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/reivew/*")
+@RequestMapping("/review/*")
 public class ProductReviewController {
 	private final ProductReviewService service;
 	private final StorageService storageService;
@@ -66,7 +67,6 @@ public class ProductReviewController {
 	@GetMapping("list")
 	public Map<String, ?> list(
 			@RequestParam(name = "productCode") long productCode,
-			@RequestParam(name = "productId") long productId,
 			@RequestParam(name = "sortBy", defaultValue = "0") int sortBy,
 			@RequestParam(name = "pageNo", defaultValue = "1") int current_page,
 			HttpSession session) throws Exception {
@@ -80,11 +80,12 @@ public class ProductReviewController {
 			int dataCount = 0;
 			
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("productCode", productId);
+			map.put("productCode", productCode);
 			map.put("sortBy", sortBy);
 			
-			dataCount = service.dataCount(map);
+			Summary summary = Objects.requireNonNull(service.findByReviewSummary(map));
 			
+			dataCount = service.dataCount(map);
 			int total_page = paginateUtil.pageCount(dataCount, size);
 			
 			current_page = Math.min(current_page, total_page);
@@ -107,6 +108,7 @@ public class ProductReviewController {
 			String paging = paginateUtil.pagingMethod(current_page, total_page, "listReview");
 			
 			model.put("list", list);
+			model.put("summary", summary);
 			model.put("dataCount", dataCount);
 			model.put("size", size);
 			model.put("pageNo", current_page);

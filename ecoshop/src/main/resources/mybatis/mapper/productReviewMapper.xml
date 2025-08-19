@@ -57,4 +57,11 @@
 		ORDER BY regDate DESC
 		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
+	
+	<select id="findByReviewSummary" parameterType="map" resultType="com.sp.app.model.Summary">
+		SELECT NVL(COUNT(*), 0) count,
+			   ROUND(NVL(AVG(rate), 0), 1) ave
+		FROM productReview
+		WHERE productCode = #{productCode} AND showReview = 1 AND block = 0
+	</select>
 </mapper>

@@ -35,32 +35,34 @@ function listReview(page) {
 }
 */
 
-/*
 // 리뷰
 $(function(){
 	$('ul.reviewSortBy li').click(function(){
 		let liEls = $('ul.reviewSortBy li');
 		
-		liEls.each(function())
+		liEls.each(function(){
+			if($(this).hasClass('clicked')){
+				$(this).removeClass('clicked');
+			}
+		});
 		
-		$(this).classList.add('clicked');
+		$(this).addClass('clicked');
 		listReview(1);
 	});
 });
-*/
+
 function listReview(page) {
 	const contextPath = document.getElementById('web-contextPath').value;
 	const productCode = document.getElementById('product-productCode').value;
 	
-	let sortBy = $('ul.reviewSortBy li.clicked').attr('data-value');
+	let clickedLiEl = $('ul.reviewSortBy li.clicked');
+	let clickedAEl = clickedLiEl.children().first();
+	let sortBy = clickedAEl.attr('data-value');
 
 	if(! sortBy){
 		sortBy = 0;
 	}
-	console.log(sortBy);
 	
-	// let sortBy = $('.reviewSortBy').val();
-	/*
 	let url = contextPath + '/review/list';
 	let requestParams = {productCode:productCode, pageNo:page, sortBy:sortBy};
 	
@@ -69,7 +71,6 @@ function listReview(page) {
 	};
 
 	ajaxRequest(url, 'get', requestParams, 'json', fn);
-	*/
 }
 /*
 $(function(){
@@ -84,12 +85,8 @@ $(function(){
 function printReview(data) {
 	const contextPath = document.getElementById('web-contextPath').value;
     const { dataCount, paging, summary, list } = data;
-
-    if (dataCount > 0) {
-        $('.reviewSort-area').show();
-    } else {
-        $('.reviewSort-area').hide();
-    }
+	$('.list-review').show();
+ 
 
     // 요약 정보를 출력하는 함수를 호출
     printSummary(summary);
@@ -98,27 +95,27 @@ function printReview(data) {
 
     if (dataCount > 0) {
         reviewsHtml = list.map(item => {
-            const { num, name, score, review, review_date, answer, answer_date, listFilename } = item;
+            const { reviewId, name, rate, content, regDate, answer, answerDate, listReviewImg } = item;
 
             // 별점 아이콘 HTML 생성
 			const starRatingHtml = Array.from({ length: 5 }, (_, i) => {
-				if (i < Math.floor(score)) {
-					// score의 정수 부분까지는 채워진 별
-					return '<i class="bi bi-star-fill"></i> ';
-				} else if (i === Math.floor(score) && score % 1 !== 0) {
-					// score가 실수이고 현재 인덱스가 정수 부분과 같으면 반쪽 별 (옵션)
-					return '<i class="bi bi-star-half"></i> ';
+				if (i < Math.floor(rate)) {
+					// rate의 정수 부분까지는 채워진 별
+					return '<i class="bi bi-star-fill text-warning"></i> ';
+				} else if (i === Math.floor(rate) && rate % 1 !== 0) {
+					// rate가 실수이고 현재 인덱스가 정수 부분과 같으면 반쪽 별 (옵션)
+					return '<i class="bi bi-star-half text-warning"></i> ';
 				} else {
 					// 나머지는 빈 별
-					return '<i class="bi bi-star"></i> ';
+					return '<i class="bi bi-star text-warning"></i> ';
 				}
 			}).join('');
 
             // 첨부 파일이 있을 경우 이미지 HTML 생성
-            const filenamesHtml = listFilename && listFilename.length > 0
+            const imgNamesHtml = listReviewImg && listReviewImg.length > 0
                 ? `
                 <div class="row gx-1 mt-2 mb-1 p-1">
-                    ${listFilename.map(f => `
+                    ${listReviewImg.map(f => `
                         <div class="col-md-auto md-img">
                             <img class="border rounded" src="${contextPath}/uploads/review/${f}">
                         </div>
@@ -132,7 +129,7 @@ function printReview(data) {
                 <div class="p-3 pt-0">
                     <div class="bg-light">
                         <div class="p-3 pb-0">
-                            <label class="text-bg-primary px-2"> 관리자 </label> <label>${answer_date}</label>
+                            <label class="text-bg-primary px-2"> 관리자 </label> <label>${answerDate}</label>
                         </div>
                         <div class="p-3 pt-1">${answer}</div>
                     </div>
@@ -141,48 +138,68 @@ function printReview(data) {
 
             // 각 리뷰 항목에 대한 전체 HTML 구조를 반환
             return `
-                <div class="mt-3 border-bottom">
-                    <div class="row p-2">
-                        <div class="col-auto fs-2"><i class="bi bi-person-circle text-muted icon"></i></div>
-                        <div class="col pt-3 ps-0 fw-semibold">${name}</div>
-                        <div class="col pt-3 text-end">
-                            <span>${review_date}</span>
-                            |<span class="notifyReview" data-num="${num}">신고</span>
-                        </div>
-                    </div>
-                    <div class="row p-2">
-                        <div class="col-auto pt-0 ps-2 pe-2 score-star">
-                            ${starRatingHtml}
-                        </div>
-                        <div class="col-auto ps-0 fs-6"><span class="align-middle">${score}점<span></div>
-                    </div>
-                    <div class="mt-2 p-2">${review}</div>
-                    ${filenamesHtml}
-                    ${answerHtml}
-                </div>
-            `;
+				<div class="row mt-3 border-bottom">
+	                <div class="col-10 p-2">
+	                	<div class="row">
+		                    <div class="col-auto pt-0 ps-2 pe-2 rate-star">
+						    	${starRatingHtml}
+		                    </div>
+						</div>
+	                	<div class="row">
+			                <div class="mt-2 p-2">${content}</div>
+			                ${imgNamesHtml}               		
+	                	</div>
+	                	<div class="row">
+	                		<div class="mt-2 p-2" style="display: inline-flex;">
+	                			<p>3명에게 도움된 리뷰</p>
+	                			<button type="button">도움이 돼요</button>
+	                			<button type="button">도움이 안돼요</button>
+	                		</div>
+	                	</div>
+	                </div>
+	                <div class="col-2 p-2">
+                    	<div class="row" style="display: inline">
+	                    	<i class="bi bi-person-circle text-muted icon"></i>
+		                    <span class="col pt-3 ps-0 fw-semibold">${name}</span>
+		                </div>
+	                    <div class="row pt-3">
+	                        <span>${regDate}</span>
+	                    </div>
+	                </div>
+	                ${answerHtml}
+	            </div>`;
         }).join(''); // 모든 리뷰 항목의 HTML을 하나의 문자열로 결합
 
         reviewsHtml += `<div class="page-navigation">${paging}</div>`;
     }
 
-    $('.list-review').html(reviewsHtml);
+	
+	if (dataCount > 0) {
+	    $('.list-review').html(reviewsHtml);
+	} else {
+		let pTag = '<p>해당 평점의 리뷰가 존재하지 않습니다.</p>';
+	    $('.list-review').html(pTag);
+	}
+}
+
+function reviewWrite(){
+	
 }
 
 function printSummary(summary) {
     // 요약 정보에서 필요한 값들을 구조 분해 할당
-    const { count, ave, scoreRate1, scoreRate2, scoreRate3, scoreRate4, scoreRate5 } = summary;
+    const { count, ave } = summary;
 
     // 제품 리뷰 요약을 업데이트
     $('.product-reviewCount').text(count); // 총 리뷰 개수
-    $('.product-score').text(`(${ave} / 5)`); // 평균 점수
+    $('.product-rate').text(`(${ave} / 5)`); // 평균 점수
 	const starRatingHtml = Array.from({ length: 5 }, (_, i) => {
 		if (i < Math.floor(ave)) {
-			return '<i class="bi bi-star-fill"></i> ';
+			return '<i class="bi bi-star-fill text-warning"></i> ';
 		} else if (i === Math.floor(ave) && ave % 1 >= 0.5) {
-			return '<i class="bi bi-star-half"></i> ';
+			return '<i class="bi bi-star-half text-warning"></i> ';
 		} else {
-			return '<i class="bi bi-star"></i> ';
+			return '<i class="bi bi-star text-warning"></i> ';
 		}
 	}).join('');    
     $('.product-star').html(starRatingHtml);
@@ -196,28 +213,14 @@ function printSummary(summary) {
     // 전체 리뷰 요약 업데이트
     $('.title-reviewCount').text(`(${count})`); // 제목의 리뷰 개수
     $('.review-reviewCount').text(count); // 리뷰 섹션의 총 리뷰 개수
-    $('.review-score').text(`${ave} / 5`); // 리뷰 섹션의 평균 점수 (예: 4.5 / 5)
-    $('.review-score-star').html(starRatingHtml);
+    $('.review-rate').text(`${ave} / 5`); // 리뷰 섹션의 평균 점수 (예: 4.5 / 5)
+    $('.review-rate').addClass('ps-3'); // 리뷰 섹션의 평균 점수 (예: 4.5 / 5)
+    $('.review-rate-star').html(starRatingHtml);
 
     // 리뷰 점수 비율을 업데이트
     $('.review-rate .one-space').removeClass('on'); // 모든 비율 바를 비활성화
     // 각 점수(5점~1점)별 비율 데이터를 배열로 만든다.
-    const scoreRates = [scoreRate5, scoreRate4, scoreRate3, scoreRate2, scoreRate1];
 
-    // 5점부터 1점까지의 비율을 반복하여 업데이트
-    for (let i = 0; i < scoreRates.length; i++) {
-        const score = 5 - i; // 현재 처리할 점수(5, 4, 3, 2, 1)
-        const rate = scoreRates[i]; // 해당 점수의 비율
-        // 해당 점수의 jQuery 요소를 선택
-        const $scoreElement = $(`.review-rate .score-${score}`);
-
-        // 비율에 따라 그래프 바를 활성화(10% 당 하나).
-        for (let j = 0; j < Math.floor(rate / 10); j++) {
-            $scoreElement.find('.one-space').eq(j).addClass('on');
-        }
-        // 해당 점수의 비율 텍스트를 업데이트
-        $scoreElement.find('.graph-rate').text(`${rate}%`);
-    }
 }
 
 $(function(){

@@ -2,11 +2,13 @@ package com.sp.app.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 
 import com.sp.app.mapper.ProductReviewMapper;
 import com.sp.app.model.ProductReview;
+import com.sp.app.model.Summary;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +43,21 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 		}
 		
 		return list;
+	}
+
+	@Override
+	public Summary findByReviewSummary(Map<String, Object> map) {
+		Summary dto = null;
+		
+		try {
+			dto = Objects.requireNonNull(mapper.findByReviewSummary(map));
+			
+		} catch (NullPointerException e) {
+		} catch (Exception e) {
+			log.info("findByReviewSummary : ", e);
+		}
+		
+		return dto;
 	}
 
 }
