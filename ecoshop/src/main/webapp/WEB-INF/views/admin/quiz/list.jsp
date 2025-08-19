@@ -273,7 +273,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function searchList() {
 	const f = document.searchForm;
-	// 검색어 유효성 검사는 필요 시 추가
 	f.submit();
 }
 </script>
