@@ -102,6 +102,12 @@
     FROM advertisingFile
     WHERE advertisingFileNum = #{advertisingFileNum}
 	</select>
+	
+	<select id="listAdvertisementFile" parameterType="Long" resultType="com.sp.app.admin.model.AdvertisementManage">
+		SELECT advertisingFileNum, advertisingId, saveFilename, originalFilename, fileSize
+		FROM advertisingFile
+		WHERE advertisingId = #{advertisingId}    
+	</select>
 
 
 </mapper>

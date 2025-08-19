@@ -112,28 +112,28 @@
 								<tr>
 								    <td class="col-md-2 bg-light">문의유형</td>
 								    <td>
-								        <input type="text" name="inquiryType" class="form-control" rows="10" placeholder="내용 입력">${dto.inquiryType}>
+								        <input type="text" name="inquiryType" class="form-control" rows="10" placeholder="내용 입력">${dto.inquiryType}
 								    </td>
 								</tr>
 								
 								<tr>
 								    <td class="col-md-2 bg-light">이메일</td>
 								    <td>
-								        <input type="text" name="email" class="form-control" rows="10" placeholder="내용 입력">${dto.email}>
+								        <input type="text" name="email" class="form-control" rows="10" placeholder="내용 입력">${dto.email}
 								    </td>
 								</tr>
 								
 								<tr>
 								    <td class="col-md-2 bg-light">전화번호</td>
 								    <td>
-								        <input type="text" name="tel" class="form-control" rows="10" placeholder="내용 입력">${dto.tel}>
+								        <input type="text" name="tel" class="form-control" rows="10" placeholder="내용 입력">${dto.tel}
 								    </td>
 								</tr>
 								
 								<tr>
 								    <td class="col-md-2 bg-light">광고 시작일</td>
 								    <td>
-								        <input type="DATE"  name="adverStart" class="form-control" >${dto.adverStart}>
+								        <input type="DATE"  name="adverStart" class="form-control" >${dto.adverStart}
 								    </td>
 								</tr>
 								

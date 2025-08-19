@@ -1,27 +1,35 @@
-	package com.sp.app.admin.controller;
+package com.sp.app.admin.controller;
 	
-	import java.util.HashMap;
-	import java.util.List;
-	import java.util.Map;
-	import java.util.Objects;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 	
-	import org.springframework.stereotype.Controller;
-	import org.springframework.ui.Model;
-	import org.springframework.web.bind.annotation.GetMapping;
-	import org.springframework.web.bind.annotation.PostMapping;
-	import org.springframework.web.bind.annotation.RequestMapping;
-	import org.springframework.web.bind.annotation.RequestParam;
-	import org.springframework.web.bind.annotation.ResponseBody;
-	
-	import com.sp.app.admin.model.AdvertisementManage;
-	import com.sp.app.admin.service.AdvertisementManageService;
-	import com.sp.app.common.MyUtil;
-	import com.sp.app.common.PaginateUtil;
-	
-	import jakarta.servlet.http.HttpServletRequest;
-	import jakarta.servlet.http.HttpServletResponse;
-	import lombok.RequiredArgsConstructor;
-	import lombok.extern.slf4j.Slf4j;
+import com.sp.app.admin.model.AdvertisementManage;
+
+import com.sp.app.admin.service.AdvertisementManageService;
+import com.sp.app.common.MyUtil;
+import com.sp.app.common.PaginateUtil;
+import com.sp.app.common.StorageService;
+import com.sp.app.exception.StorageException;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 	
 	@Controller
 	@RequiredArgsConstructor
@@ -31,7 +39,13 @@
 	    private final MyUtil myUtil;
 		private final AdvertisementManageService service;
 		private final PaginateUtil paginateUtil;
+		private final StorageService storageService;
+		private String uploadPath;
 		
+		@PostConstruct
+		public void init() {
+			uploadPath = this.storageService.getRealPath("/uploads/advertisement");
+		}	
 	
 		@GetMapping("list")
 		public String advertisementManage(
@@ -195,14 +209,18 @@
 		
 		 @GetMapping("profile")
 		    public String detaileAdvertisement(@RequestParam(name = "advertisingId") Long advertisingId,
-		                                 @RequestParam(name = "page") String page, Model model,
-		                                 HttpServletResponse resp) throws Exception {
-	
+		                                 @RequestParam(name = "page") String page,
+		                                 @RequestParam(name = "schType", defaultValue = "all") String schType,
+		                     			 @RequestParam(name = "kwd", defaultValue = "") String kwd,
+		                                 Model model, HttpServletResponse resp) throws Exception {
 		        try {
 		        	AdvertisementManage dto = Objects.requireNonNull(service.findById(advertisingId));
-	
+		        	 List<AdvertisementManage> listFile = service.listAdvertisementFile(advertisingId);
+		        	 
 		            model.addAttribute("dto", dto);
 		            model.addAttribute("page", page);
+		            model.addAttribute("listFile", listFile);
+		           
 		            
 	
 		        } catch (NullPointerException e) {
@@ -229,7 +247,27 @@
 		     return model;
 		 }
 		 
-		 
+		 @GetMapping("download/{advertisingFileNum}")
+			public ResponseEntity<?> download(
+					@PathVariable(name = "advertisingFileNum") long advertisingFileNum) throws Exception {
+				
+				try {
+					AdvertisementManage dto = Objects.requireNonNull(service.findByFileId(advertisingFileNum));
+
+					return storageService.downloadFile(uploadPath, dto.getSaveFilename(), dto.getOriginalFilename());
+					
+				} catch (NullPointerException | StorageException e) {
+					log.info("download : ", e);
+				} catch (Exception e) {
+					log.info("download : ", e);
+				}
+				
+				String errorMessage = "<script>alert('파일 다운로드가 불가능 합니다 !!!');history.back();</script>";
+
+				return ResponseEntity.status(HttpStatus.NOT_FOUND) // 404 상태 코드 반환
+						.contentType(MediaType.valueOf("text/html;charset=UTF-8"))
+						.body(errorMessage); // 에러 메시지 반환
+			}
 		 
 	
 	}

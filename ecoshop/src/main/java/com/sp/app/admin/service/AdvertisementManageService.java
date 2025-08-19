@@ -13,5 +13,8 @@ public interface AdvertisementManageService {
 	public void updateAdvertisement(Map<String, Object> map) throws Exception;
 	
 	public AdvertisementManage findById(long advertisingId);
+	
 	public AdvertisementManage findByFileId(long advertisingFileNum);
+	
+	public List<AdvertisementManage> listAdvertisementFile(long advertisingId);
 }

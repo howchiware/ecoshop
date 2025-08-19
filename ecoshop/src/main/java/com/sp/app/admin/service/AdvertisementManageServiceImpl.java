@@ -54,7 +54,7 @@ public class AdvertisementManageServiceImpl implements AdvertisementManageServic
 		}
 		
 	}
-
+	
 	@Override
 	public AdvertisementManage findById(long advertisingId) {
 		AdvertisementManage dto = null;
@@ -91,5 +91,20 @@ public class AdvertisementManageServiceImpl implements AdvertisementManageServic
 			throw e;
 		}
 	}
+
+	@Override
+	public List<AdvertisementManage> listAdvertisementFile(long advertisingId) {
+		List<AdvertisementManage> listFile = null;
+		
+		try {
+			listFile = mapper.listAdvertisementFile(advertisingId) ;
+			
+		} catch (Exception e) {
+			log.info("listAdvertisementFile : " , e);
+		}
+		return listFile;
+	}
+	
+	
 
 }

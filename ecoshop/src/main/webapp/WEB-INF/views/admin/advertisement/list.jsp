@@ -100,7 +100,12 @@
   color: #000;
 }
 
-.modal-backdrop { z-index: 9998 !important; }
+.modal-backdrop {
+ z-index: 9998 !important; 
+ pointer-events: none !important;
+ }
+ 
+ 
 .modal { z-index: 9999 !important; }
 body.modal-open { overflow: hidden; padding-right: 0 !important; }
 </style>
@@ -296,21 +301,7 @@ function profile(advertisingId, page){
 	ajaxRequest(url, 'get', params, 'text', fn);
 }
 
-// 아코디언 상세보기
-$(document).on('show.bs.collapse', 'tr.collapse', function (e) {
-    e.stopPropagation(); 
 
-    const advertisingId = $(this).attr("id").replace("collapse-", "");
-    const $detailDiv = $("#detail-" + advertisingId);
-
-    let url = '${pageContext.request.contextPath}/admin/advertisement/profile';
-    let page = 1; 
-    let params = 'advertisingId=' + advertisingId + '&page=' + page;
-
-    ajaxRequest(url, 'get', params, 'text', function(data){
-        $detailDiv.html(data);
-    });
-});
 
 // 수정하기
  function updateAdvertisementOk(page) {
