@@ -58,7 +58,7 @@
 		WHERE gongguProductId = #{gongguProductId}
 	</delete>
 	
-	<select id="photoFindByCode" parameterType="long" resultType="long">
+	<select id="findPhotoById" parameterType="long" resultType="long">
 	    SELECT gongguProductDetailId
 	    FROM gongguProductDetail
 	    WHERE gongguProductDetailId = #{gongguProductDetailId}

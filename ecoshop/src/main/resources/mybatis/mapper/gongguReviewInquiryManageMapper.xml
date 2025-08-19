@@ -3,17 +3,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.admin.mapper.GongguReviewInquiryManageMapper">
 	<select id="findAllReviews" resultType="com.sp.app.admin.model.GongguReviewManage">
-	SELECT gongguReviewId, m2.name AS userName, g.content, g.regDate, g.gongguProductId, g.memberId, g.showReview, g.answerId, g.answerDate, g.answer, p.gongguProductName, g.rate, m2.name AS answerName
+	SELECT g.gongguReviewId, m2.name AS userName, g.content, g.regDate, (CASE WHEN g.answer IS NOT NULL THEN 1 ELSE 0 END) AS status, g.gongguProductId, g.memberId, g.showReview, g.answerId, g.answerDate, g.answer, p.gongguProductName, g.rate, d.reviewImg AS photoFileName
 	FROM gongguReview g
 	JOIN member1 m1 ON g.memberId = m1.memberId
 	JOIN member2 m2 ON m1.memberId = m2.memberId
 	JOIN gongguProduct p ON g.gongguProductId = p.gongguProductId
+	LEFT OUTER JOIN gongguReviewDetail d ON g.gongguReviewId = d.gongguReviewId
 	ORDER BY g.regDate DESC
 	</select>
 	
 	<select id="findAllInquirys" resultType="com.sp.app.admin.model.GongguInquiryManage">
 	 	SELECT g.gongguProductName, i.content, i.regDate, (CASE WHEN i.answer IS NOT NULL THEN 1 ELSE 0 END) AS status, m2.name AS userName, m1.userId, m1.userLevel, c.categoryId,
-	 		 c.categoryName, i.gongguInquiryId, i.answerId, i.answer, i.answerDate, m2.name AS answerName
+	 		 c.categoryName, i.gongguInquiryId, i.answerId, i.answer, i.answerDate
 	 	FROM gongguInquiry i
 	 	LEFT JOIN gongguProduct g ON i.gongguProductId = g.gongguProductId
 		LEFT JOIN member1 m1 ON i.memberId = m1.memberId
@@ -23,11 +24,12 @@
 	</select>
 	
 	<select id="findReviewsBySearch" parameterType="map" resultType="com.sp.app.admin.model.GongguReviewManage">
-    SELECT gongguReviewId, m2.name AS userName, g.content, g.regDate, (CASE WHEN g.answer IS NOT NULL THEN 1 ELSE 0 END) AS status, g.gongguProductId, g.memberId, g.showReview, g.answerId, g.answerDate, g.answer, p.gongguProductName, g.rate
+    SELECT g.gongguReviewId, m2.name AS userName, g.content, g.regDate, (CASE WHEN g.answer IS NOT NULL THEN 1 ELSE 0 END) AS status, g.gongguProductId, g.memberId, g.showReview, g.answerId, g.answerDate, g.answer, p.gongguProductName, g.rate, d.reviewImg AS photoFileName
     FROM gongguReview g
     JOIN member1 m1 ON g.memberId = m1.memberId
     JOIN member2 m2 ON m1.memberId = m2.memberId
     JOIN gongguProduct p ON g.gongguProductId = p.gongguProductId
+    LEFT OUTER JOIN gongguReviewDetail d ON g.gongguReviewId = d.gongguReviewId
     <where>
         <if test="gongguProductName != null and !gongguProductName.isEmpty()">
             AND p.gongguProductName LIKE '%' || #{gongguProductName} || '%'
@@ -41,7 +43,7 @@
 	
 	<select id="findInquirysBySearch" parameterType="map" resultType="com.sp.app.admin.model.GongguInquiryManage">
 		SELECT g.gongguProductName, i.content, i.regDate, (CASE WHEN i.answer IS NOT NULL THEN 1 ELSE 0 END) AS status, m2.name AS userName, m1.userId, m1.userLevel, c.categoryId,
-	 		 c.categoryName, i.gongguInquiryId, i.answerId, i.answer, i.answerDate, m2.name AS answerName
+	 		 c.categoryName, i.gongguInquiryId, i.answerId, i.answer, i.answerDate
 	 	FROM gongguInquiry i
 	 	LEFT JOIN gongguProduct g ON i.gongguProductId = g.gongguProductId
 		LEFT JOIN member1 m1 ON i.memberId = m1.memberId

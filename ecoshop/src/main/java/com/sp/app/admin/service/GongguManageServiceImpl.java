@@ -162,17 +162,16 @@ public class GongguManageServiceImpl implements GongguManageService {
 
 	@Override
 	public void deleteProductPhoto(long gongguProductDetailId, String uploadPath) throws Exception {
-		try {
-			if (uploadPath != null && ! uploadPath.isBlank()) {
-				storageService.deleteFile(uploadPath);
-			}
-
-			gongguManageMapper.deleteProductPhoto(gongguProductDetailId);
-		} catch (Exception e) {
-			log.info("deleteProductFile : ", e);
-			
-			throw e;
-		}
+		 try {
+		        GongguManage dto = gongguManageMapper.findPhotoById(gongguProductDetailId); 
+		        if (dto != null && !dto.getGongguPhotoName().isBlank()) {
+		            storageService.deleteFile(uploadPath, dto.getGongguPhotoName());
+		        }
+		        gongguManageMapper.deleteProductPhoto(gongguProductDetailId);
+		    } catch (Exception e) {
+		        log.info("deleteGongguProductPhoto : ", e);
+		        throw e;
+		    }
 	}
 
 	@Override
@@ -278,20 +277,20 @@ public class GongguManageServiceImpl implements GongguManageService {
 				
 				String pathString = uploadPath + File.separator + dto.getGongguPhotoName();
 				
-				// 파일 삭제(thumbnail)
-				if (! dto.getGongguThumbnail().isBlank()) {
-					deleteUploadPhoto(uploadPath, dto.getGongguThumbnail());
-				}
+				List<GongguManage> photoList = gongguManageMapper.listProductPhoto(gongguProductId);
+	            if (photoList != null) {
+	                for (GongguManage photoDto : photoList) {
+	                    storageService.deleteFile(uploadPath, photoDto.getGongguPhotoName());
+	                }
+	            }
 				
-				// 추가 파일 삭제
-				deleteProductPhoto(dto.getGongguProductId(), pathString);
-			
-				// 상품 삭제
+	            gongguManageMapper.deleteProductPhoto(gongguProductId);
+
 				gongguManageMapper.deleteProduct(dto.getGongguProductId());
 			}
 			
 		} catch (Exception e) {
-			log.info("deleteProduct : ", e);
+			log.info("deleteGongguProduct : ", e);
 			
 			throw e;
 		}

@@ -128,3 +128,19 @@ body {
   div.reviewDetailContent{padding: 15px 10px;}
   
   hr.reviewDivider{margin: 5px 0px;}
+
+.reviewPhoto {
+    min-height: 100px; 
+    width:100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd; 
+    margin: 10px 0;
+}
+
+.reviewPhoto img {
+    max-width: 100%;
+    height: auto;
+}

@@ -22,7 +22,11 @@
 					<tr class="border-bottom reviewTr">
 						<td>${dto.gongguProductName}</td>
 						<td>${dto.content}</td>
-						<td>${dto.rate}</td>
+						<td>
+					        <c:forEach var="i" begin="1" end="${dto.rate}">
+					            <i class="bi bi-star-fill" style="color: #ffc107;"></i>
+					        </c:forEach>
+					    </td>
 						<td>${dto.userName}</td>
 						<td><fmt:formatDate value="${dto.regDate}"
 								pattern="yyyy-MM-dd" /></td>
@@ -49,11 +53,15 @@
 											</div>
 										</div>
 									</div>
-									<hr class="reviewDivider">
 									<div class="reviewDetailBody">
 										<div class="reviewDetailContent">
 											<p class="content">${dto.content}</p>
 										</div>
+										<div class="">
+											<c:if test="${not empty dto.photoFileName}">
+										        <img src="${pageContext.request.contextPath}/uploads/gonggu/review/${dto.photoFileName}" alt="리뷰 사진">
+										    </c:if>
+									    </div>
 										<c:choose>
 											<c:when test="${dto.status eq 1}">
 												<hr class="reviewDivider">

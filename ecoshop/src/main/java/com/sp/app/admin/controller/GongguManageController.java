@@ -181,12 +181,13 @@ public class GongguManageController {
     	
         List<GongguReviewManage> reviewList = gongguReviewInquiryManageService.searchReviews(map);
         
-        for(GongguReviewManage dto : reviewList) {
-        	if(dto.getAnswer() != null) {
-        		String answerName = gongguReviewInquiryManageService.answerNameFindById(dto.getAnswerId());
-        		System.out.println(answerName);
-        		dto.setAnswerName(answerName);        		
-        	}
+        if(reviewList != null) {
+	        for(GongguReviewManage dto : reviewList) {
+	        	if(dto.getAnswer() != null) {
+	        		String answerName = gongguReviewInquiryManageService.answerNameFindById(dto.getAnswerId());
+	        		dto.setAnswerName(answerName);        		
+	        	}
+	        }
         }
         
         model.addAttribute("reviewList", reviewList);
