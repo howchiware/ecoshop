@@ -67,6 +67,10 @@
 .form-check .form-check-input {
 	cursor: pointer;
 }
+
+.form-select {
+width: 10rem;
+}
 </style>
 </head>
 <body>
@@ -88,8 +92,8 @@
 		<form id="filterForm" class="row g-2 align-items-end mb-4"
 			method="get" action="${listAction}">
 			<div class="col-sm-4 col-md-3">
-				<label class="form-label">카테고리</label> <select class="form-select"
-					name="categoryId">
+				<!-- <label class="form-label">카테고리</label> --> 
+				<select class="form-select" name="categoryId">
 					<option value="">전체</option>
 					<c:forEach var="cvo" items="${category}">
 						<option value="${cvo.categoryId}"
@@ -101,8 +105,8 @@
 			</div>
 
 			<div class="col-sm-4 col-md-3">
-				<label class="form-label">정렬</label> <select class="form-select"
-					name="sort">
+				<!-- <label class="form-label">정렬</label> -->  
+				<select class="form-select" name="sort">
 					<option value="latest"
 						<c:if test="${sort=='latest'}">selected</c:if>>최신순</option>
 					<option value="deadline"
@@ -120,7 +124,7 @@
 
 			<div class="col-sm-12 col-md-3">
 				<input type="hidden" name="page" value="1">
-				<button class="btn btn-dark w-100 mt-2 mt-md-0" type="submit">검색</button>
+				<button class="btn btn-dark w-50 mt-2 mt-md-0" type="submit">검색</button>
 			</div>
 		</form>
 
@@ -204,16 +208,16 @@
 										</div>
 
 										<div class="mt-2 small text-muted">
-											<span class="me-2"> 일정 : <c:choose>
+											<span class="me-2"> 일정 | <c:choose>
 													<c:when test="${not empty w.scheduleDate}">
 														<fmt:formatDate value="${w.scheduleDate}"
 															pattern="yyyy.MM.dd" />
 													</c:when>
 													<c:otherwise>-</c:otherwise>
 												</c:choose>
-											</span> <span class="me-2">정원 : <c:out value="${w.capacity}" /></span>
+											</span> <span class="me-2">정원 | <c:out value="${w.capacity}" /></span>
 											<c:if test="${not empty w.applyDeadline}">
-												<span>마감: <fmt:formatDate value="${w.applyDeadline}"
+												<span>마감 | <fmt:formatDate value="${w.applyDeadline}"
 														pattern="MM.dd" />
 												</span>
 											</c:if>

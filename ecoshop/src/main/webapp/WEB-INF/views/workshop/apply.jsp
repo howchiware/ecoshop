@@ -72,7 +72,7 @@
 
 	<header class="border-bottom bg-white">
 		<div class="container py-3">
-			<h3 class="m-0">프로그램 신청하기</h3>
+			<p class="m-0" style="font-size: 1.2rem;">워크샵 > 신청</p>
 		</div>
 	</header>
 
@@ -91,7 +91,7 @@
 				<div class="section-card p-4 mb-4">
 					<div class="d-flex justify-content-between align-items-center mb-3">
 						<div>
-							<div class="text-muted">프로그램 정보</div>
+							<div class="text-muted">워크샵 정보</div>
 							<div class="section-title">
 								<c:out value="${ws.workshopTitle}" />
 							</div>

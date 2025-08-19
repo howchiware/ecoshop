@@ -79,17 +79,18 @@
 						</c:when>
 						<c:otherwise>-</c:otherwise>
 					</c:choose>
+					<br> 장소 :
+					<c:out value="${dto.location}" />
 					<br> 정원 :
 					<c:out value="${dto.capacity}" />
-					명 <br> 마감 :
+					명 
+					<br> 모집 마감 :
 					<c:choose>
 						<c:when test="${not empty dto.applyDeadline}">
 							<fmt:formatDate value="${dto.applyDeadline}" pattern="MM.dd" />
 						</c:when>
 						<c:otherwise>-</c:otherwise>
 					</c:choose>
-					<br> 장소 :
-					<c:out value="${dto.location}" />
 				</p>
 
 				<!-- 신청 버튼 -->
@@ -170,7 +171,7 @@
 							<div class="form-floating">
 								<textarea id="reviewContent" class="form-control"
 									style="height: 100px" placeholder="후기를 남겨주세요."></textarea>
-								<label for="reviewContent">후기를 들려주세요.</label>
+								<!-- <label for="reviewContent">참여 후기를 남겨주세요.</label> -->
 							</div>
 							<div
 								class="d-flex justify-content-between align-items-center mt-2">
