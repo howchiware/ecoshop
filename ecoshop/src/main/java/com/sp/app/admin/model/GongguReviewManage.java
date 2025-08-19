@@ -19,6 +19,7 @@ public class GongguReviewManage {
     private Date  answerDate;
     private String answer;
     private String answerName;
+    private String photoFileName;
    
     private String gongguProductName; 
     private Integer rate;

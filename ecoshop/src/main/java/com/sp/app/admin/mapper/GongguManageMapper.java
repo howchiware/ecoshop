@@ -27,7 +27,7 @@ public interface GongguManageMapper {
 	public void deleteProductPhoto(long gongguProductDetailId) throws SQLException;
 	public void updateProductDisplayOrder(Map<String, Object> map) throws SQLException;
 	public int dataCount(Map<String, Object> map);
-	
+	public GongguManage findPhotoById(long gongguProductDetailId);
 	public List<Long> optionFindByCode(long id);
 	
 	public List<ProductStockManage> listProductStock(Map<String, Object> map);
