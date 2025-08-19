@@ -51,6 +51,7 @@
 	        </td>
 	      </tr>
 	      <!-- 상세 영역 -->
+	      
 	      <tr class="collapse" id="collapse-${dto.advertisingId}">
 	        <td colspan="6">
 	          <div class="accordion-body" id="detail-${dto.advertisingId}">
