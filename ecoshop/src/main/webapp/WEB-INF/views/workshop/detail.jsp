@@ -169,14 +169,14 @@
 						<div class="mb-3">
 							<div class="form-floating">
 								<textarea id="reviewContent" class="form-control"
-									style="height: 100px" placeholder="후기를 남겨주세요"></textarea>
-								<label for="reviewContent">참여 후기를 남겨주세요.</label>
+									style="height: 100px" placeholder="후기를 남겨주세요."></textarea>
+								<label for="reviewContent">후기를 들려주세요.</label>
 							</div>
 							<div
 								class="d-flex justify-content-between align-items-center mt-2">
 								<small class="text-muted"> <c:choose>
-										<c:when test="${empty participantId}">참석 완료 후 등록 가능합니다.</c:when>
-										<c:otherwise>참석 완료된 사용자입니다. 후기를 등록할 수 있어요.</c:otherwise>
+										<c:when test="${empty participantId}">참여 완료 후 등록 가능합니다.</c:when>
+										<c:otherwise>참여 완료된 사용자입니다. 후기를 등록할 수 있어요.</c:otherwise>
 									</c:choose>
 								</small>
 								<button id="reviewSubmitBtn" type="button"

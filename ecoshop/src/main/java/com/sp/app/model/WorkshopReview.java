@@ -5,12 +5,12 @@ import java.util.Date;
 public class WorkshopReview {
 
 	private String writerName;
-	private long workshopReviewId;
+	private Long workshopReviewId;
 	private String reviewContent;
-	private long reviewImgId;
+	private Long reviewImgId;
 	private String reviewImagePath;
-	private long participantId;
-	private long workshopId;
+	private Long participantId;
+	private Long workshopId;
 	private Date regDate;
 	private String regDateStr;
 

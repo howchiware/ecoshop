@@ -587,6 +587,17 @@
 		SET isAttended = #{isAttended}
 		WHERE participantId = #{participantId}
 	</update>
-
+	
+	<update id="updateWorkshopStatus" parameterType="com.sp.app.model.Workshop">
+	UPDATE workshop
+	SET workshopStatus = #{workshopStatus}, updDate = SYSDATE
+	WHERE workshopId = #{workshopId}
+	</update>
+	
+	<select id="findMemberById" parameterType="long" resultType="com.sp.app.admin.model.MemberManage">
+	SELECT memberId, name, tel, email
+	FROM member2
+	WHERE memberId = #{memberId}
+	</select>
 
 </mapper>

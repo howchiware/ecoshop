@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -88,8 +89,9 @@ public class WorkshopManageController {
 	// 프로그램 목록
 	@GetMapping("/program/list")
 	public String programList(@RequestParam(name = "page", defaultValue = "1") int current_page,
-			@RequestParam(name = "kwd", defaultValue = "") String kwd,
-			@RequestParam(name = "categoryId", required = false) Long categoryId, Model model) {
+			@RequestParam(name = "kwd", defaultValue = "latest") String kwd,
+			@RequestParam(name = "categoryId", required = false) Long categoryId, 
+			Model model) {
 
 		try {
 			kwd = myUtil.decodeUrl(kwd);
@@ -383,12 +385,26 @@ public class WorkshopManageController {
 
 			model.addAttribute("schType", schType);
 			model.addAttribute("kwd", kwd);
+			model.addAttribute("workshopStatus", workshopStatus);
 
 		} catch (Exception e) {
 			log.info("workshop list : ", e);
 		}
 
 		return "admin/workshop/workshopList";
+	}
+	
+	@PostMapping("/updateStatus")
+	@ResponseBody
+	public Map<String, Object> updateStatus(@RequestBody Workshop dto) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			service.updateWorkshopStatus(dto);
+			map.put("success", true);
+		} catch (Exception e) {
+			map.put("success", false);
+		}
+		return map;
 	}
 
 	// 워크샵 작성
@@ -438,7 +454,7 @@ public class WorkshopManageController {
 		} catch (Exception e) {
 			log.info("workshop writeSubmit : ", e);
 		}
-		return "redirect:/admin/workshop/write";
+		return "redirect:/admin/workshop/list";
 	}
 
 	// 워크샵 상세
@@ -558,8 +574,10 @@ public class WorkshopManageController {
 			for (MultipartFile file : files) {
 				if (file != null && !file.isEmpty()) {
 					String path = storageService.uploadFileToServer(file, uploadPath);
+					
 					dto.setWorkshopId(workshopId);
 					dto.setWorkshopImagePath(path);
+					
 					service.insertWorkshopPhoto(dto);
 				}
 			}

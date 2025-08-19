@@ -104,7 +104,7 @@
                       <td><fmt:formatDate value="${p.appliedDate}" pattern="yyyy.MM.dd HH:mm" /></td>
                       <td>
                         <select class="form-select form-select-sm js-status" data-id="${p.participantId}">
-                          <option value="1" <c:if test="${p.participantStatus == 1}">selected</c:if>>신청완료</option>
+                          <option value="1" <c:if test="${p.participantStatus == 1}">selected</c:if>>확정</option>
                           <option value="2" <c:if test="${p.participantStatus == 2}">selected</c:if>>대기</option>
                           <option value="0" <c:if test="${p.participantStatus == 0}">selected</c:if>>취소</option>
                         </select>
@@ -143,8 +143,14 @@
         const isAttended = e.target.checked ? "Y" : "N";
         try {
           const res = await post("${ctx}/admin/workshop/participant/attendance", { participantId, isAttended });
-          if (!res.success) {
-            alert("출석 저장 실패: " + (res.message || ""));
+          if (res.success) {
+        	if(isAttended === 'Y') {
+        		alert("출석 처리 되었습니다.");
+        	} else {
+        		alert("출석이 취소되었습니다.");
+        	}
+          } else {
+        	alert("출석 저장 실패: " + (res.message || ""));
             e.target.checked = !e.target.checked; 
           }
         } catch (err) {
@@ -156,7 +162,6 @@
 
     // 상태 변경
     document.querySelectorAll(".js-status").forEach(sel => {
-      // 현재 선택값을 data-prev에 저장(실패 시 복구용)
       sel.dataset.prev = sel.value;
 
       sel.addEventListener("change", async (e) => {
@@ -164,11 +169,12 @@
         const participantStatus = e.target.value;
         try {
           const res = await post("${ctx}/admin/workshop/participant/status", { participantId, participantStatus });
-          if (!res.success) {
+          if (res.success) {
+            alert("상태가 변경되었습니다.");
+            e.target.dataset.prev = participantStatus;
+          } else {
             alert("상태 변경 실패: " + (res.message || ""));
             e.target.value = e.target.dataset.prev; 
-          } else {
-            e.target.dataset.prev = participantStatus; 
           }
         } catch (err) {
           alert("네트워크 오류로 실패했습니다.");

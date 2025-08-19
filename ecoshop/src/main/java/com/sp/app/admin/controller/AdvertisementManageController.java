@@ -40,6 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 		private final AdvertisementManageService service;
 		private final PaginateUtil paginateUtil;
 		private final StorageService storageService;
+		
 		private String uploadPath;
 		
 		@PostConstruct
