@@ -203,7 +203,7 @@ text-align: center;
 									</table>
 	
 									<div class="btn-area">
-										<button class="btn-accent" type="button" onclick="searchList();">조회</button>
+										<button class="btn-accent" type="button" onclick="searchList();" style="background: #fff; border: 1px solid black; border-radius: 4px; padding: 3px 10px;">조회</button>
 										<button class="btn-accent" type="reset">초기화</button>
 										<!-- 
 										<input type="hidden" name="size" value="${size}">

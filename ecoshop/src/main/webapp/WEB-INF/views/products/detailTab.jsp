@@ -8,10 +8,10 @@
 		<button class="nav-link linkBtn active w-100" id="tab-1" data-bs-toggle="tab" data-bs-target="#tab-pane-1" type="button" role="tab" aria-controls="1" aria-selected="true">상세정보</button>
 	</div>
 	<div class="nav-item item-div col-4" role="presentation">
-		<button class="nav-link linkBtn w-100" id="tab-2" data-bs-toggle="tab" data-bs-target="#tab-pane-2" type="button" role="tab" aria-controls="2" aria-selected="false">구매후기 <span class="title-reviewCount">(10)</span></button>
+		<button class="nav-link linkBtn w-100" id="tab-2" data-bs-toggle="tab" data-bs-target="#tab-pane-2" type="button" role="tab" aria-controls="2" aria-selected="false">구매후기 <span class="title-reviewCount">(${dto.reviewCount})</span></button>
 	</div>
 	<div class="nav-item item-div col-4" role="presentation">
-		<button class="nav-link linkBtn w-100" id="tab-3" data-bs-toggle="tab" data-bs-target="#tab-pane-3" type="button" role="tab" aria-controls="3" aria-selected="false">Q&A <span class="title-qnaCount">(3)</span></button>
+		<button class="nav-link linkBtn w-100" id="tab-3" data-bs-toggle="tab" data-bs-target="#tab-pane-3" type="button" role="tab" aria-controls="3" aria-selected="false">Q&A <span class="title-qnaCount">(${dto.inquiryCount})</span></button>
 	</div>
 </div>
 
@@ -19,18 +19,14 @@
 	<!-- 상품 설명 탭 Content -->
 	<div class="tab-pane fade show active" id="tab-pane-1" role="tabpanel" aria-labelledby="tab-1" tabindex="0">
 		<div class="mt-4 mb-5 pb-4 product-content border-bottom">
-			${dto.content}상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보<br>
-			상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보<br>
-			상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보<br>
-			상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보<br>
-			상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보상품 정보<br>
+			${dto.detailInfo}
 		</div>
 		<div class="mt-4 mb-5 product-deliveryInfo border-bottom">
 			<div class="border-bottom delivery-header">
 				<p>배송 정보</p>
 			</div>
 			<div class="deliveryInfo-div">
-				<p>- 모든 제품의 배송은 Plastic Free 원칙으로 종이재질로 발송됩니다. (종이박스, 종이완충재, 종이테이프)<br>- 수령하신 택배박스는 운송장을 제거한 후 종이로 분리배출 해주세요.<br>- 결제완료 후 제품을 수령하시기까지 약 2~5일 소요됩니다.<br>- 배송이 늦어지거나 일부 제품이 품절인 경우 개별적으로 연락을 드립니다.<br>- 40,000원 이상 주문 건의 경우 무료배송됩니다.</p>
+				<p>${deliveryRefundInfo.deliveryInfo}</p>
 			</div>
 		</div>
 		<div class="mt-4 mb-5 product-refundInfo border-bottom">
@@ -38,7 +34,7 @@
 				<p>환불 안내</p>
 			</div>
 			<div class="refundInfo-div">
-				<p>- 구매자의 단순 변심에 의한 반품 요청은 제품 수령 후 7일 이내에 가능합니다. (이때 발생하는 왕복배송비는 구매자 부담입니다.)<br>- 반품을 원하시는 경우 소비자상담실(01-0235-0342)로 문의 부탁드립니다.<br>- 제품을 개봉하여서 사용하셨을 경우 반품이 불가합니다. (제품 하자에 의한 환불은 가능합니다.)</p>
+				<p>${deliveryRefundInfo.refundInfo}</p>
 			</div>
 		</div>
 	</div>
@@ -46,7 +42,7 @@
 	<!-- 상품 리뷰 탭 Content -->
 	<div class="tab-pane fade" id="tab-pane-2" role="tabpanel" aria-labelledby="tab-2" tabindex="0">
 	    <div class="row mt-3 pt-3">
-	        <p class="fs-6">구매평(30)</p>
+	        <p class="fs-6">구매평(${dto.reviewCount})</p>
 	        <div class="col">
 	            <i class="bi bi-star-fill fs-4 text-warning"></i>
 	            <i class="bi bi-star-fill fs-4 text-warning"></i>
@@ -97,7 +93,7 @@
 	                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 	                    전체 평점 보기
 	                </button>
-	                <ul class="dropdown-menu">
+	                <ul class="dropdown-menu reviewSortBy">
 	                    <li><a class="dropdown-item" href="#" data-value="0">전체 평점 보기</a></li>
 	                    <li><a class="dropdown-item" href="#" data-value="5">최고&nbsp; 
 	                        <i class="bi bi-star-fill text-warning"></i>

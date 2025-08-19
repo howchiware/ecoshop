@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.app.admin.model.CategoryManage;
-import com.sp.app.admin.model.ProductDeliveryRefundInfo;
+import com.sp.app.admin.model.ProductDeliveryRefundInfoManage;
 import com.sp.app.admin.model.ProductInquiryManage;
 import com.sp.app.admin.model.ProductManage;
 import com.sp.app.admin.model.ProductReviewManage;
@@ -27,7 +27,7 @@ import com.sp.app.admin.service.ProductReviewInquiryManageService;
 import com.sp.app.common.PaginateUtil;
 import com.sp.app.common.StorageService;
 import com.sp.app.model.SessionInfo;
-import com.sp.app.service.WorkshopServiceImpl;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -39,8 +39,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequestMapping("/admin/products/*")
 public class ProductManageController {
-
-    private final WorkshopServiceImpl workshopServiceImpl;
 
 	private final ProductManageService service;
 	private final PaginateUtil paginateUtil;
@@ -361,8 +359,8 @@ public class ProductManageController {
 			HttpServletRequest req) throws Exception {
 		
 		try {
-			ProductDeliveryRefundInfo listDeliveryRefundInfo = service.listDeliveryRefundInfo();
-			List<ProductDeliveryRefundInfo> listDeliveryFee = service.listDeliveryFee();
+			ProductDeliveryRefundInfoManage listDeliveryRefundInfo = service.listDeliveryRefundInfo();
+			List<ProductDeliveryRefundInfoManage> listDeliveryFee = service.listDeliveryFee();
 			
 			if(listDeliveryRefundInfo == null || listDeliveryFee.size() == 0) {
 				model.addAttribute("mode", "write");
@@ -383,7 +381,7 @@ public class ProductManageController {
 	}
 	
 	@PostMapping("deliveryWrite")
-	public String deliveryWriteSubmit(ProductDeliveryRefundInfo dto, 
+	public String deliveryWriteSubmit(ProductDeliveryRefundInfoManage dto, 
 			@RequestParam(name = "deliveryLocation") List<String> deliveryLocation,
 			@RequestParam(name = "fee") List<Integer> fee,
 			Model model) {
@@ -407,7 +405,7 @@ public class ProductManageController {
 	}
 
 	@PostMapping("deliveryUpdate")
-	public String deliveryUpdateForm(ProductDeliveryRefundInfo dto, 
+	public String deliveryUpdateForm(ProductDeliveryRefundInfoManage dto, 
 			@RequestParam(name = "deliveryLocation") List<String> deliveryLocation,
 			@RequestParam(name = "fee") List<Integer> fee,
 			Model model) {
@@ -514,6 +512,21 @@ public class ProductManageController {
         	
     	} catch (Exception e) {
     		log.info("deleteAnswer : ", e);
+    	}
+    	
+    	return "redirect:/admin/products/productReviewInquiry";
+    }
+    
+    @GetMapping("deleteInquiry")
+    public String deleteInquiry(@RequestParam(name="inquiryId") long inquiryId,
+    		Model model,
+    		HttpServletRequest req) {
+    	try {
+    		
+    		productReviewInquiryManageService.deleteInquiry(inquiryId);        		
+    		
+    	} catch (Exception e) {
+    		log.info("deleteInquiry : ", e);
     	}
     	
     	return "redirect:/admin/products/productReviewInquiry";

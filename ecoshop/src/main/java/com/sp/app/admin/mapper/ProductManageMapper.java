@@ -7,7 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.sp.app.admin.model.CategoryManage;
-import com.sp.app.admin.model.ProductDeliveryRefundInfo;
+import com.sp.app.admin.model.ProductDeliveryRefundInfoManage;
 import com.sp.app.admin.model.ProductManage;
 import com.sp.app.admin.model.ProductStockManage;
 
@@ -49,11 +49,11 @@ public interface ProductManageMapper {
 	public List<ProductStockManage> listProductStock(Map<String, Object> map);
 	public void deleteProductStock(long productId) throws SQLException;
 	
-	public ProductDeliveryRefundInfo listDeliveryRefundInfo();
-	public List<ProductDeliveryRefundInfo> listDeliveryFee();
+	public ProductDeliveryRefundInfoManage listDeliveryRefundInfo();
+	public List<ProductDeliveryRefundInfoManage> listDeliveryFee();
 	
-	public void insertProductDeliveryRefundInfo(ProductDeliveryRefundInfo dto);
-	public void updateProductDeliveryRefundInfo(ProductDeliveryRefundInfo dto);
+	public void insertProductDeliveryRefundInfo(ProductDeliveryRefundInfoManage dto);
+	public void updateProductDeliveryRefundInfo(ProductDeliveryRefundInfoManage dto);
 	public void insertProductDeliveryFee(Map<String, Object> map);
 	public void deleteProductDeliveryFee();
 	

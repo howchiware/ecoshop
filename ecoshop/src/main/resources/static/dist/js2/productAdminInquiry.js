@@ -210,7 +210,7 @@ $(function(){
 });
 
 $(function(){
-	// 삭제
+	// 답변 삭제
 	$('div#content-area').on('click', 'button.removeAnswer', function(){
 		let inquiryId = $(this).attr('data-inquiryId');
 		
@@ -221,3 +221,16 @@ $(function(){
 		location.href = 'deleteAnswer?inquiryId=' + inquiryId;
 	});
 })
+
+$(function(){
+	// 문의 삭제
+	$('div#content-area').on('click', 'button.deleteInquiry', function(){
+		let inquiryId = $(this).attr('data-inquiryId');
+
+		if(! confirm('해당 문의를 삭제하시겠습니까 ?')){
+			return false;
+		}
+
+		location.href = 'deleteInquiry?inquiryId=' + inquiryId;
+	});
+});

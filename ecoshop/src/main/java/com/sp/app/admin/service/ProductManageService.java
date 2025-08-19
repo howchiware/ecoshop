@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sp.app.admin.model.CategoryManage;
-import com.sp.app.admin.model.ProductDeliveryRefundInfo;
+import com.sp.app.admin.model.ProductDeliveryRefundInfoManage;
 import com.sp.app.admin.model.ProductManage;
 import com.sp.app.admin.model.ProductStockManage;
 
@@ -36,11 +36,11 @@ public interface ProductManageService {
 	
 	public boolean deleteUploadPhoto(String uploadPath, String photoName);
 	
-	public ProductDeliveryRefundInfo listDeliveryRefundInfo();
-	public List<ProductDeliveryRefundInfo> listDeliveryFee();
+	public ProductDeliveryRefundInfoManage listDeliveryRefundInfo();
+	public List<ProductDeliveryRefundInfoManage> listDeliveryFee();
 	
 	public void insertProductDeliveryFee(Map<String, Object> map);
-	public void insertProductDeliveryRefundInfo(ProductDeliveryRefundInfo dto);
-	public void updateProductDeliveryRefundInfo(ProductDeliveryRefundInfo dto);
+	public void insertProductDeliveryRefundInfo(ProductDeliveryRefundInfoManage dto);
+	public void updateProductDeliveryRefundInfo(ProductDeliveryRefundInfoManage dto);
 	public void deleteProductDeliveryFee();
 }

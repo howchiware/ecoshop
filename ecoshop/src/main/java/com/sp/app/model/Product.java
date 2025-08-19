@@ -50,7 +50,7 @@ public class Product {
 	// 상품 리뷰
 	private double rate;
 	private int reviewCount;
-	private int questionCount;
+	private int inquiryCount;
 	
 	// 유저의 상품 찜 여부
 	private int userWish;

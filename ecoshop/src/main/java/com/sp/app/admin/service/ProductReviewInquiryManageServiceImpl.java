@@ -94,4 +94,13 @@ public class ProductReviewInquiryManageServiceImpl implements ProductReviewInqui
 		}
 	}
 
+	@Override
+	public void deleteInquiry(long inquiryId) {
+		try {
+			productReviewInquiryManageMapper.deleteInquiry(inquiryId);
+		} catch (Exception e) {
+			log.info("deleteInquiry: ", e);
+		}
+	}
+
 }

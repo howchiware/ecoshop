@@ -12,11 +12,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sp.app.admin.mapper.ProductManageMapper;
 import com.sp.app.admin.model.CategoryManage;
-import com.sp.app.admin.model.ProductDeliveryRefundInfo;
+import com.sp.app.admin.model.ProductDeliveryRefundInfoManage;
 import com.sp.app.admin.model.ProductManage;
 import com.sp.app.admin.model.ProductStockManage;
 import com.sp.app.common.StorageService;
-import com.sp.app.controller.GongguController;
 import com.sp.app.exception.StorageException;
 
 import lombok.RequiredArgsConstructor;
@@ -524,9 +523,9 @@ public class ProductManageServiceImpl implements ProductManageService {
 	}
 
 	@Override
-	public ProductDeliveryRefundInfo listDeliveryRefundInfo() {
+	public ProductDeliveryRefundInfoManage listDeliveryRefundInfo() {
 		try {
-			ProductDeliveryRefundInfo dto = mapper.listDeliveryRefundInfo();
+			ProductDeliveryRefundInfoManage dto = mapper.listDeliveryRefundInfo();
 			
 			return dto;
 		} catch (Exception e) {
@@ -537,9 +536,9 @@ public class ProductManageServiceImpl implements ProductManageService {
 	}
 
 	@Override
-	public List<ProductDeliveryRefundInfo> listDeliveryFee() {
+	public List<ProductDeliveryRefundInfoManage> listDeliveryFee() {
 		try {
-			List<ProductDeliveryRefundInfo> list = mapper.listDeliveryFee();
+			List<ProductDeliveryRefundInfoManage> list = mapper.listDeliveryFee();
 			
 			return list;
 		} catch (Exception e) {
@@ -550,7 +549,7 @@ public class ProductManageServiceImpl implements ProductManageService {
 	}
 
 	@Override
-	public void insertProductDeliveryRefundInfo(ProductDeliveryRefundInfo dto) {
+	public void insertProductDeliveryRefundInfo(ProductDeliveryRefundInfoManage dto) {
 		try {
 			mapper.insertProductDeliveryRefundInfo(dto);
 		} catch (Exception e) {
@@ -561,7 +560,7 @@ public class ProductManageServiceImpl implements ProductManageService {
 	}
 
 	@Override
-	public void updateProductDeliveryRefundInfo(ProductDeliveryRefundInfo dto) {
+	public void updateProductDeliveryRefundInfo(ProductDeliveryRefundInfoManage dto) {
 		try {
 			mapper.updateProductDeliveryRefundInfo(dto);
 		} catch (Exception e) {

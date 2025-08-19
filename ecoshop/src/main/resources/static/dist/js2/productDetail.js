@@ -3,20 +3,20 @@ $(function(){
 	const gvProductCode = document.getElementById('product-productCode').value;
 	const gvOptionCount = Number(document.getElementById('product-optionCount').value) || 0;
 	const gvTotalStock = Number(document.getElementById('product-totalStock').value) || 0;
-	const gvSalePrice = Number(document.getElementById('product-salePrice').value) || 0;
+	const gvPrice = Number(document.getElementById('product-price').value) || 0;
 	const gvStockNum = Number(document.getElementById('product-stockNum').value) || 0;
 
 	// 옵션이 없는 경우
 	if(gvOptionCount === 0) {
-		$('.order-area').attr('data-totalStock', gvTotalStock);
+		$('.order-box').attr('data-totalStock', gvTotalStock);
 		
-		buyQuantity(gvStockNum, gvSalePrice, 0, 0);
+		buyQuantity(gvStockNum, gvPrice, 0, 0);
 	}
 	
 	// 옵션-1 선택
 	$('.requiredOption').change(function(){
-		let detailNum = $(this).val();
-		if(! detailNum) {
+		let optionDetailNum = $(this).val();
+		if(! optionDetailNum) {
 			return false;
 		}
 		
@@ -24,11 +24,11 @@ $(function(){
 		
 		// 옵션이 1개인 경우 
 		if (gvOptionCount === 1) {
-		    const selectedDetailNum = detailNum;
+		    const selectedOptionDetailNum = optionDetailNum;
 		
 		    // 이미 주문 영역에 동일한 detailNum이 있는지 확인
-		    const isOptionAlreadyAdded = $('.order-area input[name="detailNums"]').toArray().some(function(input) {
-		        return $(input).val() === selectedDetailNum;
+		    const isOptionAlreadyAdded = $('.order-box input[name="optionDetailNums"]').toArray().some(function(input) {
+		        return $(input).val() === selectedOptionDetailNum;
 		    });
 		
 		    if (isOptionAlreadyAdded) {
@@ -37,10 +37,10 @@ $(function(){
 		    }
 		
 		    // 선택된 옵션의 재고 번호와 판매 가격을 가져온다.
-		    let stockNum = $('.requiredOption :selected').attr('data-stockNum');
+		    let stockNum = $('.requiredOption:selected').attr('data-stockNum');
 		
 		    // buyQuantity 함수를 호출하여 상품을 추가
-		    buyQuantity(stockNum, gvSalePrice, selectedDetailNum, 0);
+		    buyQuantity(stockNum, gvPrice, selectedOptionDetailNum, 0);
 		
 		    return false;
 		}		
@@ -60,14 +60,14 @@ $(function(){
 		let url = gvContextPath + '/products/listOptionDetailStock';
 		const fn = function(data) {
 			$(data).each(function(_, item){
-				let detailNum = item.detailNum2;
+				let optionDetailNum = item.optionDetailNum2;
 				let optionValue = item.optionValue2;
 				let stockNum = item.stockNum;
 				let totalStock = parseInt(item.totalStock);
 				
 				let s;
 				s = `<option 
-			        value="${detailNum}" 
+			        value="${optionDetailNum}" 
 			        data-optionValue="${optionValue}" 
 			        data-stockNum="${stockNum}" 
 			        data-totalStock="${totalStock}">
@@ -78,7 +78,7 @@ $(function(){
 			});
 		};
 		
-		ajaxRequest(url, 'get', {productCode:gvProductCode, detailNum:detailNum}, 'json', fn);
+		ajaxRequest(url, 'get', {productId: gvProductCode, productCode:gvProductCode, optionDetailNum:optionDetailNum}, 'json', fn);
 	});
 	
 	// 옵션-2 선택
@@ -87,14 +87,14 @@ $(function(){
 			return false;
 		}
 
-		let detailNum = $('.requiredOption').val();
-		let detailNum2 = $(this).val();
+		let optionDetailNum = $('.requiredOption').val();
+		let optionDetailNum2 = $(this).val();
 		
 		let b = true;
-		$('.order-area input[name=detailNums2]').each(function(){
-			let dnum = $(this).closest('.input-group').find('input[name=detailNums]').val();
+		$('.order-box input[name=optionDetailNums2]').each(function(){
+			let dnum = $(this).closest('.input-group').find('input[name=optionDetailNums]').val();
 			let dnum2 = $(this).val();
-			if(detailNum === dnum && detailNum2 === dnum2) {
+			if(optionDetailNum === dnum && optionDetailNum2 === dnum2) {
 				alert('선택된 옵션입니다.');
 				
 				$('.requiredOption').val('');
@@ -111,14 +111,14 @@ $(function(){
 		
 		let stockNum = $('.requiredOption2 :selected').attr('data-stockNum');
 		
-		buyQuantity(stockNum, gvSalePrice, detailNum, detailNum2);
+		buyQuantity(stockNum, gvPrice, optionDetailNum, optionDetailNum2);
 	});
 	
 	
 	// 구매 개수
-	function buyQuantity(stockNum, salePrice, detailNum, detailNum2) {
-		/*
-	    const totalPrice = salePrice.toLocaleString();
+	function buyQuantity(stockNum, price, optionDetailNum, optionDetailNum2) {
+		
+	    const totalPrice = price.toLocaleString();
 	
 	    let buyOption = '';
 	
@@ -137,19 +137,19 @@ $(function(){
 	                    <label>${buyOption}</label>
 	                </div>
 	            ` : ''}
-	            <div class="row border-bottom mt-1 pb-2">
+	            <div class="row border-bottom mt-1 mb-3 pb-3" style="border-bottom: ">
 	                <div class="col">
 	                    <div class="input-group">
 	                        <i class="bi bi-dash input-group-text bg-white qty-minus"></i>
 	                        <input type="text" name="buyQtys" class="form-control" value="1" style="flex:none; width: 60px; text-align: center;" readonly>
 	                        <input type="hidden" name="productCodes" value="${gvProductCode}">
 	                        <input type="hidden" name="stockNums" value="${stockNum}">
-	                        <input type="hidden" name="detailNums" value="${detailNum}" disabled>
-	                        <input type="hidden" name="detailNums2" value="${detailNum2}" disabled>
+	                        <input type="hidden" name="optionDetailNums" value="${optionDetailNum}" disabled>
+	                        <input type="hidden" name="optionDetailNums2" value="${optionDetailNum2}" disabled>
 	                        <i class="stockNumsbi bi-plus input-group-text bg-white qty-plus"></i>
 	                    </div>
 	                </div>
-	                <div class="col text-end product-salePrice" data-salePrice="${salePrice}">
+	                <div class="col text-end product-price" data-price="${price}">
 	                    <label class="pt-2 fs-6 fw-semibold item-totalPrice">${totalPrice}원</label>
 	                    ${gvOptionCount > 0 ? `
 	                        <label class="pt-2 ps-1"><i class="bi bi-x qty-remove"></i></label>
@@ -159,19 +159,19 @@ $(function(){
 	        </div>
 	    `;
 	
-	    $('.order-area').append(itemHtml);
+	    $('.order-box').append(itemHtml);
 	
 	    totalProductPrice();
-		*/
+		
 	}
 	
 	
 	// 수량 더하기
-	$('.order-area').on('click', '.qty-plus', function() {
+	$('.order-box').on('click', '.qty-plus', function() {
 		let totalStock = 0;
 		
 		if(gvOptionCount === 0) {
-			totalStock = parseInt($('.order-area').attr('data-totalStock'));
+			totalStock = parseInt($('.order-box').attr('data-totalStock'));
 		} else if(gvOptionCount === 1) {
 			totalStock = parseInt($('.requiredOption :selected').attr('data-totalStock'));
 		} else if(gvOptionCount === 2) {
@@ -189,8 +189,8 @@ $(function(){
 		
 		qty++;
 		$order.find('input[name=buyQtys]').val(qty);
-		let salePrice = $order.find('.product-salePrice').attr('data-salePrice');
-		let item = qty * salePrice;
+		let price = $order.find('.product-price').attr('data-price');
+		let item = qty * price;
 		let totalPrice = item.toLocaleString();
 		$order.find('.item-totalPrice').text(totalPrice + '원');
 		
@@ -198,13 +198,13 @@ $(function(){
 	});
 
 	// 수량 빼기
-	$('.order-area').on('click', '.qty-minus', function() {
+	$('.order-box').on('click', '.qty-minus', function() {
 		let $order = $(this).closest('.order-qty');
 		let qty = parseInt($order.find('input[name=buyQtys]').val()) - 1;
 		if(qty <= 0) {
 			alert('구매 수량은 한개 이상입니다.');
 			
-			if(optionCount === 0) {
+			if(gvOptionCount === 0) {
 				return false;			
 			}
 			
@@ -218,8 +218,8 @@ $(function(){
 		}
 		
 		$order.find('input[name=buyQtys]').val(qty);
-		let salePrice = $order.find('.product-salePrice').attr('data-salePrice');
-		let item = qty * salePrice;
+		let price = $order.find('.product-price').attr('data-price');
+		let item = qty * price;
 		let totalPrice = item.toLocaleString();
 		$order.find('.item-totalPrice').text(totalPrice + '원');
 		
@@ -227,8 +227,8 @@ $(function(){
 	});
 	
 	// 수량 제거
-	$('.order-area').on('click', '.qty-remove', function() {
-		if(optionCount === 0) {
+	$('.order-box').on('click', '.qty-remove', function() {
+		if(gvOptionCount === 0) {
 			return false;			
 		}
 		
@@ -245,10 +245,10 @@ $(function(){
 		let totalPrice = 0;
 		$('.order-qty').each(function(){
 			let qty = parseInt($(this).find('input[name=buyQtys]').val());
-			let salePrice = parseInt($(this).find('.product-salePrice').attr('data-salePrice'));
+			let price = parseInt($(this).find('.product-price').attr('data-price'));
 			
 			totalQty += qty;
-			totalPrice += (salePrice * qty);
+			totalPrice += (price * qty);
 		});
 		
 		let s = totalPrice.toLocaleString();
@@ -305,7 +305,6 @@ $(function(){
 	const pname = document.getElementById('product-productName').value;
 	const pimg = document.getElementById('product-thumbnail').value;
 	const price = Number(document.getElementById('product-price').value) || 0;
-	const salePrice = Number(document.getElementById('product-salePrice').value) || 0;
 	
 	// localStorage.clear(); // localStorage 전체 지우기
 	
@@ -333,58 +332,10 @@ $(function(){
 	}
 	
 	// 저장할 데이터
-	let obj = {pnum:pnum, pname:pname, pimg:pimg, price:price, salePrice:salePrice};
+	let obj = {pnum:pnum, pname:pname, pimg:pimg, price:price};
 	product.unshift(obj); // 배열 가장 앞에 추가
 	
 	// 웹스트로지에 저장
 	let p = JSON.stringify(product);
 	localStorage.setItem('recentProduct', p);
-});
-
-// 오늘의 특가 / 기획전 남은 시간 계산
-function task() {
-	let endDate = document.getElementById('product-endDate').value;
-	if(! endDate) return false;
-	
-    let y = parseInt(endDate.substring(0, 4));
-    let m = parseInt(endDate.substring(5, 7));
-    let d = parseInt(endDate.substring(8, 10));
-    let h = parseInt(endDate.substring(11, 13));
-    let mi = parseInt(endDate.substring(14));
-	
-	let now = new Date();
-	let date = new Date(y, m-1, d, h, mi, 0);
-	
-	let diff = Math.floor((date.getTime() - now.getTime()) / 1000);
-	if(diff <= 0) {
-		$('.btn-buySend').prop('disabled', true);
-		$('.btn-productBlind').prop('disabled', true);
-		$('.btn-productCart').prop('disabled', true);
-		$('.time-remaining').html('판매 종료');
-		
-		return false;
-	}
-	
-	let days = Math.floor(diff / (24*3600));
-	let hours = Math.floor((diff % (24*3600)) / 3600);
-	if (hours < 10) hours = '0' + hours;
-	let minutes = Math.floor((diff % (3600)) / 60);
-	if (minutes < 10) minutes = '0' + minutes;
-	let seconds = Math.floor(diff % 60);
-	if (seconds < 10) seconds = '0' + seconds;
-
-    let s = '';
-    if(days >= 1) s = days + '일 ';
-    
-    s += hours + ':' + minutes + ':' + seconds + ' 남음';
-    $(".time-remaining").html(s);
-    
-    setTimeout('task();', 1000);
-}
-
-$(function(){
-	let classify = document.getElementById('product-classify').value;
-	if(classify === '100') return false;
-	
-	task();
 });

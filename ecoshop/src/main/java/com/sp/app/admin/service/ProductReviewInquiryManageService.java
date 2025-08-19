@@ -16,4 +16,5 @@ public interface ProductReviewInquiryManageService {
 	public String answerNameFindById(long answerId);
 	
 	public void deleteAnswer(long inquiryId);
+	public void deleteInquiry(long inquiryId);
 }

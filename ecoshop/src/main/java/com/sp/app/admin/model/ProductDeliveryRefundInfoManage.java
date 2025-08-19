@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductDeliveryRefundInfo {
+public class ProductDeliveryRefundInfoManage {
 	int deliveryRefundInfoNum;
 	String deliveryInfo;
 	String RefundInfo;

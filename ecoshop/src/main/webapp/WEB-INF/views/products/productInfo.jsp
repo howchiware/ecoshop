@@ -42,9 +42,9 @@
 								</div>
 							</div>
 							<div class="row gx-1 mt-2 p-1">
-								<c:forEach var="vo" items="${listFile}">
+								<c:forEach var="vo" items="${listPhoto}">
 									<div class="col-md-auto sm-img">
-										<img class="border rounded" src="${pageContext.request.contextPath}/uploads/products/${vo.filename}">
+										<img class="border rounded" src="${pageContext.request.contextPath}/uploads/products/${vo.photoName}">
 									</div>
 								</c:forEach>
 							</div>
@@ -61,36 +61,36 @@
 								
 								<div class="row pt-2 border-bottom namePrice">
 									<div class="col productName mb-2">
-										스테인리스 칫솔걸이
+										${dto.productName}
 									</div>
 									<div class="price">
-										<fmt:formatNumber value="30000"/>원
+										<fmt:formatNumber value="${dto.price}"/>원
 									</div>
 								</div>
 								<!-- 
 								<div class="row pt-1 pb-1 border-bottom">
 									<div class="col">
 										<label class="align-middle">리뷰수 <span class="fs-5 fw-semibold product-reviewCount">${dto.reviewCount}</span></label>
-										<label class="align-middle pt-0 ps-2 score-star product-star">
-											<fmt:parseNumber var="intScore" value="${dto.score}" integerOnly="true" type="number"/>
-											<c:forEach var="i" begin="1" end="${intScore}">
+										<label class="align-middle pt-0 ps-2 rate-star product-star">
+											<fmt:parseNumber var="intRate" value="${dto.rate}" integerOnly="true" type="number"/>
+											<c:forEach var="i" begin="1" end="${intRate}">
 												<i class="bi bi-star-fill"></i>
 											</c:forEach>
-											<c:if test="${dto.score -  intScore >= 0.5}">
+											<c:if test="${dto.rate -  intRate >= 0.5}">
 												<i class="bi bi bi-star-half"></i>
-												<c:set var="intScore" value="${intScore+1}"/>
+												<c:set var="intRate" value="${intRate+1}"/>
 											</c:if>
-											<c:forEach var="i" begin="${intScore + 1}" end="5">
+											<c:forEach var="i" begin="${intRate + 1}" end="5">
 												<i class="bi bi-star"></i>
 											</c:forEach>
 										</label>
-										<label class="align-middle "><span class="product-score ps-1">(${dto.score} / 5)</span></label>
+										<label class="align-middle "><span class="product-rate ps-1">(${dto.rate} / 5)</span></label>
 									</div>
 								</div>
 								-->
 								
 								<div class="row infoArea">
-									<p class="content">칫솔의 위생적 건조가 가능한 스테인레스 칫솔걸이입니다.<br>특히 물기에 취약한 대나무 칫솔과 함께 사용하면 좋아요.</p>
+									<p class="content">${dto.content}</p>
 								</div>
 								
 								<div class="row mt-2">
@@ -102,7 +102,7 @@
 											</tr>
 											<tr>
 												<td>구매혜택</td>
-												<td>64 포인트 적립예정</td>
+												<td>${dto.point} 포인트 적립예정</td>
 											</tr>
 											<tr>
 												<td>배송 방법</td>
@@ -128,10 +128,10 @@
 										<option value="">${listOption[0].optionName}</option>
 										<c:forEach var="vo" items="${listOptionDetail}">
 											<c:if test="${dto.optionCount == 1}">
-												<option value="${vo.detailNum}" data-stockNum="${vo.stockNum}" data-totalStock="${vo.totalStock}" data-optionValue="${vo.optionValue}">${vo.optionValue}${vo.totalStock<5?' 재고 - '+= vo.totalStock:''}</option>
+												<option value="${vo.optionDetailNum}" data-stockNum="${vo.stockNum}" data-totalStock="${vo.totalStock}" data-optionValue="${vo.optionValue}">${vo.optionValue}${vo.totalStock<5?' 재고 - '+= vo.totalStock:''}</option>
 											</c:if>
 											<c:if test="${dto.optionCount != 1}">
-												<option value="${vo.detailNum}">${vo.optionValue}</option>
+												<option value="${vo.optionDetailNum}">${vo.optionValue}</option>
 											</c:if>
 										</c:forEach>
 									</select>
@@ -147,32 +147,42 @@
 								</c:if>-->
 								
 								<div class="option-area">
-									<div class="row mt-2" style="font-weight: 500">
-										* 필수 옵션
-									</div>
+									<c:if test="${dto.optionCount > 0}">
+										<div class="row mt-2" style="font-weight: 500">
+											* 필수 옵션
+										</div>
+									</c:if>
 									
 									<div class="option-select-area" style="padding: 3px 6px;">
-										<div class="row mt-2">
-											<select class="form-select requiredOption" data-optionNum="${listOption[0].optionNum}" ${dto.totalStock < 1 ? 'disabled':''}>
-												<option value="">사이즈</option>
-												<option value="S">S</option>
-												<option value="M">M</option>
-												<option value="L">L</option>
-											</select>
-										</div>
+										<c:if test="${dto.optionCount > 0}">
+											<div class="row mt-2">
+												<select class="form-select requiredOption" data-optionNum="${listOption[0].optionNum}" ${dto.totalStock < 1 ? 'disabled':''}>
+													<option value="">${listOption[0].optionName}</option>
+													<c:forEach var="vo" items="${listOptionDetail}">
+														<c:if test="${dto.optionCount == 1}">
+															<option value="${vo.optionDetailNum}" data-stockNum="${vo.stockNum}" data-totalStock="${vo.totalStock}" data-optionValue="${vo.optionValue}">${vo.optionValue}${vo.totalStock<5?' 재고 - '+= vo.totalStock:''}</option>
+														</c:if>
+														<c:if test="${dto.optionCount != 1}">
+															<option value="${vo.optionDetailNum}">${vo.optionValue}</option>
+														</c:if>
+													</c:forEach>
+												</select>
+											</div>
+										</c:if>
 					
-										<div class="row mt-2">
-											<select class="form-select requiredOption2" data-optionNum2="${listOption[1].optionNum}" ${dto.totalStock < 1 ? 'disabled':''}>
-												<option value="">색상</option>
-												<option value="">빨강</option>
-												<option value="">노랑</option>
-											</select>
-										</div>
+										<c:if test="${dto.optionCount > 1}">
+											<div class="row mt-2">
+												<select class="form-select requiredOption2" data-optionNum2="${listOption[1].optionNum}" ${dto.totalStock < 1 ? 'disabled':''}>
+													<option value="">${listOption[1].optionName}</option>
+												</select>
+											</div>
+										</c:if>
 									</div>
 								</div>
 														
 								<div class="row pb-2 order-area">
 									<div class="order-box">
+										<!-- 
 										<p>S / 빨강</p>
 										<div class="stockPrice">
 											
@@ -182,8 +192,8 @@
 							                        <input type="text" name="buyQtys" class="form-control" value="1" style="flex:none; width: 60px; text-align: center;" readonly>
 							                        <input type="hidden" name="productCodes" value="${gvProductCodes}">
 							                        <input type="hidden" name="stockNums" value="${stockNum}">
-							                        <input type="hidden" name="detailNums" value="${detailNum}" disabled>
-							                        <input type="hidden" name="detailNums2" value="${detailNum2}" disabled>
+							                        <input type="hidden" name="optionDetailNums" value="${optionDetailNum}" disabled>
+							                        <input type="hidden" name="optionDetailNums2" value="${optionDetailNum2}" disabled>
 							                        <i class="stockNumsbi bi-plus input-group-text bg-white qty-plus"></i>
 							                    </div>
 							                </div>
@@ -191,37 +201,13 @@
 							                    <label class="pt-2 fs-6 fw-semibold item-totalPrice">30,000원</label>
 							                </div>
 							            </div>
+							             -->
 									</div>
-									<div class="order-box">
-										<p>S / 빨강</p>
-										<div class="stockPrice">
-											
-											<div class="col" style="display: inline-block">
-							                    <div class="input-group">
-							                        <i class="bi bi-dash input-group-text bg-white qty-minus"></i>
-							                        <input type="text" name="buyQtys" class="form-control" value="1" style="flex:none; width: 60px; text-align: center;" readonly>
-							                        <input type="hidden" name="productCodes" value="${gvProductCodes}">
-							                        <input type="hidden" name="stockNums" value="${stockNum}">
-							                        <input type="hidden" name="detailNums" value="${detailNum}" disabled>
-							                        <input type="hidden" name="detailNums2" value="${detailNum2}" disabled>
-							                        <i class="stockNumsbi bi-plus input-group-text bg-white qty-plus"></i>
-							                    </div>
-							                </div>
-		                	                <div class="col text-end product-salePrice" data-salePrice="${salePrice}" style="display: inline-block">
-							                    <label class="pt-2 fs-6 fw-semibold item-totalPrice">30,000원</label>
-							                </div>
-							            </div>
-									</div>
-									
-							        <div class="order-qty"></div>
 							        
-							        <div style="display: flex; justify-content: center; padding: 10px 10px 5px 10px;">
-								        <hr style="width: 98%">
-							        </div>
 									<div class="total-div">
-										<div class="col-auto fw-semibold pt-1 total">총상품금액 (1개)</div>
+										<div class="col-auto fw-semibold pt-1 total">총상품금액 (<span class="product-totalQty">0</span>개)</div>
 										<div class="col text-end">
-											<label><span class="product-totalAmount fs-5 fw-semibold text-primary">30,000</span><span class="fw-semibold fs-6 text-primary">원</span></label>
+											<label><span class="product-totalAmount fs-5 fw-semibold text-primary">0</span><span class="fw-semibold fs-6 text-primary">원</span></label>
 										</div>
 									</div>
 								</div>
@@ -259,16 +245,14 @@
 
 <div id="product-template">
 	<input type="hidden" id="web-contextPath" value="${pageContext.request.contextPath}">
-	<input type="hidden" id="product-productCode" value="1">
+	<input type="hidden" id="product-productCode" value="${dto.productCode}">
 	<input type="hidden" id="product-productName" value="${dto.productName}">
 	<input type="hidden" id="product-optionCount" value="${dto.optionCount}">
 	<input type="hidden" id="product-price" value="${dto.price}">
-	<input type="hidden" id="product-salePrice" value="${dto.salePrice}">
+	<input type="hidden" id="product-salePrice" value="${dto.sale}">
 	<input type="hidden" id="product-stockNum" value="${dto.stockNum}">
 	<input type="hidden" id="product-totalStock" value="${dto.totalStock}">
 	<input type="hidden" id="product-thumbnail" value="${dto.thumbnail}">
-	<input type="hidden" id="product-endDate" value="${dto.endDate}">
-	<input type="hidden" id="product-classify" value="${dto.classify}">
 </div>
 
 <script src="${pageContext.request.contextPath}/dist/js2/productDetail.js"></script>

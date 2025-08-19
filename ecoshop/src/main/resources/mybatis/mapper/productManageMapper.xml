@@ -154,7 +154,7 @@
 	
 	<!-- 상품 재고 리스트 -->
 	<select id="listProductStock" parameterType="map" resultType="com.sp.app.admin.model.ProductStockManage">
-		SELECT p.productId, p.productName, 
+		SELECT p.productId, p.productName, p.productCode,
 			po1.optionNum, po1.optionName,
 			po2.optionNum optionNum2, po2.optionName optionName2,
 			d1.optionDetailNum, d1.optionValue, 
@@ -262,17 +262,17 @@
 	</delete>
 	
 	<!-- 배송정책 -->
-	<select id="listDeliveryRefundInfo" resultType="com.sp.app.admin.model.ProductDeliveryRefundInfo">
+	<select id="listDeliveryRefundInfo" resultType="com.sp.app.admin.model.ProductDeliveryRefundInfoManage">
 	    SELECT deliveryInfo, refundInfo
 	    FROM deliveryRefundInfo
 	</select>
 
-	<select id="listDeliveryFee" resultType="com.sp.app.admin.model.ProductDeliveryRefundInfo">
+	<select id="listDeliveryFee" resultType="com.sp.app.admin.model.ProductDeliveryRefundInfoManage">
 	    SELECT fee, deliveryLocation
 	    FROM deliveryFee
 	</select>
 	
-	<insert id="insertProductDeliveryRefundInfo" parameterType="com.sp.app.admin.model.ProductDeliveryRefundInfo">
+	<insert id="insertProductDeliveryRefundInfo" parameterType="com.sp.app.admin.model.ProductDeliveryRefundInfoManage">
 		INSERT INTO deliveryRefundInfo(deliveryRefundInfoNum, deliveryInfo, refundInfo)
 		VALUES (deliveryRefundInfo_seq.NEXTVAL, #{deliveryInfo}, #{refundInfo})
 	</insert>
@@ -282,7 +282,7 @@
 		VALUES (deliveryFee_seq.NEXTVAL, #{fee}, #{deliveryLocation})
 	</insert>
 	
-	<update id="updateProductDeliveryRefundInfo" parameterType="com.sp.app.admin.model.ProductDeliveryRefundInfo">
+	<update id="updateProductDeliveryRefundInfo" parameterType="com.sp.app.admin.model.ProductDeliveryRefundInfoManage">
 		UPDATE deliveryRefundInfo SET deliveryInfo = #{deliveryInfo}, refundInfo = #{refundInfo}
 	</update>
 

@@ -11,6 +11,7 @@ $(function(){
     });	
 });
 
+/*
 // 리뷰
 $(function(){
 	$('.reviewSortBy').change(function(){
@@ -32,7 +33,53 @@ function listReview(page) {
 
 	ajaxRequest(url, 'get', requestParams, 'json', fn);
 }
+*/
 
+/*
+// 리뷰
+$(function(){
+	$('ul.reviewSortBy li').click(function(){
+		let liEls = $('ul.reviewSortBy li');
+		
+		liEls.each(function())
+		
+		$(this).classList.add('clicked');
+		listReview(1);
+	});
+});
+*/
+function listReview(page) {
+	const contextPath = document.getElementById('web-contextPath').value;
+	const productCode = document.getElementById('product-productCode').value;
+	
+	let sortBy = $('ul.reviewSortBy li.clicked').attr('data-value');
+
+	if(! sortBy){
+		sortBy = 0;
+	}
+	console.log(sortBy);
+	
+	// let sortBy = $('.reviewSortBy').val();
+	/*
+	let url = contextPath + '/review/list';
+	let requestParams = {productCode:productCode, pageNo:page, sortBy:sortBy};
+	
+	const fn = function(data) {
+		printReview(data);
+	};
+
+	ajaxRequest(url, 'get', requestParams, 'json', fn);
+	*/
+}
+/*
+$(function(){
+	$('ul.reviewSortBy li').click(function(){
+		const sortBy = $(this).attr('data-value');
+		
+		console.log(sortBy);
+	});
+});
+*/
 
 function printReview(data) {
 	const contextPath = document.getElementById('web-contextPath').value;

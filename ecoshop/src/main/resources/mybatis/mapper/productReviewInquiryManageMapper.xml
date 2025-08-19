@@ -59,10 +59,10 @@
 	    ORDER BY i.regDate DESC
 	</select>
 	
-	<insert id="updateAnswer" parameterType="com.sp.app.admin.model.ProductInquiryManage">
+	<update id="updateAnswer" parameterType="com.sp.app.admin.model.ProductInquiryManage">
 		UPDATE productInquiry SET answer = #{answer}, answerDate = SYSDATE, answerId = #{answerId}
 		WHERE inquiryId = #{inquiryId}
-	</insert>
+	</update>
 	
 	<select id="answerNameFindById" parameterType="Long" resultType="String">
 	    SELECT name
@@ -73,4 +73,8 @@
 	<update id="deleteAnswer" parameterType="Long">
 		UPDATE productInquiry SET answerId = null, answer = null, answerDate = null WHERE inquiryId = #{inquiryId}
 	</update>
+	
+	<delete id="deleteInquiry" parameterType="Long">
+		DELETE FROM productInquiry WHERE inquiryId = #{inquiryId}
+	</delete>
 </mapper>

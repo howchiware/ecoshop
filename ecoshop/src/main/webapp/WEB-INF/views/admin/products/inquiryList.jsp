@@ -29,15 +29,7 @@
 	                        </c:choose>
 	                    </td>
 	                    <td>
-	                        <c:choose>
-	                            <c:when test="${dto.status eq 1}">
-	                                <button type="button" class="small-btn">수정</button>
-	                                <button type="button" class="small-btn">삭제</button>
-	                            </c:when>
-	                            <c:otherwise>
-	                                <button type="button" class="small-btn deleteInquiry" data-inquiryId="${dto.inquiryId}">삭제</button>
-	                            </c:otherwise>
-	                        </c:choose>
+                            <button type="button" class="small-btn deleteInquiry" data-inquiryId="${dto.inquiryId}">삭제</button>
 	                    </td>
 	                </tr>
 	                <tr class="inquiryDetailTr d-none">

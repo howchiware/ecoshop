@@ -19,4 +19,5 @@ public interface ProductReviewInquiryManageMapper {
 	public void updateAnswer(ProductInquiryManage dto);
 	public String answerNameFindById(long answerId);
 	public void deleteAnswer(long inquiryId);
+	public void deleteInquiry(long inquiryId);
 }
