@@ -1,0 +1,92 @@
+* {
+	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
+	box-sizing: border-box;
+}
+
+@font-face {
+	font-family: 'Pretendard-Regular';
+	src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+	font-style: normal;
+}
+
+.sidebar-compact {
+	margin-top: 10px;
+	background-color: #ffffff;
+	border: 1px solid #dee2e6;
+	border-radius: 8px;
+	padding: 16px 12px;
+}
+
+.sidebar-compact .nav-section-title {
+	font-size: 1rem;
+	font-weight: 600;
+	color: #343a40;
+	margin-top: 16px;
+	margin-bottom: 8px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #f1f3f5;
+}
+
+.nav-section-maintitle {
+	font-size: 2rem;
+	font-weight: 900;
+	color: #343a40;
+	margin-top: 16px;
+	margin-bottom: 28px;
+	padding-bottom: 5px;
+	padding-left: 20px;
+}
+
+.sidebar-compact .nav-section-title:first-child {
+	margin-top: 0;
+}
+
+.sidebar-compact .list-unstyled li a {
+	display: block;
+	padding: 8px 10px;
+	border-radius: 5px;
+	color: #495057;
+	text-decoration: none;
+	font-size: 0.9rem;
+	transition: background-color 0.2s, color 0.2s;
+}
+
+.sidebar-compact .list-unstyled li a:hover {
+	background-color: #f8f9fa;
+	color: #000;
+}
+
+.sidebar-compact .list-unstyled li a.active {
+	background-color: #e9ecef;
+	color: #000;
+	font-weight: 600;
+}
+
+.main-container {
+	position: relative;
+	padding: 2rem 1rem;
+	max-width: 1400px;
+	margin: 0 auto;
+	box-sizing: border-box;
+}
+
+
+.sidebar-compact {
+	background-color: #ffffff;
+	border: 1px solid #dee2e6;
+	border-radius: 8px;
+	padding: 16px 12px;
+}
+
+.contentsArea {
+	margin-top: 10px;
+	background-color: #ffffff;
+	border: 1px solid #dee2e6;
+	border-radius: 8px;
+	padding: 16px 16px;
+	min-height: 50rem; 
+}
+
+.sub-title {
+	font-weight: 500;
+}
