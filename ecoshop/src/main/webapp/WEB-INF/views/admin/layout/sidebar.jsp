@@ -95,7 +95,7 @@
       <a href="#"> 광고 관리 ></a>
       <ul class="submenu">
         <li><a href="${pageContext.request.contextPath}/admin/advertisement/list"> 광고 목록</a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/status/list"> 광고 상태 조회</a></li>
+        <li><a href="${pageContext.request.contextPath}/admin/promotion/list"> 광고 상태 조회</a></li>
       </ul>
     </li>
 
