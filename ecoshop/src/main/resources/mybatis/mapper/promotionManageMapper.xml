@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.admin.mapper.PromotionManageMapper">
+	<insert id="insertPromotionManage" parameterType="com.sp.app.admin.model.PromotionManage">
+		INSERT INTO promotion(promotionId , memberId ,advertisingId , subject, imageFilename, regDate, postingStatus)
+		VALUES (promotion_seq.NEXTVAL, #{memberId}, #{advertisingId}, #{subject},  
+			#{imageFilename}, SYSDATE, 0)
+	</insert>
+	
+	<sql id="where-list">
+		( INSTR(subject, #{kwd}) &gt; 0)
+	</sql>
+	
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM promotion p
+		JOIN member2 m ON p.memberId = m.memberId
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list"/>
+			</if>
+			AND block = 0
+		</where>		
+	</select>
+
+</mapper>

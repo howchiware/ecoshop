@@ -1,16 +1,17 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core"%>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Spring</title>
-<jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/board.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/paginate.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/vendor/glightbox/css/glightbox.min.css" type="text/css">
+  <meta charset="UTF-8">
+  <title>공지사항</title>
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
+ <link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+	
 <style type="text/css">
 .photo-section .photo-content {
   position: relative;
@@ -96,13 +97,12 @@
 </head>
 <body>
 
-<header>
-	<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
-</header>
+<jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
 
-<main>
-	<!-- Page Title -->
-	<div class="page-title">
+<main class="main-container">
+  <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
+
+    <div class="page-title">
 		<div class="container align-items-center" data-aos="fade-up">
 			<h1>포토 갤러리</h1>
 			<div class="page-title-underline-accent"></div>
@@ -123,7 +123,7 @@
 							</form>
 						</div>
 						<div class="col-md-8 text-end">
-							<button type="button" class="btn-accent btn-md" onclick="location.href='${pageContext.request.contextPath}/photo/write';">사진올리기</button>
+							<button type="button" class="btn-accent btn-md" onclick="location.href='${pageContext.request.contextPath}/admin/promotion/write';">사진올리기</button>
 						</div>
 					</div>
 				
@@ -135,11 +135,11 @@
 									<div class="photo-info">
 										<p><label>${dto.subject}</label></p>
 										<a href="${pageContext.request.contextPath}/uploads/photo/${dto.imageFilename}" title="${dto.subject}" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-										<a href="#inline-content-${dto.num}" title="상세정보" class="glightbox4 details-link" data-glightbox="width: 700; height: auto;"><i class="bi bi-link-45deg"></i></a>
+										<a href="#inline-content-${dto.promotionId}" title="상세정보" class="glightbox4 details-link" data-glightbox="width: 700; height: auto;"><i class="bi bi-link-45deg"></i></a>
 									</div>
 								</div>
 								
-								<div id="inline-content-${dto.num}" class="d-none">
+								<div id="inline-content-${dto.promotionId}" class="d-none">
 									<div class="inline-inner">
 										<h4 class="text-center mb-3">${dto.subject}</h4>
 										<div class="row g-3">
@@ -148,25 +148,22 @@
 												작성자 : ${dto.name}
 											</div>
 											<div class="col-md-6 text-end">
-												작성일 : ${dto.reg_date}
+												작성일 : ${dto.regDate}
 											</div>
 											<div class="col-md-12 border-top"></div>
-											<div class="col-md-12">
-												${dto.content}
-											</div>
 											<div class="col-md-12 border-top"></div>
 											<div class="col-md-6">
 												<c:choose>
 													<c:when test="${sessionScope.member.member_id==dto.member_id}">
-														<button type="button" class="btn-default" onclick="location.href='${pageContext.request.contextPath}/photo/update?num=${dto.num}&page=${page}';">수정</button>											</c:when>
+														<button type="button" class="btn-default" onclick="location.href='${pageContext.request.contextPath}/admin/promotion/update?num=${dto.promotionId}&page=${page}';">수정</button>											</c:when>
 													<c:otherwise>
 														<button type="button" class="btn-default" disabled>수정</button>
 													</c:otherwise>
 												</c:choose>
 												
 												<c:choose>
-													<c:when test="${sessionScope.member.member_id==dto.member_id || sessionScope.member.userLevel>50}">
-														<button type="button" class="btn-default" onclick="deleteOk('${dto.num}', '${dto.imageFilename}')">삭제</button>
+													<c:when test="${sessionScope.member.memberId==dto.memberId || sessionScope.member.userLevel>50}">
+														<button type="button" class="btn-default" onclick="deleteOk('${dto.promotionId}', '${dto.imageFilename}')">삭제</button>
 													</c:when>
 													<c:otherwise>
 														<button type="button" class="btn-default" disabled>삭제</button>
@@ -192,7 +189,6 @@
 		</div>
 	</div>
 </main>
-
 
 </body>
 </html>
