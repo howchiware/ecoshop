@@ -11,6 +11,13 @@ body {
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'SpoqaHanSansNeo-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SpoqaHanSansNeo-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 .navbar {
   background-color: #ffffff;
   border-bottom: 1px solid #e2e2e2;
@@ -19,10 +26,11 @@ body {
 }
 
 .navbar-brand {
-  font-weight: bold; /* bold 유지 */
-  font-size: 1.4rem;
+  font-size: 1.7rem;
   color: #315e4e !important; /* 최종 색상 유지 */
-  letter-spacing: 0.7px;
+  letter-spacing: 0.5px;
+  font-family: 'SpoqaHanSansNeo-Regular';
+  font-weight: 900;
 }
 
 .nav-link {
