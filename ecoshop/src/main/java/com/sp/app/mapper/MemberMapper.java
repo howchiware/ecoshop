@@ -25,8 +25,7 @@ public interface MemberMapper {
 	public Member findById(String userId);
 	public Member findByNickname(String nickname);
 	
-	public void deleteMember1(Map<String, Object> map) throws SQLException;
-	public void deleteMember2(Map<String, Object> map) throws SQLException;
+	public void deleteMember(Map<String, Object> map) throws SQLException;
 	
 	
 	

@@ -49,6 +49,14 @@
 		LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
 		WHERE m2.nickname = #{nickname}
 	</select>
+	
+	<update id="updateMember1" parameterType="com.sp.app.model.Member">
+	
+	</update>
+	
+	<update id="updateMember2" parameterType="com.sp.app.model.Member">
+	
+	</update>
 
 	
 </mapper>

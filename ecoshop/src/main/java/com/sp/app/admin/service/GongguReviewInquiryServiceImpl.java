@@ -62,5 +62,45 @@ public class GongguReviewInquiryServiceImpl implements GongguReviewInquiryManage
 		}
 		return list;  
 	}
+
+	@Override
+	public void updateAnswer(GongguReviewManage dto) {
+		try {
+			gongguReviewInquiryManageMapper.updateAnswer(dto);
+		} catch (Exception e) {
+			log.info("gongguInsertAnswer: ", e);
+		}
+	}
+
+	@Override
+	public String answerNameFindById(long answerId) {
+String name = null;
+		
+		try {
+			name = gongguReviewInquiryManageMapper.answerNameFindById(answerId);
+		} catch (Exception e) {
+			log.info("gongguAnswerNameFindById: ", e);
+		}
+		
+		return name;
+	}
+
+	@Override
+	public void deleteAnswer(long gongguReviewId) {
+		try {
+			gongguReviewInquiryManageMapper.deleteAnswer(gongguReviewId);
+		} catch (Exception e) {
+			log.info("gongguDeleteAnswer: ", e);
+		}
+	}
+
+	@Override
+	public void deleteReview(long gongguReviewId) {
+		try {
+			gongguReviewInquiryManageMapper.deleteReview(gongguReviewId);
+		} catch (Exception e) {
+			log.info("gongguDeleteInquiry: ", e);
+		}
+	}
 	
 }

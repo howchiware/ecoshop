@@ -23,12 +23,12 @@ public class GongguManage {
     private String gongguThumbnail;
     private long originalPrice;
     private long gongguPrice;
-    private String reg_date;
+    private String regDate;
     private Integer limitCount;
     private String deadline;
     private long categoryId; 
     private String categoryName;
-    private String update_date;
+    private String updateDate;
     private String content;
     private String detailInfo; 
     private String limitInfo;

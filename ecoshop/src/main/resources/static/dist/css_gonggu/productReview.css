@@ -79,3 +79,52 @@ body {
 .search-select {
 	width: 20px;
 }
+
+
+
+
+
+
+
+
+
+
+  img.user-icon {   
+  	display: block;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #999;
+    border-radius: 35px;
+    object-fit: cover;
+    color: #999;
+    margin: 0px 10px;
+  }
+  
+  img.answer-icon {   
+  	display: block;
+    width: 25px;
+    height: 25px;
+    border: 1px solid #999;
+    border-radius: 35px;
+    object-fit: cover;
+    color: #999;
+    margin: 0px 10px;
+  }
+  
+  .review-detailInfo{text-align: left; padding: 0px 50px;}
+  
+  .reviewDetailHeader{display: inline-flex; align-items: center;}
+  .reviewDetailAnswer{display: inline-flex; align-items: top; margin-top: 10px}
+  
+  p.reviewDetailName{margin: 5px; font-size: 11px;  text-align: left; color: black;}
+  p.reviewDetailDate{margin: 5px; font-size: 11px;  text-align: left; padding-left: 5px;}  
+  p.reviewDetailAnswerDate{padding-left: 10px;}
+  p.reviewDetailAnswerName{color: black;}
+  p.content, p.answerContent {margin: 0px;}
+  
+  div.reviewDetailTD{display: inline-flex;}
+  div.reviewDetailAnswerND{display: inline-flex; font-size: 11px;}
+  div.reviewDetailAnswerContent{font-size: 11px;}
+  div.reviewDetailContent{padding: 15px 10px;}
+  
+  hr.reviewDivider{margin: 5px 0px;}

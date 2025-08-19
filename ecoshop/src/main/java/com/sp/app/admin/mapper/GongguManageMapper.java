@@ -28,6 +28,8 @@ public interface GongguManageMapper {
 	public void updateProductDisplayOrder(Map<String, Object> map) throws SQLException;
 	public int dataCount(Map<String, Object> map);
 	
+	public List<Long> optionFindByCode(long id);
+	
 	public List<ProductStockManage> listProductStock(Map<String, Object> map);
 	
 	public CategoryManage findByCategory(long categoryId);

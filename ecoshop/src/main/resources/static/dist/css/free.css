@@ -1,0 +1,36 @@
+* {
+	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
+	box-sizing: border-box;
+}
+
+@font-face {
+	font-family: 'Pretendard-Regular';
+	src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+	font-style: normal;
+}
+
+.board-title a {
+    color: inherit;
+    text-decoration: none; 
+}
+
+.board-title a:hover {
+    color: inherit;
+}
+
+.board-tabs .nav-link {
+    color: #6c757d;
+    font-size: 1rem;
+    border: none;
+    padding: 0.5rem 0.75rem;
+}
+
+.board-tabs .nav-link:hover {
+    color: #000;
+}
+
+.board-tabs .nav-link.active {
+    color: #2c5e2d; 
+    font-weight: bold;
+    background-color: transparent;
+}
