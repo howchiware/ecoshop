@@ -70,7 +70,7 @@
       </ul>
     </li>
 
-    <li class="menu-title">워크숍</li>
+    <li class="menu-title">워크샵</li>
     <li>
       <a href="/admin/workshop/program/list"> 프로그램 관리 </a>
     </li>

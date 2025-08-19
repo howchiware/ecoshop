@@ -7,6 +7,8 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<link href="//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css" rel="stylesheet">
+
 </head>
 <body>
 
@@ -23,10 +25,10 @@
 					<c:otherwise>
 						<a class="text-decoration-none me-3 text-muted" href="${pageContext.request.contextPath}/member/logout" title="로그아웃">로그아웃</a>
 						<c:if test="${sessionScope.member.userLevel>50}">
-							<a class="text-decoration-none me-3 text-muted" href="${pageContext.request.contextPath}/admin" title="관리자">관리 페이지</a>
+							<a class="text-decoration-none me-3 text-muted" href="${pageContext.request.contextPath}/admin" title="관리자">관리자페이지</a>
 						</c:if>
 						<c:if test="${sessionScope.member.userLevel == 1  }">
-							<a class="text-decoration-none me-3 text-muted" href="${pageContext.request.contextPath}/member/myPage" title="사용자">마이 페이지</a>
+							<a class="text-decoration-none me-3 text-muted" href="${pageContext.request.contextPath}/member/myPage" title="사용자">마이페이지</a>
 						</c:if>
 					</c:otherwise>
 				</c:choose>
@@ -37,7 +39,7 @@
 	<!-- 상단 네비게이션 -->
 	<nav class="navbar navbar-expand-lg sticky-top">
 		<div class="container">
-			<a class="navbar-brand" href="${pageContext.request.contextPath}/">ECOBRAND</a>
+			<a class="navbar-brand" href="${pageContext.request.contextPath}/">에코모아</a>
 			<button class="navbar-toggler" data-bs-target="#navbarNav"
 				data-bs-toggle="collapse" type="button">
 				<span class="navbar-toggler-icon"></span>

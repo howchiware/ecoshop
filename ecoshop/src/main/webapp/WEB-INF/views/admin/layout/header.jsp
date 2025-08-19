@@ -9,6 +9,8 @@
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
 	rel="stylesheet">
+<link href="//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css" rel="stylesheet" type="text/css">
+	
 <style>
 /* --- ▼▼▼ 새롭게 개선된 헤더 CSS ▼▼▼ --- */
 @font-face {
@@ -18,6 +20,17 @@
 		format('woff');
 	font-style: normal;
 }
+
+@font-face {
+    font-family: 'SpoqaHanSansNeo-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SpoqaHanSansNeo-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.site-title {
+      font-family: 'SpoqaHanSansNeo-Regular'
+    }
 
 .admin-header {
 	width: 100%;
@@ -118,8 +131,8 @@
 	<header class="admin-header">
 		<div class="header-left">
 			<a href="${pageContext.request.contextPath}/admin" class="logo-link">
-				<span class="site-title">ECOBRAND</span>
-			</a> <span class="admin-text">Admin Page</span>
+				<span class="site-title">에코모아</span>
+			</a> <span class="admin-text">관리자 페이지</span>
 		</div>
 
 		<div class="header-right">
