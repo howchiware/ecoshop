@@ -150,10 +150,11 @@
       <!-- 히어로: 썸네일 + 정보 -->
       <div class="hero">
         <div class="detail-hero">
-          <!-- 썸네일 -->
-          <div class="hero-thumb"
-               style="background-image:url('${empty dto.thumbnail ? (cp.concat("/resources/static/dist/images/noimage.png")) : dto.thumbnail}')">
-          </div>
+          <!-- 썸네일 (A안 경로 고정: 업로드된 파일명만 DB에 저장되어 있다고 가정) -->
+          <c:set var="heroThumb"
+                 value="${empty dto.thumbnail ? cp.concat('/resources/admin/images/add_photo.png')
+                                              : cp.concat('/uploads/challenge/').concat(dto.thumbnail)}"/>
+          <div class="hero-thumb" style="background-image:url('${heroThumb}')"></div>
 
           <!-- 핵심 정보 -->
           <div class="info-grid">

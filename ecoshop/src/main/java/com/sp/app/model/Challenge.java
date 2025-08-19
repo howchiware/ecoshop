@@ -1,5 +1,7 @@
 package com.sp.app.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -46,9 +48,5 @@ public class Challenge {
     private String photoUrl;
     private String photoRegDate; // 인증사진 등록일자 
     
-    
-    
-    
-    
-    
+    private MultipartFile thumbnailFile;
 }

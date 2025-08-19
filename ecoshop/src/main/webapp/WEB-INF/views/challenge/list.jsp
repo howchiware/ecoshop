@@ -103,8 +103,11 @@
       <div class="row justify-content-center">
         <div class="col-lg-10 my-3">
           <div class="daily-card" id="dailyCard">
+            <c:set var="todayThumb"
+                   value="${empty today.thumbnail ? cp.concat('/resources/admin/images/add_photo.png')
+                                                 : cp.concat('/uploads/challenge/').concat(today.thumbnail)}"/>
             <div class="daily-media"
-                 style="background-image:url('${empty today.thumbnail ? (cp.concat("/resources/static/dist/images/add_photo.png")) : today.thumbnail}')"></div>
+                 style="background-image:url('${todayThumb}')"></div>
             <div class="daily-body">
               <div class="d-flex justify-content-between align-items-center">
                 <h2 class="daily-title">${empty today.title ? '수요일 플라스틱 제로데이 챌린지' : today.title}</h2>
@@ -166,12 +169,13 @@
     <div class="container" data-aos="fade-up" data-aos-delay="50">
       <div id="specialGrid" class="special-grid">
         <c:forEach var="s" items="${list}">
-          <!-- 초기 렌더 카드에도 커서 값(data-end-date) 포함 -->
           <div class="card"
                data-id="${s.challengeId}"
                data-end-date="${s.endDate}">
-            <div class="card-thumb"
-                 style="background-image:url('${empty s.thumbnail ? (cp.concat("/resources/images/add_photo.png")) : s.thumbnail}')"></div>
+            <c:set var="thumbUrl"
+                   value="${empty s.thumbnail ? cp.concat('/resources/admin/images/add_photo.png')
+                                              : cp.concat('/uploads/challenge/').concat(s.thumbnail)}"/>
+            <div class="card-thumb" style="background-image:url('${thumbUrl}')"></div>
             <div class="card-body">
               <h3 class="card-title">${s.title}</h3>
               <p class="card-desc">${s.description}</p>
@@ -293,7 +297,9 @@
         const frag = document.createDocumentFragment();
 
         items.forEach(function(s){
-          const thumb = (s.thumbnail && s.thumbnail.length>0) ? s.thumbnail : (cp + "/resources/admin/images/add_photo.png");
+          const thumb = (s.thumbnail && s.thumbnail.length>0)
+                        ? (cp + "/uploads/challenge/" + s.thumbnail)
+                        : (cp + "/resources/admin/images/add_photo.png");
           const title = s.title || "";
           const desc  = s.description || "";
           const endDt = s.endDate || "";
