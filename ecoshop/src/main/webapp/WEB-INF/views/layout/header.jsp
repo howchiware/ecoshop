@@ -67,7 +67,7 @@
 					</li>
 					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">커뮤니티</a>
 						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/free/list">자유게시판</a></li>
+							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/free/dairyList">자유게시판</a></li>
 							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/notice/list">공지사항</a></li>
 						</ul>
 					</li>
