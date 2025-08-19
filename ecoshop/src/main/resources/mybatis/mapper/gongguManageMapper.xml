@@ -12,9 +12,9 @@
 	</insert>
 	
 	<insert id="insertProduct" parameterType="com.sp.app.admin.model.GongguManage">
-		INSERT INTO gongguProduct(gongguProductId, categoryId, gongguProductName, originalPrice, gongguPrice,
+		INSERT INTO gongguProduct(gongguProductId, productCode, categoryId, originalPrice, gongguPrice,
 				gongguThumbnail, regDate, productShow, content, detailInfo, limitCount)
-		VALUES (#{gongguProductId}, #{categoryId}, #{gongguProductName}, #{originalPrice}, #{gongguPrice}, #{gongguThumbnail}, 
+		VALUES (#{gongguProductId}, #{productCode}, #{categoryId}, #{originalPrice}, #{gongguPrice}, #{gongguThumbnail}, 
 				 SYSDATE, #{productShow}, #{content}, #{detailInfo}, #{limitCount})
 	</insert>
 	
@@ -25,8 +25,8 @@
 	
 	<select id="findById" parameterType="Long" resultType="com.sp.app.admin.model.GongguManage">
 		SELECT g.gongguProductId, g.categoryId, c.categoryName, p.productId, p.productCode, p.productName,
-			g.gongguProductName, g.originalPrice, g.gongguPrice, g.gongguThumbnail, g.regDate AS reg_date,
-			g.productShow, g.content, g.detailInfo, g.updateDate AS update_date, NVL(g.limitCount, 0) limitCount
+			g.gongguProductName, g.originalPrice, g.gongguPrice, g.gongguThumbnail, g.regDate,
+			g.productShow, g.content, g.detailInfo, g.updateDate, NVL(g.limitCount, 0) limitCount
 		FROM gongguProduct g
 		JOIN gongguPackage k ON g.gongguProductId = k.gongguProductId
 		JOIN product p ON k.productCode = p.productCode
@@ -43,7 +43,7 @@
 	<update id="updateProduct" parameterType="com.sp.app.admin.model.GongguManage">
 		UPDATE gongguProduct SET categoryId = #{categoryId}, gongguProductName = #{gongguProductName},
 			gongguThumbnail = #{gongguThumbnail}, originalPrice = #{originalPrice}, gongguPrice = #{gongguPrice},
-			productShow = #{productShow}, content = #{content}, detailInfo= #{detailInfo}, update_date = SYSDATE,
+			productShow = #{productShow}, content = #{content}, detailInfo= #{detailInfo}, updateDate = SYSDATE,
 			limitCount = #{limitCount}
 		WHERE gongguProductId = #{gongguProductId}
 	</update>
@@ -66,7 +66,7 @@
 	
 	<select id="listProduct" parameterType="map" resultType="com.sp.app.admin.model.GongguManage">
 	SELECT g.gongguProductId, g.categoryId, g.gongguProductName, g.originalPrice, g.gongguPrice,
-		g.gongguThumbnail, g.regDate AS reg_date, g.productShow, g.content, g.detailInfo, g.updateDate AS update_date, NVL(g.limitCount, 0) limitCount,
+		g.gongguThumbnail, TO_CHAR(g.regDate, 'YYYY-MM-DD') regDate, g.productShow, g.content, g.detailInfo, TO_CHAR(g.updateDate,'YYYY-MM-DD') updateDate, NVL(g.limitCount, 0) limitCount,
 		c.categoryName, p.productCode, p.productName, t.totalStock
 	FROM gongguProduct g
 	LEFT OUTER JOIN gongguPackage k ON g.gongguProductId = k.gongguProductId
@@ -121,7 +121,7 @@
 	</sql>
 	
 	<sql id="where-list-period">
-		g.regDate AS reg_date BETWEEN TO_DATE(#{periodStart}, 'YYYY-MM-DD') AND TO_DATE(#{periodEnd}, 'YYYY-MM-DD')
+		g.regDate BETWEEN TO_DATE(#{periodStart}, 'YYYY-MM-DD') AND TO_DATE(#{periodEnd}, 'YYYY-MM-DD')
 	</sql>
 	
 	<sql id="where-list-price">
@@ -189,4 +189,10 @@
 	<delete id="deleteProductDeliveryFee">
 	    DELETE FROM deliveryFee
 	</delete>
+	
+	<select id="listCategory" resultType="com.sp.app.admin.model.CategoryManage">
+		SELECT categoryId, categoryName
+		FROM productCategory
+		ORDER BY orderNo ASC
+	</select>
 </mapper>

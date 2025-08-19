@@ -11,4 +11,10 @@ public interface GongguReviewInquiryManageService {
 	public List<GongguInquiryManage> getInquiryList();
 	public List<GongguReviewManage> searchReviews(Map<String, Object> map);
 	public List<GongguInquiryManage> searchInquirys(Map<String, Object> map);
+	
+	public void updateAnswer(GongguReviewManage dto);
+	public String answerNameFindById(long answerId);
+	
+	public void deleteAnswer(long gongguReviewId);
+	public void deleteReview(long gongguReviewId);
 }

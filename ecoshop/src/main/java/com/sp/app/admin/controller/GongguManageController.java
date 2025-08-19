@@ -21,14 +21,18 @@ import com.sp.app.admin.model.GongguDeliveryRefundInfo;
 import com.sp.app.admin.model.GongguInquiryManage;
 import com.sp.app.admin.model.GongguManage;
 import com.sp.app.admin.model.GongguReviewManage;
+import com.sp.app.admin.model.ProductManage;
 import com.sp.app.admin.service.CategoryManageService;
 import com.sp.app.admin.service.GongguManageService;
 import com.sp.app.admin.service.GongguReviewInquiryManageService;
+import com.sp.app.admin.service.ProductManageService;
 import com.sp.app.common.PaginateUtil;
 import com.sp.app.common.StorageService;
+import com.sp.app.model.SessionInfo;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,21 +46,24 @@ public class GongguManageController {
     private final CategoryManageService categoryManageService;
     private final PaginateUtil paginateUtil;
     private final GongguReviewInquiryManageService gongguReviewInquiryManageService;
-    
+    private final ProductManageService productManageService;
     private String uploadPath;
 
     @PostConstruct
 	public void init() {
-		uploadPath = this.storageService.getRealPath("/uploads/gongguProducts");		
+		uploadPath = this.storageService.getRealPath("/uploads/gonggu");		
 	}	
     
     @GetMapping("write")
- 	public String gongguProductAddForm(Model model) {
- 		try {
-			List<CategoryManage> listCategory = gongguManageService.listCategory();
+ 	public String gongguProductAddForm(Model model, Map<String, Object> map) {
+    	try {
+ 			
+			List<CategoryManage> categoryList = gongguManageService.listCategory();
+			List<ProductManage> productList = productManageService.listProduct(map);
 			
 			model.addAttribute("mode", "write");
-			model.addAttribute("listCategory", listCategory);
+			model.addAttribute("categoryList", categoryList);
+			model.addAttribute("productList", productList);
 			
 		} catch (Exception e) {
 			log.info("gongguProductAddForm : ", e);
@@ -80,6 +87,8 @@ public class GongguManageController {
  	public String updateForm(
  			@RequestParam(name = "categoryId", defaultValue = "0") long categoryId,
 			@RequestParam(name = "gongguProductId") long gongguProductId,
+			@RequestParam(name = "productId") long productId,
+			@RequestParam(name = "productCode") String productCode,
 			@RequestParam(name = "page") String page,
 			Model model) {
  		
@@ -91,14 +100,19 @@ public class GongguManageController {
 			// 추가 이미지
 			List<GongguManage> listPhoto = gongguManageService.listProductPhoto(gongguProductId);
 			
+			// 옵션1/옵션2 옵션명
+			// List<ProductManage> listOption = productManageService.listProductOption(productId);
+			
 			model.addAttribute("mode", "update");
 			
 			model.addAttribute("dto", dto);
 			model.addAttribute("listPhoto", listPhoto);
+			
 			model.addAttribute("listCategory", listCategory);
 			model.addAttribute("page", page);
 			
 			return "admin/gonggu/gongguProductAdd";
+			
  		} catch (NullPointerException e) {
 			log.info("updateForm : ", e);
 		} catch (Exception e) {
@@ -127,12 +141,12 @@ public class GongguManageController {
  	@ResponseBody
 	@PostMapping("deleteFile")
 	public Map<String, ?> deleteFile(@RequestParam(name = "gongguProductDetailId") long gongguProductDetailId, 
-			@RequestParam(name = "PhotoName") String PhotoName) throws Exception {
+			@RequestParam(name = "detailPhoto") String detailPhoto) throws Exception {
 		Map<String, Object> model = new HashMap<>();
 
 		String state = "false";
 		try {
-			String pathString = uploadPath + File.separator + PhotoName;
+			String pathString = uploadPath + File.separator + detailPhoto;
 			gongguManageService.deleteProductPhoto(gongguProductDetailId, pathString);
 			
 			state = "true";
@@ -153,16 +167,33 @@ public class GongguManageController {
     public String getProductReviewList(
     		@RequestParam(value = "gongguProductName", required = false) String gongguProductName, 
     		@RequestParam(value = "kwd", required = false) String kwd, 
-    		Model model) {
+    		Model model, HttpServletRequest req) {
+    	
+    	HttpSession session = req.getSession();
+    	SessionInfo info = (SessionInfo)session.getAttribute("member");
+    	
+    	long managerId = info.getMemberId();
+    	String managerName = info.getName();
+    	
     	Map<String, Object> map = new HashMap<>();
         map.put("gongguProductName", gongguProductName);
         map.put("kwd", kwd);
     	
         List<GongguReviewManage> reviewList = gongguReviewInquiryManageService.searchReviews(map);
-      
+        
+        for(GongguReviewManage dto : reviewList) {
+        	if(dto.getAnswer() != null) {
+        		String answerName = gongguReviewInquiryManageService.answerNameFindById(dto.getAnswerId());
+        		System.out.println(answerName);
+        		dto.setAnswerName(answerName);        		
+        	}
+        }
+        
         model.addAttribute("reviewList", reviewList);
         model.addAttribute("gongguProductName", gongguProductName);
         model.addAttribute("kwd", kwd);
+        model.addAttribute("managerId", managerId);
+        model.addAttribute("managerName", managerName);
         
         return "admin/gonggu/reviewList";
     }
@@ -184,6 +215,54 @@ public class GongguManageController {
         model.addAttribute("kwd", kwd);
         
         return "admin/gonggu/inquiryList";
+    }
+    
+	@GetMapping("gongguReview")
+	public String getGongguReviewPage(@RequestParam(value="memberId", required = false) Long memberId, Model model) {
+		
+		return "admin/gonggu/gongguReview";
+	}
+	
+    @PostMapping("writeAnswer")
+    public String writeAnswer(GongguReviewManage dto,
+    		Model model) {
+    	try {
+    		gongguReviewInquiryManageService.updateAnswer(dto);
+		} catch (Exception e) {
+			log.info("writeAnswer : ", e);
+		}
+    	
+    	return "redirect:/admin/gonggu/gongguReview";
+    }
+
+    @GetMapping("deleteAnswer")
+    public String deleteAnswer(@RequestParam(name="gongguReviewId") long gongguReviewId,
+    		Model model,
+    		HttpServletRequest req) {
+    	try {
+        	
+    		gongguReviewInquiryManageService.deleteAnswer(gongguReviewId);        		
+        	
+    	} catch (Exception e) {
+    		log.info("deleteAnswer : ", e);
+    	}
+    	
+    	return "redirect:/admin/gonggu/gongguReview";
+    }
+    
+    @GetMapping("deleteReview")
+    public String deleteReview(@RequestParam(name="gongguReviewId") long gongguReviewId,
+    		Model model,
+    		HttpServletRequest req) {
+    	try {
+    		
+    		gongguReviewInquiryManageService.deleteReview(gongguReviewId);        		
+    		
+    	} catch (Exception e) {
+    		log.info("deleteReview : ", e);
+    	}
+    	
+    	return "redirect:/admin/gonggu/gongguReview";
     }
 
     @GetMapping("category")

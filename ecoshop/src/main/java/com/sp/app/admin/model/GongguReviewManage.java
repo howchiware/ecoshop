@@ -17,7 +17,8 @@ public class GongguReviewManage {
     private Boolean showReview; 
     private long answerId; 
     private Date  answerDate;
-    private String answer;   
+    private String answer;
+    private String answerName;
    
     private String gongguProductName; 
     private Integer rate;

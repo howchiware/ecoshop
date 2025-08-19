@@ -173,8 +173,8 @@ text-align: center;
 											<td class="select-title-area" width="10%">기간 검색</td>
 											<td class="select-area">
 												<select name="period" id="period">
-											        <option value="reg_date">최초등록일</option>
-											        <option value="update_date">최근수정일</option>
+											        <option value="regDate">최초등록일</option>
+											        <option value="updateDate">최근수정일</option>
 											    </select>
 											    <input type="date" name="periodStart" id="periodStart"> ~ 
 											    <input type="date" name="periodEnd" id="periodEnd">
@@ -264,10 +264,10 @@ text-align: center;
 											</td>
 											<td rowspan="2">${dto.gongguProductId}</td>
 											<td rowspan="2" width="55">
-												<img class="border rounded" width="50" height="50" src="${pageContext.request.contextPath}/uploads/gongguProducts/${dto.gongguThumbnail}">
+												<img class="border rounded" width="50" height="50" src="${pageContext.request.contextPath}/uploads/gonggu/${dto.gongguThumbnail}">
 											</td>
 											<td>${dto.categoryName}</td>
-											<td>${dto.reg_date}</td>
+											<td>${dto.regDate}</td>
 											<td rowspan="2">${dto.gongguPrice} 원</td>
 											<td rowspan="2">2</td>
 											<td rowspan="2">
@@ -284,6 +284,7 @@ text-align: center;
 													<c:param name="categoryId" value="${categoryId}"/>
 													<c:param name="page" value="${page}"/>
 												</c:url>
+												<button type="button" onclick="location.href='${updateUrl}';">수정</button>
 											</td>
 										</tr>
 										<tr>
@@ -291,7 +292,7 @@ text-align: center;
 												${dto.gongguProductName}
 											</td>
 											<td>
-												${dto.update_date}
+												${dto.updateDate}
 											</td>
 										</tr>
 									</c:forEach>

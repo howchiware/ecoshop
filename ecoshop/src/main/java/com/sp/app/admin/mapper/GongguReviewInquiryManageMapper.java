@@ -15,4 +15,10 @@ public interface GongguReviewInquiryManageMapper {
 	public List<GongguInquiryManage> findAllInquirys() throws SQLException;
 	public List<GongguReviewManage> findReviewsBySearch(Map<String, Object> map);
 	public List<GongguInquiryManage> findInquirysBySearch(Map<String, Object> map);
+	
+	public void updateAnswer(GongguReviewManage dto);
+	public String answerNameFindById(long answerId);
+	
+	public void deleteAnswer(long reviewId);
+	public void deleteReview(long reviewId);
 }

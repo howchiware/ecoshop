@@ -13,7 +13,7 @@ public interface GongguManageService {
 	public void updateGongguProduct(GongguManage dto, String uploadPath) throws Exception;
 	public void deleteGongguProduct(List<Long> gongguProductId, String uploadPath) throws Exception;
 	public void deleteProductPhoto(long gongguProductDetailId, String uploadPath) throws Exception;
-	public boolean deleteUploadPhoto(String uploadPath, String photoName);
+	public boolean deleteUploadPhoto(String uploadPath, String gongguPhotoName);
 	
 	public int dataCount(Map<String, Object> map);
 	public List<GongguManage> listProduct(Map<String, Object> map);

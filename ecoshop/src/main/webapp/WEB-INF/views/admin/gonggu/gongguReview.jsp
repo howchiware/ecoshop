@@ -56,5 +56,6 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script src="${pageContext.request.contextPath}/dist/jsGonggu/sendAjaxRequest.js"></script>
 	<script src="${pageContext.request.contextPath}/dist/jsGonggu/showReviewTab.js"></script>
+	<script src="${pageContext.request.contextPath}/dist/js2/productAdminReview.js"></script>
 </body>
 </html>

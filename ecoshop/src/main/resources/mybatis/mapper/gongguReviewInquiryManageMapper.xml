@@ -3,7 +3,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.admin.mapper.GongguReviewInquiryManageMapper">
 	<select id="findAllReviews" resultType="com.sp.app.admin.model.GongguReviewManage">
-	SELECT gongguReviewId, m2.name AS userName, g.content, g.regDate, g.gongguProductId, g.memberId, g.showReview, g.answerId, g.answerDate, g.answer, p.gongguProductName, g.rate
+	SELECT gongguReviewId, m2.name AS userName, g.content, g.regDate, g.gongguProductId, g.memberId, g.showReview, g.answerId, g.answerDate, g.answer, p.gongguProductName, g.rate, m2.name AS answerName
 	FROM gongguReview g
 	JOIN member1 m1 ON g.memberId = m1.memberId
 	JOIN member2 m2 ON m1.memberId = m2.memberId
@@ -57,4 +57,23 @@
 	    </where>
 	    ORDER BY i.regDate DESC
 	</select>
+	
+	<update id="updateAnswer" parameterType="com.sp.app.admin.model.GongguReviewManage">
+		UPDATE gongguReview SET answer = #{answer}, answerDate = SYSDATE, answerId = #{answerId}
+		WHERE gongguReviewId = #{gongguReviewId}
+	</update>
+	
+	<select id="answerNameFindById" parameterType="Long" resultType="String">
+	    SELECT name
+	    FROM member2
+	    WHERE memberId = #{answerId}
+	</select>
+	
+	<update id="deleteAnswer" parameterType="Long">
+		UPDATE gongguReview SET answerId = null, answer = null, answerDate = null WHERE gongguReviewId = #{gongguReviewId}
+	</update>
+	
+	<delete id="deleteReview" parameterType="Long">
+		DELETE FROM gongguReview WHERE gongguReviewId = #{gongguReviewId}
+	</delete>
 </mapper>
