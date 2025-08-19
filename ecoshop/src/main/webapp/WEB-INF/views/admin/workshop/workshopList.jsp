@@ -122,12 +122,18 @@
 										<td class="text-center"><fmt:formatDate
 												value="${row.scheduleDate}" pattern="yyyy.MM.dd" /></td>
 										<td class="text-center">${row.capacity}</td>
-										<td class="text-center"><c:choose>
-												<c:when test="${row.workshopStatus == 1}">모집</c:when>
-												<c:when test="${row.workshopStatus == 0}">마감</c:when>
-												<c:when test="${row.workshopStatus == 2}">취소</c:when>
-												<c:otherwise>-</c:otherwise>
-											</c:choose></td>
+										<td class="text-center"><select
+											class="form-select form-select-sm" name="workshopStatus"
+											data-id="${row.workshopId}" onchange="updateStatus(this)">
+												<option value="1"
+													<c:if test="${row.workshopStatus == 1}">selected</c:if>>모집
+													중</option>
+												<option value="0"
+													<c:if test="${row.workshopStatus == 0}">selected</c:if>>마감</option>
+												<option value="2"
+													<c:if test="${row.workshopStatus == 2}">selected</c:if>>취소</option>
+										</select></td>
+
 
 										<td class="text-center"><a
 											href="${ctx}/admin/workshop/update?num=${row.workshopId}&page=${page}"
@@ -147,7 +153,6 @@
 				</table>
 			</div>
 
-			<!-- 페이지네이션 -->
 			<c:set var="hasPrev" value="${page > 1}" />
 			<c:set var="hasNext" value="${not empty list && list.size() >= size}" />
 			<nav aria-label="페이지네이션">
@@ -166,6 +171,31 @@
 
 		</div>
 	</main>
+	
+	<script type="text/javascript">
+	function updateStatus(select) {
+		const workshopId = select.getAttribute("data-id");
+		const newStatus = select.value;
+		
+		fetch("${ctx}/admin/workshop/updateStatus", {
+			method: "POST",
+			headers: { "Content-Type": "application/json"},
+			body: JSON.stringify({workshopId, workshopStatus: newStatus})
+		})
+		.then(res => res.json())
+		.then(data => {
+			if(data.success) {
+				alert("상태가 변경되었습니다.");
+			} else {
+				alert("상태 변경에 실패했습니다.");
+			}
+		})
+		.catch(err => {
+			console.error(err);
+			alert("상태 변경에 실패했습니다.");
+		});
+	}
+	</script>
 
 </body>
 </html>

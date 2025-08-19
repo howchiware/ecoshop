@@ -6,9 +6,13 @@
 <head>
 <meta charset="UTF-8">
 <title>프로그램 신청</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
-	
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/dist/css/home.css"
+	type="text/css">
+
 <style>
 .page-wrap {
 	background: #f6f7f8;
@@ -68,7 +72,7 @@
 
 	<header class="border-bottom bg-white">
 		<div class="container py-3">
-			<h3 class="m-0">워크샵 신청</h3>
+			<h3 class="m-0">프로그램 신청하기</h3>
 		</div>
 	</header>
 
@@ -136,22 +140,19 @@
 					</div>
 
 					<div class="mb-3">
-						<label class="form-label">신청자명 <span class="req">*</span></label>
-						<input type="text" class="form-control" name="name" required
-							maxlength="50" placeholder="홍길동">
+						<label class="form-label">이름<span class="req"> *</span></label> 
+						<input type="text" class="form-control" name="name" value="${member.name}" readonly>
+						<input type="hidden" name="memberId" value="${loginMember.memberId}">
 					</div>
 
 					<div class="mb-3">
-						<label class="form-label">휴대폰<span class="req">*</span></label> <input
-							type="tel" class="form-control" name="tel" required
-							maxlength="20" pattern="^[0-9\\-\\+\\s]{9,}$"
-							placeholder="01012345678">
+						<label class="form-label">휴대폰 번호<span class="req"> *</span></label> 
+						<input type="tel" class="form-control" name="tel" value="${member.tel}">
 					</div>
 
 					<div class="mb-4">
-						<label class="form-label">이메일</label> <input type="email"
-							class="form-control" name="email" maxlength="100"
-							placeholder="you@example.com">
+						<label class="form-label">이메일</label> 
+						<input type="email" class="form-control" name="email" value="${member.email}">
 					</div>
 
 					<div class="d-lg-none mb-3">
@@ -185,7 +186,7 @@
 								사진·영상 촬영 및 마케팅 활용 동의 </label>
 						</div>
 						<div class="small text-muted mt-2">행사 중 촬영된 사진·영상은 홍보·마케팅에
-							활용될 수 있음</div>
+							활용될 수 있습니다.</div>
 					</div>
 
 					<div class="consent-item">
@@ -195,8 +196,7 @@
 								for="agreePenalty"> 취소/패널티 안내 확인 <span class="req">(필수)</span>
 							</label>
 						</div>
-						<div class="small text-muted mt-2">무단 불참 시 3개월 간 신청 제한 · 행사
-							3일 전까지 취소 시 패널티 없음</div>
+						<div class="small text-muted mt-2">무단 불참 시 향후 3개월 동안 신청이 제한됩니다.</div>
 					</div>
 
 					<div class="mt-4 d-none d-lg-block">
@@ -208,7 +208,7 @@
 		</div>
 
 	</main>
-	  <footer>
+	<footer>
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 	</footer>
 

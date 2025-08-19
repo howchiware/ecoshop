@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+
+import com.sp.app.admin.model.MemberManage;
 import com.sp.app.common.StorageService;
 import com.sp.app.mapper.WorkshopMapper;
 import com.sp.app.model.Participant;
@@ -592,8 +594,25 @@ public class WorkshopServiceImpl implements WorkshopService {
 			return mapper.findParticipantById(memberId, workshopId);
 		} catch (Exception e) {
 			log.info("findParticipantById : ", e);
+			return null;
 		}
-		return null;
+	}
+
+	@Override
+	public void updateWorkshopStatus(Workshop dto) {
+		mapper.updateWorkshopStatus(dto);
+		
+	}
+
+	@Override
+	public MemberManage findMemberById(long memberId) {
+		try {
+
+			return mapper.findMemberById(memberId);
+		} catch (Exception e) {
+			log.info("findMemberById : ", e);
+			return null;
+		}
 	}
 
 }

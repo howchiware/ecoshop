@@ -3,8 +3,8 @@ package com.sp.app.model;
 import java.util.Date;
 
 public class WorkshopFaq {
-	private long faqId;
-	private long programId;
+	private Long faqId;
+	private Long programId;
 	private String question;
 	private String answer;
 	private Date regDate;

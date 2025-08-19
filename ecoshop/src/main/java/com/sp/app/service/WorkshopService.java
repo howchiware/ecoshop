@@ -3,6 +3,7 @@ package com.sp.app.service;
 import java.util.List;
 import java.util.Map;
 
+import com.sp.app.admin.model.MemberManage;
 import com.sp.app.model.Participant;
 import com.sp.app.model.Workshop;
 import com.sp.app.model.WorkshopFaq;
@@ -53,6 +54,7 @@ public interface WorkshopService {
 	public Workshop findWorkshopStatusAndCapacity(long workshopId) throws Exception;
 	public void applyWorkshop(Map<String, Object> map) throws Exception;
 	public void cancelApplication(Map<String, Object> map) throws Exception;
+	public MemberManage findMemberById(long memberId);
 	
 	// (사용자) 워크샵 목록 상세
 	public List<Workshop> listUserWorkshop(Map<String, Object> map);
@@ -73,6 +75,7 @@ public interface WorkshopService {
 	public void deleteFaq(long num) throws Exception;
 	public Long findProgramIdByWorkshopId(long workshopId);
 	public WorkshopFaq findFaqById(long faqId);
+	public void updateWorkshopStatus(Workshop dto);
 	
 	
 	

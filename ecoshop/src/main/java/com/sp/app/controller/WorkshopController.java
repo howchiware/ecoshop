@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sp.app.admin.model.MemberManage;
 import com.sp.app.model.SessionInfo;
 import com.sp.app.model.Workshop;
 import com.sp.app.model.WorkshopFaq;
@@ -94,6 +95,7 @@ public class WorkshopController {
 
 		return "workshop/list";
 	}
+	
 
 	// 상세
 	@GetMapping("/detail")
@@ -166,8 +168,13 @@ public class WorkshopController {
 	        }
 
 	        Workshop detail = service.findWorkshopDetail(workshopId);
+	        
+	        MemberManage member = service.findMemberById(info.getMemberId());
+	        
+	        model.addAttribute("member", member);
 	        model.addAttribute("detail", detail);
 	        model.addAttribute("workshopId", workshopId);
+	        
 	        return "workshop/apply";
 	    } catch (Exception e) {
 	        log.info("applyWorkshop : ", e);
@@ -217,6 +224,9 @@ public class WorkshopController {
 			Map<String, Object> p = new HashMap<>();
 			p.put("workshopId", workshopId);
 			p.put("memberId", info.getMemberId());
+			p.put("name", name);
+			p.put("tel", tel);
+			p.put("email", email);
 			p.put("agreeTerms", agreeTerms);
 			p.put("agreeMarketing", agreeMarketing);
 
@@ -356,9 +366,5 @@ public class WorkshopController {
 
 		return Map.of("success", true);
 	}
-
-	// 후기 수정
-
-	// 후기 삭제
 
 }

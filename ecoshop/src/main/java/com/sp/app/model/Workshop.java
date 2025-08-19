@@ -5,22 +5,22 @@ import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class Workshop {
-	private long categoryId;
+	private Long categoryId;
 	private String categoryName;
 
-	private long programId;
+	private Long programId;
 	private String programTitle;
 	private String programContent;
 	private Date regDate;
 	private Date updDate;
 
-	private long managerId;
+	private Long managerId;
 	private String name;
 	private String tel;
 	private String email;
 	private String department;
 
-	private long workshopId;
+	private Long workshopId;
 	private String workshopTitle;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private Date scheduleDate;
@@ -32,10 +32,10 @@ public class Workshop {
 	private String thumbnailPath;
 	private String workshopContent;
 
-	private long photoId;
+	private Long photoId;
 	private String workshopImagePath;
 
-	public long getCategoryId() {
+	public Long getCategoryId() {
 		return categoryId;
 	}
 

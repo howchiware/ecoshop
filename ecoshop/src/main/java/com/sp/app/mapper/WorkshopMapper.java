@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.sp.app.admin.model.MemberManage;
 import com.sp.app.model.Participant;
 import com.sp.app.model.Workshop;
 import com.sp.app.model.WorkshopFaq;
@@ -79,6 +80,7 @@ public interface WorkshopMapper {
 	public int cancelApplication(Map<String, Object> map);
 	int isParticipantOfMember(@Param("participantId") long participantId,
             @Param("memberId") long memberId);
+	public MemberManage findMemberById(long memberId);
 	
 	// 워크샵 후기
 	public void insertReview(WorkshopReview dto) throws SQLException;
@@ -90,5 +92,7 @@ public interface WorkshopMapper {
 	
 	// 워크샵 상태 검증
 	public Workshop findWorkshopStatusAndCapacity(long workshopId);
+	
+	public void updateWorkshopStatus(Workshop dto);
 	
 }
