@@ -87,6 +87,8 @@ table.member-info td:first-child {
     color: #333;
     width: 120px;
 }
+
+
 </style>
 
 <!-- 광고 상세보기 -->
@@ -135,7 +137,7 @@ table.member-info td:first-child {
   	<td>내용</td>
     <td class="article-content">${dto.content}</td>
   </tr>
-  <tr>
+  
    <!-- 첨부파일 -->
         <c:if test="${listFile.size() != 0}">
           <div class="mb-3">
@@ -151,7 +153,6 @@ table.member-info td:first-child {
             </p>
           </div>
         </c:if>
-       </tr>
 </table>
 
 <div class="btn-row">
