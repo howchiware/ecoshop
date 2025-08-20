@@ -77,10 +77,10 @@
     <li>
       <a href="#"> 워크샵 관리 > </a>
       <ul class="submenu">
-        <li><a href="/admin/workshop/list"> 워크샵 등록</a></li>
-        <li><a href="/admin/workshop/participant/list"> 참여자 관리</a></li>
         <li><a href="/admin/workshop/manager/list"> 담당자 관리</a></li>
-        <li><a href="/admin/workshop/faq/list"> FAQ 관리</a></li>
+        <li><a href="/admin/workshop/list"> 워크샵 관리</a></li>
+        <li><a href="/admin/workshop/participant/list"> 참여자 관리</a></li>
+        <li><a href="/admin/workshop/faq/manage"> FAQ 관리</a></li>
       </ul>
     </li>
     <li>

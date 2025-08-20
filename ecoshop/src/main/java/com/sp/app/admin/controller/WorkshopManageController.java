@@ -89,7 +89,7 @@ public class WorkshopManageController {
 	// 프로그램 목록
 	@GetMapping("/program/list")
 	public String programList(@RequestParam(name = "page", defaultValue = "1") int current_page,
-			@RequestParam(name = "kwd", defaultValue = "latest") String kwd,
+			@RequestParam(name = "kwd", defaultValue = "") String kwd,
 			@RequestParam(name = "categoryId", required = false) Long categoryId, 
 			Model model) {
 
@@ -258,29 +258,6 @@ public class WorkshopManageController {
 		return "admin/workshop/managerList";
 	}
 
-	// 담당자 수정
-	@GetMapping("/manager/update")
-	public String updateManager(@RequestParam(name = "num") long num, @RequestParam(name = "page") String page,
-			Model model) throws Exception {
-		try {
-			Workshop dto = Objects.requireNonNull(service.findManagerById(num));
-
-			Map<String, Object> map = new HashMap<>();
-			map.put("offset", 0);
-			map.put("size", 200);
-
-			model.addAttribute("dto", dto);
-			model.addAttribute("mode", "update");
-			model.addAttribute("page", page);
-
-			return "admin/workshop/managerList";
-		} catch (Exception e) {
-			log.info("update Manager : ", e);
-		}
-
-		return "redirect:/admin/workshop/manager/list?page=" + page;
-	}
-
 	@PostMapping("/manager/update")
 	public String updateSubmitManager(Workshop dto, @RequestParam(name = "page", defaultValue = "1") String page)
 			throws Exception {
@@ -300,7 +277,9 @@ public class WorkshopManageController {
 			@RequestParam(name = "page", defaultValue = "1") String page,
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
 			@RequestParam(name = "kwd", defaultValue = "") String kwd) throws Exception {
+		
 		String query = "page=" + page;
+		
 		try {
 			kwd = myUtil.decodeUrl(kwd);
 			if (!kwd.isBlank()) {
@@ -599,9 +578,9 @@ public class WorkshopManageController {
 		return "redirect:/admin/workshop/photo/list?workshopId=" + workshopId;
 	}
 
-	// FAQ 작성 폼
-	@GetMapping("/faq/write")
-	public String faqWriteForm(@RequestParam(name = "programId", required = false) Long programId, Model model) {
+	// FAQ 관리
+	@GetMapping("/faq/manage")
+	public String faqManage(@RequestParam(name = "programId", required = false) Long programId, Model model) {
 		try {
 			Map<String, Object> pmap = new HashMap<>();
 			pmap.put("offset", 0);
@@ -610,13 +589,25 @@ public class WorkshopManageController {
 			List<Workshop> programList = service.listProgram(pmap);
 
 			model.addAttribute("programList", programList);
+			
+			if(programId == null && programList != null && !programList.isEmpty()) {
+				programId = programList.get(0).getProgramId();
+			}
 			model.addAttribute("programId", programId);
-			model.addAttribute("mode", "write");
+			
+			List<WorkshopFaq> faqList = List.of();
+			if(programId != null) {
+				Map<String, Object> map = new HashMap<>();
+				map.put("programId", programId);
+				faqList = service.listFaq(map);
+			}
+			model.addAttribute("faqList", faqList);
+			
 		} catch (Exception e) {
-			log.info("faqWriteForm : ", e);
+			log.info("faqManage : ", e);
 		}
 
-		return "admin/workshop/faqWrite";
+		return "admin/workshop/faqManage";
 	}
 
 	// FAQ 등록
@@ -626,93 +617,38 @@ public class WorkshopManageController {
 		try {
 			service.insertFaq(dto);
 			session.setAttribute("msg", "FAQ가 등록되었습니다.");
-			return "redirect:/admin/workshop/faq/list?programId=" + dto.getProgramId() + "&page=" + page;
 		} catch (Exception e) {
 			log.info("writeSubmitProgram : ", e);
+			session.setAttribute("msg", "FAQ 등록에 실패했습니다.");
 		}
-		session.setAttribute("msg", "FAQ가 등록에 실패했습니다.");
-		return "redirect:/admin/workshop/faq/write";
-	}
-
-	// FAQ 목록
-	@GetMapping("/faq/list")
-	public String faqList(@RequestParam(name = "programId", required = false) Long programId, Model model) {
-
-		try {
-			Map<String, Object> pmap = new HashMap<String, Object>();
-			pmap.put("offset", 0);
-			pmap.put("size", 300);
-
-			List<Workshop> programList = service.listProgram(pmap);
-			model.addAttribute("programList", programList);
-
-			if (programId == null && programList != null && !programList.isEmpty()) {
-				programId = programList.get(0).getProgramId();
-			}
-			model.addAttribute("programId", programId);
-
-			List<WorkshopFaq> faqList = List.of();
-			if (programId != null) {
-				Map<String, Object> map = new HashMap<>();
-				map.put("programId", programId);
-				faqList = service.listFaq(map);
-			}
-			model.addAttribute("faqList", faqList);
-
-		} catch (Exception e) {
-			log.info("faqList : ", e);
-		}
-
-		return "admin/workshop/faqList";
-	}
-
-	// FAQ 수정
-	@GetMapping("/faq/update")
-	public String updateFormFaq(@RequestParam(name = "faqId") long faqId,
-			@RequestParam(name = "page", defaultValue = "1") String page, Model model) throws Exception {
-		try {
-			WorkshopFaq faq = service.findFaqById(faqId);
-
-			Map<String, Object> map = new HashMap<>();
-			map.put("offset", 0);
-			map.put("size", 200);
-			List<Workshop> programList = service.listProgram(map);
-
-			model.addAttribute("dto", faq);
-			model.addAttribute("programList", programList);
-			model.addAttribute("programId", faq.getProgramId());
-			model.addAttribute("mode", "update");
-			model.addAttribute("page", page);
-
-			return "admin/workshop/faqWrite";
-		} catch (Exception e) {
-			log.info("updateFormFaq : ", e);
-		}
-
-		return "redirect:/admin/workshop/faq/list?page=" + page;
+		return "redirect:/admin/workshop/faq/manage?programId=" + dto.getProgramId();
 	}
 
 	@PostMapping("/faq/update")
-	public String updateSubmitFaq(WorkshopFaq dto, @RequestParam(name = "page", defaultValue = "1") String page)
-			throws Exception {
-
-		service.updateFaq(dto);
-
-		return "redirect:/admin/workshop/faq/list?programId=" + dto.getProgramId() + "&page=" + page;
+	public String updateFaq(WorkshopFaq dto, HttpSession session) throws Exception {
+		try {
+			service.updateFaq(dto);
+			session.setAttribute("msg", "FAQ가 수정되었습니다.");
+		} catch (Exception e) {
+			log.info("writeSubmitProgram : ", e);
+			session.setAttribute("msg", "FAQ 등록에 실패했습니다.");
+		}
+		return "redirect:/admin/workshop/faq/manage?programId=" + dto.getProgramId();
 	}
 
 	// FAQ 삭제
 	@PostMapping("/faq/delete")
-	public String deleteFaq(@RequestParam(name = "faqId") long faqId, @RequestParam(name = "programId") long programId,
-			@RequestParam(name = "page", defaultValue = "1") String page) throws Exception {
+	public String deleteFaq(@RequestParam(name = "faqId") Long faqId, @RequestParam(name = "programId") Long programId,
+			HttpSession session) throws Exception {
 		try {
 			service.deleteFaq(faqId);
+			session.setAttribute("msg", "FAQ가 삭제되었습니다.");
 		} catch (Exception e) {
 			log.info("deleteFaq : ", e);
-			throw e;
+			session.setAttribute("msg", "FAQ가 삭제에 실패했습니.");
 		}
 
-		return "redirect:/admin/workshop/faq/list?programId=" + programId + "&page=" + page;
+		return "redirect:/admin/workshop/faq/manage?programId=" + programId;
 	}
 
 	// 참여자 목록
