@@ -10,10 +10,10 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/free.css" type="text/css">
-<style>
-
-</style>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/free.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/dairyWrite.css" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/quill-resize-module@2.0.4/dist/resize.css" rel="stylesheet">
 </head>
 <body>
     <header>
@@ -24,45 +24,36 @@
 	
 	<jsp:include page="/WEB-INF/views/layout/freeHeader.jsp"/>
 	
-	<div>
-		<div>
-			<span>${mode=='update'?'일상이야기 수정':'일상이야기 작성'}</span>
-		</div>
-	
-		<form action="dairyForm" action="" method="post" enctype="multipart/form-data">
-			<table>
-				<tr>
-					<td>제목</td>
-					<td>
-						<input type="text" name="subject" placeholder="제목을 입력해주세요." value="#{dto.subject}">
-					</td>
-				</tr>
-				
-				<tr>
-					<td>내용</td>
-					<td>
-						<input type="text" name="content" placeholder="내용을 입력해주세요.\n 부적절한 내용 작성하면 임의로 차단됩니다." value="#{dto.content}">
-					</td>
-				</tr>
-				
-				<tr>
-					<td>내용</td>
-					<td>
-						<input type="text" name="content" placeholder="내용을 입력해주세요.\n 부적절한 내용 작성하면 임의로 차단됩니다." value="#{dto.content}">
-					</td>
-				</tr>
-				
-				<tr>
-					<td>파일</td>
-					<td>
-						<input type="file" name="selectFile" multiple="multiple">
-					</td>
-				</tr>
-				
-			</table>
-		</form>
+	<div class="page-header">
+		<h2>${mode=='update'?'일상이야기 수정':'일상이야기 등록'}</h2>
 	</div>
-	
+
+	<form name="dairyForm" class="write-form" method="post" enctype="multipart/form-data">
+		<div class="mb-3">
+			<label for="subject" class="form-label">제목</label>
+			<input type="text" id="subject" name="subject" class="form-control" placeholder="제목을 입력해주세요." value="${dto.subject}" maxlength="50">
+		</div>
+		
+		<div class="mb-3">
+			<label for="nickname" class="form-label">닉네임</label>
+			<input type="text" id="nickname" name="nickname" class="form-control" value="${sessionScope.member.nickname}" readonly>
+		</div>
+		
+		<div class="mb-4">
+			<label for="editor" class="form-label">내용</label>
+			<div id="editor">${dto.content}</div>
+			<input type="hidden" name="content">
+		</div>
+		
+		<div class="button-group">
+			<button type="button" class="btn btn-accent btn-md" onclick="sendOk();">${mode=='update'?'수정완료':'등록완료'}</button>
+			<button type="button" class="btn btn-default btn-md" onclick="location.href='${pageContext.request.contextPath}/free/dairyList';">${mode=='update'?'수정취소':'등록취소'}</button>
+			<c:if test="${mode=='update'}">
+				<input type="hidden" name="freeId" value="${dto.freeId}">
+				<input type="hidden" name="page" value="${page}">
+			</c:if>
+		</div>
+	</form>
 	
 </main>
 
@@ -71,17 +62,49 @@
 	</footer>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-window.addEventListener('DOMContentLoaded', () => {
-	const inputEL = document.querySelector('form input[name=kwd]'); 
-	inputEL.addEventListener('keydown', function (evt) {
-		if(evt.key === 'Enter') { 
-			evt.preventDefault();
-			searchList();
+<script src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill-resize-module@2.0.4/dist/resize.js"></script>
+<script src="${pageContext.request.contextPath}/dist/js/qeditor.js"></script>
+<script src="${pageContext.request.contextPath}/dist/jsFree/dairyWrite.js"></script>
+<script type="text/javascript">
+function hasContent(htmlContent) {
+	htmlContent = htmlContent.replace(/<p[^>]*>/gi, '');
+	htmlContent = htmlContent.replace(/<\/p>/gi, '');
+	htmlContent = htmlContent.replace(/<br\s*\/?>/gi, '');
+	htmlContent = htmlContent.replace(/&nbsp;/g, ' ');
+	htmlContent = htmlContent.replace(/\s/g, '');
+	
+	return htmlContent.length > 0;
+}
+function sendOk() {
+    const f = document.dairyForm;
+    
+	str = f.subject.value.trim();
+	if( ! str ) {
+		alert('제목을 입력하세요. ');
+		f.subject.focus();
+		return;
+	}
+    
+	const htmlViewEL = document.querySelector('textarea#html-view');
+	let htmlContent = htmlViewEL ? htmlViewEL.value : quill.root.innerHTML;
+	if(! hasContent(htmlContent)) {
+		alert('내용을 입력하세요. ');
+		if(htmlViewEL) {
+			htmlViewEL.focus();
+		} else {
+			quill.focus();
 		}
-	});
-});
+		return;
+	}
+	f.content.value = htmlContent;
+	
+	f.action = '${pageContext.request.contextPath}/free/${mode}';
+	f.submit();
+}
 </script>
+
 </body>
 </html>
