@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.FreeMapper">
+
+	<insert id="insertDairy" parameterType="com.sp.app.model.Free">
+		INSERT INTO freeBoard(freeId, subject, content, hitCount, regDate, block, report, memberId)
+		VALUES(freeId_seq.NEXTVAL, #{subject}, #{content}, 0, SYSDATE, 0, 0, #{memberId})
+	</insert>
+	
+	<sql id="where-list">
+	    <if test="kwd != null and kwd != ''">
+	        <choose>
+	            <when test="schType == 'nickname'">
+	                AND nickname LIKE '%' || #{kwd} || '%'
+	            </when>
+	            <otherwise>
+	                AND subject LIKE '%' || #{kwd} || '%'
+	            </otherwise>
+	        </choose>
+	    </if>
+	</sql>
+	
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM freeBoard fb
+		JOIN member2 m2 ON fb.memberId = m2.memberId
+		<where>
+			<if test="kwd != null and kwd != ''">
+				<include refid="where-list" />
+			</if>	
+		</where>
+	</select>
+	
+	<select id="dairyList" parameterType="map" resultType="com.sp.app.model.Free">
+		SELECT fb.freeId, fb.subject, fb.content, fb.hitCount, TO_CHAR(fb.regDate, 'YYYY-MM-DD') regDate, fb.block, fb.report, m2.memberId, m2.nickname, NVL(replyCount, 0) replyCount
+		FROM freeBoard fb
+		JOIN member2 m2 ON fb.memberId = m2.memberId
+		LEFT OUTER JOIN (
+			SELECT freeId, COUNT(*) replyCount
+			FROM freeReply
+			WHERE parentNum = 0 AND block = 0 AND report = 0
+			GROUP BY freeId
+		) f ON fb.freeId = f.freeId
+		<where>
+			<if test="kwd != null and kwd != ''">
+				<include refid="where-list" />
+			</if>
+			AND block = 0
+		</where>
+		ORDER BY freeId DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<select id="findByDairy" parameterType="Long" resultType="com.sp.app.model.Free">
+		SELECT fb.freeId, fb.subject, fb.content, fb.hitCount, TO_CHAR(fb.regDate, 'YYYY-MM-DD') regDate, fb.block, fb.report, m2.memberId, m2.nickname
+		FROM freeBoard fb
+		JOIN member2 m2 ON m2.memberId = fb.memberId
+		WHERE fb.freeId = #{freeId} AND block = 0
+	</select>
+	
+	<update id="updateHitCount" parameterType="Long">
+		UPDATE freeBoard SET hitCount = hitCount + 1 
+		WHERE freeId = #{freeId}
+	</update>
+	
+	<select id="findByPrev" parameterType="map" resultType="com.sp.app.model.Free">
+		SELECT freeId, subject
+		FROM freeBoard b
+		JOIN member2 m ON b.memberId = m.memberId
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list"/>
+			</if>
+			AND (freeId &gt; #{freeId})
+			AND block = 0
+		</where>
+		ORDER BY freeId ASC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<select id="findByNext" parameterType="map" resultType="com.sp.app.model.Free">
+		SELECT freeId, subject
+		FROM freeBoard b
+		JOIN member2 m ON b.memberId = m.memberId
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list"/>
+			</if>
+			AND (freeId &lt; #{freeId})
+			AND block = 0
+		</where>
+		ORDER BY freeId DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<update id="updateDairy" parameterType="com.sp.app.model.Free">
+		UPDATE freeBoard SET subject = #{subject}, content = #{content}
+		WHERE freeId = #{freeId}
+	</update>
+	
+	<delete id="deleteDairy" parameterType="Long">
+		DELETE FROM freeBoard
+		WHERE freeId = #{freeId}
+	</delete>
+	
+	<insert id="insertReply" parameterType="com.sp.app.model.Free">
+		INSERT freeReply(replyId, content, regDate, parentNum, block, report, fredId, memberId, nickname)
+		VALUES(freeReply_seq.NEXTVAL, #{content} , SYSDATE, #{parentNum}, 0, 0, #{fredId}, #{memberId}, #{nickname});
+	</insert>
+	
+	<select id="replyCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM freeReply
+		WHERE fredId = #{fredId} AND parentNum = 0 AND block = 0
+		<if test="userLevel lt 51">
+			AND ( report = 1 OR memberId = #{memberId} )
+		</if>
+	</select>
+
+	<select id="listReply" parameterType="map" resultType="com.sp.app.model.Free">
+		SELECT fr1.replyId, fr1.memberId, freeId, name, content, fr1.regDate, block, m2.nickname, report, NVL(answerCount, 0) answerCount
+		FROM freeReply fr1
+		JOIN member2 m2 ON fb.memberId = m2.memberId
+		LEFT OUTER JOIN (
+			SELECT parentNum, COUNT(*) answerCount
+			FROM freeReply
+			WHERE freeId = #{freeId} AND parentNum != 0 AND block = 0
+			<if test="userLevel lt 51">
+				AND ( report = 0 OR memberId = #{memberId} )
+			</if>
+			GROUP BY parentNum
+		) fr2 ON fr1.replyId = fr2.replyId
+		WHERE freeId = #{freeId} AND fr1.parentNum = 0 AND fr1.block = 0
+		<if test="userLevel lt 51">
+			AND ( report = 1 OR fr1.memberId = #{memberId} )
+		</if>
+		ORDER BY fr1.replyId DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<delete id="deleteReply" parameterType="map">
+		DELETE FROM freeReply
+		WHERE replyId = #{replyId}
+		<if test="mode == 'reply'">
+			OR parentNum = #{replyId}
+		</if>
+	</delete>
+	
+	<select id="listReplyAnswer" parameterType="map" resultType="com.sp.app.model.Free">
+		SELECT replyId, freeId, fr.memberId, name, m2.nickname, content, regDate, profile_photo, parentNum, report
+		FROM freeReply fr
+		JOIN member2 m2 ON fr.member_id = m2.memberId AND block = 0
+		WHERE parentNum = #{parentNum}
+		<if test="userLevel lt 51">
+			AND ( showReply = 1 OR fr.memberId = #{memberId} )
+		</if>
+		ORDER BY replyId DESC
+	</select>
+	
+	<select id="replyAnswerCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM freeReply
+		WHERE parentNum = #{parentNum} AND block = 0
+		<if test="userLevel lt 51">
+			AND ( report = 1 OR memberId = #{memberId} )
+		</if>
+	</select>
+	
+	<update id="updateReplyShowHide" parameterType="map">
+		UPDATE freeReply SET report = #{report}
+		WHERE replyId = #{replyId} AND memberId = #{memberId}
+	</update>
+
+</mapper>

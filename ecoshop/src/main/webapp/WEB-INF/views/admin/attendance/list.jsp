@@ -266,73 +266,76 @@ form button[type=button]:hover {
 
 	<main class="main-container">
 		<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
-		
+
 
 		<div class="content">
 			<h2 class="mb-4">출석체크 관리</h2>
 
 			<form name="searchForm" class="row g-3 mb-4" method="get">
 				<div class="col-auto">
-					<label for="start" class="form-label">기간 시작일(월요일)</label> 
-					<input type="date" id="start" name="start" value="${empty start ? '' : start}" class="form-control" required>
+					<label for="start" class="form-label">기간 시작일(월요일)</label> <input
+						type="date" id="start" name="start"
+						value="${empty start ? '' : start}" class="form-control" required>
 				</div>
 				<div class="col-auto">
-					<label for="end" class="form-label">기간 종료일(일요일)</label>
-					<input type="date" id="end" name="end" value="${empty end ? '' : end}" class="form-control" readonly>
+					<label for="end" class="form-label">기간 종료일(일요일)</label> <input
+						type="date" id="end" name="end" value="${empty end ? '' : end}"
+						class="form-control" readonly>
 				</div>
 
 				<div class="col-auto">
-					<label for="schType" class="form-label">검색 조건</label> 
-						<select 	id="schType" name="schType" class="form-select">
-							<option value="name" ${schType=="name"?"selected":""}>이름</option>
-							<option value="memberId" ${schType=="memberId"?"selected":""}>회원번호</option>
-						</select>
-					
+					<label for="schType" class="form-label">검색 조건</label> <select
+						id="schType" name="schType" class="form-select">
+						<option value="name" ${schType=="name"?"selected":""}>이름</option>
+						<option value="memberId" ${schType=="memberId"?"selected":""}>회원번호</option>
+					</select>
+
 				</div>
 				<div class="col-auto">
-					<label for="keyword" class="form-label">검색어</label> 
-					<input type="text" id="kwd" name="kwd" value="${kwd}" class="form-control">
+					<label for="keyword" class="form-label">검색어</label> <input
+						type="text" id="kwd" name="kwd" value="${kwd}"
+						class="form-control">
 				</div>
 
 				<div class="col-auto align-self-end">
-					<button type="submit" class="btn btn-primary" onclick="searchList();">조회</button>
-					<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/attendance/list'">초기화
-				</button>
+					<button type="submit" class="btn btn-primary"
+						onclick="searchList();">조회</button>
+					<button type="button"
+						onclick="location.href='${pageContext.request.contextPath}/admin/attendance/list'">초기화
+					</button>
 				</div>
-				
-				
-					</form>
 
-<div class="row mb-4">
-    <div class="col-md-4">
-        <div class="card text-center">
-            <div class="card-body">
-                <h5 class="card-title">총 조회 인원</h5>
-                <p class="card-text fs-4 fw-bold">${dataCount}명</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-center">
-            <div class="card-body">
-                <h5 class="card-title">포인트 지급 대상</h5>
-                <%-- 이 값은 컨트롤러에서 계산해서 넘겨줘야 합니다 --%>
-                <p class="card-text fs-4 fw-bold text-success">${pointTargetCount}명</p> 
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-center">
-            <div class="card-body">
-                <h5 class="card-title">기간 내 총 출석</h5>
-                <%-- 이 값도 컨트롤러에서 계산해서 넘겨줘야 합니다 --%>
-                <p class="card-text fs-4 fw-bold">${totalAttendanceCount}회</p>
-            </div>
-        </div>
-    </div>
-</div>
 
-<table class="table table-bordered table-hover">
+			</form>
+
+			<div class="row mb-4">
+				<div class="col-md-4">
+					<div class="card text-center">
+						<div class="card-body">
+							<h5 class="card-title">총 조회 인원</h5>
+							<p class="card-text fs-4 fw-bold">${dataCount}명</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="card text-center">
+						<div class="card-body">
+							<h5 class="card-title">포인트 지급 대상</h5>
+							<p class="card-text fs-4 fw-bold text-success">${pointTargetCount}명</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="card text-center">
+						<div class="card-body">
+							<h5 class="card-title">기간 내 총 출석</h5>
+							<p class="card-text fs-4 fw-bold">${totalAttendanceCount}회</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<table class="table table-bordered table-hover">
 				<thead class="table-light">
 					<tr class="text-center">
 						<th>회원번호</th>
@@ -349,27 +352,24 @@ form button[type=button]:hover {
 							<td>${item.memberId}</td>
 							<td>${item.name}</td>
 							<td>${start}~${end}</td>
-							<td>
-			                    <c:choose>
-			                        <c:when test="${item.attendanceCount > 0}">
+							<td><c:choose>
+									<c:when test="${item.attendanceCount > 0}">
 			                            ${item.attendanceCount}회
 			                        </c:when>
-			                        <c:otherwise>
+									<c:otherwise>
 			                            없음
 			                        </c:otherwise>
-			                    </c:choose>
-			                </td>
-			                <td><fmt:formatDate value="${item.lastAttendanceDate}" pattern="yyyy-MM-dd" /></td>
-							<td>
-								<c:choose>
+								</c:choose></td>
+							<td><fmt:formatDate value="${item.lastAttendanceDate}"
+									pattern="yyyy-MM-dd" /></td>
+							<td><c:choose>
 									<c:when test="${item.attendanceCount >= 5}">
 										<span class="badge bg-success">지급완료</span>
 									</c:when>
 									<c:otherwise>
 										<span class="badge bg-secondary">미지급</span>
 									</c:otherwise>
-								</c:choose>
-							</td>
+								</c:choose></td>
 						</tr>
 					</c:forEach>
 
@@ -381,9 +381,8 @@ form button[type=button]:hover {
 					</c:if>
 				</tbody>
 			</table>
-			
-			<div class="page-navigation">
-				${dataCount == 0 ? "등록된 게시글이 없습니다" : paging}
+
+			<div class="page-navigation">${dataCount == 0 ? "등록된 게시글이 없습니다" : paging}
 			</div>
 		</div>
 	</main>

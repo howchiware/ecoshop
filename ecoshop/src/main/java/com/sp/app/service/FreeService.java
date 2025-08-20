@@ -14,9 +14,9 @@ public interface FreeService {
 	public Free findByPrev(Map<String, Object> map);
 	public Free findByNext(Map<String, Object> map);
 		
-	public void insertDairy(Free dto, String uploadPath) throws Exception;
-	public void updateDairy(Free dto, String uploadPath) throws Exception;
-	public void deleteDairy(long freeId, String uploadPath, Long memberId, int userLevel) throws Exception;
+	public void insertDairy(Free dto) throws Exception;
+	public void updateDairy(Free dto) throws Exception;
+	public void deleteDairy(long freeId, Long memberId, int userLevel) throws Exception;
 	
 	public void insertReply(Free dto) throws Exception;
 	public List<Free> listReply(Map<String, Object> map);
@@ -26,5 +26,7 @@ public interface FreeService {
 	public List<Free> listReplyAnswer(Map<String, Object> map);
 	public int replyAnswerCount(Map<String, Object> map);
 	
-	public boolean deleteUploadFile(String uploadPath, String filename);
+	// public boolean deleteUploadFile(String uploadPath, String filename);
+	
+	public void updateReplyShowHide(Map<String, Object> map) throws Exception;
 }

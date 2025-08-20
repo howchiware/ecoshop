@@ -37,7 +37,7 @@ $(function(){
 		    }
 		
 		    // 선택된 옵션의 재고 번호와 판매 가격을 가져온다.
-		    let stockNum = $('.requiredOption:selected').attr('data-stockNum');
+		    let stockNum = $('.requiredOption :selected').attr('data-stockNum');
 		
 		    // buyQuantity 함수를 호출하여 상품을 추가
 		    buyQuantity(stockNum, gvPrice, selectedOptionDetailNum, 0);
@@ -286,7 +286,7 @@ function sendOk(mode) {
 		// GET 방식으로 전송. 로그인 후 결제화면으로 이동하기 위해
 		// 또는 자바스크립트 sessionStorage를 활용 할 수 있음
 		f.method = 'get';
-		f.action = contextPath + '/order/payment';
+		f.action = contextPath + '/productsOrder/payment';
 	} else {
 		if(! confirm('선택한 상품을 장바구니에 담으시겠습니까 ? ')) {
 			return false;

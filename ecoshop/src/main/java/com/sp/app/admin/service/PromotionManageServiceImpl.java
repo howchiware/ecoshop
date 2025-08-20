@@ -142,4 +142,6 @@ public class PromotionManageServiceImpl implements PromotionManageService{
 		return false;
 	}
 
+
+
 }

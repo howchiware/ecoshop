@@ -1,0 +1,126 @@
+main.container {
+	background-color: #ffffff;
+	padding: 2.5rem;
+	border-radius: 12px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.article-card {
+	border: 1px solid #e9ecef;
+	border-radius: 12px;
+	box-shadow: none;
+	overflow: hidden;
+}
+
+.article-card .card-header {
+	background-color: #f8f9fa;
+	border-bottom: 1px solid #e9ecef;
+	padding: 1.5rem;
+}
+
+.article-card .card-header h3 {
+	font-size: 1.75rem;
+	font-weight: 700;
+	margin-bottom: 0.75rem;
+	color: #212529;
+}
+
+.article-card .card-header .text-muted {
+	font-size: 0.875rem;
+}
+
+.article-card .card-body {
+	padding: 2rem 1.5rem;
+	font-size: 1rem;
+	line-height: 1.8;
+}
+
+.article-card .card-body img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 8px;
+	margin-bottom: 1.5rem;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.article-card .card-body p {
+	white-space: pre-wrap;
+}
+
+.post-navigation {
+	border: 1px solid #e9ecef;
+	border-radius: 8px;
+	margin-top: 2rem;
+	font-size: 0.95rem;
+}
+
+.post-navigation .nav-item {
+	padding: 0.8rem 1.2rem;
+	display: flex;
+	align-items: center;
+}
+
+.post-navigation .nav-item:first-child {
+	border-bottom: 1px solid #e9ecef;
+}
+
+.post-navigation .nav-item .fw-bold {
+	color: #315e4e;
+	margin-right: 0.75rem;
+	flex-shrink: 0; 
+}
+
+.post-navigation .nav-item a {
+	text-decoration: none;
+	color: #555;
+	transition: color 0.2s ease;
+}
+
+.post-navigation .nav-item a:hover {
+	color: #000;
+	text-decoration: underline;
+}
+
+.button-group {
+	margin-top: 2.5rem;
+}
+
+.btn-default {
+	background-color: #f8f9fa;
+	border-color: #dee2e6;
+	color: #333;
+	padding: 0.5rem 1.25rem;
+	border-radius: 6px;
+	transition: all 0.2s ease-in-out;
+}
+
+.btn-default:hover {
+	background-color: #e2e6ea;
+	border-color: #dae0e5;
+}
+
+.btn-outline-danger {
+	border-radius: 6px;
+	padding: 0.5rem 1.25rem;
+}
+
+.btn-outline-danger:hover {
+	color: #fff;
+	background-color: #dc3545;
+	border-color: #dc3545;
+}
+
+.btn-primary {
+	background-color: #315e4e;
+	border-color: #315e4e;
+	border-radius: 6px;
+	padding: 0.5rem 1.25rem;
+	transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+	background-color: #234d3c;
+	border-color: #234d3c;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 10px rgba(49, 94, 78, 0.25);
+}

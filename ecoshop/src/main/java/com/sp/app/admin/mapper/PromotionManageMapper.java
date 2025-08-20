@@ -14,9 +14,11 @@ public interface PromotionManageMapper {
 	public void updatePromotionManage(PromotionManage dto) throws SQLException;
 	public void deletePromotionManage(long promotionId) throws SQLException;
 	
+	public void updateHitCount(long promotionId) throws SQLException;
+	
 	public int dataCount(Map<String, Object> map);
 	public List<PromotionManage> listPromotionManage(Map<String, Object> map);
-
+	
 	public PromotionManage findById(Long promotionId);
 	public PromotionManage findByPrev(Map<String, Object> map);
 	public PromotionManage findByNext(Map<String, Object> map);

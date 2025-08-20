@@ -1,0 +1,193 @@
+function deleteOk() {
+	let params = 'freeId=' + FREE_ID + '&' + QUERY_STRING;
+	let url = CONTEXT_PATH + '/free/delete?' + params;
+
+	if(confirm('게시글을 삭제하시겠습니까?')) {
+		location.href = url;
+	}
+}
+
+// 페이징
+$(function() {
+	listPage(1);
+});
+
+function listPage(page) {
+	let url = CONTEXT_PATH + '/free/listReply';
+	let params = {freeId: FREE_ID, pageNo: page};
+	let selector = 'div#listReply';
+	
+	const fn = function(data) {
+		$(selector).html(data);
+	};
+	
+	ajaxRequest(url, 'get', params, 'text', fn);
+}
+
+// 댓글 등록
+$(function(){
+	$('button.btnSendReply').click(function(){
+		const $div = $(this).closest('div.reply-form');
+
+		let content = $div.find('textarea').val().trim();
+		if(! content) {
+			$div.find('textarea').focus();
+			return false;
+		}
+		
+		let url = CONTEXT_PATH + '/free/insertReply';
+		let params = {freeId: FREE_ID, content:content, parentNum:0}; 
+		
+		const fn = function(data){
+			$div.find('textarea').val('');
+			
+			let state = data.state;
+			if(state === 'true') {
+				listPage(1);
+			} else if(state === 'false') {
+				alert('댓글 추가에 실패했습니다.');
+			}
+		};
+		
+		ajaxRequest(url, 'post', params, 'json', fn);
+	});
+});
+
+// 삭제, 신고
+$(function(){
+	$('div#listReply').on('click', '.dropdown-button', function(){
+		const $menu = $(this).next('.reply-menu');
+		
+		$('.reply-menu').not($menu).addClass('d-none');
+		
+		$menu.toggleClass('d-none');
+	});
+	
+	$('body').on('click', function(evt) {
+		const parent = evt.target.parentNode;
+		const isMatch = parent.tagName === 'SPAN' && $(parent).hasClass('dropdown-button');		
+		
+		if(isMatch) {
+			return false;
+		}
+		
+		$('div.reply-menu:not(.d-none)').addClass('d-none');
+	});
+});
+
+// 댓글 삭제
+$(function(){
+	$('div#listReply').on('click', '.deleteReply', function(){
+		if(! confirm('댓글을 삭제하시겠습니까 ? ')) {
+		    return false;
+		}
+		
+		let replyNum = $(this).attr('data-replyNum');
+		let page = $(this).attr('data-pageNo');
+		
+		let url = CONTEXT_PATH + '/free/deleteReply';
+		let params = {replyNum:replyNum, mode:'reply'};
+		
+		const fn = function(data){
+			listPage(page);
+		};
+		
+		ajaxRequest(url, 'post', params, 'json', fn);
+	});
+});
+
+// 답글 리스트
+function listReplyAnswer(parentNum) {
+	let url = CONTEXT_PATH + '/free/listReplyAnswer';
+	let params = 'parentNum=' + parentNum;
+	let selector = 'div#listReplyAnswer' + parentNum;
+	
+	const fn = function(data){
+		$(selector).html(data);
+	};
+	
+	ajaxRequest(url, 'get', params, 'text', fn);
+}
+
+// 댓글별 답글 개수
+function countReplyAnswer(parentNum) {
+	let url = CONTEXT_PATH + '/free/countReplyAnswer';
+	let params = 'parentNum=' + parentNum;
+	
+	const fn = function(data){
+		let count = data.count;
+		let selector = 'span#answerCount' + parentNum;
+		$(selector).html(count);
+	};
+	
+	ajaxRequest(url, 'post', params, 'json', fn);
+}
+
+// 답글 버튼
+$(function(){
+	$('div#listReply').on('click', 'button.btnReplyAnswerLayout', function(){
+		const $trReplyAnswer = $(this).closest('tr').next();
+		
+		let isHidden = $trReplyAnswer.hasClass('d-none');
+		let replyNum = $(this).attr('data-replyNum');
+		
+		if(isHidden) {
+			listReplyAnswer(replyNum);
+			countReplyAnswer(replyNum);
+		}
+		
+		$trReplyAnswer.toggleClass('d-none');
+	});
+	
+});
+
+// 답글 등록
+$(function(){
+	$('div#listReply').on('click', 'button.btnSendReplyAnswer', function(){
+		let replyNum = $(this).attr('data-replyNum');
+		const $td = $(this).closest('td');
+		
+		let content = $td.find('textarea').val().trim();
+		if(! content) {
+			$td.find('textarea').focus();
+			return false;
+		}
+		
+		let url = CONTEXT_PATH + '/free/insertReply';
+		let params = {freeId: FREE_ID, content:content, parentNum:replyNum};
+		
+		const fn = function(data){
+			$td.find('textarea').val('');
+			
+			let state = data.state;
+			if(state === 'true') {
+				listReplyAnswer(replyNum);
+				countReplyAnswer(replyNum);
+			}
+		};
+		
+		ajaxRequest(url, 'post', params, 'json', fn);
+	});
+});
+
+// 답글 삭제
+$(function(){
+	$('div#listReply').on('click', '.deleteReplyAnswer', function(){
+		if(! confirm('답글을 삭제하시겠습니까 ? ')) {
+		    return false;
+		}
+		
+		let replyNum = $(this).attr('data-replyNum');
+		let parentNum = $(this).attr('data-parentNum');
+		
+		let url = CONTEXT_PATH + '/free/deleteReply';
+		let params = {replyNum:replyNum, mode:'answer'};
+		
+		const fn = function(data){
+			listReplyAnswer(parentNum);
+			countReplyAnswer(parentNum);
+		};
+		
+		ajaxRequest(url, 'post', params, 'json', fn);
+	});
+});

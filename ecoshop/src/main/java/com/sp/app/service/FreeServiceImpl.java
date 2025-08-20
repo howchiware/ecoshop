@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.sp.app.common.MyUtil;
-import com.sp.app.common.StorageService;
 import com.sp.app.mapper.FreeMapper;
 import com.sp.app.model.Free;
 
@@ -19,94 +18,237 @@ import lombok.extern.slf4j.Slf4j;
 public class FreeServiceImpl implements FreeService {
 	
 	private final FreeMapper mapper;
-	private final StorageService storageService;
 	private final MyUtil myUtil;
+	// private final StorageService storageService;
 	
 	
 	@Override
 	public List<Free> dairyList(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Free> list = null;
+		
+		try {
+			list = mapper.dairyList(map);			
+		} catch (Exception e) {
+			log.info("dairyList : ", e);
+		}
+		
+		return list;
 	}
+	
 	@Override
 	public Free findByDairy(long freeId) {
-		// TODO Auto-generated method stub
-		return null;
+		Free dto = null;
+		
+		try {
+			dto = mapper.findByDairy(freeId);
+		} catch (Exception e) {
+			log.info("findByDairy: ", e);
+		}
+		
+		return dto;
 	}
+	
 	@Override
 	public int dataCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try {
+			result = mapper.dataCount(map);
+		} catch (Exception e) {
+			log.info("dataCount: ", e);
+		}
+		
+		return result;
 	}
+	
 	@Override
 	public void updateHitCount(long freeId) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			mapper.updateHitCount(freeId);
+		} catch (Exception e) {
+			log.info("updateHitCount: ", e);
+			throw e;
+		}
 	}
+	
 	@Override
 	public Free findByPrev(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		Free dto = null;
+		
+		try {
+			dto = mapper.findByPrev(map);
+		} catch (Exception e) {
+			log.info("findByPrev: ", e);
+		}
+		
+		return dto;
 	}
+	
 	@Override
 	public Free findByNext(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public void insertDairy(Free dto, String uploadPath) throws Exception {
+		Free dto = null;
+		
 		try {
-			if(! dto.getSelectFile().isEmpty()) {
-				
-			}
+			dto = mapper.findByNext(map);
 		} catch (Exception e) {
-			// TODO: handle exception
+			log.info("findByNext: ", e);
+		}
+		
+		return dto;
+	}
+	
+	@Override
+	public void insertDairy(Free dto) throws Exception {
+		try {
+			/*
+			if(! dto.getSelectFile().isEmpty()) {
+				String saveFilename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
+				dto.setSaveFilename(saveFilename);
+				dto.setOriginalFilename(dto.getSelectFile().getOriginalFilename());
+			}
+			*/
+			mapper.insertDairy(dto);
+		} catch (Exception e) {
+			log.info("insertDairy: ", e);
+			throw e;
 		}
 	}
 	@Override
-	public void updateDairy(Free dto, String uploadPath) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void updateDairy(Free dto) throws Exception {
+		try {
+			/*
+			if(dto.getSelectFile() != null && ! dto.getSelectFile().isEmpty()) {
+				if(! dto.getSaveFilename().isBlank()) {
+					deleteUploadFile(uploadPath, dto.getSaveFilename());					
+				}
+				
+				String saveFilename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
+				dto.setSaveFilename(saveFilename);
+				dto.setOriginalFilename(dto.getSelectFile().getOriginalFilename());
+			}
+			*/
+			mapper.updateDairy(dto);
+		} catch (Exception e) {
+			log.info("updateDairy: ", e);
+			throw e;
+		}
 	}
+
 	@Override
-	public void deleteDairy(long freeId, String uploadPath, Long memberId, int userLevel) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void deleteDairy(long freeId, Long memberId, int userLevel) throws Exception {
+	    try {
+	        Free dto = findByDairy(freeId);
+
+	        if (dto == null) {
+	            return;
+	        }
+
+	        if (userLevel < 51 && !memberId.equals(dto.getMemberId())) {
+	            return; 
+	        }
+	        
+	        mapper.deleteDairy(freeId);
+
+	    } catch (Exception e) {
+	        log.error("deleteDairy: ", e);
+	        throw e;
+	    }
 	}
+	
 	@Override
 	public void insertReply(Free dto) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			mapper.insertReply(dto);
+		} catch (Exception e) {
+			log.info("insertReply : ", e);
+			throw e;
+		}
 	}
+	
 	@Override
 	public List<Free> listReply(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Free> list = null;
+		
+		try {
+			list = mapper.listReply(map);
+			for(Free dto : list) {
+				dto.setContent(myUtil.htmlSymbols(dto.getContent()));
+				map.put("replyId", dto.getReplyId());
+			}
+		} catch (Exception e) {
+			log.info("listReply : ", e);
+		}
+		
+		return list;
 	}
+	
 	@Override
 	public int replyCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try {
+			result = mapper.replyCount(map);
+		} catch (Exception e) {
+			log.info("replyCount : ", e);
+		}
+		
+		return result;
 	}
+	
 	@Override
 	public void deleteReply(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			mapper.deleteReply(map);
+		} catch (Exception e) {
+			log.info("deleteReply : ", e);
+			throw e;
+		}
 	}
+	
 	@Override
 	public List<Free> listReplyAnswer(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Free> list = null;
+		
+		try {
+			list = mapper.listReplyAnswer(map);
+			for(Free dto : list) {
+				dto.setContent(myUtil.htmlSymbols(dto.getContent()));
+			}
+		} catch (Exception e) {
+			log.info("listReplyAnswer : ", e);
+		}
+		
+		return list;
 	}
+	
 	@Override
 	public int replyAnswerCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try {
+			result = mapper.replyAnswerCount(map);
+		} catch (Exception e) {
+			log.info("replyAnswerCount : ", e);
+		}
+		
+		return result;
 	}
+	/*
 	@Override
 	public boolean deleteUploadFile(String uploadPath, String filename) {
-		// TODO Auto-generated method stub
-		return false;
+		return storageService.deleteFile(uploadPath, filename);
+	}
+	*/
+
+	@Override
+	public void updateReplyShowHide(Map<String, Object> map) throws Exception {
+		try {
+			mapper.updateReplyShowHide(map);
+		} catch (Exception e) {
+			log.info("updateReplyShowHide : ", e);
+			throw e;
+		}
+		
 	}
 	
 	

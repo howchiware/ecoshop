@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Destination {
 	private long num;
-	private Long member_id;
+	private Long memberId;
 	private String addressName;
 	private String recipientName;
 	private int defaultDest;

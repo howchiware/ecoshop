@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.ProductOrderMapper">
+	<select id="findByMaxOrderNumber" resultType="String">
+		SELECT orderId
+		FROM productOrder
+		ORDER BY orderDate DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<!-- 주문 등록 -->
+	<insert id="insertOrder" parameterType="com.sp.app.model.ProductOrder">
+		INSERT INTO productOrder(orderId, memberId, orderDate, totalAmount, 
+			usedPoint, deliveryCharge, payment, cancelAmount, orderState) 
+		VALUES (#{orderId}, #{memberId}, SYSDATE, #{totalAmount}, 
+			#{usedPoint}, #{deliveryCharge}, #{payment}, 0, 1)
+	</insert>
+
+	<!-- 결제 내역 등록 -->
+	<insert id="insertPayDetail" parameterType="com.sp.app.model.ProductOrder">
+		INSERT INTO payment(orderId, imp_uid, payMethod, cardName, cardNumber, applyNum, applyDate) 
+		VALUES (#{orderId}, #{imp_uid, jdbcType=VARCHAR}, #{payMethod, jdbcType=VARCHAR}, #{cardName, jdbcType=VARCHAR}, 
+			#{cardNumber, jdbcType=VARCHAR}, #{applyNum, jdbcType=VARCHAR},
+			TO_DATE(#{applyDate}, 'YYYY-MM-DD HH24:MI:SS') )
+	</insert>
+
+	<!-- 주문 상세 정보 등록 -->
+	<insert id="insertOrderDetail" parameterType="com.sp.app.model.ProductOrder">
+		INSERT INTO orderDetail(orderDetailId, orderId, qty, price, 
+			productCode, optionDetailNum, optionDetailNum2, productMoney, savedPoint, 
+			userDelete, detailState) 
+		VALUES (orderDetail_seq.NEXTVAL, #{orderId}, #{qty}, #{price},  
+			#{productCode}, #{optionDetailNum, jdbcType=BIGINT}, 
+			#{optionDetailNum2, jdbcType=BIGINT}, #{productMoney}, #{savedPoint}, 0, 0)
+	</insert>
+	
+	<!-- 배송지 등록 -->
+	<insert id="insertOrderDelivery" parameterType="com.sp.app.model.ProductOrder">
+		INSERT INTO deliveryDestination(orderId, recipientName, tel, zip, addr1, addr2, pickup, 
+			accessInfo, passcode, requestMemo) 
+		VALUES (#{orderId}, #{recipientName}, #{tel}, #{zip}, #{addr1}, #{addr2}, 
+			#{pickup, jdbcType=VARCHAR}, #{accessInfo, jdbcType=VARCHAR}, 
+			#{passcode, jdbcType=VARCHAR}, #{requestMemo, jdbcType=VARCHAR})
+	</insert>
+
+	<!-- 포인트 등록 -->
+	<insert id="insertUserPoint" parameterType="com.sp.app.model.Point">
+		INSERT INTO point(pointId, memberId, orderId, baseDate, classify, 
+			point, reason, balance)
+		VALUES(point_seq.NEXTVAL, #{memberId}, 
+			#{orderId, jdbcType=VARCHAR},
+			TO_DATE(#{baseDate},'YYYY-MM-DD HH24:MI:SS'),
+			#{classify}, #{point}, #{reason, jdbcType=VARCHAR}, 
+			NVL((SELECT balance FROM point 
+					WHERE memberId = #{memberId}
+					ORDER BY pointId DESC 
+					FETCH FIRST 1 ROWS ONLY ), 0) + #{point}
+			)
+	</insert>
+	
+	<!-- 주문 내역 상세 리스트 -->
+	<select id="listOrderProduct" parameterType="java.util.List" resultType="com.sp.app.model.ProductOrder">
+    	SELECT ps.stockNum, ps.productCode, ps.optionDetailNum, ps.optionDetailNum2, ps.totalStock,
+    		p.productName, p.price, p.point, p.thumbnail, 
+    		p.optionCount,
+    		po1.optionNum, po1.optionName,
+    		po2.optionNum optionNum2, po2.optionName optionName2,
+    		d1.optionDetailNum, d1.optionValue,
+    		d2.optionDetailNum optionDetailNum2, d2.optionValue optionValue2
+    	FROM (
+    		SELECT stockNum, productCode, optionDetailNum, optionDetailNum2, totalStock
+    		FROM productStock
+			WHERE (stockNum, productCode) IN
+				<foreach collection="list" item="item" index="index"
+					open="(" separator="," close=")">
+					(#{item.stockNum}, #{item.productId})
+				</foreach>    		
+    	) ps 
+    	JOIN product p ON ps.productCode = p.productCode
+    	LEFT OUTER JOIN (
+            SELECT productCode, optionNum, optionName, parentOption 
+            FROM productOption 
+            WHERE parentOption IS NULL
+    	) po1 ON ps.productCode = po1.productCode
+		LEFT OUTER JOIN (
+            SELECT optionNum, optionName, parentOption
+            FROM productOption
+			WHERE parentOption IS NOT NULL
+        ) po2 ON po1.optionNum = po2.parentOption
+    	LEFT OUTER JOIN optionDetail d1 ON ps.optionDetailNum = d1.optionDetailNum
+    	LEFT OUTER JOIN optionDetail d2 ON ps.optionDetailNum2 = d2.optionDetailNum
+	</select>
+	
+		<!-- 판매 개수 만큼 재고 감소 -->
+	<update id="updateProductStockDec" parameterType="com.sp.app.model.ProductOrder">
+		UPDATE productStock SET totalStock = totalStock - #{qty}
+		WHERE stockNum = #{stockNum}
+	</update>
+</mapper>

@@ -1,0 +1,119 @@
+main.container {
+    background-color: #ffffff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.search-form {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2.5rem;
+    border: 1px solid #e9ecef;
+}
+
+.search-form .form-label {
+    font-size: 0.875rem;
+    color: #555;
+    font-weight: 500;
+}
+
+.search-form .form-control,
+.search-form .form-select {
+    border-radius: 6px;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.search-form .form-control:focus,
+.search-form .form-select:focus {
+    border-color: #9DB492;
+    box-shadow: 0 0 0 0.25rem rgba(49, 94, 78, 0.2);
+}
+
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+    vertical-align: middle;
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    color: #333;
+    font-weight: 600;
+}
+
+.table tbody tr {
+    transition: background-color 0.15s ease-in-out;
+}
+
+.table-hover > tbody > tr:hover > * {
+    background-color: #f7f6f3;
+}
+
+.table td, .table th {
+    padding: 1rem 0.75rem;
+}
+
+.table tbody td {
+    border-bottom: 1px solid #e9ecef;
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table .text-start a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.2s ease-in-out;
+}
+
+.table .text-start a:hover {
+    color: #315e4e;
+    text-decoration: underline;
+}
+
+.table-bottom-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.page-navigation .pagination .page-link {
+    color: #555;
+    border-radius: 6px;
+    margin: 0 3px;
+    border: 1px solid #dee2e6;
+    transition: all 0.2s ease;
+}
+
+.page-navigation .pagination .page-link:hover {
+    background-color: #e9ecef;
+    color: #315e4e;
+}
+
+.page-navigation .pagination .page-item.active .page-link {
+    background-color: #315e4e;
+    border-color: #315e4e;
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(49, 94, 78, 0.3);
+}
+
+.btn-primary {
+    background-color: #315e4e;
+    border-color: #315e4e;
+    border-radius: 6px;
+    padding: 0.5rem 1.25rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+    background-color: #234d3c;
+    border-color: #234d3c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(49, 94, 78, 0.25);
+}
