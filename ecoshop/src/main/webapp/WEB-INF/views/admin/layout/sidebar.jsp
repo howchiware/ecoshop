@@ -60,7 +60,7 @@
       <a href="#"> 챌린지 관리 ></a>
       <ul class="submenu">
         <li><a href="${pageContext.request.contextPath}/admin/challengeManage/list"> 챌린지 목록</a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/challengeManage/write"> 챌린지 등록/수정/삭제</a></li>
+        <li><a href="${pageContext.request.contextPath}/admin/challengeManage/write"> 챌린지 등록</a></li>
       </ul>
     </li>
     <li>
