@@ -54,9 +54,9 @@ public class PromotionManageServiceImpl implements PromotionManageService{
 		List<PromotionManage> list = null;
 
 		try {
-			list = mapper.listPhoto(map);
+			list = mapper.listPromotionManage(map);
 		} catch (Exception e) {
-			log.info("listPhoto : ", e);
+			log.info("listPromotionManage : ", e);
 		}
 
 		return list;
@@ -77,26 +77,63 @@ public class PromotionManageServiceImpl implements PromotionManageService{
 
 	@Override
 	public PromotionManage findByPrev(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		PromotionManage dto = null;
+		
+		try {
+			dto = mapper.findByPrev(map);
+		} catch (Exception e) {
+			log.info("findByPrev : ", e);
+		}
+
+		return dto;
 	}
 
 	@Override
 	public PromotionManage findByNext(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		PromotionManage dto = null;
+		
+		try {
+			dto = mapper.findByPrev(map);
+		} catch (Exception e) {
+			log.info("findByPrev : ", e);
+		}
+
+		return dto;
 	}
 
 	@Override
 	public void updatePromotionManage(PromotionManage dto, String uploadPath) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			if(dto.getSelectFile() != null && ! dto.getSelectFile().isEmpty()) {
+				if(! dto.getImageFilename().isBlank()) {
+					deleteUploadFile(uploadPath, dto.getImageFilename());
+				}
+				
+				String saveFilename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
+				dto.setImageFilename(saveFilename);
+			}
+
+			 mapper.updatePromotionManage(dto);
+		} catch (Exception e) {
+			log.info("updatePromotionManage : ", e);
+			
+			throw e;
+		}
 	}
 
 	@Override
 	public void deletePromotionManage(long promotionId, String uploadPath, String filename) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			if (filename != null) {
+				deleteUploadFile(uploadPath, filename);
+			}
+
+			 mapper.deletePromotionManage(promotionId);
+		} catch (Exception e) {
+			log.info("deletePromotionManage : ", e);
+			
+			throw e;
+		}
 	}
 
 	@Override

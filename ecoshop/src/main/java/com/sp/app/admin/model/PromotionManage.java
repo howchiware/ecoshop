@@ -12,7 +12,7 @@ import lombok.Setter;
 public class PromotionManage {
 	private long promotionId;
 	private long memberId;
-	private long advertisingId;
+	private Integer advertisingId;
 	private String subject;
 	private String imageFilename;
 	private String regDate;

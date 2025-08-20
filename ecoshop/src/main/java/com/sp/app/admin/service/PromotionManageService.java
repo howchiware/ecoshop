@@ -15,8 +15,11 @@ public interface PromotionManageService {
 	public PromotionManage findByPrev(Map<String, Object> map);
 	public PromotionManage findByNext(Map<String, Object> map);
 	
+	
 	public void updatePromotionManage (PromotionManage dto, String uploadPath) throws Exception;
 	public void deletePromotionManage (long promotionId, String uploadPath, String filename) throws Exception;
 	
 	public boolean deleteUploadFile(String uploadPath, String filename);
+	
+	
 }

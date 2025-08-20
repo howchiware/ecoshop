@@ -134,13 +134,54 @@
 	</section>
 	<!-- 광고 섹션 -->
 	<section class="py-5">
-		<div class="container">
-			<div class="bg-light text-center py-5 px-3 border rounded shadow-sm">
-				<p class="mb-0 fw-semibold fs-5 text-muted">광고 또는 배너 영역</p>
-			</div>
-		</div>
-	</section>
+	  <div class="container">
+	    <div class="promotion-carousel-wrapper border rounded shadow-sm overflow-hidden" 
+	         style="background-color: #f8f9fa; height: 160px;">
 	
+	      <div id="carouselExampleIndicators" class="carousel slide h-100" data-bs-ride="carousel">
+	
+	        <div class="carousel-indicators">
+	          <c:forEach var="vo" items="${listPromotionManage}" varStatus="status">
+	            <button type="button" data-bs-target="#carouselExampleIndicators" 
+	                    data-bs-slide-to="${status.index}" 
+	                    class="${status.index == 0 ? 'active' : '' }"
+	                    aria-current="${status.index == 0 ? 'true' : 'false'}"
+	                    aria-label="${vo.subject}"></button>
+	          </c:forEach>
+	        </div>
+	
+	        <div class="carousel-inner h-100">
+	          <c:forEach var="vo" items="${listPromotionManage}" varStatus="status">
+	            <div class="carousel-item ${status.index == 0 ? 'active' : '' } h-100">
+	              <!-- <a href="${pageContext.request.contextPath}/admin/promotion/list?page=1"> -->
+	                <img src="${pageContext.request.contextPath}/uploads/promotion/${vo.imageFilename}"
+	                     class="d-block w-100 h-100" style="object-fit: cover;" alt="${vo.subject}">
+	             <!-- </a> --> 
+	            </div>
+	          </c:forEach>
+	
+	          <c:if test="${empty listPromotionManage}">
+	            <div class="carousel-item active h-100">
+	              <img src="${pageContext.request.contextPath}/dist/promotion/bg.png"
+	                   class="d-block w-100 h-100" style="object-fit: cover;" alt="기본 배너">
+	            </div>
+	          </c:if>
+	        </div>
+	
+	        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+	          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+	          <span class="visually-hidden">Previous</span>
+	        </button>
+	        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+	          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+	          <span class="visually-hidden">Next</span>
+	        </button>
+	
+	      </div>
+	    </div>
+	  </div>
+	</section>
+		
 	<footer>
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp"/>
 	</footer>

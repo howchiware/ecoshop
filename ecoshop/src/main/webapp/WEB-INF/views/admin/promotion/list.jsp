@@ -5,7 +5,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>공지사항</title>
+  <title>관리자페이지</title>
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
  <link
@@ -104,7 +104,7 @@
 
     <div class="page-title">
 		<div class="container align-items-center" data-aos="fade-up">
-			<h1>포토 갤러리</h1>
+			<h1>광고상태조회</h1>
 			<div class="page-title-underline-accent"></div>
 		</div>
 	</div>
@@ -131,10 +131,10 @@
 						<c:forEach var="dto" items="${list}" varStatus="status">
 							<div class="col-lg-4 col-md-6">
 								<div class="photo-content h-100">
-									<img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFilename}" class="img-fluid border rounded w-100" style="height: 235px;" alt="">
+									<img src="${pageContext.request.contextPath}/uploads/promotion/${dto.imageFilename}" class="img-fluid border rounded w-100" style="height: 235px;" alt="">
 									<div class="photo-info">
 										<p><label>${dto.subject}</label></p>
-										<a href="${pageContext.request.contextPath}/uploads/photo/${dto.imageFilename}" title="${dto.subject}" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+										<a href="${pageContext.request.contextPath}/uploads/promotion/${dto.imageFilename}" title="${dto.subject}" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
 										<a href="#inline-content-${dto.promotionId}" title="상세정보" class="glightbox4 details-link" data-glightbox="width: 700; height: auto;"><i class="bi bi-link-45deg"></i></a>
 									</div>
 								</div>
@@ -144,9 +144,6 @@
 										<h4 class="text-center mb-3">${dto.subject}</h4>
 										<div class="row g-3">
 											<div class="col-md-12 border-top"></div>
-											<div class="col-md-6">
-												작성자 : ${dto.name}
-											</div>
 											<div class="col-md-6 text-end">
 												작성일 : ${dto.regDate}
 											</div>
@@ -154,7 +151,7 @@
 											<div class="col-md-12 border-top"></div>
 											<div class="col-md-6">
 												<c:choose>
-													<c:when test="${sessionScope.member.member_id==dto.member_id}">
+													<c:when test="${sessionScope.member.memberId==dto.memberId}">
 														<button type="button" class="btn-default" onclick="location.href='${pageContext.request.contextPath}/admin/promotion/update?num=${dto.promotionId}&page=${page}';">수정</button>											</c:when>
 													<c:otherwise>
 														<button type="button" class="btn-default" disabled>수정</button>

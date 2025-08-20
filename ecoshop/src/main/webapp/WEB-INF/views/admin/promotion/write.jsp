@@ -47,6 +47,17 @@
 									<input type="text" name="subject" class="form-control" maxlength="100"  value="${dto.subject}">
 								</td>
 							</tr>
+							
+							<tr>
+								<td class="col-md-2 bg-light">번호</td>
+								<td>
+									<div class="row">
+										<div class="col-md-6">
+											<input type="text" name="name" class="form-control" readonly tabindex="-1" value="${dto.advertisingId}">
+										</div>
+									</div>
+								</td>
+							</tr>
 
 							<tr>
 								<td class="col-md-2 bg-light">이 름</td>
@@ -98,7 +109,7 @@ window.addEventListener('DOMContentLoaded', evt => {
 	let uploadImage = '${dto.imageFilename}';
 	let img;
 	if( uploadImage ) { // 수정인 경우
-		img = '${pageContext.request.contextPath}/uploads/photo/' + uploadImage;
+		img = '${pageContext.request.contextPath}/uploads/promotion' + uploadImage;
 	} else {
 		img = '${pageContext.request.contextPath}/dist/images/add_photo.png';
 	}
@@ -110,7 +121,7 @@ window.addEventListener('DOMContentLoaded', evt => {
 		if(! file) {
 			let img;
 			if( uploadImage ) { // 수정인 경우
-				img = '${pageContext.request.contextPath}/uploads/photo/' + uploadImage;
+				img = '${pageContext.request.contextPath}/uploads/promotion/' + uploadImage;
 			} else {
 				img = '${pageContext.request.contextPath}/dist/images/add_photo.png';
 			}

@@ -2,10 +2,11 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.admin.mapper.PromotionManageMapper">
+	<!-- 등록 -->
 	<insert id="insertPromotionManage" parameterType="com.sp.app.admin.model.PromotionManage">
 		INSERT INTO promotion(promotionId , memberId ,advertisingId , subject, imageFilename, regDate, postingStatus)
-		VALUES (promotion_seq.NEXTVAL, #{memberId}, #{advertisingId}, #{subject},  
-			#{imageFilename}, SYSDATE, 0)
+		VALUES (promotion_seq.NEXTVAL, #{memberId}, #{advertisingId, jdbcType=INTEGER}, #{subject},  
+			#{imageFilename}, SYSDATE, 1)
 	</insert>
 	
 	<sql id="where-list">
@@ -20,8 +21,102 @@
 			<if test="kwd != null and kwd != '' ">
 				<include refid="where-list"/>
 			</if>
-			AND block = 0
+			AND postingStatus = 0
 		</where>		
 	</select>
+	
+	<update id="updateAdvertisingStatus" parameterType="Long">
+	    UPDATE advertising
+	    SET postingStatus = 1
+	    WHERE advertisingId = #{advertisingId}
+	</update>
+	
+	<select id="listAdvertisement" parameterType="map" resultType="com.sp.app.admin.model.AdvertisementManage">
+	SELECT advertisingId, username, subject, content, TO_CHAR(regDate, 'YYYY-MM-DD') regDate, inquiryType, status,
+	 postingStatus, email, tel, TO_CHAR(adverStart, 'YYYY-MM-DD') adverStart, TO_CHAR(adverEnd , 'YYYY-MM-DD') adverEnd
+	 FROM advertising
+	<where>
+        <if test="kwd != null and kwd != ''">
+            <include refid="where-list"/>
+        </if>
+            <choose>
+                <when test="role == 2">
+                    AND status = 4
+                </when>
+                <when test="role == 1">
+                    AND status = 5
+                </when>
+                <when test="role == 3">
+                    AND status = 3
+                </when>
+                <otherwise>
+					AND ( status = 0 OR status = 5 )
+				</otherwise>
+            </choose>
+    </where>
+    ORDER BY regDate DESC
+    OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<select id="listPromotionManage" parameterType="map" resultType="com.sp.app.admin.model.PromotionManage">
+		SELECT promotionId, p.memberId, m.name, advertisingId, subject, imageFilename, TO_CHAR(regDate, 'YYYY-MM-DD'), postingStatus
+		FROM promotion p
+		JOIN member2 m ON p.memberId = m.memberId
+		<where>
+			<if test="kwd != null and kwd != ''">
+				<include refid="where-list"/>
+			</if>
+			AND postingStatus = 1
+		</where>
+		ORDER BY promotionId DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<select id="findById" parameterType="Long" resultType="com.sp.app.admin.model.PromotionManage">
+		SELECT promotionId, p.memberId, m.name, advertisingId, subject, imageFilename, regDate, 'yyyy-mm-dd', postingStatus
+		FROM promotion p
+		JOIN member2 m ON p.memberId = m.memberId
+		WHERE promotionId = #{promotionId} AND postingStatus = 1
+	</select>
+	
+	<select id="findByPrev" parameterType="map" resultType="com.sp.app.admin.model.PromotionManage">
+		SELECT promotionId, subject, postingStatus
+		FROM promotion p
+		JOIN member2 m ON p.member_id = m.member_id
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list"/>
+			</if>
+			AND (promotionId &gt; #{promotionId})
+			AND postingStatus = 1
+		</where>
+		ORDER BY promotionId ASC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+
+	<select id="findByNext" parameterType="map" resultType="com.sp.app.admin.model.PromotionManage">
+		SELECT promotionId, subject, postingStatus
+		FROM promotion p
+		JOIN member2 m ON p.member_id = m.member_id
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list"/>
+			</if>
+			AND (promotionId &lt; #{promotionId})
+			AND postingStatus = 1
+		</where>
+		ORDER BY promotionId DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<update id="updatePromotionManage" parameterType="com.sp.app.admin.model.PromotionManage">
+		UPDATE promotion SET subject = #{subject}, imageFilename = #{imageFilename}
+		WHERE promotionId = #{promotionId}
+	</update>
+	
+	<delete id="deletePhoto" parameterType="Long">
+		DELETE FROM promotion
+		WHERE promotionId = #{promotionId}
+	</delete>
 
 </mapper>
