@@ -33,26 +33,18 @@
             <hr>
 
             <div class="outside">
-                <form method="post" name="gongguProductForm" enctype="multipart/form-data">
+                <form method="post" name="productForm" enctype="multipart/form-data">
                     <div class="title">카테고리</div>
                     <div class="card-body">
                         <table class="form-table">
                             <tr>
-                                <th>패키지 상품구성</th>
+                                <th>카테고리</th>
                                 <td>
-                                    <select name="categoryId" class="st">
+                                    <select name="categoryId" id="categoryId" class="st">
                                         <option value="">::카테고리 선택::</option>
                                         <c:forEach var="vo" items="${categoryList}">
-                                            <option value="${vo.categoryId}" ${dto.categoryId==vo.categoryId?"selected":""}>${vo.categoryName}</option>
+                                            <option value="${vo.categoryId}">${vo.categoryName}</option>
                                         </c:forEach>
-                                    </select>
-                                    <select name="productId" class="st">
-                                        <option value="">::상품 선택::</option>
-                                        <c:if test="dto.categoryId==vo.categoryId">
-	                                        <c:forEach var="vo" items="${productList}">
-	                                        	<option value="${vo.productId}" ${dto.productId==vo.productId?"selected":""}>${vo.productName}</option>
-	                                        </c:forEach>
-                                        </c:if>
                                     </select>
                                 </td>
                             </tr>
@@ -120,8 +112,8 @@
                                 <th>판매가</th>
                                 <td>
                                     <div class="input-flex">
-                                        <input type="text" name="gongguPrice"
-                                            placeholder="판매가를 입력하세요" value="${dto.gongguPrice}"> <span>원</span>
+                                        <input type="text" name="discountRate"
+                                            placeholder="할인율을 입력하세요" value="${dto.gongguPrice}"> <span>%</span>
                                     </div>
                                 </td>
                             </tr>
@@ -168,12 +160,9 @@
                         <button type="reset" class="btn-default btn-md">다시입력</button>
                         <button type="button" class="btn-default btn-md" onclick="location.href='${url}';">${mode=='update'?'수정취소':'등록취소'}</button>
                         <c:if test="${mode=='update'}">
-                            <input type="hidden" name="productCode" value="${dto.productCode}">
                             <input type="hidden" name="gongguProductId" value="${dto.gongguProductId}">
                             <input type="hidden" name="gongguThumbnail" value="${dto.gongguThumbnail}">
                             <input type="hidden" name="page" value="${page}">
-                            
-                            <input type="hidden" name="prevOptionNum" value="${empty dto.optionNum ? 0 : dto.optionNum}">
                         </c:if>
                     </div>
                 </form>
@@ -417,5 +406,6 @@ window.addEventListener('DOMContentLoaded', evt => {
 	});	
 });
 </script>
+
 </body>
 </html>

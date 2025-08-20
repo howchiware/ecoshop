@@ -10,30 +10,20 @@ import com.sp.app.admin.model.CategoryManage;
 import com.sp.app.admin.model.GongguDeliveryRefundInfo;
 import com.sp.app.admin.model.GongguManage;
 import com.sp.app.admin.model.GongguPackage;
-import com.sp.app.admin.model.ProductStockManage;
 
 @Mapper
 public interface GongguManageMapper {
 	// 상품등록
-	public long gongguProductSeq();
-	public void insertGongguPackage(GongguPackage dto) throws SQLException;
 	public void insertProduct(GongguManage dto) throws SQLException;
-	public void insertProductPhoto(GongguManage dto) throws SQLException;
-	public List<GongguManage> listProduct(Map<String, Object> map);
-	public GongguManage findById(long productId);
-	public List<GongguManage> listProductPhoto(long productId);
 	public void updateProduct(GongguManage dto) throws SQLException;
 	public void deleteProduct(long gongguProductId) throws SQLException;
-	public void deleteProductPhoto(long gongguProductDetailId) throws SQLException;
-	public void updateProductDisplayOrder(Map<String, Object> map) throws SQLException;
-	public int dataCount(Map<String, Object> map);
-	public GongguManage findPhotoById(long gongguProductDetailId);
-	public List<Long> optionFindByCode(long id);
 	
-	public List<ProductStockManage> listProductStock(Map<String, Object> map);
+	public int dataCountGongguProduct(Map<String, Object> map);
+	public List<GongguManage> listGongguProduct(Map<String, Object> map);
+	public GongguManage findById(long productId);
 	
+	public void insertGongguPackage(GongguPackage dto) throws SQLException;
 	public CategoryManage findByCategory(long categoryId);
-	public List<CategoryManage> listCategory();
 	
 	// 배송정책
 	public GongguDeliveryRefundInfo listDeliveryRefundInfo();

@@ -17,6 +17,5 @@ public class GongguPackage {
     private long packageNum;
     private int stock;
     private int price;
-    private long optionDetailNum;
 }
 

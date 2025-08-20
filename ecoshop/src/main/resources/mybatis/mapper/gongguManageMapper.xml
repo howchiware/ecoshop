@@ -2,26 +2,87 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.admin.mapper.GongguManageMapper">
+	<!-- 공동구매 상품등록 --> 
+	<select id="findByCategory" parameterType="Long" resultType="com.sp.app.admin.model.CategoryManage">
+		SELECT categoryId, categoryName, enabled
+		FROM productCategory
+		WHERE categoryId = #{categoryId}
+	</select>
+	<!-- 
 	<select id="gongguProductSeq" resultType="Long">
 		SELECT gongguProduct_seq.NEXTVAL FROM dual
 	</select>
 	
-	<insert id="insertGongguPackage" parameterType="com.sp.app.admin.model.GongguPackage">
-		INSERT INTO gongguPackage (packageNum, stock, productCode, gongguProductId, price, optionDetailNum)
-		VALUES (gongguPackage_seq.NEXTVAL, #{stock}, #{productCode}, #{gongguProductId}, #{price}, #{optionDetailNum})
+
+	<insert id="insertGongguPackage" parameterType="map">
+	    INSERT INTO gongguPackage (packageNum, stock, productCode, gongguProductId, price, optionDetailNum)
+	    SELECT gongguPackage_seq.NEXTVAL, s.totalStock, p.productCode, #{gongguProductId}, p.price, d.optionDetailNum
+	      FROM product p
+	           JOIN productOption o ON p.productCode = o.productCode
+	           LEFT JOIN optionDetail d ON o.optionNum = d.optionNum
+	           LEFT JOIN productStock s ON d.optionDetailNum = s.optionDetailNum
+	     WHERE p.productCode = #{productCode}
 	</insert>
 	
 	<insert id="insertProduct" parameterType="com.sp.app.admin.model.GongguManage">
-		INSERT INTO gongguProduct(gongguProductId, productCode, categoryId, originalPrice, gongguPrice,
-				gongguThumbnail, regDate, productShow, content, detailInfo, limitCount)
-		VALUES (#{gongguProductId}, #{productCode}, #{categoryId}, #{originalPrice}, #{gongguPrice}, #{gongguThumbnail}, 
-				 SYSDATE, #{productShow}, #{content}, #{detailInfo}, #{limitCount})
+		INSERT INTO gongguProduct(gongguProductId, gongguProductName, gongguThumbnail, originalPrice, gongguPrice, regDate, limitCount, deadline, categoryId, updateDate, content, detailInfo, productShow)
+		VALUES (#{gongguProductId}, #{gongguProductName}, #{gongguThumbnail}, #{originalPrice}, #{gongguPrice}, SYSDATE, #{limitCount}, #{deadline}, #{categoryId},#{updateDate},
+				 #{content}, #{detailInfo}, #{productShow})
 	</insert>
 	
-	<insert id="insertProductPhoto" parameterType="com.sp.app.admin.model.GongguManage">
-		INSERT INTO gongguProductDetail(gongguProductDetailId, gongguProductId, detailPhoto)
-		VALUES(gongguProductDetail_seq.NEXTVAL, #{gongguProductId}, #{detailPhoto})
+	<update id="updateProduct" parameterType="com.sp.app.admin.model.GongguManage">
+		UPDATE gongguProduct SET categoryId = #{categoryId}, gongguProductName = #{gongguProductName},
+			gongguThumbnail = #{gongguThumbnail}, productShow = #{productShow}, content = #{content}, detailInfo= #{detailInfo}, updateDate = SYSDATE,
+			limitCount = #{limitCount}
+		WHERE gongguProductId = #{gongguProductId}
+	</update>
+	
+	<delete id="deleteProduct" parameterType="Long">
+		DELETE FROM gongguProduct
+		WHERE gongguProductId = #{gongguProductId}
+	</delete>
+	-->
+	
+	<insert id="insertProduct" parameterType="com.sp.app.admin.model.GongguManage">
+		INSERT INTO gongguProduct(gongguProductId, title, content, detailPhoto, 
+		        startDate, endDate, productShow, regDate)
+		VALUES (gongguProduct_seq.NEXTVAL, #{title}, #{content}, #{detailPhoto}, 
+				TO_DATE(#{startDate}, 'YYYY-MM-DD HH24:MI:SS'), 
+				TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'), #{productShow}, SYSDATE)
 	</insert>
+	
+	<update id="updateProduct" parameterType="com.sp.app.admin.model.GongguManage">
+		UPDATE gongguProduct SET title = #{title}, content = #{content}, 
+			detailPhoto = #{detailPhoto}, 
+			startDate = TO_DATE(#{startDate}, 'YYYY-MM-DD HH24:MI:SS'),
+			endDate = TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'),
+			productShow = #{productShow}
+		WHERE gongguProductId = #{gongguProductId}
+	</update>
+	
+	<delete id="deleteProduct" parameterType="Long">
+		DELETE FROM gongguProduct
+		WHERE gongguProductId = #{gongguProductId}
+	</delete>
+	
+	<sql id="where-list">
+		<if test="schType=='all' ">
+			<![CDATA[
+				(
+					INSTR(subject, #{kwd}) > 0
+					OR DBMS_LOB.INSTR(REGEXP_REPLACE(content, '<[^>]+>', ''), #{kwd}) > 0
+				)
+			]]>
+		</if>
+		<if test="schType=='title' ">
+			INSTR(title, #{kwd}) &gt; 0
+		</if>
+		<if test="schType=='content' ">
+			<![CDATA[
+				DBMS_LOB.INSTR(REGEXP_REPLACE(content, '<[^>]+>', ''), #{kwd}) > 0
+			]]>
+		</if>
+	</sql>
 	
 	<select id="findById" parameterType="Long" resultType="com.sp.app.admin.model.GongguManage">
 		SELECT g.gongguProductId, g.categoryId, c.categoryName, p.productId, p.productCode, p.productName,
@@ -34,24 +95,19 @@
 		WHERE g.gongguProductId = #{gongguProductId}
 	</select>
 	
+	  
+	<!-- 공동구매 등록시 사진 -->
+	<!--
+	<insert id="insertProductPhoto" parameterType="com.sp.app.admin.model.GongguManage">
+		INSERT INTO gongguProductDetail(gongguProductDetailId, gongguProductId, detailPhoto)
+		VALUES(gongguProductDetail_seq.NEXTVAL, #{gongguProductId}, #{detailPhoto})
+	</insert>
+	
 	<select id="listProductPhoto" parameterType="Long" resultType="com.sp.app.admin.model.GongguManage">
 		SELECT gongguProductDetailId, gongguProductId, detailPhoto
 		FROM gongguProductDetail
 		WHERE gongguProductId = #{gongguProductId}
 	</select>
-	
-	<update id="updateProduct" parameterType="com.sp.app.admin.model.GongguManage">
-		UPDATE gongguProduct SET categoryId = #{categoryId}, gongguProductName = #{gongguProductName},
-			gongguThumbnail = #{gongguThumbnail}, originalPrice = #{originalPrice}, gongguPrice = #{gongguPrice},
-			productShow = #{productShow}, content = #{content}, detailInfo= #{detailInfo}, updateDate = SYSDATE,
-			limitCount = #{limitCount}
-		WHERE gongguProductId = #{gongguProductId}
-	</update>
-	
-	<delete id="deleteProduct" parameterType="Long">
-		DELETE FROM gongguProduct
-		WHERE gongguProductId = #{gongguProductId}
-	</delete>
 	
 	<delete id="deleteProductPhoto" parameterType="Long">
 		DELETE FROM gongguProductDetail
@@ -63,7 +119,10 @@
 	    FROM gongguProductDetail
 	    WHERE gongguProductDetailId = #{gongguProductDetailId}
 	</select>
+	-->
 	
+	<!-- 공동구매 리스트 검색 -->
+	<!-- 
 	<select id="listProduct" parameterType="map" resultType="com.sp.app.admin.model.GongguManage">
 	SELECT g.gongguProductId, g.categoryId, g.gongguProductName, g.originalPrice, g.gongguPrice,
 		g.gongguThumbnail, TO_CHAR(g.regDate, 'YYYY-MM-DD') regDate, g.productShow, g.content, g.detailInfo, TO_CHAR(g.updateDate,'YYYY-MM-DD') updateDate, NVL(g.limitCount, 0) limitCount,
@@ -98,12 +157,6 @@
 		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 	
-	<select id="findByCategory" parameterType="Long" resultType="com.sp.app.admin.model.CategoryManage">
-	SELECT categoryId, categoryName, enabled
-	FROM productCategory
-	WHERE categoryId = #{categoryId}
-	</select>
-	
 	<sql id="where-list-schType">
 		<if test="schType=='all'">
 			INSTR(p.productName, #{kwd}) > 0 OR INSTR(p.productCode, #{kwd}) > 0 OR INSTR(g.gongguProductName, #{kwd}) > 0
@@ -131,7 +184,9 @@
 	<sql id="where-list-stock">
 		totalStock BETWEEN #{stockLowest} AND #{stockHighest}
 	</sql>
-		
+	-->
+	<!-- 공동구매 상품 검색시 개수 -->	
+	<!--
 	<select id="dataCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(g.gongguProductId), 0)
 		FROM gongguProduct g
@@ -161,7 +216,9 @@
 			</if>
 		</where>
 	</select>	
+	-->
 	
+	<!-- 배송정책 -->
 	<select id="listDeliveryRefundInfo" resultType="com.sp.app.admin.model.GongguDeliveryRefundInfo">
 	    SELECT deliveryInfo, refundInfo
 	    FROM deliveryRefundInfo

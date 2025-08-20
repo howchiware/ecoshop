@@ -21,31 +21,43 @@ public class GongguManage {
     private long gongguProductId;
     private String gongguProductName;
     private String gongguThumbnail;
-    private long originalPrice;
-    private long gongguPrice;
+    private int originalPrice;
+    private int gongguPrice;
     private String regDate;
     private Integer limitCount;
-    private String deadline;
-    private long categoryId; 
-    private String categoryName;
     private String updateDate;
     private String content;
     private String detailInfo; 
-    private String limitInfo;
     private int productShow;
-    private int delivery;
     private MultipartFile gongguThumbnailFile;
-    private List<String> detailPhotos;
-    private List<GongguPackage> packages; 
+    
+    private String startDate;
+	private String endDate;
+	private String sday;
+	private String stime;
+	private String eday;
+	private String etime;
+
+    private long categoryId; 
+    private String categoryName;
+    
+    private int delivery;
+    
+    private MultipartFile selectFile;
+    
+    
+    
    
-    private long gongguProductPhotoNum;
-	private String gongguPhotoName;
+    private long gongguProductDetailId;
+	private String detailPhoto;
+	private long fileNum;
+	private String filename;
 	private List<MultipartFile> addFiles;
 	private List<Long> gongguProductIds;
 	
-	private String productCode;
-	private String productName;
 	private int totalStock;
+	private long productId;
+	private String productName;
 
 
 }

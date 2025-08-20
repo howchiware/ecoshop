@@ -21,11 +21,9 @@ import com.sp.app.admin.model.GongguDeliveryRefundInfo;
 import com.sp.app.admin.model.GongguInquiryManage;
 import com.sp.app.admin.model.GongguManage;
 import com.sp.app.admin.model.GongguReviewManage;
-import com.sp.app.admin.model.ProductManage;
 import com.sp.app.admin.service.CategoryManageService;
 import com.sp.app.admin.service.GongguManageService;
 import com.sp.app.admin.service.GongguReviewInquiryManageService;
-import com.sp.app.admin.service.ProductManageService;
 import com.sp.app.common.PaginateUtil;
 import com.sp.app.common.StorageService;
 import com.sp.app.model.SessionInfo;
@@ -46,7 +44,6 @@ public class GongguManageController {
     private final CategoryManageService categoryManageService;
     private final PaginateUtil paginateUtil;
     private final GongguReviewInquiryManageService gongguReviewInquiryManageService;
-    private final ProductManageService productManageService;
     private String uploadPath;
 
     @PostConstruct
@@ -55,107 +52,26 @@ public class GongguManageController {
 	}	
     
     @GetMapping("write")
- 	public String gongguProductAddForm(Model model, Map<String, Object> map) {
-    	try {
- 			
-			List<CategoryManage> categoryList = gongguManageService.listCategory();
-			List<ProductManage> productList = productManageService.listProduct(map);
-			
-			model.addAttribute("mode", "write");
-			model.addAttribute("categoryList", categoryList);
-			model.addAttribute("productList", productList);
-			
-		} catch (Exception e) {
-			log.info("gongguProductAddForm : ", e);
-		}
- 		
- 		return "admin/gonggu/gongguProductAdd";
+ 	public String gongguProductAddForm(Model model) {
+
+		model.addAttribute("mode", "write");
+
+ 		return "admin/gonggu/write";
  	}
- 	
- 	@PostMapping("write") 
- 	public String gongguProductAddSubmit(GongguManage dto, Model model) {
- 		try {
+    
+    @PostMapping("write")
+    public String writeSubmit(GongguManage dto, Model model) throws Exception {
+    	try {
 			gongguManageService.insertGongguProduct(dto, uploadPath);
 		} catch (Exception e) {
-			log.info("gongguProductAddSubmit : ", e);
 		}
- 		
- 		return "redirect:/admin/gonggu/listProduct";
- 	}
+    	
+    	return "redirect:/admin/gonggu/write";
+    }
  	
- 	@GetMapping("update")
- 	public String updateForm(
- 			@RequestParam(name = "categoryId", defaultValue = "0") long categoryId,
-			@RequestParam(name = "gongguProductId") long gongguProductId,
-			@RequestParam(name = "productId") long productId,
-			@RequestParam(name = "productCode") String productCode,
-			@RequestParam(name = "page") String page,
-			Model model) {
- 		
- 		try {
-			GongguManage dto = Objects.requireNonNull(gongguManageService.findById(gongguProductId));
-			
-			List<CategoryManage> listCategory = gongguManageService.listCategory();
-			
-			// 추가 이미지
-			List<GongguManage> listPhoto = gongguManageService.listProductPhoto(gongguProductId);
-			
-			// 옵션1/옵션2 옵션명
-			// List<ProductManage> listOption = productManageService.listProductOption(productId);
-			
-			model.addAttribute("mode", "update");
-			
-			model.addAttribute("dto", dto);
-			model.addAttribute("listPhoto", listPhoto);
-			
-			model.addAttribute("listCategory", listCategory);
-			model.addAttribute("page", page);
-			
-			return "admin/gonggu/gongguProductAdd";
-			
- 		} catch (NullPointerException e) {
-			log.info("updateForm : ", e);
-		} catch (Exception e) {
-			log.info("updateForm : ", e);
-		}
- 		
- 		String query = "categoryId=" + categoryId + "&page=" + page;
-		return "redirect:/admin/gonggu/listProduct?" + query;
- 	}
- 	
- 	@PostMapping("update")
-	public String updateSubmit(GongguManage dto,
-			@RequestParam(name = "page") String page,
-			Model model) {
-		
-		try {
-			gongguManageService.updateGongguProduct(dto, uploadPath);
-		} catch (Exception e) {
-			log.info("updateSubmit : ", e);
-		}
-
-		String query = "categoryId=" + dto.getCategoryId() + "&page=" + page;
-		return "redirect:/admin/gonggu/listProduct?" + query;
-	}
- 	
- 	@ResponseBody
-	@PostMapping("deleteFile")
-	public Map<String, ?> deleteFile(@RequestParam(name = "gongguProductDetailId") long gongguProductDetailId, 
-			@RequestParam(name = "detailPhoto") String detailPhoto) throws Exception {
-		Map<String, Object> model = new HashMap<>();
-
-		String state = "false";
-		try {
-			String pathString = uploadPath + File.separator + detailPhoto;
-			gongguManageService.deleteProductPhoto(gongguProductDetailId, pathString);
-			
-			state = "true";
-		} catch (Exception e) {
-		}
-		
-		model.put("state", state);
-		return model;
-	}
+    
+    
+    
  	
     @GetMapping("productReview")
     public String getProductReview(@RequestParam(value="memberId", required = false) Long memberId, Model model) {
@@ -389,7 +305,7 @@ public class GongguManageController {
 			map.put("stockLowest", stockLowest);
 			map.put("stockHighest", stockHighest);
 			
-			dataCount = gongguManageService.dataCount(map);
+			dataCount = gongguManageService.dataCountGongguProduct(map);
 			total_page = paginateUtil.pageCount(dataCount, size);
 			current_page = Math.min(current_page, total_page);
 			
