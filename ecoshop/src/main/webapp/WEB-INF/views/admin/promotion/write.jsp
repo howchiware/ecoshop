@@ -109,7 +109,7 @@ window.addEventListener('DOMContentLoaded', evt => {
 	let uploadImage = '${dto.imageFilename}';
 	let img;
 	if( uploadImage ) { // 수정인 경우
-		img = '${pageContext.request.contextPath}/uploads/promotion' + uploadImage;
+		img = '${pageContext.request.contextPath}/uploads/promotion/' + uploadImage;
 	} else {
 		img = '${pageContext.request.contextPath}/dist/images/add_photo.png';
 	}

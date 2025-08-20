@@ -17,7 +17,6 @@ public class PromotionManage {
 	private String imageFilename;
 	private String regDate;
 	private int postingStatus;
-	private int block;
 	
 	private MultipartFile selectFile;
 }

@@ -8,10 +8,9 @@
   <title>관리자페이지</title>
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
- <link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-	
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"rel="stylesheet">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/vendor/glightbox/css/glightbox.min.css" type="text/css">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <style type="text/css">
 .photo-section .photo-content {
   position: relative;
@@ -93,6 +92,85 @@
 .photo-section .photo-content:hover img {
   transform: scale(1.1);
 }
+
+.page-navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  font-family: 'Noto Sans KR', sans-serif;
+  gap: 10px;
+}
+
+.page-navigation a,
+.page-navigation span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid #7ecf98;
+  color: #4caf50;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(126, 207, 152, 0.4);
+  transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+  font-size: 1rem;
+}
+
+.page-navigation a:hover {
+  background-color: #a4d7a7;
+  color: white;
+  box-shadow: 0 4px 12px rgba(126, 207, 152, 0.6);
+}
+
+.paginate span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid #4caf50;
+  background-color: #4caf50;
+  color: #fff;
+  font-weight: 700;
+  cursor: default;
+  box-shadow: 0 2px 5px rgba(76, 175, 80, 0.6);
+  font-size: 1rem;
+}
+
+.paginate a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid #4caf50;
+  color: #4caf50;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s, color 0.3s;
+  font-size: 1rem;
+}
+
+.paginate a:hover {
+  background-color: #81c784;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(129, 199, 132, 0.6);
+}
+
+.page-navigation .disabled {
+  color: #cde5d4;
+  border-color: #cde5d4;
+  cursor: default;
+  pointer-events: none;
+  box-shadow: none;
+}
+
 </style>
 </head>
 <body>
@@ -114,14 +192,10 @@
 		<div class="container photo-section" data-aos="fade-up" data-aos-delay="100">
 			<div class="row justify-content-center">
 				<div class="col-md-10 my-1 p-2">
+				<div class="data-info">
+		        <span class="small-title">글목록</span> <span class="dataCount">${dataCount}개(${page}/${total_page} 페이지)</span>
+		      </div>
 				
-					<div class="row mb-4">
-						<div class="col-md-4 text-start">
-							<form name="searchForm" class="form-group-search">
-								<input type="text" name="kwd" value="${kwd}" class="form-control" placeholder="검색어를 입력하세요">
-								<button type="button" onclick="searchList();"><i class="bi bi-search"></i></button>
-							</form>
-						</div>
 						<div class="col-md-8 text-end">
 							<button type="button" class="btn-accent btn-md" onclick="location.href='${pageContext.request.contextPath}/admin/promotion/write';">사진올리기</button>
 						</div>
@@ -134,9 +208,32 @@
 									<img src="${pageContext.request.contextPath}/uploads/promotion/${dto.imageFilename}" class="img-fluid border rounded w-100" style="height: 235px;" alt="">
 									<div class="photo-info">
 										<p><label>${dto.subject}</label></p>
-										<a href="${pageContext.request.contextPath}/uploads/promotion/${dto.imageFilename}" title="${dto.subject}" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-										<a href="#inline-content-${dto.promotionId}" title="상세정보" class="glightbox4 details-link" data-glightbox="width: 700; height: auto;"><i class="bi bi-link-45deg"></i></a>
-									</div>
+										  <div class="mt-2">
+									        <c:choose>
+									            <c:when test="${sessionScope.member.memberId==dto.memberId}">
+									                <button type="button" class="btn btn-sm btn-outline-primary"
+									                        onclick="location.href='${pageContext.request.contextPath}/admin/promotion/update?promotionId=${dto.promotionId}&page=${page}';">
+									                    수정
+									                </button>
+									            </c:when>
+									            <c:otherwise>
+									                <button type="button" class="btn btn-sm btn-outline-secondary" disabled>수정</button>
+									            </c:otherwise>
+									        </c:choose>
+									
+									        <c:choose>
+									            <c:when test="${sessionScope.member.memberId==dto.memberId || sessionScope.member.userLevel>50}">
+									                <button type="button" class="btn btn-sm btn-outline-danger"
+									                        onclick="deleteOk('${dto.promotionId}', '${dto.imageFilename}')">
+									                    삭제
+									                </button>
+									            </c:when>
+									            <c:otherwise>
+									                <button type="button" class="btn btn-sm btn-outline-secondary" disabled>삭제</button>
+									            </c:otherwise>
+									        </c:choose>
+									    </div>
+									</div> 	
 								</div>
 								
 								<div id="inline-content-${dto.promotionId}" class="d-none">
@@ -184,8 +281,22 @@
 				</div>
 			</div>
 		</div>
-	</div>
 </main>
+
+<script type="text/javascript">
+
+function deleteOk(promotionId, filename) {
+	let params = 'promotionId=' + promotionId + '&imageFilename=' + filename + '&${query}';
+    let url = '${pageContext.request.contextPath}/admin/promotion/delete?' + params;
+
+    if(confirm('위 자료를 삭제 하시 겠습니까 ? ')) {
+		location.href = url;
+    }
+}
+
+</script>
+
+
 
 </body>
 </html>
