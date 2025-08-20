@@ -28,6 +28,11 @@
 .section-title {
 	font-weight: 700;
 	font-size: 1.25rem;
+	margin-top: 20px;
+}
+
+.section-card .section-title {
+    margin-top: 0;
 }
 
 .kv dt {

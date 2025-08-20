@@ -33,7 +33,7 @@
 
 			<!-- 상단 바 -->
 			<div class="d-flex justify-content-between align-items-center mb-3">
-				<h4 class="m-0">프로그램 목록</h4>
+				<h4 class="m-0">프로그램 관리</h4>
 				<div class="d-flex gap-2">
 					<a class="btn btn-outline-secondary"
 						href="${ctx}/admin/workshop/program/write">등록</a>
@@ -43,8 +43,8 @@
 			<!-- 필터/검색 -->
 			<form class="row g-2 align-items-end mb-3" method="get"
 				action="${ctx}/admin/workshop/program/list">
-				<div class="col-md-2">
-					<label class="form-label">검색 구분</label> <select class="form-select"
+				<div class="col-md-1">
+					<label class="form-label"></label> <select class="form-select"
 						name="schType">
 						<option value="all" <c:if test="${schType=='all'}">selected</c:if>>전체</option>
 						<option value="title"
@@ -55,9 +55,9 @@
 				</div>
 
 				<div class="col-md-3">
-					<label class="form-label">카테고리</label> <select class="form-select"
+					<label class="form-label"></label> <select class="form-select"
 						name="categoryId">
-						<option value="">전체</option>
+						<option value="">카테고리 선택</option>
 						<c:forEach var="c" items="${category}">
 							<option value="${c.categoryId}"
 								<c:if test="${categoryId == c.categoryId}">selected</c:if>>
@@ -67,12 +67,11 @@
 				</div>
 
 				<div class="col-md-4">
-					<label class="form-label">키워드</label> <input type="text"
-						class="form-control" name="kwd" value="${kwd}"
-						placeholder="검색어를 입력하세요">
+					<label class="form-label"></label> <input type="text"
+						class="form-control" name="kwd" value="${kwd}">
 				</div>
 
-				<div class="col-md-3">
+				<div class="col-md-1">
 					<input type="hidden" name="page" value="1" />
 					<button type="submit" class="btn btn-primary w-100">검색</button>
 				</div>
@@ -129,22 +128,10 @@
 				</table>
 			</div>
 
-			<!-- 페이지네이션 (간단 버전) -->
-			<c:set var="hasPrev" value="${page > 1}" />
-			<c:set var="hasNext" value="${not empty list && list.size() >= size}" />
+			<!-- 페이징 -->
 			<nav aria-label="페이지네이션">
 				<ul class="pagination justify-content-center">
-					<li class="page-item <c:if test='${!hasPrev}'>disabled</c:if>">
-						<a class="page-link"
-						href="${ctx}/admin/workshop/program/list?page=${page-1}&schType=${schType}&kwd=${kwd}&categoryId=${categoryId}">
-							이전 </a>
-					</li>
 					<li class="page-item active"><span class="page-link">${page}</span></li>
-					<li class="page-item <c:if test='${!hasNext}'>disabled</c:if>">
-						<a class="page-link"
-						href="${ctx}/admin/workshop/program/list?page=${page+1}&schType=${schType}&kwd=${kwd}&categoryId=${categoryId}">
-							다음 </a>
-					</li>
 				</ul>
 			</nav>
 

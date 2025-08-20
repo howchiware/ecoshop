@@ -46,16 +46,18 @@ public class WorkshopManageController {
 	
 		// 카테고리 목록
 		@GetMapping("/category/manage")
-		public String categoryManage(Model model) {
+		public String categoryManage(@RequestParam(name = "page", defaultValue = "1") int current_page, Model model) {
 			try {
+				int size = 10;
+				
 				Map<String, Object> pmap = new HashMap<>();
 				pmap.put("offset", 0);
-				pmap.put("size", 200);
+				pmap.put("size", size);
 				
 				List<Workshop> categoryList = service.listCategory(pmap);
 
+				model.addAttribute("page", current_page);
 				model.addAttribute("categoryList", categoryList);
-				
 			} catch (Exception e) {
 				log.info("categoryManage : ", e);
 				model.addAttribute("categoryList", List.of());
@@ -632,11 +634,15 @@ public class WorkshopManageController {
 
 	// FAQ 관리
 	@GetMapping("/faq/manage")
-	public String faqManage(@RequestParam(name = "programId", required = false) Long programId, Model model) {
+	public String faqManage(@RequestParam(name = "page", defaultValue = "1") int current_page, @RequestParam(name = "programId", required = false) Long programId, Model model) {
 		try {
+			int size = 10;
+			
 			Map<String, Object> pmap = new HashMap<>();
 			pmap.put("offset", 0);
-			pmap.put("size", 200);
+			pmap.put("size", size);
+			
+			model.addAttribute("page", current_page);
 
 			List<Workshop> programList = service.listProgram(pmap);
 
@@ -706,12 +712,16 @@ public class WorkshopManageController {
 
 	// 참여자 목록
 	@GetMapping("/participant/list")
-	public String participantList(@RequestParam(name = "workshopId", required = false) Long workshopId, Model model) {
+	public String participantList(@RequestParam(name = "page", defaultValue = "1") int current_page, @RequestParam(name = "workshopId", required = false) Long workshopId, Model model) {
 
 		try {
+			int size = 20;
+			
 			Map<String, Object> wmap = new HashMap<String, Object>();
 			wmap.put("offset", 0);
-			wmap.put("size", 300);
+			wmap.put("size", size);
+			
+			model.addAttribute("page", current_page);
 
 			List<Workshop> workshopList = service.listWorkshop(wmap);
 			model.addAttribute("workshopList", workshopList);

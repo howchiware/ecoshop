@@ -18,7 +18,7 @@
 	width: 100%;
 	aspect-ratio: 4/3;
 	object-fit: cover;
-	border-radius: 8px;
+	border-radius: 4px;
 	background: #f8f9fa
 }
 
@@ -26,6 +26,7 @@
 	border-bottom: 1px solid #e9ecef;
 	padding: 1rem 0
 }
+
 </style>
 
 </head>
@@ -45,84 +46,84 @@
 
 		<!-- 대표 이미지 선택 -->
 		<c:set var="rawMain"
-			value="${(not empty photoList and fn:length(photoList)>0) ? photoList[0].workshopImagePath : ''}" />
+	value="${(not empty photoList and fn:length(photoList)>0) ? photoList[0].workshopImagePath : ''}" />
+<c:choose>
+	<c:when test="${empty rawMain}">
+		<c:set var="mainImg"
+			value='${pageContext.request.contextPath}/dist/images/noimage.png' />
+	</c:when>
+	<c:when
+		test="${fn:startsWith(rawMain,'http://') or fn:startsWith(rawMain,'https://') or fn:startsWith(rawMain,'/')}">
+		<c:set var="mainImg" value='${rawMain}' />
+	</c:when>
+	<c:otherwise>
+		<c:set var="mainImg"
+			value='${pageContext.request.contextPath}/uploads/workshop/${rawMain}' />
+	</c:otherwise>
+</c:choose>
+
+<div class="row g-4 mb-4">
+	<div class="col-md-6">
+		<img src="${mainImg}" alt="<c:out value='${dto.workshopTitle}'/>"
+			class="workshop-main-img"
+			onerror="if(this.src.indexOf('noimage.png')===-1)this.src='${pageContext.request.contextPath}/dist/images/noimage.png'">
+	</div>
+	<div class="col-md-6">
+		<h2 class="mb-2">
+			<c:out value="${dto.workshopTitle}" />
+		</h2>
+		<p class="text-muted mb-2">
+			일정 :
+			<c:choose>
+				<c:when test="${not empty dto.scheduleDate}">
+					<fmt:formatDate value="${dto.scheduleDate}" pattern="yyyy.MM.dd" />
+				</c:when>
+				<c:otherwise>-</c:otherwise>
+			</c:choose>
+			<br> 장소 :
+			<c:out value="${dto.location}" />
+			<br> 정원 :
+			<c:out value="${dto.capacity}" />
+			명 
+			<br> 모집 마감 :
+			<c:choose>
+				<c:when test="${not empty dto.applyDeadline}">
+					<fmt:formatDate value="${dto.applyDeadline}" pattern="MM.dd" />
+				</c:when>
+				<c:otherwise>-</c:otherwise>
+			</c:choose>
+		</p>
+
+		<c:url var="applyUrl" value="/workshop/apply">
+			<c:param name="workshopId" value="${dto.workshopId}" />
+		</c:url>
+
 		<c:choose>
-			<c:when test="${empty rawMain}">
-				<c:set var="mainImg"
-					value='${pageContext.request.contextPath}/dist/images/noimage.png' />
+			<c:when test="${alreadyApplied}">
+				<button type="button" class="btn btn-secondary" disabled>신청 완료</button>
+				<form
+					action="${pageContext.request.contextPath}/workshop/apply/cancel"
+					method="post" style="display: inline;">
+					<input type="hidden" name="workshopId" value="${dto.workshopId}" />
+					<button type="submit" class="btn btn-outline-danger"
+						onclick="return confirm('정말 신청을 취소하시겠습니까?');">신청 취소</button>
+				</form>
 			</c:when>
+
 			<c:when
-				test="${fn:startsWith(rawMain,'http://') or fn:startsWith(rawMain,'https://') or fn:startsWith(rawMain,'/')}">
-				<c:set var="mainImg" value='${rawMain}' />
+				test="${dto.workshopStatus == 0 
+           || dto.workshopStatus == 2 
+           || dto.applyDeadline.time lt now.time}">
+				<button type="button" class="btn btn-secondary" disabled>신청
+					불가</button>
 			</c:when>
+
 			<c:otherwise>
-				<c:set var="mainImg"
-					value='${pageContext.request.contextPath}/uploads/workshop/${rawMain}' />
+				<a href="${applyUrl}" class="btn btn-dark">신청하기</a>
 			</c:otherwise>
 		</c:choose>
-
-		<div class="row g-4 mb-4">
-			<div class="col-md-6">
-				<img src="${mainImg}" alt="<c:out value='${dto.workshopTitle}'/>"
-					class="workshop-main-img"
-					onerror="if(this.src.indexOf('noimage.png')===-1)this.src='${pageContext.request.contextPath}/dist/images/noimage.png'">
-			</div>
-			<div class="col-md-6">
-				<h2 class="mb-2">
-					<c:out value="${dto.workshopTitle}" />
-				</h2>
-				<p class="text-muted mb-2">
-					일정 :
-					<c:choose>
-						<c:when test="${not empty dto.scheduleDate}">
-							<fmt:formatDate value="${dto.scheduleDate}" pattern="yyyy.MM.dd" />
-						</c:when>
-						<c:otherwise>-</c:otherwise>
-					</c:choose>
-					<br> 장소 :
-					<c:out value="${dto.location}" />
-					<br> 정원 :
-					<c:out value="${dto.capacity}" />
-					명 
-					<br> 모집 마감 :
-					<c:choose>
-						<c:when test="${not empty dto.applyDeadline}">
-							<fmt:formatDate value="${dto.applyDeadline}" pattern="MM.dd" />
-						</c:when>
-						<c:otherwise>-</c:otherwise>
-					</c:choose>
-				</p>
-
-				<!-- 신청 버튼 -->
-				<c:url var="applyUrl" value="/workshop/apply">
-					<c:param name="workshopId" value="${dto.workshopId}" />
-				</c:url>
-
-				<c:choose>
-					<c:when test="${alreadyApplied}">
-						<button type="button" class="btn btn-secondary" disabled>이미
-							신청된 워크샵</button>
-						<form
-							action="${pageContext.request.contextPath}/workshop/apply/cancel"
-							method="post" style="display: inline;">
-							<input type="hidden" name="workshopId" value="${dto.workshopId}" />
-							<button type="submit" class="btn btn-outline-danger"
-								onclick="return confirm('정말 신청을 취소하시겠습니까?');">신청 취소</button>
-						</form>
-					</c:when>
-
-					<c:when
-						test="${dto.workshopStatus == 0 
-                   || dto.workshopStatus == 2 
-                   || dto.applyDeadline.time lt now.time}">
-						<button type="button" class="btn btn-secondary" disabled>신청
-							불가</button>
-					</c:when>
-
-					<c:otherwise>
-						<a href="${applyUrl}" class="btn btn-dark">신청하기</a>
-					</c:otherwise>
-				</c:choose>
+	</div>
+</div>
 
 
 

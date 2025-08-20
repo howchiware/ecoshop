@@ -28,9 +28,8 @@
 
       <!-- 제목 & 등록버튼 -->
       <div class="d-flex align-items-center justify-content-between mb-3">
-        <h3 class="m-0">카테고리 관리</h3>
-        <button class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#categoryModal">
-          <i class="bi bi-plus-lg"></i> 카테고리 등록
+        <h4 class="m-0">카테고리 관리</h4>
+        <button class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#categoryModal"> 등록
         </button>
       </div>
 
@@ -38,7 +37,7 @@
       <table class="table table-bordered align-middle">
         <thead class="table-light">
           <tr>
-            <th style="width:10%">No</th>
+            <th style="width:10%">번호</th>
             <th>카테고리명</th>
             <th style="width:20%">관리</th>
           </tr>
@@ -76,7 +75,13 @@
           </c:choose>
         </tbody>
       </table>
-
+    
+    <nav aria-label="페이지네이션">
+				<ul class="pagination justify-content-center">
+					<li class="page-item active"><span class="page-link">${page}</span></li>
+				</ul>
+			</nav>
+			
     </div>
   </main>
 

@@ -15,7 +15,6 @@
 }
 
 .section-title {
-  border-bottom: 1px solid #e5e7eb;
   padding-bottom: .75rem;
   margin-bottom: 1rem;
   font-weight: 600;
@@ -47,14 +46,13 @@
     <div class="container py-4">
 
       <div class="d-flex align-items-center justify-content-between mb-3">
-        <h3 class="m-0">참여자 관리</h3>
-        <div class="text-muted small">관리자 &gt; 워크샵 &gt; 참여자 관리</div>
+        <h4 class="m-0">참여자 관리</h4>
       </div>
 
-      <div class="section-title">워크샵 선택</div>
+      <div class="section-title"></div>
       <form class="row g-3 filters mb-4" method="get" action="${ctx}/admin/workshop/participant/list">
         <div class="col-sm-6 col-lg-4">
-          <label class="form-label">워크샵</label>
+          <label class="form-label">워크샵명</label>
           <select name="workshopId" class="form-select" onchange="this.form.submit()">
             <option value="">워크샵 선택</option>
             <c:forEach var="w" items="${workshopList}">
@@ -74,13 +72,13 @@
 
       <!-- 참여자 목록 -->
       <c:if test="${not empty workshopId}">
-        <div class="section-title">참여자 목록</div>
+        <div class="section-title">참여자 명단</div>
 
         <div class="table-outline mb-3">
           <table class="table table-bordered align-middle mb-0">
             <thead>
               <tr>
-                <th class="row-no">No</th>
+                <th class="row-no">번호</th>
                 <th>이름</th>
                 <th>연락처</th>
                 <th>이메일</th>
@@ -122,6 +120,12 @@
           </table>
         </div>
       </c:if>
+      
+      <nav aria-label="페이지네이션">
+		<ul class="pagination justify-content-center">
+			<li class="page-item active"><span class="page-link">${page}</span></li>
+		</ul>
+	  </nav>
 
     </div>
   </main>

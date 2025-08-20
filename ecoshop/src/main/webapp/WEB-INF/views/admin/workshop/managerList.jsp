@@ -37,19 +37,19 @@
 			<!-- 검색 폼 -->
 			<form class="row g-2 align-items-end mb-3" method="get"
 				action="${ctx}/admin/workshop/manager/list">
-				<div class="col-md-3">
-					<label class="form-label">검색 구분</label>
+				<div class="col-md-1">
+					<label class="form-label"></label>
 					<select class="form-select" name="schType">
 						<option value="all" <c:if test="${schType=='all'}">selected</c:if>>전체</option>
 						<option value="name" <c:if test="${schType=='name'}">selected</c:if>>이름</option>
 						<option value="department" <c:if test="${schType=='department'}">selected</c:if>>소속</option>
 					</select>
 				</div>
-				<div class="col-md-5">
-					<label class="form-label">키워드</label>
-					<input type="text" name="kwd" value="${kwd}" class="form-control" placeholder="검색어 입력">
+				<div class="col-md-3">
+					<label class="form-label"></label>
+					<input type="text" name="kwd" value="${kwd}" class="form-control">
 				</div>
-				<div class="col-md-2">
+				<div class="col-md-1">
 					<input type="hidden" name="page" value="1">
 					<button type="submit" class="btn btn-primary w-100">검색</button>
 				</div>
@@ -107,17 +107,9 @@
 			</div>
 
 			<!-- 페이징 -->
-			<c:set var="hasPrev" value="${page > 1}" />
-			<c:set var="hasNext" value="${not empty list && list.size() >= size}" />
 			<nav aria-label="페이징">
 				<ul class="pagination justify-content-center">
-					<li class="page-item <c:if test='${!hasPrev}'>disabled</c:if>'">
-						<a class="page-link" href="${ctx}/admin/workshop/manager/list?page=${page-1}&schType=${schType}&kwd=${kwd}">이전</a>
-					</li>
 					<li class="page-item active"><span class="page-link">${page}</span></li>
-					<li class="page-item <c:if test='${!hasNext}'>disabled</c:if>'">
-						<a class="page-link" href="${ctx}/admin/workshop/manager/list?page=${page+1}&schType=${schType}&kwd=${kwd}">다음</a>
-					</li>
 				</ul>
 			</nav>
 

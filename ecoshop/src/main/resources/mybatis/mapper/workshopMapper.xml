@@ -117,7 +117,7 @@
 		<where>
 			<include refid="where-list-manager" />
 		</where>
-		ORDER BY managerId DESC
+		ORDER BY managerId ASC
 		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS
 		ONLY
 	</select>

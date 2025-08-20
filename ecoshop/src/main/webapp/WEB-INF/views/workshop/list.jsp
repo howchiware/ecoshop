@@ -69,8 +69,10 @@
 }
 
 .form-select {
-width: 10rem;
+width: 11rem;
 }
+
+
 </style>
 </head>
 <body>
@@ -91,7 +93,7 @@ width: 10rem;
 		<c:url var="listAction" value="/workshop/list" />
 		<form id="filterForm" class="row g-2 align-items-end mb-4"
 			method="get" action="${listAction}">
-			<div class="col-sm-4 col-md-3">
+			<div class="col-sm-2 col-md-2 pe-0">
 				<!-- <label class="form-label">카테고리</label> --> 
 				<select class="form-select" name="categoryId">
 					<option value="">전체</option>
@@ -104,7 +106,7 @@ width: 10rem;
 				</select>
 			</div>
 
-			<div class="col-sm-4 col-md-3">
+			<div class="col-sm-2 col-md-2 pe-0">
 				<!-- <label class="form-label">정렬</label> -->  
 				<select class="form-select" name="sort">
 					<option value="latest"

@@ -28,16 +28,16 @@
 
       <!-- 제목 & 등록버튼 -->
       <div class="d-flex align-items-center justify-content-between mb-3">
-        <h3 class="m-0">FAQ 관리</h3>
+        <h4 class="m-0">FAQ 관리</h4>
         <button class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#faqModal">
-          <i class="bi bi-plus-lg"></i> FAQ 등록
+          등록
         </button>
       </div>
 
       <!-- 검색/필터 -->
       <form class="row g-2 align-items-end mb-3" method="get" action="${ctx}/admin/workshop/faq/manage">
-        <div class="col-sm-6 col-md-4">
-          <label class="form-label">프로그램</label>
+        <div class="col-sm-6 col-md-3">
+          <label class="form-label">프로그램명</label>
           <select name="programId" class="form-select" onchange="this.form.submit()">
             <option value="">프로그램 선택</option>
             <c:forEach var="p" items="${programList}">
@@ -53,7 +53,7 @@
       <table class="table table-bordered align-middle">
         <thead class="table-light">
           <tr>
-            <th style="width:5%">No</th>
+            <th style="width:5%">번호</th>
             <th style="width:25%">질문</th>
             <th>답변</th>
             <th style="width:15%">관리</th>
@@ -92,7 +92,14 @@
           </c:choose>
         </tbody>
       </table>
-
+      
+      <!-- 페이징 -->
+	  <nav aria-label="페이징">
+		<ul class="pagination justify-content-center">
+			<li class="page-item active"><span class="page-link">${page}</span></li>
+		</ul>
+	  </nav>
+			
     </div>
   </main>
 
