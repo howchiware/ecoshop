@@ -16,5 +16,6 @@ public class Point {
     private int points;      // 적립/차감 포인트
     private Long postId;     // 인증 게시물
     private int balance;    // 누적 포인트 잔액
+    private String orderId;
 		
 }
