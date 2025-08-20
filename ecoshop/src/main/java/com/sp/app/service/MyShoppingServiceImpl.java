@@ -1,6 +1,7 @@
 package com.sp.app.service;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -64,8 +65,26 @@ public class MyShoppingServiceImpl implements MyShoppingService {
 
 	@Override
 	public void insertDestination(Destination dto) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			String tel = dto.getTel1() + "-" + dto.getTel2() + "-" + dto.getTel3();
+			dto.setTel(tel);
+			
+			if(dto.getDefaultDest() == 1) {
+				Map<String, Object> map = new HashMap<>();
+				map.put("memberId", dto.getMemberId());
+				map.put("defaultDest", 0);
+				mapper.updateDefaultDestination(map);
+			}
+			
+			mapper.insertDestination(dto);
+			
+			// 최근 10개만 남기고 삭제
+			mapper.deleteOldestDestination(dto.getMemberId());			
+		} catch (Exception e) {
+			log.info("insertDestination : ", e);
+			
+			throw e;
+		}
 	}
 
 	@Override
