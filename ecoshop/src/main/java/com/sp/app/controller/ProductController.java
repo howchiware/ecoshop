@@ -112,7 +112,6 @@ public class ProductController {
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			List<Product> listStock = null;
-			
 			if(dto.getOptionCount() < 2) {
 				map.put("productId", dto.getProductId());
 				map.put("productCode", dto.getProductCode());

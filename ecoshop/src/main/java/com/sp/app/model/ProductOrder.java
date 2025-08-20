@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Order {
+public class ProductOrder {
 	// 상품 정보
 	private long productId;
 	private long productCode;
@@ -17,6 +17,7 @@ public class Order {
 	private String thumbnail;
 	private int price;
 	private int sale;
+	private int point;
 	private int savedPoint;
 	private int delivery;
 	private int optionCount;
@@ -61,7 +62,7 @@ public class Order {
 	private List<Integer> productMoneys;
 	private List<Integer> prices;
 	private List<Integer> salePrices;
-	private List<Integer> savedPoints;
+	private List<Integer> points;
 	
 	// 장바구니 정보
 	private Long cartId;

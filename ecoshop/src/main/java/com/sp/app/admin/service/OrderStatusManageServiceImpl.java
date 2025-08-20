@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.sp.app.admin.mapper.OrderManageMapper;
 import com.sp.app.admin.model.OrderDetailManage;
 import com.sp.app.admin.model.OrderManage;
-import com.sp.app.mapper.OrderMapper;
+import com.sp.app.mapper.ProductOrderMapper;
 // import com.sp.app.model.UserPoint;
 import com.sp.app.state.OrderState;
 
@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrderStatusManageServiceImpl implements OrderStatusManageService {
 	private final OrderManageMapper mapper;
-	private final OrderMapper orderMapper;
+	private final ProductOrderMapper orderMapper;
 	
 	@Override
 	public int orderCount(Map<String, Object> map) {
