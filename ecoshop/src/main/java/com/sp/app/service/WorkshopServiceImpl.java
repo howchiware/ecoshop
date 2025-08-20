@@ -28,12 +28,13 @@ public class WorkshopServiceImpl implements WorkshopService {
 	// ** 관리자 **
 	// 카테고리
 	@Override
-	public void insertCategory(Workshop dto, String categoryName) {
+	public void insertCategory(Workshop dto) {
 		try {
-			String name = categoryName == null ? null : categoryName.trim();
-
-			dto.setCategoryName(name);
-			mapper.insertProgramCategory(dto);
+			if (dto.getCategoryName() != null) {
+	            dto.setCategoryName(dto.getCategoryName().trim());
+	        }
+			
+			mapper.insertCategory(dto);
 		} catch (Exception e) {
 			log.info("insertCategory : ", e);
 
@@ -47,13 +48,36 @@ public class WorkshopServiceImpl implements WorkshopService {
 		List<Workshop> list = null;
 
 		try {
-			list = mapper.listProgramCategory(map);
+			list = mapper.listCategory(map);
 
 		} catch (Exception e) {
 			log.info("list : ", e);
 		}
 
 		return list;
+	}
+	
+	@Override
+	public void updateCategory(Workshop dto) {
+		try {
+			mapper.updateCategory(dto);
+		} catch (Exception e) {
+			log.info("updateProgram : ", e);
+
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public void deleteCategory(Long categoryId) {
+		try {
+			mapper.deleteCategory(categoryId);
+		} catch (Exception e) {
+			log.info("updateProgram : ", e);
+
+			throw e;
+		}
 	}
 
 	// 프로그램
@@ -86,7 +110,7 @@ public class WorkshopServiceImpl implements WorkshopService {
 	}
 
 	@Override
-	public Workshop findProgramById(long num) {
+	public Workshop findProgramById(Long num) {
 		Workshop dto = null;
 
 		try {
@@ -110,7 +134,7 @@ public class WorkshopServiceImpl implements WorkshopService {
 	}
 
 	@Override
-	public void deleteProgram(long num) throws Exception {
+	public void deleteProgram(Long num) throws Exception {
 		try {
 			mapper.deleteProgram(num);
 		} catch (Exception e) {
@@ -526,13 +550,13 @@ public class WorkshopServiceImpl implements WorkshopService {
 	}
 
 	@Override
-	public void deleteFaq(long faqId) throws Exception {
+	public void deleteFaq(Long faqId) throws Exception {
 		mapper.deleteFaq(faqId);
 
 	}
 
 	@Override
-	public Long findProgramIdByWorkshopId(long workshopId) {
+	public Long findProgramIdByWorkshopId(Long workshopId) {
 		try {
 
 			return mapper.findProgramIdByWorkshopId(workshopId);
@@ -545,7 +569,7 @@ public class WorkshopServiceImpl implements WorkshopService {
 	}
 
 	@Override
-	public WorkshopFaq findFaqById(long faqId) {
+	public WorkshopFaq findFaqById(Long faqId) {
 		WorkshopFaq dto = null;
 
 		try {

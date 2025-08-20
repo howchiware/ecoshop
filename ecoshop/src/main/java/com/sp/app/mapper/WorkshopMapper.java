@@ -17,10 +17,10 @@ import com.sp.app.model.WorkshopReview;
 public interface WorkshopMapper {
 	/* ──────────────── 관리자 ──────────────── */
 	// 카테고리
-	public void insertProgramCategory(Workshop dto);
-	public void updateProgramCategory(Workshop dto) throws SQLException;
-	public void deleteProgramCategory(long num) throws SQLException;
-	public List<Workshop> listProgramCategory(Map<String, Object> map);
+	public void insertCategory(Workshop dto);
+	public void updateCategory(Workshop dto);
+	public void deleteCategory(Long categoryId);
+	public List<Workshop> listCategory(Map<String, Object> map);
 	
 	// 프로그램
 	public void insertProgram(Workshop dto);
@@ -28,7 +28,7 @@ public interface WorkshopMapper {
 	public void deleteProgram(long num);
 	public int programDataCount(Map<String, Object> map);
 	public List<Workshop> listProgram(Map<String, Object> map);
-	public Workshop findProgramById(long num);
+	public Workshop findProgramById(Long num);
 	
 	// 워크샵
 	public void insertWorkshop(Workshop dto) throws SQLException;

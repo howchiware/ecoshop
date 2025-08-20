@@ -43,6 +43,70 @@ public class WorkshopManageController {
 	public void init() {
 		uploadPath = this.storageService.getRealPath("/uploads/workshop");
 	}
+	
+		// 카테고리 목록
+		@GetMapping("/category/manage")
+		public String categoryManage(Model model) {
+			try {
+				Map<String, Object> pmap = new HashMap<>();
+				pmap.put("offset", 0);
+				pmap.put("size", 200);
+				
+				List<Workshop> categoryList = service.listCategory(pmap);
+
+				model.addAttribute("categoryList", categoryList);
+				
+			} catch (Exception e) {
+				log.info("categoryManage : ", e);
+				model.addAttribute("categoryList", List.of());
+			}
+
+			return "admin/workshop/categoryManage";
+		}
+
+		// 카테고리 등록
+		@PostMapping("/category/write")
+		public String addCategory(Workshop dto, @RequestParam("categoryName") String categoryName,
+				HttpSession session) throws Exception {
+			try {
+				dto.setCategoryName(categoryName.trim());
+				service.insertCategory(dto);
+				
+				session.setAttribute("msg", "카테고리가 등록되었습니다.");
+			} catch (Exception e) {
+				log.info("addCategory : ", e);
+				session.setAttribute("msg", "카테고리 등록에 실패했습니다.");
+			}
+			return "redirect:/admin/workshop/category/manage";
+		}
+
+		// 카테고리 수정
+		@PostMapping("/category/update")
+		public String updateCategory(Workshop dto, HttpSession session) throws Exception {
+			try {
+				service.updateCategory(dto);
+				session.setAttribute("msg", "카테고리가 수정되었습니다.");
+			} catch (Exception e) {
+				log.info("writeSubmitProgram : ", e);
+				session.setAttribute("msg", "카테고리 등록에 실패했습니다.");
+			}
+			
+			return "redirect:/admin/workshop/category/manage";
+		}
+
+		// 카테고리 삭제
+		@PostMapping("/category/delete")
+		public String deleteCategory(@RequestParam(name = "categoryId") Long categoryId, HttpSession session) throws Exception {
+			try {
+				service.deleteCategory(categoryId);
+				session.setAttribute("msg", "카테고리가 삭제되었습니다.");
+			} catch (Exception e) {
+				log.info("deleteCategory : ", e);
+				session.setAttribute("msg", "카테고리 삭제에 실패했습니다.");
+			}
+
+			return "redirect:/admin/workshop/category/manage";
+		}
 
 	// 프로그램 등록 폼
 	@GetMapping("/program/write")
@@ -61,18 +125,6 @@ public class WorkshopManageController {
 		}
 
 		return "admin/workshop/programWrite";
-	}
-
-	// 카테고리 등록
-	@PostMapping("/category")
-	public String addCategory(Workshop dto, @RequestParam("categoryName") String categoryName) {
-		try {
-			service.insertCategory(dto, categoryName);
-		} catch (Exception e) {
-			log.info("program addCategory : ", e);
-		}
-
-		return "redirect:/admin/workshop/program/write";
 	}
 
 	// 프로그램 등록
@@ -624,6 +676,7 @@ public class WorkshopManageController {
 		return "redirect:/admin/workshop/faq/manage?programId=" + dto.getProgramId();
 	}
 
+	// FAQ 수정
 	@PostMapping("/faq/update")
 	public String updateFaq(WorkshopFaq dto, HttpSession session) throws Exception {
 		try {

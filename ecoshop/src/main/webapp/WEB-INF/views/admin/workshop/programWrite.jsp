@@ -43,20 +43,6 @@
 					</div>
 				</div>
 
-				<!-- 새 카테고리 추가 폼 -->
-				<form method="post" action="${ctx}/admin/workshop/category"
-					class="row g-2 align-items-center">
-					<label class="col-sm-2 col-form-label">새 카테고리</label>
-					<div class="col-sm-6">
-						<input type="text" name="categoryName" class="form-control"
-							required />
-					</div>
-					<div class="col-sm-2">
-						<button type="submit" class="btn btn-outline-secondary w-100">추가</button>
-					</div>
-				</form>
-			</section>
-
 			<!-- 프로그램 등록 폼 -->
 			<section>
 				<h4>| 기본 정보</h4>

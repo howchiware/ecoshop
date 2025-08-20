@@ -11,15 +11,17 @@ import com.sp.app.model.WorkshopReview;
 
 public interface WorkshopService {
 	// 카테고리
-	public void insertCategory(Workshop dto, String categoryName);
+	public void insertCategory(Workshop dto);
+	public void updateCategory(Workshop dto);
+	public void deleteCategory(Long categoryId);
 	public List<Workshop> listCategory(Map<String, Object> map);
 	
 	// 프로그램
 	public void insertProgram(Workshop dto) throws Exception;
 	public List<Workshop> listProgram(Map<String, Object> map);
-	public Workshop findProgramById(long num);
+	public Workshop findProgramById(Long num);
 	public void updateProgram(Workshop dto) throws Exception;
-	public void deleteProgram(long num) throws Exception;
+	public void deleteProgram(Long num) throws Exception;
 	
 	// 담당자
 	public void insertManager(Workshop dto) throws Exception;
@@ -72,12 +74,9 @@ public interface WorkshopService {
 	public List<WorkshopFaq> listFaq(Map<String,Object> map);
 	public void insertFaq(WorkshopFaq dto) throws Exception;
 	public void updateFaq(WorkshopFaq dto) throws Exception;
-	public void deleteFaq(long num) throws Exception;
-	public Long findProgramIdByWorkshopId(long workshopId);
-	public WorkshopFaq findFaqById(long faqId);
+	public void deleteFaq(Long num) throws Exception;
+	public Long findProgramIdByWorkshopId(Long workshopId);
+	public WorkshopFaq findFaqById(Long faqId);
 	public void updateWorkshopStatus(Workshop dto);
-	
-	
-	
 	
 }
