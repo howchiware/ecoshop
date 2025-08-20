@@ -13,12 +13,12 @@ public interface ProductInquiryMapper {
 	public void insertInquiry(ProductInquiry dto) throws SQLException;
 	
 	public int dataCount(Map<String, Object> map);
-	public List<ProductInquiry>listQuestion(Map<String, Object> map);
+	public List<ProductInquiry> listInquiry(Map<String, Object> map);
 	
 	public int dataCountManage(Map<String, Object> map);
-	public List<ProductInquiry>listQuestionManage(Map<String, Object> map);
+	public List<ProductInquiry> listInquiryManage(Map<String, Object> map);
 	
-	public void updateQuestion(ProductInquiry dto) throws SQLException;
+	public void updateInquiry(ProductInquiry dto) throws SQLException;
 
-	public void deleteQuestion(long num) throws SQLException;
+	public void deleteInquiry(long inquiryId) throws SQLException;
 }

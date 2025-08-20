@@ -7,7 +7,8 @@ import com.sp.app.model.ProductReview;
 import com.sp.app.model.Summary;
 
 public interface ProductReviewService {
-	int dataCount(Map<String, Object> map);
-	List<ProductReview> listReview(Map<String, Object> map);
-	Summary findByReviewSummary(Map<String, Object> map);
+	public int dataCount(Map<String, Object> map);
+	public List<ProductReview> listReview(Map<String, Object> map);
+	public Summary findByReviewSummary(Map<String, Object> map);
+	public void insertReview(ProductReview dto, String uploadPath) throws Exception;
 }

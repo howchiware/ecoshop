@@ -64,4 +64,16 @@
 		FROM productReview
 		WHERE productCode = #{productCode} AND showReview = 1 AND block = 0
 	</select>
+	
+	<insert id="insertReview" parameterType="com.sp.app.model.ProductReview">
+		INSERT INTO productReview(reviewId, rate, content, productCode, memberId, 
+			regDate, showReview, block)
+		VALUES(productReview_seq.NEXTVAL, #{rate}, #{content}, #{productCode}, #{memberId}, SYSDATE, 1, 0)
+	</insert>
+	
+	<insert id="insertReviewPhoto" parameterType="com.sp.app.model.ProductReview">
+		INSERT INTO productReviewDetail(reviewPhotoId, reviewId, reviewImg)
+		VALUES(productReviewDetail_seq.NEXTVAL, #{reviewId}, #{reviewImg})
+	</insert>
+	
 </mapper>

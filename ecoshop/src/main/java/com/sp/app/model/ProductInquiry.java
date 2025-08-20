@@ -24,4 +24,6 @@ public class ProductInquiry {
 	private String answer;
 	
 	private String productName;
+	
+	private int deletePermit;
 }

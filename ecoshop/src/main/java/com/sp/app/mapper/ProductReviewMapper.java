@@ -13,4 +13,7 @@ public interface ProductReviewMapper {
 	int dataCount(Map<String, Object> map);
 	public List<ProductReview> listReview(Map<String, Object> map);
 	public Summary findByReviewSummary(Map<String, Object> map);
+
+	public void insertReview(ProductReview dto) throws Exception;
+	public void insertReviewPhoto(ProductReview dto) throws Exception;
 }

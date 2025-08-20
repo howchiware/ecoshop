@@ -23,18 +23,47 @@ public class ProductInquiryServiceImpl implements ProductInquiryService {
 	
 	@Override
 	public void insertInquiry(ProductInquiry dto, String uploadPath) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			mapper.insertInquiry(dto);
+		} catch (Exception e) {
+			log.info("insertInquiry : ", e);
+			
+			throw e;
+		}
 	}
 	@Override
 	public int dataCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try {
+			result = mapper.dataCount(map); 
+		} catch (Exception e) {
+			log.info("dataCount : ", e);
+		}
+		
+		return result;
 	}
 	@Override
 	public List<ProductInquiry> listInquiry(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		List<ProductInquiry> list = null;
+		
+		try {
+			list = mapper.listInquiry(map);
+			
+			for (ProductInquiry dto : list) {
+				dto.setName(myUtil.nameMasking(dto.getName()));
+				
+				dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+				
+				if(dto.getAnswer() != null) {
+					dto.setAnswer(dto.getAnswer().replaceAll("\n", "<br>"));
+				}
+			}
+		} catch (Exception e) {
+			log.info("listInquiry : ", e);
+		}
+		
+		return list;
 	}
 	@Override
 	public int dataCountManage(Map<String, Object> map) {
@@ -52,9 +81,14 @@ public class ProductInquiryServiceImpl implements ProductInquiryService {
 		
 	}
 	@Override
-	public void deleteInquiry(long num, String uploadPath) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void deleteInquiry(long inquiryId) throws Exception {
+		try {
+			mapper.deleteInquiry(inquiryId);
+		} catch (Exception e) {
+			log.info("deleteInquiry : ", e);
+			
+			throw e;
+		}
 	}
 	
 

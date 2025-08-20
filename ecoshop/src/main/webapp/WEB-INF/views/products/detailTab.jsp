@@ -259,20 +259,74 @@
 	
 </div>
 
-<!-- 상품문의 대화상자 -->
-<div class="modal fade" id="questionDialogModal" tabindex="-1" 
+<!-- 리뷰쓰기 -->
+
+<!-- 상품리뷰 대화상자 -->
+<div class="modal fade" id="reviewDialogModal" tabindex="-1" 
 		data-bs-backdrop="static" data-bs-keyboard="false"
-		aria-labelledby="questionDialogModalLabel" aria-hidden="true">
+		aria-labelledby="reviewDialogModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="questionDialogModalLabel">상품 문의 하기</h5>
+				<h5 class="modal-title" id="reviewDialogModalLabel">상품 리뷰 등록</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="review-form p-2">
+					<form name="reviewForm">
+						<div class="row">
+							<div class="col">
+								<span class="fw-bold">상품 리뷰 쓰기</span>
+							</div>
+						</div>
+						<div class="p-1">
+							<p class="star">
+								<a href="#" class="on"><i class="bi bi-star-fill"></i></a>
+								<a href="#" class="on"><i class="bi bi-star-fill"></i></a>
+								<a href="#" class="on"><i class="bi bi-star-fill"></i></a>
+								<a href="#" class="on"><i class="bi bi-star-fill"></i></a>
+								<a href="#" class="on"><i class="bi bi-star-fill"></i></a>
+								<input type="hidden" name="rate" value="5">
+								<input type="hidden" name="productCode" value="${dto.productCode}">
+							</p>
+						</div>
+						<div class="p-1">
+							<textarea name="content" class="form-control"></textarea>
+						</div>
+						<div class="p-1">
+							<div class="preview-session">
+								<label for="selectFile" class="me-2" tabindex="0" title="이미지 업로드">
+									<img class="image-upload-btn" src="${pageContext.request.contextPath}/dist/images/add_photo.png">
+									<input type="file" name="selectFile" id="selectFile" hidden="" multiple accept="image/png, image/jpeg">
+								</label>
+								<div class="image-upload-list"></div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn-accent btnReviewSendOk">리뷰등록 <i class="bi bi-check2"></i> </button>
+				<button type="button" class="btn-default btnReviewSendCancel" data-bs-dismiss="modal">취소</button>
+			</div>			
+		</div>
+	</div>
+</div>
+
+<!-- 상품문의 대화상자 -->
+<div class="modal fade" id="inquiryDialogModal" tabindex="-1" 
+		data-bs-backdrop="static" data-bs-keyboard="false"
+		aria-labelledby="inquiryDialogModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="inquiryDialogModalLabel">상품 문의 하기</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 
 				<div class="qna-form p-2">
-					<form name="questionForm">
+					<form name="inquiryForm">
 						<div class="row">
 							<div class="col">
 								<span class="fw-bold">문의사항 쓰기</span><span> - 상품 및 상품 구매 과정과 관련없는 글은 삭제 될 수 있습니다.</span>
@@ -283,25 +337,17 @@
 							</div>
 						</div>
 						<div class="p-1">
-							<input type="hidden" name="productCode" value="1">
-							<textarea name="question" id="question" class="form-control"></textarea>
+							<input type="hidden" name="productCode" value="${dto.productCode}">
+							<input type="text" name="title" placeholder="제목">
+							<textarea name="content" id="content" class="form-control" placeholder="문의 내용을 입력하세요."></textarea>
 						</div>
-						<div class="p-1">
-							<div class="preview-session">
-								<label for="selectFile" class="me-2" tabindex="0" title="이미지 업로드">
-									<img class="image-upload-btn" src="${pageContext.request.contextPath}/dist/images/add_photo.png">
-									<input type="file" name="selectFile" id="selectFile" hidden="" multiple accept="image/png, image/jpeg">
-								</label>
-								<div class="image-upload-list"></div>
-							</div>
-						</div>							
 					</form>
 				</div>
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn-accent btnQuestionSendOk">문의등록 <i class="bi bi-check2"></i> </button>
-				<button type="button" class="btn-default btnQuestionSendCancel" data-bs-dismiss="modal">취소</button>
+				<button type="button" class="btn-accent btnInquirySendOk">문의등록 <i class="bi bi-check2"></i> </button>
+				<button type="button" class="btn-default btnInquirySendCancel" data-bs-dismiss="modal">취소</button>
 			</div>			
 		</div>
 	</div>

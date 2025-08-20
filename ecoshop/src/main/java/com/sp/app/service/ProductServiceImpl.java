@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.sp.app.mapper.ProductMapper;
 import com.sp.app.model.Product;
 import com.sp.app.model.ProductDeliveryRefundInfo;
+import com.sp.app.model.ProductReview;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -100,6 +101,10 @@ public class ProductServiceImpl implements ProductService {
 		
 		try {
 			dto = productMapper.listDeliveryRefundInfo();
+			
+			dto.setDeliveryInfo(dto.getDeliveryInfo().replaceAll("\n", "<br>"));
+			dto.setRefundInfo(dto.getRefundInfo().replaceAll("\n", "<br>"));
+				
 		} catch (Exception e) {
 			log.info("listDeliveryRefundInfo : ", e);
 		}

@@ -110,17 +110,12 @@ public class ProductController {
 				listOptionDetail = productService.listOptionDetail(listOption.get(0).getOptionNum());
 			}
 			
-			for(Product od : listOptionDetail) {
-				System.out.println(od.getOptionDetailNum());
-			}
-			
 			Map<String, Object> map = new HashMap<String, Object>();
 			List<Product> listStock = null;
 			
 			if(dto.getOptionCount() < 2) {
 				map.put("productId", dto.getProductId());
 				map.put("productCode", dto.getProductCode());
-				map.put("optionDetailNum", listOptionDetail.get(0).getOptionDetailNum());
 				listStock = productService.listOptionDetailStock(map);
 				
 				if(dto.getOptionCount() == 0 && listStock.size() > 0) {

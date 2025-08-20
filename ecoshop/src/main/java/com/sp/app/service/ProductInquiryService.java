@@ -9,12 +9,12 @@ public interface ProductInquiryService {
 	public void insertInquiry(ProductInquiry dto, String uploadPath) throws Exception;
 	
 	public int dataCount(Map<String, Object> map);
-	public List<ProductInquiry>listInquiry(Map<String, Object> map);
+	public List<ProductInquiry> listInquiry(Map<String, Object> map);
 	
 	public int dataCountManage(Map<String, Object> map);
-	public List<ProductInquiry>listInquiryManage(Map<String, Object> map);
+	public List<ProductInquiry> listInquiryManage(Map<String, Object> map);
 	
 	public void updateInquiry(ProductInquiry dto) throws Exception;
 	
-	public void deleteInquiry(long num, String uploadPath) throws Exception;
+	public void deleteInquiry(long inquiryId) throws Exception;
 }

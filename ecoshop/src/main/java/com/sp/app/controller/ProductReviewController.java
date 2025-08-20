@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +39,6 @@ public class ProductReviewController {
 		uploadPath = this.storageService.getRealPath("/uploads/review");
 	}		
 	
-	/*
 	// AJAX - JSON
 	@PostMapping("write")
 	public Map<String, ?> writeSubmit(ProductReview dto,
@@ -49,6 +49,7 @@ public class ProductReviewController {
 		String state = "false";
 		try {
 			
+			System.out.println("ggg");
 			SessionInfo info = (SessionInfo)session.getAttribute("member");
 			dto.setMemberId(info.getMemberId());
 			
@@ -61,7 +62,6 @@ public class ProductReviewController {
 		model.put("state", state);
 		return model;
 	}
-	*/
 	
 	// AJAX - JSON
 	@GetMapping("list")

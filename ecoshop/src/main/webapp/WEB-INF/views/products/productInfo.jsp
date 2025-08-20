@@ -55,11 +55,10 @@
 						<div class="col-md-6 ps-4">
 							<form name="buyForm">
 								<c:if test="${dto.totalStock < 1}">
-									<div class="border rounded bg-light mt-2 p-2 text-center">
+									<div class="border rounded mt-2 mb-2 p-2 text-center" style="background: ">
 										<label class="text-black-50 fw-bold">상품 재고가 없습니다.</label>
 									</div>
 								</c:if>
-								
 								<div class="row pt-2 border-bottom namePrice">
 									<div class="col productName mb-2">
 										${dto.productName}
@@ -221,10 +220,10 @@
 								
 								<div class="row mt-2 mb-2">
 									<div class="col pe-1">
-										<button type="button" class="btn-default btn-lg w-100 btn-productLike" data-productCode="1" ${empty sessionScope.member.member_id ? "disabled" : ""}>찜하기&nbsp;&nbsp;<i class="bi ${dto.userWish==1 ? 'bi-heart-fill text-danger':'bi-heart'}"></i></button>
+										<button type="button" class="btn-default btn-lg w-100 btn-productLike" data-productCode="1" ${empty sessionScope.member.memberId ? "disabled" : ""}>찜하기&nbsp;&nbsp;<i class="bi ${dto.userWish==1 ? 'bi-heart-fill text-danger':'bi-heart'}"></i></button>
 									</div>
 									<div class="col ps-1">
-										<button type="button" class="btn-default btn-lg w-100 btn-productCart" onclick="sendOk('cart');" ${empty sessionScope.member.member_id || dto.totalStock < 1 ? "disabled" : ""}>장바구니&nbsp;&nbsp;<i class="bi bi-cart-plus"></i></button>
+										<button type="button" class="btn-default btn-lg w-100 btn-productCart" onclick="sendOk('cart');" ${empty sessionScope.member.memberId || dto.totalStock < 1 ? "disabled" : ""}>장바구니&nbsp;&nbsp;<i class="bi bi-cart-plus"></i></button>
 									</div>
 								</div>
 							</form>

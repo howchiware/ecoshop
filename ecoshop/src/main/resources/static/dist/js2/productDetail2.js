@@ -6,7 +6,7 @@ $(function(){
 		if(tab === '2') { // review
 			listReview(1);
 		} else if( tab === '3') { // qna
-			listQuestion(1);
+			listInquiry(1);
 		}
     });	
 });
@@ -182,9 +182,6 @@ function printReview(data) {
 	}
 }
 
-function reviewWrite(){
-	
-}
 
 function printSummary(summary) {
     // 요약 정보에서 필요한 값들을 구조 분해 할당
@@ -223,116 +220,10 @@ function printSummary(summary) {
 
 }
 
-$(function(){
-	$('body').on('click', '.notifyReview', function(){
-		let num = $(this).attr('data-num');
-		alert(num);
-	});
-});
-
-// question
-function listQuestion(page) {
-	const contextPath = document.getElementById('web-contextPath').value;
-	const productCode = document.getElementById('product-productCode').value;
-	
-	let url = contextPath + '/inquiry/list';
-	let params = {productCode:productCode, pageNo:page};
-	
-	const fn = function(data) {
-		printQuestion(data);
-	};
-
-	ajaxRequest(url, 'get', params, 'json', fn);
+// 상품리뷰 대화상자
+function reviewWrite(){
+	$('#reviewDialogModal').modal('show');
 }
-
-function printQuestion(data) {
-	/*
-	const contextPath = document.getElementById('web-contextPath').value;	
-    // 데이터를 구조 분해 할당으로 추출
-    const { dataCount, pageNo, total_page, size, paging, list } = data;
-
-    // 전체 문의 개수 업데이트
-    $('.title-qnaCount').html(`(${dataCount})`);
-
-    let out = '';
-
-    if (dataCount > 0) {
-        // list 배열의 각 항목을 HTML 문자열로 변환
-        out = list.map(item => {
-            // 각 문의 항목에서 필요한 데이터를 추출
-            const { num, name, question, question_date, answer, answer_date, listFilename, secret } = item;
-            // 답변 상태를 설정
-            const answerState = answer_date ? '<span class="text-primary">답변완료</span>' : '<span class="text-secondary">답변대기</span>';
-
-            // 첨부 파일이 있을 경우 HTML을 생성
-            const filenamesHtml = listFilename && listFilename.length > 0
-                ? `<div class="row gx-1 mt-2 mb-1 p-1">
-                    ${listFilename.map(f => `
-                        <div class="col-md-auto md-img">
-                            <img class="border rounded" src="${contextPath}/uploads/qna/${f}">
-                        </div>
-                    `).join('')}
-                  </div>`
-                : ''; // 파일이 없으면 빈 문자열
-
-            // 비밀글이 아닐 경우에 신고 링크를 추가
-            const reportLink = secret === 0 ? ` |<span class="notifyQuestion" data-num="${num}">신고</span>` : '';
-
-            // 답변이 있을 경우 답변 보기 버튼을 추가
-            const answerButton = answer
-                ? `<div class="col pt-2 text-end"><button class="btn-default btnAnswerView"> <i class="bi bi-chevron-down"></i> </button></div>`
-                : '';
-
-            // 답변 내용이 있을 경우 답변 섹션을 추가
-            const answerContent = answer
-                ? `
-                <div class="p-3 pt-0 answer-content" style="display: none;">
-                    <div class="bg-light">
-                        <div class="p-3 pb-0">
-                            <label class="text-bg-primary px-2"> 관리자 </label> <label>${answer_date}</label>
-                        </div>
-                        <div class="p-3 pt-1">${answer}</div>
-                    </div>
-                </div>`
-                : '';
-
-            // 각 문의 항목에 대한 전체 HTML 구조를 반환
-            return `
-                <div class="mt-1 border-bottom">
-                    <div class="mt-2 p-2">${question}</div>
-                    ${filenamesHtml}
-                    <div class="row p-2">
-                        <div class="col-auto pt-2 pe-0">${answerState}</div>
-                        <div class="col-auto pt-2 px-0">&nbsp;|&nbsp;${name}</div>
-                        <div class="col-auto pt-2 px-0">&nbsp;|&nbsp;<span>${question_date}</span>${reportLink}</div>
-                        ${answerButton}
-                    </div>
-                    ${answerContent}
-                </div>
-            `;
-        }).join(''); // 모든 항목의 HTML을 하나의 문자열로 합친다.
-
-        out += `<div class="page-navigation">${paging}</div>`;
-    }
-
-    $('.list-question').html(out);
-	*/
-}
-
-$(function(){
-	// 문의 답변 보기/숨기기
-	$('.list-question').on('click', '.btnAnswerView', function(){
-		const $btn = $(this);
-		const $EL = $(this).closest('.row').next('.answer-content');
-		if($EL.is(':visible')) {
-			$btn.html(' <i class="bi bi-chevron-down"></i> ');
-			$EL.hide(100);
-		} else {
-			$btn.html(' <i class="bi bi-chevron-up"></i> ');
-			$EL.show(100);
-		}
-	});
-});
 
 window.addEventListener('DOMContentLoaded', () => {
 	var sel_files = [];
@@ -399,24 +290,269 @@ window.addEventListener('DOMContentLoaded', () => {
 		}
 	});
 	
-	// 상품문의 대화상자
-	$('.btnQuestion').click(function(){
-		$('#questionDialogModal').modal('show');
-	});
-
-	$('.btnQuestionSendOk').click(function(){
-		const f = document.questionForm;
+	$('.btnReviewSendOk').click(function(){
+		const f = document.reviewForm;
 		let s;
 		
-		s = f.question.value.trim();
+		console.log(f.rate.value);
+		if(f.rate.value === '0') {
+			alert('평점은 1점부터 가능합니다.');
+			return false;
+		}
+		console.log(f.content.value);
+		s = f.content.value.trim();
 		if( ! s ) {
-			alert('문의 사항을 입력하세요.');
-			f.question.focus();
+			alert('리뷰 내용을 입력하세요.');
+			f.content.focus();
 			return false;
 		}
 		
 		if(f.selectFile.files.length > 5) {
 			alert('이미지는 최대 5개까지 가능합니다.');
+			return false;
+		}
+		
+		const contextPath = document.getElementById('web-contextPath').value;
+		const url = contextPath + '/review/write';
+		console.log(url);
+		// FormData : form 필드와 그 값을 나타내는 일련의 key/value 쌍을 쉽게 생성하는 방법을 제공 
+		// FormData는 Content-Type을 명시하지 않으면 multipart/form-data로 전송
+		let formData = new FormData(f); 
+		
+		const fn = function(data) {
+			if(data.state === 'true') {
+				f.reset();
+				$('.review-form .img-item').each(function(){
+					$(this).remove();
+				});
+				sel_files.length = 0;
+				
+				$('#reviewDialogModal').modal('hide');
+				
+				listReview(1);
+			}
+			
+			console.log(222);
+		};
+		
+		ajaxRequest(url, 'post', formData, 'json', fn, true);
+	});
+	
+	$('.btnReviewSendCancel').click(function(){
+		const f = document.reviewForm;
+		f.reset();
+		$('.review-form .img-item').each(function(){
+			$(this).remove();
+		});
+		sel_files.length = 0;
+		
+		$('#reviewDialogModal').modal('hide');
+	});		
+});
+
+$(function(){
+	// 별
+	$('.review-form .star a').click(function(e){
+		console.log($(this));
+		let b = $(this).hasClass('on');
+		$(this).parent().children('a').removeClass('on');
+		$(this).addClass('on').prevAll('a').addClass('on');
+		
+		if( b ) {
+			$(this).removeClass('on');
+		}
+		
+		let s = $(this).closest('.review-form').find('.star .on').length;
+		$(this).closest('.review-form').find('input[name=rate]').val(s);
+		
+		// e.preventDefault(); // 화면 위로 이동 안되게
+		return false;
+	});
+});
+
+$(function(){
+	$('body').on('click', '.notifyReview', function(){
+		let num = $(this).attr('data-num');
+		alert(num);
+	});
+});
+
+// 문의
+function listInquiry(page) {
+	const contextPath = document.getElementById('web-contextPath').value;
+	const productCode = document.getElementById('product-productCode').value;
+	
+	let url = contextPath + '/inquiry/list';
+	let params = {productCode:productCode, pageNo:page};
+	
+	const fn = function(data) {
+		printInquiry(data);
+	};
+
+	ajaxRequest(url, 'get', params, 'json', fn);
+}
+
+function printInquiry(data) {
+
+	const contextPath = document.getElementById('web-contextPath').value;	
+    // 데이터를 구조 분해 할당으로 추출
+    const { dataCount, pageNo, total_page, size, paging, list } = data;
+
+    // 전체 문의 개수 업데이트
+    $('.title-qnaCount').html(`(${dataCount})`);
+
+    let out = '';
+
+    if (dataCount > 0) {
+        // list 배열의 각 항목을 HTML 문자열로 변환
+        out = `<table class="inquiry-table table">
+					<tbody>
+						<tr>
+							<td class="table-header" width="150px">상태</td>
+							<td class="table-header">제목</td>
+							<td class="table-header" width="150px">작성자</td>
+							<td class="table-header" width="230px">등록일</td>
+						</tr>`;
+		
+		out += list.map(item => {
+            // 각 문의 항목에서 필요한 데이터를 추출
+            const { inquiryId, name, title, content, regDate, answer, answerDate, secret, deletePermit } = item;
+            // 답변 상태를 설정
+            const answerState = answerDate ? `<td class="inquiryStatus" data-inquiryId="${inquiryId}" width="150px">답변완료</td>` : `<td class="inquiryStatus" data-inquiryId="${inquiryId}" width="150px">답변대기</td>`;
+			
+			const isMyInquiry = deletePermit === 1 ? 'myInquiry' : '';
+			
+			const isSecretInquiry = secret === 1 ? 'secret-inquiry' : '';
+			
+			const isSecretTitle = secret === 1 ? 'secret' : '';
+			
+			const inquirySimple = answerState + `<td class="inquiryTitle ${isSecretTitle}" data-inquiryId="${inquiryId}">${title}</td>
+									<td class="inquiryName" data-inquiryId="${inquiryId}" width="150px">${name}</td>
+									<td class="inquiryDate" data-inquiryId="${inquiryId}" width="230px">${regDate}</td>`;
+			
+			const deleteAvailable = deletePermit === 1 ? `<p class="myInquiryDelete">삭제</p>` : '';
+
+			const answerContent = answer ? `<hr class="inquireDivider">
+												<div class="inquireDetailAnswer">
+													<img src="/dist/images/person.png" class="answer-icon">
+													<div class="inquiryDetailNDC">
+														<div class="inquiryDetailAnswerND">
+															<p class="inquiryDetailAnswerName">관리자</p>
+															<p class="inquiryDetailAnswerDate">${answerDate}</p>
+														</div>
+														<div class="inquireDetailAnswerContent">
+															<p class="answerContent">${answer}</p>
+														</div>
+													</div>
+												</div>` : '';
+
+			// const isMyInquiry = ;																				
+			const inquiryDetail = `<tr class="inquiryDetailTr d-none">
+										<td colspan="4">
+											<div class="">
+												<div id="inquiryDetail${inquiryId}" class="inquiry-detailInfo">
+													<div class="inquiryDetailHeader">
+														<img src="/dist/images/person.png" class="user-icon">
+														<div class="inquiryDetailNTD">
+															<p class="inquiryDetailTitle">${title}</p>
+															<div class="inquiryDetailTD">
+																<p class="inquiryDetailName">${name}</p>
+																<p class="inquiryDetailDate">${regDate}</p>
+																${deleteAvailable}
+															</div>
+														</div>
+													</div>
+													<hr class="inquireDivider">
+													<div class="inquiryDetailBody">
+														<div class="inquireDetailContent" style="color: black">
+															<p class="content">${content}</p>
+														</div>
+														${answerContent}
+													</div>
+												</div>
+											</div>
+										</td>
+									</tr>`;	
+
+            // 각 문의 항목에 대한 전체 HTML 구조를 반환
+            return `
+				<tr class="inquiryTr ${isSecretInquiry} ${isMyInquiry}" data-inquiryId="${inquiryId}">
+					${inquirySimple}
+				</tr>
+				${inquiryDetail}
+            `;
+        }).join(''); // 모든 항목의 HTML을 하나의 문자열로 합친다.
+
+        out += `</tbody></table></div><div class="page-navigation">${paging}</div>`;
+    }
+
+    $('.list-inquiry').html(out);
+}
+
+/*
+$(function(){
+	// 문의 답변 보기/숨기기
+	$('.list-question').on('click', '.btnAnswerView', function(){
+		const $btn = $(this);
+		const $EL = $(this).closest('.row').next('.answer-content');
+		if($EL.is(':visible')) {
+			$btn.html(' <i class="bi bi-chevron-down"></i> ');
+			$EL.hide(100);
+		} else {
+			$btn.html(' <i class="bi bi-chevron-up"></i> ');
+			$EL.show(100);
+		}
+	});
+});
+*/
+
+// 문의 삭제
+$(function(){
+	$('div.detailTabList').on('click', 'p.myInquiryDelete', function(){
+		const $tr = $(this).closest('tr').prev();
+		let inquiryId = $tr.attr('data-inquiryId');
+		
+		console.log(inquiryId);
+		
+		if(! confirm('해당 문의를 삭제하시겠습니까 ? ')){
+			return;
+		}
+		
+		const contextPath = document.getElementById('web-contextPath').value;
+		const url = contextPath + '/inquiry/delete?inquiryId=' + inquiryId;
+		
+		const fn = function(data) {
+			if(data.state === 'true') {
+				listInquiry(1);
+			}
+		};
+				
+		ajaxRequest(url, 'post', null, 'json', fn, true);
+	});
+});
+
+
+window.addEventListener('DOMContentLoaded', () => {	
+	// 상품문의 대화상자
+	$('.inquiry-add-btn').click(function(){
+		$('#inquiryDialogModal').modal('show');
+	});
+
+	$('.btnInquirySendOk').click(function(){
+		const f = document.inquiryForm;
+		let s;
+		
+		title = f.title.value.trim();
+		if( ! title ){
+			alert('문의 제목을 입려하세요.');
+			f.title.focus();
+			return false;
+		}
+		
+		s = f.content.value.trim();
+		if( ! s ) {
+			alert('문의 사항을 입력하세요.');
+			f.content.focus();
 			return false;
 		}
 		
@@ -430,38 +566,39 @@ window.addEventListener('DOMContentLoaded', () => {
 		const fn = function(data) {
 			if(data.state === 'true') {
 				f.reset();
-				$('.qna-form .img-item').each(function(){
-					$(this).remove();
-				});
-				sel_files.length = 0;
 				
-				$('#questionDialogModal').modal('hide');
+				$('#inquiryDialogModal').modal('hide');
 				
-				listQuestion(1);
+				listInquiry(1);
+			} else if(data.state === 'onlyMember'){
+				alert('오직 회원만 문의 가능합니다.');
+				
+				$('#inquiryDialogModal').modal('hide');
+				
+				listInquiry(1);				
 			}
 		};
 		
 		ajaxRequest(url, 'post', formData, 'json', fn, true);
 	});
 	
-	$('.btnQuestionSendCancel').click(function(){
-		const f = document.questionForm;
+	$('.btnInquirySendCancel').click(function(){
+		const f = document.inquiryForm;
 		f.reset();
-		$('.qna-form .img-item').each(function(){
-			$(this).remove();
-		});
-		sel_files.length = 0;
 		
-		$('#questionDialogModal').modal('hide');
+		$('#inquiryDialogModal').modal('hide');
 	});	
 	
+	/*
 	$('.btnMyQuestion').click(function(){
 		const contextPath = document.getElementById('web-contextPath').value;
 		location.href = contextPath + '/myPage/review?mode=qna';
 	});	
+	*/
 });
 
-// 추가 - 문의사항 디테일 보기
+/*
+// 문의사항 디테일 보기 -- tr 전체 누르면 디테일 창 보임
 $(function(){
 	$('div.detailTabList').on('click', 'tr.inquiryTr', function(){
 		const $inquiryDetailTr = $(this).next();
@@ -476,6 +613,31 @@ $(function(){
 			
 			$inquiryDetailTr.removeClass('d-none');
 		} else if(! $inquiryDetailTr.hasClass('d-none') && ! isSecret) {
+			$table.children().find('tr.inquiryDetailTr').addClass('d-none');
+			
+			$inquiryDetailTr.addClass('d-none');
+		}
+		
+	});
+});
+*/
+
+// 문의사항 디테일 보기 -- title 눌러야지만 디테일 창 보임
+$(function(){
+	$('div.detailTabList').on('click', 'td.inquiryTitle', function(){
+		const $inquiryDetailTr = $(this).parent().next();
+		const $table = $(this).closest('table');
+		
+		let isHidden = $inquiryDetailTr.hasClass('d-none');
+		let isSecret = $(this).parent().hasClass('secret-inquiry');
+		let isMyInquiry = $(this).parent().hasClass('myInquiry');
+		let inquiryId = $(this).attr('data-inquiryId');
+		
+		if($inquiryDetailTr.hasClass('d-none') && (! isSecret || isMyInquiry)){
+			$table.children().find('tr.inquiryDetailTr').addClass('d-none');
+			
+			$inquiryDetailTr.removeClass('d-none');
+		} else if(! $inquiryDetailTr.hasClass('d-none') && (! isSecret || isMyInquiry)) {
 			$table.children().find('tr.inquiryDetailTr').addClass('d-none');
 			
 			$inquiryDetailTr.addClass('d-none');

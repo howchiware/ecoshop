@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.ProductInquiryMapper">
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM productInquiry
+		WHERE productCode = #{productCode} AND showQuestion = 1
+	</select>
+		
+	<select id="listInquiry" parameterType="map" resultType="com.sp.app.model.ProductInquiry">
+		SELECT pi.inquiryId, pi.memberId, m2.name, secret, title, content, regDate, 
+			answerId, mm2.name answerName, answer, answerDate,
+			showQuestion,
+			pi.productCode
+		FROM productInquiry pi
+		JOIN member2 m2 ON pi.memberId = m2.memberId
+		LEFT OUTER JOIN member2 mm2 ON answerId = mm2.memberId		
+		WHERE pi.productCode = #{productCode} AND showQuestion = 1
+		ORDER BY pi.inquiryId DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<insert id="insertInquiry" parameterType="com.sp.app.model.ProductInquiry">
+		INSERT INTO productInquiry(inquiryId, productCode, memberId, secret, title, content, 
+			showQuestion, regDate)
+		VALUES(productInquiry_seq.NEXTVAL, #{productCode}, #{memberId}, #{secret}, #{title}, #{content}, 
+			1, SYSDATE)
+	</insert>
+	
+	<delete id="deleteInquiry" parameterType="Long">
+		DELETE FROM productInquiry
+		WHERE inquiryId = #{inquiryId}
+	</delete>
+	
+</mapper>
