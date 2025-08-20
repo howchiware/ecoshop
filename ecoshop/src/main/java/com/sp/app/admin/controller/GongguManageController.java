@@ -1,12 +1,10 @@
 package com.sp.app.admin.controller;
 
-import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.app.admin.model.CategoryManage;
 import com.sp.app.admin.model.GongguDeliveryRefundInfo;
@@ -64,12 +61,87 @@ public class GongguManageController {
     	try {
 			gongguManageService.insertGongguProduct(dto, uploadPath);
 		} catch (Exception e) {
+			log.info("productWriteSubmit : ",e);;
 		}
     	
-    	return "redirect:/admin/gonggu/write";
+    	return "redirect:/admin/gonggu/listProduct";
     }
  	
-    
+    @GetMapping("listProduct")
+ 	public String listProduct(
+ 			@RequestParam(name = "state", defaultValue = "1") int state,
+			@RequestParam(name = "schType", defaultValue = "all") String schType,
+			@RequestParam(name = "kwd", defaultValue = "") String kwd,		
+			@RequestParam(name = "page", defaultValue = "1") int current_page,
+			Model model,
+			HttpServletRequest req) throws Exception {
+		
+		try {
+			int size = 10;
+			int total_page;
+			int dataCount;
+			
+			kwd = URLDecoder.decode(kwd, "UTF-8");
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("state", state);
+			map.put("schType", schType);
+			map.put("kwd", kwd);
+			
+			dataCount = gongguManageService.dataCountGongguProduct(map);
+			total_page = paginateUtil.pageCount(dataCount, size);
+			
+			current_page = Math.min(current_page, total_page);
+			
+			int offset = (current_page - 1) * size;
+			if(offset < 0) offset = 0;
+			
+			map.put("offset", offset);
+			map.put("size", size);
+			
+			List<GongguManage> listProduct = gongguManageService.listProduct(map);
+			
+			String cp = req.getContextPath();
+			
+			String listUrl = cp + "/admin/gonggu/listProduct";
+			String articleUrl = cp + "/admin/gonggu/article?page=" + current_page;
+			String query = "";
+			
+			if(state != 1) {
+				query = "state=" + state;
+			}
+			if (! kwd.isBlank()) {
+				query += query.isEmpty() ? "" : "&";
+				query += "schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "UTF-8");
+			}
+			
+			if(! query.isBlank()) {
+				listUrl += "?" + query;
+				articleUrl += "&" + query;
+			}
+			
+			String paging = paginateUtil.paging(current_page, total_page, listUrl);
+
+			model.addAttribute("listProduct", listProduct);
+			model.addAttribute("dataCount", dataCount);
+			model.addAttribute("state", state);
+			model.addAttribute("schType", schType);
+			model.addAttribute("kwd", kwd);
+			
+			model.addAttribute("articleUrl", articleUrl);
+			
+			model.addAttribute("page", current_page);
+			model.addAttribute("size", size);
+			model.addAttribute("total_page", total_page);
+			model.addAttribute("paging", paging);
+			
+		} catch (Exception e) {
+			log.info("listProduct : ", e);
+		}
+		
+		return "admin/gonggu/display";
+	}
     
     
  	
@@ -268,107 +340,7 @@ public class GongguManageController {
  		return "redirect:/admin";
  	}
  	
- 	@GetMapping("listProduct")
- 	public String listProduct(
-			@RequestParam(name = "schType", defaultValue = "all") String schType,
-			@RequestParam(name = "kwd", defaultValue = "") String kwd,		
-			@RequestParam(name = "categoryId", defaultValue = "0") long categoryId,
-			@RequestParam(name = "period", defaultValue = "") String period,
-			@RequestParam(name = "periodStart", defaultValue = "") String periodStart,
-			@RequestParam(name = "periodEnd", defaultValue = "") String periodEnd,
-			@RequestParam(name = "priceLowest", defaultValue = "") String priceLowest,
-			@RequestParam(name = "priceHighest", defaultValue = "") String priceHighest,
-			@RequestParam(name = "stockLowest", defaultValue = "") String stockLowest,
-			@RequestParam(name = "stockHighest", defaultValue = "") String stockHighest,
-			@RequestParam(name = "page", defaultValue = "1") int current_page,
-			Model model,
-			HttpServletRequest req) {
-		
-		try {
-			int size = 5;
-			int total_page;
-			int dataCount;
-			
-			kwd = URLDecoder.decode(kwd, "UTF-8");
-			
-			List<CategoryManage> listCategory = categoryManageService.listCategory();
-			
-			Map<String, Object> map = new HashMap<>();
-			map.put("categoryId", categoryId);
-			map.put("schType", schType);
-			map.put("kwd", kwd);
-			map.put("period", period);
-			map.put("periodStart", periodStart);
-			map.put("periodEnd", periodEnd);
-			map.put("priceLowest", priceLowest);
-			map.put("priceHighest", priceHighest);
-			map.put("stockLowest", stockLowest);
-			map.put("stockHighest", stockHighest);
-			
-			dataCount = gongguManageService.dataCountGongguProduct(map);
-			total_page = paginateUtil.pageCount(dataCount, size);
-			current_page = Math.min(current_page, total_page);
-			
-			int offset = (current_page - 1) * size;
-			if(offset < 0) offset = 0;
-			
-			map.put("offset", offset);
-			map.put("size", size);
-			
-			List<GongguManage> listProduct = gongguManageService.listProduct(map);
-			
-			for(GongguManage dto : listProduct) {
-				String categoryName = gongguManageService.findByCategory(dto.getCategoryId()).getCategoryName();
-				dto.setCategoryName(categoryName);
-			}
-			
-			String cp = req.getContextPath();
-			
-			String listUrl = cp + "/admin/gonggu/listProduct";
-			
-			String query = "categoryId=" + categoryId;
-			if (! kwd.isBlank()) {
-				query += "&schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "UTF-8");
-			}
-			if(! periodStart.isBlank() && ! periodEnd.isBlank()) {
-				query += "&period=" + period + "&periodStart=" + periodStart + "&periodEnd=" + periodEnd;				
-			}
-			if(! priceLowest.isBlank() && ! priceHighest.isBlank()) {
-				query += "&priceLowest=" + priceLowest + "&priceHighest=" + priceHighest;				
-			}
-			if(! stockLowest.isBlank() && ! stockHighest.isBlank()) {
-				query += "&stockLowest=" + stockLowest + "&stockHighest=" + stockHighest;
-			}
-			
-			listUrl += "?" + query;
-			
-			String paging = paginateUtil.paging(current_page, total_page, listUrl);
-			
-			model.addAttribute("listCategory", listCategory);
-			model.addAttribute("listProduct", listProduct);
-			model.addAttribute("dataCount", dataCount);
-			
-			model.addAttribute("categoryId", categoryId);
-			model.addAttribute("schType", schType);
-			model.addAttribute("kwd", kwd);
-			model.addAttribute("period", period);
-			model.addAttribute("periodStart", periodStart);
-			model.addAttribute("periodEnd", periodEnd);
-			model.addAttribute("priceLowest", priceLowest);
-			model.addAttribute("priceHighest", priceHighest);
-			model.addAttribute("stockLowest", stockLowest);
-			model.addAttribute("stockHighest", stockHighest);
-			
-			model.addAttribute("page", current_page);
-			model.addAttribute("size", size);
-			model.addAttribute("total_page", total_page);
-			model.addAttribute("paging", paging);
-		} catch (Exception e) {
-			log.info("listProduct : ", e);
-		}
-		
-		return "admin/gonggu/totalGongguProductList";
-	}
+ 	
 
 
 }

@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.sp.app.model.GongguPackage;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,6 +38,8 @@ public class GongguManage {
 
     private long categoryId; 
     private String categoryName;
+    
+    private int gongguProductCount;
     
     private int delivery;
     

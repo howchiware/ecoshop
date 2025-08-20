@@ -17,107 +17,6 @@
 
 <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/quill-resize-module@2.0.4/dist/resize.css" rel="stylesheet">
-<style type="text/css">
-
-body {
-	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
-	background-color: #f7f6f3;
-	color: #333;
-	margin: 0;
-}
-
-@font-face {
-	font-family: 'Pretendard-Regular';
-	src:
-		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-		format('woff');
-	font-style: normal;
-}
-
-.main-container {
-	display: flex;
-}
-
-.right-PANEL {
-	flex-grow: 1;
-	padding: 2rem;
-	overflow-y: auto;
-}
-
-.outside {
-	flex: 1;
-	background-color: #fff;
-	border-radius: 8px;
-	padding: 20px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-/*
-.right-panel {
-margin-left: 250px;
-padding: 30px;
-}
-*/
-.search-area tr {
-font-size: 13px;
-}
-
-.search-area td.select-area {
-	text-align: left;
-}
-
-p.small-title {
-font-weight: 500;
-}
-
-.search-list {
-	border: 1px solid black;
-}
-
-.search-list td {
-	padding: 10px;
-}
-
-.search-list tbody, td, tfoot, th, thead, tr {
-  border-color: black;
-  border-style: solid;
-  border-width: 0;
-}
-
-td.select-title-area {
-border-right: 1px solid black;
-}
-
-select, input {
-	padding: 3px;
-	margin: -2px;
-}
-
-button {
-	background: #fff;
-	border: 1px solid black;
-	color: black;
-	padding: 3px;
-}
-
-.btn-area {
-margin-top: 30px;
-text-align: center;
-}
-
-.btn-accent {
-	background: silver;
-	border: none;
-	color: black; 
-}
-
-#productStockDialogModal {
-	z-index: 10000;
-}
-
-.main-container {
-	z-index: 100;
-}
-</style>
 </head>
 <body>
 	<header>
@@ -137,7 +36,7 @@ text-align: center;
 						<table class="table write-form">
 							<tr>
 								<td class="col-md-2 bg-light">제 목</td>
-								<td><input type="text" name="subject" class="form-control"
+								<td><input type="text" name="gongguProductName" class="form-control"
 									value="${dto.gongguProductName}"></td>
 							</tr>
 
@@ -310,12 +209,12 @@ function hasContent(htmlContent) {
 function sendOk() {
 	const f = document.gongguProductForm;
 	const mode = '${mode}';
-	let str, b;
+	let str;
 	
-	str = f.title.value.trim();
+	str = f.gongguProductName.value.trim();
 	if( ! str ) {
 		alert('제목을 입력하세요. ');
-		f.title.focus();
+		f.gongguProductName.focus();
 		return;
 	}
 
