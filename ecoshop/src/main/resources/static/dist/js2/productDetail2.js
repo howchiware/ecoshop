@@ -95,7 +95,7 @@ function printReview(data) {
 
     if (dataCount > 0) {
         reviewsHtml = list.map(item => {
-            const { reviewId, name, rate, content, regDate, answer, answerDate, listReviewImg } = item;
+            const { reviewId, name, rate, content, regDate, answer, answerDate, listReviewImg, reviewHelpfulCount, userReviewHelpful } = item;
 
             // 별점 아이콘 HTML 생성
 			const starRatingHtml = Array.from({ length: 5 }, (_, i) => {
@@ -124,50 +124,53 @@ function printReview(data) {
                 : ''; // 파일이 없으면 빈 문자열
 
             // 관리자 답변이 있을 경우 해당 HTML 생성
+			
             const answerHtml = answer
-                ? `
-                <div class="p-3 pt-0">
-                    <div class="bg-light">
-                        <div class="p-3 pb-0">
-                            <label class="text-bg-primary px-2"> 관리자 </label> <label>${answerDate}</label>
-                        </div>
-                        <div class="p-3 pt-1">${answer}</div>
-                    </div>
-                </div>`
-                : ''; // 답변이 없으면 빈 문자열
+                ? `<div class="p-3 pt-0" style="width: 700px">
+				    <div class="bg-light">
+				        <div class="p-3 pb-0" style="display: inline-flex; align-items:center;">
+							<img src="/dist/images/person.png" class="answer-icon" style="margin: 0px 5px">
+				            <label class="px-2 fw-semibold"> 관리자 </label> <label>${answerDate}</label>
+				        </div>
+				        <div class="p-3 ps-4 pt-2">${answer}</div>
+				    </div>
+				</div>` : ''; // 답변이 없으면 빈 문자열
 
             // 각 리뷰 항목에 대한 전체 HTML 구조를 반환
             return `
-				<div class="row mt-3 border-bottom">
-	                <div class="col-10 p-2">
-	                	<div class="row">
-		                    <div class="col-auto pt-0 ps-2 pe-2 rate-star">
-						    	${starRatingHtml}
-		                    </div>
-						</div>
-	                	<div class="row">
-			                <div class="mt-2 p-2">${content}</div>
-			                ${imgNamesHtml}               		
-	                	</div>
-	                	<div class="row">
-	                		<div class="mt-2 p-2" style="display: inline-flex;">
-	                			<p>3명에게 도움된 리뷰</p>
-	                			<button type="button">도움이 돼요</button>
-	                			<button type="button">도움이 안돼요</button>
-	                		</div>
-	                	</div>
-	                </div>
-	                <div class="col-2 p-2">
-                    	<div class="row" style="display: inline">
-	                    	<i class="bi bi-person-circle text-muted icon"></i>
-		                    <span class="col pt-3 ps-0 fw-semibold">${name}</span>
+				<div class="reviewTd" data-reviewId="${reviewId}">
+					<div class="row ms-1 me-1 mt-3 border-bottom">
+		                <div class="col-10 p-2">
+		                	<div class="row">
+			                    <div class="col-auto pt-0 ps-2 pe-2 rate-star">
+							    	${starRatingHtml}
+			                    </div>
+							</div>
+		                	<div class="row">
+				                <div class="mt-2 p-2">${content}</div>
+				                ${imgNamesHtml}           
+								<div class="mt-2 mb-2"><span class="viewReviewDetail-span" data-reviewId=${reviewId}>리뷰 상세 보기</span></div>   		
+		                	</div>
+		                	<div class="row">
+		                		<div class="p-2" style="display: inline-flex; align-items: center;" data-userReviewHelpful="${userReviewHelpful}">
+		                			<p style="margin: 0px; margin-right: 10px;">${reviewHelpfulCount}명에게 도움된 리뷰</p>
+									<button type="button" class="btnSendHelpful" data-reviewId=${reviewId} data-reviewHelpful="1"><i class="bi bi-hand-thumbs-up" style="${userReviewHelpful===1? 'color:#0d6efd;':''}"></i>&nbsp;<span>도움이 돼요</span></button>
+									<button type="button" class="btnSendHelpful" data-reviewId=${reviewId} data-reviewHelpful="0"><i class="bi bi-hand-thumbs-down" style="${userReviewHelpful==-0? 'color:red;':''}"></i>&nbsp;<span>도움이 안돼요</span></button>
+		                		</div>
+		                	</div>
 		                </div>
-	                    <div class="row pt-3">
-	                        <span>${regDate}</span>
-	                    </div>
-	                </div>
-	                ${answerHtml}
-	            </div>`;
+		                <div class="col-2 p-2">
+	                    	<div class="row" style="display: inline">
+		                    	<i class="bi bi-person-circle text-muted icon"></i>
+			                    <span class="col pt-3 ps-0 fw-semibold">${name}</span>
+			                </div>
+		                    <div class="row pt-3">
+		                        <span>${regDate}</span>
+		                    </div>
+		                </div>
+		                ${answerHtml}
+		            </div>
+				</div>`;
         }).join(''); // 모든 리뷰 항목의 HTML을 하나의 문자열로 결합
 
         reviewsHtml += `<div class="page-navigation">${paging}</div>`;
@@ -220,9 +223,43 @@ function printSummary(summary) {
 
 }
 
+
+
 // 상품리뷰 대화상자
 function reviewWrite(){
-	$('#reviewDialogModal').modal('show');
+	// ajax
+	const contextPath = document.getElementById('web-contextPath').value;
+	let productCode = document.querySelector('p.reviewWrite-pTag').getAttribute('data-productCode');
+	console.log(productCode);
+	
+	let url = contextPath + '/review/listMyOrder?productCode=' + productCode;
+	
+	const f = document.querySelector('form[name="reviewForm"]');
+	
+	const fn = function(data) {
+		const { didIBuyThis } = data;
+		
+		let reviewsHtml = ''; // 전체 리뷰 목록을 담을 변수
+
+		if (didIBuyThis.length !== 0) {
+			console.log(didIBuyThis);
+			reviewsHtml = didIBuyThis.map(item => {
+	            const { orderDate, orderDetailId } = item;
+			
+				return `<option value="${orderDetailId}">${orderDate} 구매</option>`;
+						
+			}).join(''); // 모든 리뷰 항목의 HTML을 하나의 문자열로 결합;
+		}
+		
+		let first = `<option value="0">선택</option>`;
+		
+		console.log(reviewsHtml);
+		$('.myOrder-select').html(first + reviewsHtml);
+		$('#reviewDialogModal').modal('show');
+	};
+
+	ajaxRequest(url, 'get', null, 'json', fn);
+	
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -295,6 +332,10 @@ window.addEventListener('DOMContentLoaded', () => {
 		let s;
 		
 		console.log(f.rate.value);
+		if(f.reviewId.value === '0') {
+			alert('구매일을 선택해주세요.');
+			return false;
+		}
 		if(f.rate.value === '0') {
 			alert('평점은 1점부터 가능합니다.');
 			return false;
@@ -643,5 +684,209 @@ $(function(){
 			$inquiryDetailTr.addClass('d-none');
 		}
 		
+	});
+});
+
+// 리뷰 클릭시 모달 띄우기
+$(function(){
+	$('div.detailTabList').on('click', 'span.viewReviewDetail-span', function(){
+		// ajax
+		const contextPath = document.getElementById('web-contextPath').value;
+		let reviewId = $(this).attr('data-reviewId');
+
+		let url = contextPath + '/review/viewReviewDetail?reviewId=' + reviewId;
+
+		const fn = function(data) {
+			
+			let reviewId = data.detailReview.reviewId;
+			let name = data.detailReview.name;
+			let rate = data.detailReview.rate;
+			let content = data.detailReview.content;
+			let regDate = data.detailReview.regDate;
+			let answer = data.detailReview.answer;
+			let answerDate = data.detailReview.answerDate;
+			let listReviewImg = data.detailReview.listReviewImg;
+			let reviewHelpfulCount = data.detailReview.reviewHelpfulCount;
+			let userReviewHelpful = data.detailReview.userReviewHelpful;
+			
+			let reviewsHtml = ''; // 전체 리뷰 목록을 담을 변수
+
+			const starRatingHtml = Array.from({ length: 5 }, (_, i) => {
+				if (i < Math.floor(rate)) {
+					// rate의 정수 부분까지는 채워진 별
+					return '<i class="bi bi-star-fill text-warning"></i> ';
+				} else if (i === Math.floor(rate) && rate % 1 !== 0) {
+					// rate가 실수이고 현재 인덱스가 정수 부분과 같으면 반쪽 별 (옵션)
+					return '<i class="bi bi-star-half text-warning"></i> ';
+				} else {
+					// 나머지는 빈 별
+					return '<i class="bi bi-star text-warning"></i> ';
+				}
+			}).join('');
+
+			// 첨부 파일이 있을 경우 이미지 HTML 생성
+			const imgNamesHtml = listReviewImg && listReviewImg.length > 0
+			    ? `
+			    <div class="row gx-1 mt-2 mb-1 p-1">
+					<div class="row gx-1 p-1">
+						<div class="col border rounded lg-img lg-img-modal p-0">
+							<img class="w-100 h-100 rounded" src="${contextPath}/uploads/review/${listReviewImg[0]}">
+						</div>
+			        </div>
+					<div class="row gx-1 mt-2 p-1">
+						${listReviewImg.map(f => `
+				            <div class="col-md-auto sm-img sm-img-modal">
+				                <img class="border rounded" src="${contextPath}/uploads/review/${f}">
+				            </div>
+				        `).join('')}
+					</div>
+			    </div>`
+			    : ''; // 파일이 없으면 빈 문자열
+
+
+			// 관리자 답변이 있을 경우 해당 HTML 생성
+
+			const answerHtml = answer
+			    ? `<div class="p-3 pt-0" style="width: 600px">
+				    <div class="bg-light">
+				        <div class="p-3 pb-0" style="display: inline-flex; align-items:center;">
+							<img src="/dist/images/person.png" class="answer-icon" style="margin: 0px 5px">
+				            <label class="px-2 fw-semibold"> 관리자 </label> <label>${answerDate}</label>
+				        </div>
+				        <div class="p-3 ps-4 pt-2">${answer}</div>
+				    </div>
+				</div>` : ''; // 답변이 없으면 빈 문자열
+
+			// 각 리뷰 항목에 대한 전체 HTML 구조를 반환
+			reviewsHtml =  `
+			
+						<div class="reviewTd" data-reviewId="${reviewId}">
+							<div class="row ms-1 me-1 mt-3 border-bottom">
+					            <div class="col-9 p-2">
+					            	<div class="row">
+					                    <div class="col-auto pt-0 ps-2 pe-2 rate-star">
+									    	${starRatingHtml}
+					                    </div>
+									</div>
+					            	<div class="row">
+						                <div class="mt-2 p-2">${content}</div>
+						                ${imgNamesHtml}               		
+					            	</div>
+					            	<div class="row">
+					            		<div class="p-2" style="display: inline-flex; align-items: center;" data-userReviewHelpful="${userReviewHelpful}">
+					            			<p style="margin: 0px; margin-right: 10px;">${reviewHelpfulCount}명에게 도움된 리뷰</p>
+										<button type="button" class="btnSendHelpful" data-reviewId=${reviewId} data-reviewHelpful="1"><i class="bi bi-hand-thumbs-up" style="${userReviewHelpful===1? 'color:#0d6efd;':''}"></i>&nbsp;<span>도움이 돼요</span></button>
+										<button type="button" class="btnSendHelpful" data-reviewId=${reviewId} data-reviewHelpful="0"><i class="bi bi-hand-thumbs-down" style="${userReviewHelpful==-0? 'color:red;':''}"></i>&nbsp;<span>도움이 안돼요</span></button>
+					            		</div>
+					            	</div>
+					            </div>
+					            <div class="col-3 p-2">
+					            	<div class="row" style="display: inline">
+					                	<i class="bi bi-person-circle text-muted icon"></i>
+					                    <span class="col pt-3 ps-0 fw-semibold">${name}</span>
+					                </div>
+					                <div class="row pt-3">
+					                    <span>${regDate}</span>
+					                </div>
+					            </div>
+					            ${answerHtml}
+					        </div>
+						</div>
+					</div>`;
+			
+			
+			$('#reviewDetailDialogModal .modal-body').html(reviewsHtml);
+			$('#reviewDetailDialogModal').modal('show');
+
+		};
+
+		ajaxRequest(url, 'get', null, 'json', fn);
+	});
+	
+});
+
+$(function(){
+	// 이미지 확대
+	$('div.detailTabList').on('click', '#reviewDetailDialogModal .sm-img-modal img', function(){
+
+		let url = $(this).attr('src');
+
+		$('#reviewDetailDialogModal .lg-img-modal img').attr('src', url);
+		
+		$('.lg-img-modal .img-div').attr('style', `background: url('${url}')`);
+	});
+});
+
+$(function(){
+	// 이미지 확대
+	$('div.detailTabList').on('click', '#reviewDetailDialogModal .sm-img-modal img', function(){
+		let url = $(this).attr('src');
+		$('#reviewDetailDialogModal .lg-img-modal img').attr('src', url);
+	});
+});
+
+// 리뷰 도움돼요/안돼요
+$(function(){
+	$('div.detailTabList').on('click', '.btnSendHelpful', function(){
+		const contextPath = document.getElementById('web-contextPath').value;
+		const $btn = $(this);
+		const $i = $(this).find('i');
+		let reviewId = $btn.attr('data-reviewId');
+		let reviewHelpful = $btn.attr('data-reviewHelpful');
+		let isReviewHelpful = $btn.parent('div').attr('data-userReviewHelpful') === '1';
+		let isNotReviewHelpful = $btn.parent('div').attr('data-userReviewHelpful') === '0';
+		
+		if(reviewHelpful == 1 && isNotReviewHelpful || reviewHelpful == 0 && isReviewHelpful){
+			alert('리뷰 도움여부가 이미 등록되어 있습니다.');
+			return;
+		}
+		
+		let msg = '리뷰가 도움이 되지 않으십니까 ? ';
+		if(reviewHelpful === '1' && ! isReviewHelpful){
+			msg = '리뷰가 도움이 되십니까 ? ';
+		} else if (reviewHelpful === '1' && isReviewHelpful){
+			msg = '리뷰 도움돼요를 취소하시겠습니까 ? ';
+		} else if (reviewHelpful === '0' && isNotReviewHelpful){
+			msg = '리뷰 도움 안돼요를 취소하시겠습니까 ? ';
+		}
+		
+		if(! confirm(msg)){
+			return false;
+		}
+		
+		let url = contextPath + '/review/insertReviewHelpful';
+		let params = {reviewId:reviewId, reviewHelpful:reviewHelpful, isReviewHelpful:isReviewHelpful, isNotReviewHelpful:isNotReviewHelpful};
+		
+		const fn = function(data){
+			let state = data.state;
+			if(state === 'true'){
+
+				if(isReviewHelpful || isNotReviewHelpful){
+					$i.css('color', '');
+				} else if(reviewHelpful === '1') {
+					$i.css('color', '#0d6efd');
+				} else if(reviewHelpful === '0'){
+					$i.css('color', 'red');
+				}
+				
+				console.log(data.helpfulCount);
+				console.log(data.userReviewHelpful);
+				let helpfulCount = data.helpfulCount;
+				let userReviewHelpful = data.userReviewHelpful;
+				
+				$btn.parent('div').find('p').html(helpfulCount + '명에게 도움된 리뷰');
+				
+				$btn.parent('div').attr('data-userReviewHelpful', userReviewHelpful);
+
+			} else if(state === 'liked'){
+				alert('리뷰 도움 여부는 한번만 가능합니다.');
+			} else if(state === 'noLogin'){
+				alert('로그인 후 가능합니다.');
+			} else {
+				alert('리뷰 도움 여부 처리가 실패했습니다.');
+			}
+		};
+		
+		ajaxRequest(url, 'post', params, 'json', fn);
 	});
 });

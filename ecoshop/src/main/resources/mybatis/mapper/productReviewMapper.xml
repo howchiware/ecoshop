@@ -68,7 +68,7 @@
 	<insert id="insertReview" parameterType="com.sp.app.model.ProductReview">
 		INSERT INTO productReview(reviewId, rate, content, productCode, memberId, 
 			regDate, showReview, block)
-		VALUES(productReview_seq.NEXTVAL, #{rate}, #{content}, #{productCode}, #{memberId}, SYSDATE, 1, 0)
+		VALUES(#{reviewId}, #{rate}, #{content}, #{productCode}, #{memberId}, SYSDATE, 1, 0)
 	</insert>
 	
 	<insert id="insertReviewPhoto" parameterType="com.sp.app.model.ProductReview">
@@ -76,4 +76,37 @@
 		VALUES(productReviewDetail_seq.NEXTVAL, #{reviewId}, #{reviewImg})
 	</insert>
 	
+	<select id="viewReviewDetail" parameterType="Long" resultType="com.sp.app.model.ProductReview">
+		SELECT pr.reviewId, pr.memberId, pr.productCode, pr.content, pr.rate, pr.showReview, pr.regDate, pr.answer, pr.answerId, pr.answerDate, pr.block,
+				m2.name, reviewImg
+		FROM productReview pr
+		JOIN member2 m2 ON pr.memberId = m2.memberId
+		LEFT OUTER JOIN (
+			SELECT reviewId, LISTAGG(reviewImg, ',') WITHIN GROUP(ORDER BY reviewId) reviewImg
+			FROM productReviewDetail
+			GROUP BY reviewId
+		) rd ON pr.reviewId = rd.reviewId
+		WHERE pr.reviewId = #{reviewId} AND pr.showReview = 1 AND pr.block = 0
+	</select>
+	
+	<delete id="deleteReviewHelpful" parameterType="com.sp.app.model.ReviewHelpful">
+		DELETE FROM reviewHelpful WHERE memberId = #{memberId} AND orderDetailId = #{orderDetailId}
+	</delete>
+	
+	<insert id="insertReviewHelpful" parameterType="com.sp.app.model.ReviewHelpful">
+		INSERT INTO reviewHelpful(memberId, orderDetailId, reviewHelpful) 
+		VALUES(#{memberId}, #{orderDetailId}, #{userReviewHelpful})
+	</insert>
+	
+	<select id="countReviewHelpful" parameterType="Long" resultType="Integer">
+		SELECT COUNT(DECODE(reviewHelpful, 1, 1)) helpfulCount
+		FROM reviewHelpful
+		WHERE orderDetailId = #{orderDetailId}
+	</select>
+	
+	<select id="userReviewHelpful" parameterType="map" resultType="Integer">
+		SELECT reviewHelpful
+		FROM reviewHelpful
+		WHERE orderDetailId = #{orderDetailId} AND memberId = #{memberId}
+	</select>
 </mapper>

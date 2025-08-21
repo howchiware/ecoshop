@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.sp.app.mapper.ProductOrderMapper;
 import com.sp.app.model.Point;
 import com.sp.app.model.ProductOrder;
+import com.sp.app.model.ProductReview;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -163,6 +164,30 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 	public Point findByUserPoint(Long member_id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<ProductOrder> didIBuyThis(Map<String, Object> map) {
+		List<ProductOrder> list = null;
+		try {
+			list = mapper.didIBuyThis(map);
+		} catch (Exception e) {
+			log.info("didIBuyThis : ", e);
+		}
+		
+		return list;
+	}
+
+	@Override
+	public ProductReview myReviewOfThis(long orderDetailId) {
+		ProductReview dto = null;
+		try {
+			dto = mapper.myReviewOfThis(orderDetailId);
+		} catch (Exception e) {
+			log.info("myReviewOfThis : ", e);
+		}
+		
+		return dto;
 	}
 
 }

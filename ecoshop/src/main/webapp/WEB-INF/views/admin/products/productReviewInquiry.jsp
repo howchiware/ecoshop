@@ -60,5 +60,6 @@
 	<script src="${pageContext.request.contextPath}/dist/jsProduct/sendAjaxRequest.js"></script>
 	<script src="${pageContext.request.contextPath}/dist/jsProduct/showReviewTab.js"></script>
 	<script src="${pageContext.request.contextPath}/dist/js2/productAdminInquiry.js"></script>
+	<script src="${pageContext.request.contextPath}/dist/js2/productAdminReview.js"></script>
 </body>
 </html>

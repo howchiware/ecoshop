@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.sp.app.model.ProductReview;
+import com.sp.app.model.ReviewHelpful;
 import com.sp.app.model.Summary;
 
 @Mapper
@@ -16,4 +17,10 @@ public interface ProductReviewMapper {
 
 	public void insertReview(ProductReview dto) throws Exception;
 	public void insertReviewPhoto(ProductReview dto) throws Exception;
+	public ProductReview viewReviewDetail(long reviewId);
+	
+	public void deleteReviewHelpful(ReviewHelpful dto);
+	public void insertReviewHelpful(ReviewHelpful dto);
+	public int countReviewHelpful(long reviewId);
+	public Integer userReviewHelpful(Map<String, Object> map);
 }

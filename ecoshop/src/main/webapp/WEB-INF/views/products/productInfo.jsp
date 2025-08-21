@@ -215,7 +215,7 @@
 			
 								<div class="mt-2">
 									<input type="hidden" name="mode" value="buy">
-									<button type="button" class="btn-accent btn-lg w-100 btn-buySend" onclick="sendOk('buy');" ${dto.totalStock < 1 ? 'disabled':''}>구매하기</button>
+									<button type="button" class="btn-accent btn-lg w-100 btn-buySend" onclick="sendOk('buy');" ${dto.totalStock < 1 ? 'disabled':''} ${empty sessionScope.member ? 'disabled' : ''}>구매하기</button>
 								</div>
 								
 								<div class="row mt-2 mb-2">

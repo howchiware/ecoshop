@@ -175,6 +175,11 @@
   div.inquiryDetailAnswerND{display: inline-flex; font-size: 11px;}
   div.inquireDetailAnswerContent{font-size: 11px;}
   div.inquireDetailContent{padding: 15px 10px;}
+
+  div.reviewDetailTD{display: inline-flex;}
+  div.reviewDetailAnswerND{display: inline-flex; font-size: 11px;}
+  div.reviewDetailAnswerContent{font-size: 11px;}
+  div.reviewDetailContent{padding: 15px 10px;}
   
   hr.inquireDivider{margin: 5px 0px;}
   
@@ -215,3 +220,15 @@
 	grid-template-columns:repeat(auto-fill, 54px); }
   .review-form .img-grid .item { object-fit:cover; border: 1px solid #c2c2c2;
 	width: 50px; height: 50px; border-radius: 10px; cursor: pointer; }  
+	
+.btnSendHelpful {
+	background: #fff; border: 1px solid #dee2e6; border-radius: 4px; margin: 0px 3px; height: 30px;
+	font-size: 11px;
+}
+
+.viewReviewDetail-span {color: silver; font-weight: 500}
+.viewReviewDetail-span:hover {
+	text-decoration: underline;
+	cursor: pointer;
+} 
+/*button {}*/

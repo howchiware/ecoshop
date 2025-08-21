@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.sp.app.model.ProductOrder;
+import com.sp.app.model.ProductReview;
 import com.sp.app.model.Point;
 
 @Mapper
@@ -27,4 +28,6 @@ public interface ProductOrderMapper {
 	public ProductOrder findByProduct(long productNum);
 	public ProductOrder findByOptionDetail(long detailNum);
 	public Point findByUserPoint(Long member_id);
+	public List<ProductOrder> didIBuyThis(Map<String, Object> map);
+	public ProductReview myReviewOfThis(long orderDetailId);
 }
