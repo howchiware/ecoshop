@@ -2,10 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.admin.mapper.ChallengeManageMapper">
 
+  <!-- 시퀀스 -->
   <select id="nextChallengeId" resultType="long">
     SELECT challenge_seq.NEXTVAL FROM dual
   </select>
 
+  <!-- 공통 컬럼 -->
   <sql id="baseColumns">
     c.challengeId, c.title, c.description, c.thumbnail,
     c.rewardPoints, TO_CHAR(c.regDate,'YYYY-MM-DD HH24:MI:SS') AS challengeRegDate,
@@ -17,8 +19,14 @@
     INSERT INTO challenge (
       challengeId, title, description, thumbnail, rewardPoints, regDate, challengeType
     ) VALUES (
-      #{challengeId}, #{title}, #{description}, #{thumbnail, jdbcType=VARCHAR},
-      NVL(#{rewardPoints},0), SYSDATE, #{challengeType}
+      #{challengeId},
+      #{title},
+      #{description},
+      <!-- NULL 허용: 파일명만 저장, 없으면 NULL -->
+      #{thumbnail, jdbcType=VARCHAR},
+      NVL(#{rewardPoints},0),
+      SYSDATE,
+      #{challengeType}
     )
   </insert>
 
@@ -34,12 +42,12 @@
       #{challengeId},
       TO_DATE(#{startDate}, 'YYYY-MM-DD'),
       TO_DATE(#{endDate},   'YYYY-MM-DD'),
-      #{requireDays},
-      #{specialStatus}
+      NVL(#{requireDays}, 3),
+      NVL(#{specialStatus}, 0)
     )
   </insert>
 
-  <!-- 단건 -->
+  <!-- 단건 조회 -->
   <select id="findById" parameterType="long" resultType="com.sp.app.model.Challenge">
     SELECT <include refid="baseColumns"/>
     FROM challenge c
@@ -109,11 +117,22 @@
   <update id="updateChallenge" parameterType="com.sp.app.model.Challenge">
     UPDATE challenge
     <set>
-      <if test="title != null">          title = #{title},</if>
-      <if test="description != null">    description = #{description},</if>
-      <if test="thumbnail != null">      thumbnail = #{thumbnail},</if>
-      <if test="rewardPoints != null">   rewardPoints = #{rewardPoints},</if>
-      <if test="challengeType != null">  challengeType = #{challengeType},</if>
+      <if test="title != null">       title = #{title},</if>
+      <if test="description != null"> description = #{description},</if>
+
+      <!-- 썸네일 처리
+           - 새 파일 업로드(파일명 세팅됨)일 때만 갱신
+           - 삭제 (removeThumbnail=true)면 NULL로 갱신
+           - 둘 다 아니면 기존 값 유지 -->
+      <if test="thumbnail != null">
+        thumbnail = #{thumbnail},
+      </if>
+      <if test="thumbnail == null and removeThumbnail != null and removeThumbnail == true">
+        thumbnail = NULL,
+      </if>
+
+      <if test="rewardPoints != null">  rewardPoints = #{rewardPoints},</if>
+      <if test="challengeType != null"> challengeType = #{challengeType},</if>
     </set>
     WHERE challengeId = #{challengeId}
   </update>
@@ -137,7 +156,7 @@
   <delete id="deleteChallenge" parameterType="long">
     DELETE FROM challenge WHERE challengeId = #{challengeId}
   </delete>
-  
+
   <delete id="deleteDaily" parameterType="long">
     DELETE FROM dailyChallenge WHERE challengeId = #{challengeId}
   </delete>

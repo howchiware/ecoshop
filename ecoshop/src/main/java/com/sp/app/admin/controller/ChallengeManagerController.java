@@ -3,15 +3,14 @@ package com.sp.app.admin.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sp.app.admin.service.ChallengeManageService;
 import com.sp.app.common.MyUtil;
@@ -33,48 +32,41 @@ public class ChallengeManagerController {
     private final ChallengeManageService service;
     private final PaginateUtil paginateUtil;
     private final MyUtil myUtil;
-    private final StorageService storageService; // 업로드 실제 경로 계산용
+    private final StorageService storageService;
 
-    /** A안 물리 경로: /uploads/challenge */
+    //실제 저장 경로: /uploads/challenge (webapp 기준 또는 외부 경로) 
     private String uploadPath;
 
     @PostConstruct
     public void init() {
-        // 외부 톰캣 + WAR 기준으로 getRealPath() 정상 동작
-        // webapp 루트 기준: /uploads/challenge
         this.uploadPath = storageService.getRealPath("/uploads/challenge");
     }
 
-    // 목록 + 검색/페이징
+    // 목록 + 검색/페이징 
     @GetMapping("list")
     public String list(
             @RequestParam(name = "page", defaultValue = "1") int current_page,
             @RequestParam(name = "kwd", defaultValue = "") String kwd,
-            @RequestParam(name = "challengeType", required = false) String challengeType, // DAILY | SPECIAL
-            @RequestParam(name = "weekday", required = false) Integer weekday,            // 0~6 (DAILY일 때만)
+            @RequestParam(name = "challengeType", required = false) String challengeType,
+            @RequestParam(name = "weekday", required = false) Integer weekday,
             Model model,
             HttpServletRequest req
     ) {
         try {
-            int size = 10;
-            int total_page = 0;
-
             kwd = myUtil.decodeUrl(kwd);
 
+            int size = 10;
             Map<String, Object> map = new HashMap<>();
             map.put("kwd", kwd);
             map.put("challengeType", challengeType);
             map.put("weekday", weekday);
 
             int dataCount = service.dataCount(map);
-            if (dataCount != 0) {
-                total_page = paginateUtil.pageCount(dataCount, size);
-            }
+            int total_page = paginateUtil.pageCount(dataCount, size);
+            if (total_page == 0) total_page = 1;
 
-            current_page = Math.min(current_page, Math.max(total_page, 1));
-
-            int offset = (current_page - 1) * size;
-            if (offset < 0) offset = 0;
+            current_page = Math.min(Math.max(current_page, 1), total_page);
+            int offset = Math.max((current_page - 1) * size, 0);
 
             map.put("offset", offset);
             map.put("size", size);
@@ -82,23 +74,24 @@ public class ChallengeManagerController {
             List<Challenge> list = service.listChallenge(map);
 
             String cp = req.getContextPath();
-            String query = "";
-            String listUrl = cp + "/admin/challengeManage/list";
+            StringBuilder query = new StringBuilder();
+            if (!kwd.isBlank()) {
+                query.append(query.length()==0? "": "&").append("kwd=").append(myUtil.encodeUrl(kwd));
+            }
+            if (challengeType != null && !challengeType.isBlank()) {
+                query.append(query.length()==0? "": "&").append("challengeType=").append(challengeType);
+            }
+            if (weekday != null) {
+                query.append(query.length()==0? "": "&").append("weekday=").append(weekday);
+            }
 
-            if (!kwd.isBlank()) query += (query.isBlank() ? "" : "&") + "kwd=" + myUtil.encodeUrl(kwd);
-            if (challengeType != null && !challengeType.isBlank())
-                query += (query.isBlank() ? "" : "&") + "challengeType=" + challengeType;
-            if (weekday != null)
-                query += (query.isBlank() ? "" : "&") + "weekday=" + weekday;
-
-            if (!query.isBlank()) listUrl += "?" + query;
-
-            String paging = paginateUtil.paging(current_page, total_page, listUrl);
+            String listUrl = cp + "/admin/challengeManage/list" + (query.length()>0 ? "?"+query : "");
+            String paging = paginateUtil.paging(current_page, Math.max(total_page,1), listUrl);
 
             model.addAttribute("list", list);
             model.addAttribute("page", current_page);
             model.addAttribute("size", size);
-            model.addAttribute("total_page", total_page);
+            model.addAttribute("total_page", Math.max(total_page,1));
             model.addAttribute("paging", paging);
 
             model.addAttribute("kwd", kwd);
@@ -106,47 +99,58 @@ public class ChallengeManagerController {
             model.addAttribute("weekday", weekday);
 
         } catch (Exception e) {
-            log.info("list :", e);
+            log.error("admin challenge list :", e);
         }
         return "admin/challengeManage/list";
     }
 
-    // 작성 폼
+    // 작성 폼 
     @GetMapping("write")
     public String writeForm(Model model) {
         model.addAttribute("mode", "write");
         return "admin/challengeManage/write";
     }
 
-    /** 작성 처리 (challenge + daily/special 분기) */
+    /** 작성 처리 */
     @PostMapping("write")
-    public String writeSubmit(
-            Challenge dto) {
+    public String writeSubmit(Challenge dto, RedirectAttributes ra) {
         try {
-            // 파일 저장/DB 저장은 서비스에 위임 (Notice 스타일)
+            normalizeType(dto); // DAILY/SPECIAL 대문자 정규화
+
+            // 최소 검증 (서비스에서 2차 검증/저장)
+            if ("DAILY".equals(dto.getChallengeType()) && dto.getWeekday() == null) {
+                ra.addFlashAttribute("message", "DAILY는 요일(weekday)이 필요합니다.");
+                return "redirect:/admin/challengeManage/write";
+            }
+            if ("SPECIAL".equals(dto.getChallengeType())
+                    && (isBlank(dto.getStartDate()) || isBlank(dto.getEndDate()))) {
+                ra.addFlashAttribute("message", "SPECIAL은 시작일/종료일이 필요합니다.");
+                return "redirect:/admin/challengeManage/write";
+            }
+
             service.insertChallenge(dto, uploadPath);
+            ra.addFlashAttribute("message", "등록이 완료되었습니다.");
         } catch (Exception e) {
-            log.error("writeSubmit :", e);
+            log.error("admin challenge writeSubmit :", e);
+            ra.addFlashAttribute("message", "등록에 실패했습니다. 다시 시도해 주세요.");
+            return "redirect:/admin/challengeManage/write";
         }
         return "redirect:/admin/challengeManage/list";
     }
 
-    // 상세
+    // 상세 
     @GetMapping("article")
     public String article(
-    		@RequestParam("challengeId") long challengeId,
+            @RequestParam("challengeId") long challengeId,
             @RequestParam(name = "page", defaultValue = "1") String page,
             @RequestParam(name = "kwd", defaultValue = "") String kwd,
             @RequestParam(name = "challengeType", required = false) String challengeType,
             Model model
     ) {
-        String query = "page=" + page;
+        String query = buildQuery(page, kwd, challengeType);
         try {
-            kwd = myUtil.decodeUrl(kwd);
-            if (!kwd.isBlank()) query += "&kwd=" + myUtil.encodeUrl(kwd);
-            if (challengeType != null && !challengeType.isBlank()) query += "&challengeType=" + challengeType;
-
-            Challenge dto = Objects.requireNonNull(service.findById(challengeId));
+            Challenge dto = service.findById(challengeId);
+            if (dto == null) throw new IllegalArgumentException("데이터가 존재하지 않습니다.");
 
             if ("DAILY".equalsIgnoreCase(dto.getChallengeType())) {
                 Challenge d = service.findDailyById(challengeId);
@@ -164,17 +168,14 @@ public class ChallengeManagerController {
             model.addAttribute("dto", dto);
             model.addAttribute("page", page);
             model.addAttribute("query", query);
-
             return "admin/challengeManage/article";
-        } catch (NullPointerException e) {
-            log.info("article :", e);
         } catch (Exception e) {
-            log.info("article :", e);
+            log.error("admin challenge article :", e);
+            return "redirect:/admin/challengeManage/list?" + query;
         }
-        return "redirect:/admin/challengeManage/list?" + query;
     }
 
-    // 수정 폼
+    // 수정 폼 
     @GetMapping("update")
     public String updateForm(
             @RequestParam("challengeId") long challengeId,
@@ -182,7 +183,8 @@ public class ChallengeManagerController {
             Model model
     ) {
         try {
-            Challenge dto = Objects.requireNonNull(service.findById(challengeId));
+            Challenge dto = service.findById(challengeId);
+            if (dto == null) throw new IllegalArgumentException("데이터가 존재하지 않습니다.");
 
             if ("DAILY".equalsIgnoreCase(dto.getChallengeType())) {
                 Challenge d = service.findDailyById(challengeId);
@@ -200,40 +202,82 @@ public class ChallengeManagerController {
             model.addAttribute("mode", "update");
             model.addAttribute("page", page);
             model.addAttribute("dto", dto);
-
             return "admin/challengeManage/write";
-        } catch (NullPointerException e) {
-            log.info("updateForm :", e);
         } catch (Exception e) {
-            log.info("updateForm :", e);
+            log.error("admin challenge updateForm :", e);
+            return "redirect:/admin/challengeManage/list?page=" + page;
         }
-        return "redirect:/admin/challengeManage/list?page=" + page;
     }
 
-    // 수정 처리
+    // 수정 처리 
     @PostMapping("update")
     public String updateSubmit(
             Challenge dto,
-            @RequestParam(name = "page", defaultValue = "1") String page) {
+            @RequestParam(name = "page", defaultValue = "1") String page,
+            RedirectAttributes ra
+    ) {
         try {
-            // 파일 교체/기존파일 삭제 포함해서 서비스에서 처리
+            normalizeType(dto);
+
+            // 타입별 최소 검증
+            if ("DAILY".equals(dto.getChallengeType()) && dto.getWeekday() == null) {
+                ra.addFlashAttribute("message", "DAILY는 요일(weekday)이 필요합니다.");
+                return "redirect:/admin/challengeManage/update?challengeId=" + dto.getChallengeId() + "&page=" + page;
+            }
+            if ("SPECIAL".equals(dto.getChallengeType())
+                    && (isBlank(dto.getStartDate()) || isBlank(dto.getEndDate()))) {
+                ra.addFlashAttribute("message", "SPECIAL은 시작일/종료일이 필요합니다.");
+                return "redirect:/admin/challengeManage/update?challengeId=" + dto.getChallengeId() + "&page=" + page;
+            }
+
+            // 썸네일 삭제 체크박스는 name="removeThumbnail" 로 들어오며,
+            // dto.getRemoveThumbnail() == true 이면 서비스에서 DB thumbnail=NULL 처리
             service.updateChallenge(dto, uploadPath);
+            ra.addFlashAttribute("message", "수정이 완료되었습니다.");
         } catch (Exception e) {
-            log.error("updateSubmit :", e);
+            log.error("admin challenge updateSubmit :", e);
+            ra.addFlashAttribute("message", "수정에 실패했습니다. 다시 시도해 주세요.");
+            return "redirect:/admin/challengeManage/update?challengeId=" + dto.getChallengeId() + "&page=" + page;
         }
         return "redirect:/admin/challengeManage/list?page=" + page;
     }
 
-    // 삭제
+    // 삭제 
     @GetMapping("delete")
     public String delete(
             @RequestParam("challengeId") long challengeId,
-            @RequestParam(name="page", defaultValue="1") String page) {
+            @RequestParam(name="page", defaultValue="1") String page,
+            RedirectAttributes ra
+    ) {
         try {
             service.deleteChallenge(challengeId, uploadPath);
+            ra.addFlashAttribute("message", "삭제되었습니다.");
         } catch (Exception e) {
-            log.error("delete : ", e);
+            log.error("admin challenge delete :", e);
+            ra.addFlashAttribute("message", "삭제에 실패했습니다.");
         }
         return "redirect:/admin/challengeManage/list?page=" + page;
+    }
+
+   
+    // 유틸
+    private static boolean isBlank(String s) {
+        return s == null || s.isBlank();
+    }
+
+    private static void normalizeType(Challenge dto) {
+        if (dto.getChallengeType() != null) {
+            dto.setChallengeType(dto.getChallengeType().trim().toUpperCase());
+        }
+    }
+
+    private String buildQuery(String page, String kwd, String challengeType) {
+        StringBuilder q = new StringBuilder("page=").append(page == null ? "1" : page);
+        try {
+            kwd = myUtil.decodeUrl(kwd);
+            if (!isBlank(kwd)) q.append("&kwd=").append(myUtil.encodeUrl(kwd));
+        } catch (Exception ignore) {}
+        if (!isBlank(challengeType)) q.append("&challengeType=").append(challengeType);
+        return q.toString();
     }
 }

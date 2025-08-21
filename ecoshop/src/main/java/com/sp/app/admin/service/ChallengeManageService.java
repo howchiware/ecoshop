@@ -12,7 +12,7 @@ public interface ChallengeManageService {
     // 등록
     public void insertChallenge(Challenge dto, String uploadPath) throws Exception;
 
-    // 단건
+    // 단건 조회
     public Challenge findById(long challengeId);
     public Challenge findDailyById(long challengeId);
     public Challenge findSpecialById(long challengeId);
@@ -21,9 +21,9 @@ public interface ChallengeManageService {
     public int dataCount(Map<String, Object> map);
     public List<Challenge> listChallenge(Map<String, Object> map);
 
-    // 수정
+    // 관리자 수정(썸네일 교체 및 삭제 포함)
     public void updateChallenge(Challenge dto, String uploadPath) throws Exception;
 
-    // 삭제 (CASCADE)
+    // 삭제 (CASCADE) (파일 삭제 + 보조테이블 정리 + 메인 삭제 포함)
     public void deleteChallenge(long challengeId, String uploadPath) throws Exception;
 }

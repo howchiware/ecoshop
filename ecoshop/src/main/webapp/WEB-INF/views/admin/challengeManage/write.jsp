@@ -1,19 +1,21 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <c:set var="cp" value="${pageContext.request.contextPath}" />
+<c:set var="NOIMG" value="${cp}/uploads/challenge/no-image.png" />
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
   <title>관리자 - 챌린지 ${mode=='update'?'수정':'등록'}</title>
-  <link rel="stylesheet" href="${cp}/dist/css/main2.css" />
+  <link rel="stylesheet" href="<c:url value='/dist/css/main2.css'/>" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
   <style>
     .page-wrap{max-width:1200px; margin:0 auto;}
     .card{border-radius:14px}
-    /* 썸네일 미리보기 영역 */
-    .thumb-preview{width:100%; aspect-ratio:16/9; border:1px dashed #e5e7eb; border-radius:12px;
-      background:#f8fafc center/cover no-repeat;}
+    .thumb-preview{width:100%; aspect-ratio:16/9; border:1px dashed #e5e7eb; border-radius:12px; background:#f8fafc center/cover no-repeat;}
     .section-title{font-weight:800; font-size:1.05rem}
     .weekday-badges .badge{cursor:pointer; font-weight:700}
     .weekday-badges .badge.active{background:#0d6efd!important}
@@ -33,12 +35,11 @@
       <h3 class="mb-1">${mode=='update'?'챌린지 수정':'챌린지 등록'}</h3>
       <div class="text-muted">필수 항목을 입력하고 저장하세요.</div>
     </div>
-    <a href="${cp}/admin/challengeManage/list" class="btn btn-outline-secondary">목록</a>
+    <a href="<c:url value='/admin/challengeManage/list'/>" class="btn btn-outline-secondary">목록</a>
   </div>
 
   <!-- 본문 카드 -->
-  <!-- 파일 업로드를 위해 enctype 속성을 추가. -->
-  <form id="challengeForm" method="post" action="${cp}/admin/challengeManage/${mode}" enctype="multipart/form-data">
+  <form id="challengeForm" method="post" action="<c:url value='/admin/challengeManage/${mode}'/>" enctype="multipart/form-data">
     <c:if test="${mode=='update'}">
       <input type="hidden" name="challengeId" value="${dto.challengeId}">
     </c:if>
@@ -49,8 +50,7 @@
         <div class="card p-4">
           <div class="mb-3">
             <label class="form-label section-title">기본 정보</label>
-            <input class="form-control form-control-lg" name="title" placeholder="제목을 입력하세요"
-                   value="${dto.title}" required>
+            <input class="form-control form-control-lg" name="title" placeholder="제목을 입력하세요" value="${dto.title}" required>
           </div>
 
           <div class="mb-3">
@@ -61,8 +61,7 @@
           <div class="row g-3">
             <div class="col-md-4">
               <label class="form-label">포인트</label>
-              <input class="form-control" type="number" name="rewardPoints"
-                     value="${empty dto.rewardPoints ? 0 : dto.rewardPoints}" min="0" step="10" required>
+              <input class="form-control" type="number" name="rewardPoints" value="${empty dto.rewardPoints ? 0 : dto.rewardPoints}" min="0" step="10" required>
             </div>
             <div class="col-md-4">
               <label class="form-label">타입</label>
@@ -71,10 +70,16 @@
                 <option value="SPECIAL" ${dto.challengeType=='SPECIAL'?'selected':''}>SPECIAL</option>
               </select>
             </div>
-            <!-- 기존 썸네일 URL 입력 필드를 삭제. -->
+            <!-- 썸네일 업로드 -->
             <div class="col-md-4">
               <label class="form-label">썸네일 파일</label>
               <input id="thumbInput" type="file" class="form-control" name="thumbnailFile" accept="image/*">
+              <c:if test="${mode=='update'}">
+                <div class="form-check mt-2">
+                  <input class="form-check-input" type="checkbox" id="removeThumb" name="removeThumbnail" value="true">
+                  <label class="form-check-label" for="removeThumb">이미지 없음(썸네일 삭제)</label>
+                </div>
+              </c:if>
               <div class="form-text"><small>파일을 선택하면 오른쪽에서 미리보기 됩니다.</small></div>
             </div>
           </div>
@@ -90,19 +95,20 @@
           <label class="form-label">요일 선택</label>
           <div class="weekday-badges d-flex gap-2 flex-wrap mb-2">
             <c:forEach var="i" begin="0" end="6">
-              <span class="badge bg-light text-dark px-3 py-2"
-                    data-value="${i}"><c:choose>
-                <c:when test="${i==0}">일</c:when>
-                <c:when test="${i==1}">월</c:when>
-                <c:when test="${i==2}">화</c:when>
-                <c:when test="${i==3}">수</c:when>
-                <c:when test="${i==4}">목</c:when>
-                <c:when test="${i==5}">금</c:when>
-                <c:otherwise>토</c:otherwise>
-              </c:choose></span>
+              <span class="badge bg-light text-dark px-3 py-2" data-value="${i}">
+                <c:choose>
+                  <c:when test="${i==0}">일</c:when>
+                  <c:when test="${i==1}">월</c:when>
+                  <c:when test="${i==2}">화</c:when>
+                  <c:when test="${i==3}">수</c:when>
+                  <c:when test="${i==4}">목</c:when>
+                  <c:when test="${i==5}">금</c:when>
+                  <c:otherwise>토</c:otherwise>
+                </c:choose>
+              </span>
             </c:forEach>
           </div>
-          <!-- 접근성/실제 전송용 -->
+
           <select id="weekdaySelect" class="form-select" name="weekday" aria-label="요일 선택">
             <c:forEach var="i" begin="0" end="6">
               <option value="${i}" ${dto.weekday==i?'selected':''}>${i}</option>
@@ -129,8 +135,7 @@
             </div>
             <div class="col-md-2">
               <label class="form-label">연속일</label>
-              <input class="form-control" type="number" name="requireDays"
-                     value="${empty dto.requireDays?3:dto.requireDays}" min="1" max="7">
+              <input class="form-control" type="number" name="requireDays" value="${empty dto.requireDays?3:dto.requireDays}" min="1" max="7">
             </div>
             <div class="col-md-2">
               <label class="form-label">상태</label>
@@ -147,29 +152,32 @@
         <!-- 액션 -->
         <div class="sticky-actions mt-3 d-flex gap-2">
           <c:if test="${mode=='update'}">
-          	<input type="hidden" name="thumbnail" value="${dto.thumbnail}">
-          	<input type="hidden" name="challengeId" value="${dto.challengeId}">
+            <input type="hidden" name="thumbnail" value="${dto.thumbnail}">
           </c:if>
           <button class="btn btn-primary px-4">${mode=='update'?'수정':'등록'}</button>
-          <a class="btn btn-outline-secondary" href="${cp}/admin/challengeManage/list">목록</a>
+          <a class="btn btn-outline-secondary" href="<c:url value='/admin/challengeManage/list'/>">목록</a>
         </div>
       </div>
 
-      <!-- 오른쪽 : 썸네일 미리보기 & 가이드 -->
+      <!-- 오른쪽 : 썸네일 미리보기 가이드 -->
       <div class="col-lg-5">
         <div class="card p-4">
-        <div class="section-title mb-2">썸네일 미리보기</div>
-        <c:set var="initialThumb"
-               value="${empty dto.thumbnail ? cp.concat('/resources/admin/images/add_photo.png')
-                                            : cp.concat('/uploads/challenge/').concat(dto.thumbnail)}"/>
-        <div id="thumbPreview" class="thumb-preview"
-             style="background-image:url('${initialThumb}')"></div>
-        <ul class="mt-3 text-muted small">
+          <div class="section-title mb-2">썸네일 미리보기</div>
+          <c:choose>
+            <c:when test="${not empty dto.thumbnail}">
+              <c:url var="initialThumb" value="/uploads/challenge/${fn:escapeXml(dto.thumbnail)}"/>
+            </c:when>
+            <c:otherwise>
+              <c:set var="initialThumb" value="${NOIMG}"/>
+            </c:otherwise>
+          </c:choose>
+          <div id="thumbPreview" class="thumb-preview" style="background-image:url('${initialThumb}')"></div>
+          <ul class="mt-3 text-muted small">
             <li>권장 비율 <strong>16:9</strong>, 최소 960×540</li>
             <li>이미지 파일만 업로드 가능합니다.</li>
-        </ul>
-    </div>
-        
+          </ul>
+        </div>
+
         <div class="card p-4 mt-3">
           <div class="section-title mb-2">작성 팁</div>
           <ul class="small text-muted mb-0">
@@ -193,10 +201,11 @@
   document.getElementById('typeSel').addEventListener('change', toggleBoxes);
   toggleBoxes();
 
-  // 썸네일 미리보기 (파일 업로드 버전)
+  // 썸네일 미리보기
   const thumbInput = document.getElementById('thumbInput');
   const thumbPreview = document.getElementById('thumbPreview');
-  
+  const NOIMG = '${NOIMG}';
+
   if (thumbInput) {
     thumbInput.addEventListener('change', () => {
       const file = thumbInput.files[0];
@@ -206,9 +215,21 @@
           thumbPreview.style.backgroundImage = `url('${event.target.result}')`;
         };
         reader.readAsDataURL(file);
+        const removeChkEl = document.getElementById('removeThumb');
+        if (removeChkEl) removeChkEl.checked = false;
       } else {
-        // 파일 선택이 취소된 경우 기본 이미지로 되돌림.
-        thumbPreview.style.backgroundImage = "url('${cp}/resources/admin/images/add_photo.png')";
+        thumbPreview.style.backgroundImage = `url('${NOIMG}')`;
+      }
+    });
+  }
+
+  // 삭제 체크 시 미리보기/파일 입력 초기화
+  const removeChk = document.getElementById('removeThumb');
+  if (removeChk) {
+    removeChk.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        if (thumbInput) thumbInput.value = '';
+        thumbPreview.style.backgroundImage = `url('${NOIMG}')`;
       }
     });
   }
@@ -222,13 +243,16 @@
   badges.forEach(b => b.addEventListener('click', () => {
     weekdaySelect.value = b.dataset.value; syncBadges(b.dataset.value);
   }));
-  syncBadges(weekdaySelect.value);
-  weekdaySelect.addEventListener('change', e => syncBadges(e.target.value));
+  if (weekdaySelect) {
+    syncBadges(weekdaySelect.value);
+    weekdaySelect.addEventListener('change', e => syncBadges(e.target.value));
+  }
 
   // 날짜 유효성
   const st = document.getElementById('startDate');
   const en = document.getElementById('endDate');
   function validateDates(){
+    if(!st || !en) return true;
     if(!st.value || !en.value) return true;
     if(st.value > en.value){
       en.setCustomValidity('종료일은 시작일 이후여야 합니다.');
@@ -238,10 +262,14 @@
   }
   if(st && en){ st.addEventListener('change', validateDates); en.addEventListener('change', validateDates); }
 
-  // 간단 폼 검증
+  // SPECIAL 선택 시 날짜 필수
   document.getElementById('challengeForm').addEventListener('submit', (e)=>{
     const type = document.getElementById('typeSel').value;
-    if(type==='SPECIAL' && !validateDates()){ e.preventDefault(); return; }
+    if(type==='SPECIAL'){
+      if(!st.value || !en.value || !validateDates()){
+        e.preventDefault();
+      }
+    }
   });
 </script>
 </body>
