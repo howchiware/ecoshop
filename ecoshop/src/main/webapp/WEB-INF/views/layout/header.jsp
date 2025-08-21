@@ -60,9 +60,9 @@
 					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/challenge/list">챌린지</a></li>
 					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">콘텐츠</a>
 						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="#">매거진</a></li>
-							<li><a class="dropdown-item" href="#">제로웨이스트 팁</a></li>
-							<li><a class="dropdown-item" href="#">분리배출 가이드</a></li>
+							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/magazine/list">매거진</a></li>
+							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/tipBoard/list">제로웨이스트 팁</a></li>
+							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/reguide/list">분리배출 가이드</a></li>
 						</ul>
 					</li>
 					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">커뮤니티</a>
