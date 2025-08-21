@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.TipBoardMapper">
+	<select id = "tipBoardSeq" resultType="long">
+		SELECT tipBoard_seq.NEXTVAL
+		FROM dual
+	</select>
+	<insert id="insertTipBoard" parameterType="com.sp.app.model.TipBoard">
+		INSERT INTO tipBoard(tipId, memberId, subject, content, groupNum, depth, orderNo, parent, 
+		hitCount, regDate, block, report, saveFilename, originalFilename)
+		VALUES (#{tipId}, #{memberId}, #{subject}, #{content}, #{groupNum}, #{depth}, #{orderNo}, #{parent}, 0, SYSDATE, 0, 0,
+		#{saveFilename})
+	</insert>
+	
+	<sql id="where-list">
+		<choose>
+			<when test="schType == 'all' ">
+				( INSERT(subject, #{kwd}) &gt; 0
+					OR INSERT(content, #{kwd}) &gt; 0)
+			</when>
+			<when test="schType == 'regDate' ">
+				( INSTR(TO_CHAR(regDate, 'YYYYMMDD'), #{kwd}) &gt; 0
+					OR TO_CHAR(regDate, 'YYYY-MM-DD') = #{kwd} )
+			</when>
+			<otherwise>
+			    INSTR(${schType}, #{kwd}) &gt; 0
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM tipBoard t
+		JOIN member2 m ON t.memberId = m.memberId
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list"/>
+			</if>
+		</where>
+	</select>
+	
+	<select id="listTipBoard" parameterType="map" resultType="com.sp.app.model.TipBoard">
+		SELECT tipId, name, t.memberId, subject, regDate, hitCount, groupNum, orderNo, depth
+		FROM tipBoard t
+		JOIN member2 m ON t.memberId = m.memberId
+		<where>
+			<if test="kwd != null and kwd != ''">
+				<include refid="where-list"/>
+			</if>
+		</where>
+		ORDER BY groupNum DESC, orderNo ASC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	
+	
+	
+	
+
+</mapper>
