@@ -133,7 +133,7 @@
 								onclick="sendOk();">${mode=='update'?'수정완료':'등록완료'}</button>
 							<button type="reset" class="btn-default btn-md">다시입력</button>
 							<button type="button" class="btn-default btn-md"
-								onclick="location.href='${pageContext.request.contextPath}/admin/gonggu/${mode}';">${mode=='update'?'수정취소':'등록취소'}</button>
+								onclick="location.href='${pageContext.request.contextPath}/admin/gonggu/listProduct';">${mode=='update'?'수정취소':'등록취소'}</button>
 							<c:if test="${mode=='update'}">
 								<input type="hidden" name="gongguProductId"
 									value="${dto.gongguProductId}">
@@ -215,11 +215,11 @@ function isValidDateString(dateString) {
 }
 
 function hasContent(htmlContent) {
-	htmlContent = htmlContent.replace(/<p[^>]*>/gi, ''); // p 태그 제거
+	htmlContent = htmlContent.replace(/<p[^>]*>/gi, ''); 
 	htmlContent = htmlContent.replace(/<\/p>/gi, '');
-	htmlContent = htmlContent.replace(/<br\s*\/?>/gi, ''); // br 태그 제거
+	htmlContent = htmlContent.replace(/<br\s*\/?>/gi, ''); 
 	htmlContent = htmlContent.replace(/&nbsp;/g, ' ');
-	htmlContent = htmlContent.replace(/\s/g, ''); // 공백 제거
+	htmlContent = htmlContent.replace(/\s/g, ''); 
 	
 	return htmlContent.length > 0;
 }
