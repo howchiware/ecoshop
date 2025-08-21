@@ -66,6 +66,14 @@
 						<button type="button" class="btn-default"
 							onclick="location.href='${pageContext.request.contextPath}/admin/gonggu/listProduct?${query}';">리스트</button>
 					</div>
+					<hr>
+					<div class="row packageList-container">
+						<div class="col-md-4">패키지 상품구성</div>
+						<div class="btn col-md-4 offset-md-4">
+							<button type="button" class="btn-default">상품등록</button>
+						</div>
+					</div>
+					<div class="packageContainList"></div>
 				</div>
 			</div>
 		</div>
