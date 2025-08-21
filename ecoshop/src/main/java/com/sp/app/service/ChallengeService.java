@@ -3,6 +3,8 @@ package com.sp.app.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.sp.app.model.Challenge;
 
 public interface ChallengeService {
@@ -29,6 +31,9 @@ public interface ChallengeService {
     public Long nextParticipationId();
     public void insertParticipation(Challenge dto) throws Exception;
     public void updateParticipation(Challenge dto) throws Exception;
+    
+ // 추가: 데일리 챌린지 제출 및 포인트 지급을 위한 메서드
+    public void submitDailyChallenge(Challenge dto, MultipartFile photoFile) throws Exception;
 
     // 스페셜 진행률 1~3일 (dayNumber, done)
     public List<Map<String, Object>> selectSpecialProgress(long participationId);

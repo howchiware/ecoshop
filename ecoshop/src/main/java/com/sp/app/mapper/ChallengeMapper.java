@@ -42,13 +42,16 @@ public interface ChallengeMapper {
 
     // 참여 시퀀스 
     public Long nextParticipationId() throws SQLException;
+    public Long nextPostId() throws SQLException; // 인증글 시퀀스
+    public Long nextPhotoId() throws SQLException; // 인증사진 시퀀스
 
-    /** 참여 등록 (parameterType = com.sp.app.model.Challenge) */
+    // 참여 등록 (parameterType = com.sp.app.model.Challenge) 
     public int insertParticipation(Challenge dto) throws SQLException;
+    public int insertCertificationPost(Challenge dto) throws SQLException;
+    public int insertCertificationPhoto(Challenge dto) throws SQLException;
 
-    /** 참여 상태/취소일 갱신 (넘겨준 필드만 갱신) */
+    //참여 상태/취소일 갱신 (넘겨준 필드만 갱신) 
     public int updateParticipation(Challenge dto) throws SQLException;
-
 
     //스페셜 진행률(1~3일) - 진행 현황 조회
 
@@ -61,5 +64,9 @@ public interface ChallengeMapper {
     ) throws SQLException;
 	
 	public Challenge selectDailyByWeekday(@Param("weekday") int weekday);
+	
+	
+	
+	
     
 }

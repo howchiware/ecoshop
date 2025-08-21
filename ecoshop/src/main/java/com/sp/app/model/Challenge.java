@@ -48,5 +48,10 @@ public class Challenge {
     private String photoUrl;
     private String photoRegDate; // 인증사진 등록일자 
     
+    // 파일 업로드
     private MultipartFile thumbnailFile;
+    private MultipartFile photoFile; // 챌린지 인증 시 사용
+    
+    // 관리자 챌린지 수정시 썸네일 삭제 
+    private Boolean removeThumbnail;
 }

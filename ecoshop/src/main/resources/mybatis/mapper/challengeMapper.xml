@@ -18,62 +18,68 @@
     ORDER BY d.weekday
   </select>
 
-  <!-- 오늘 요일 챌린지 1개 -->
-<select id="listSpecialMore" parameterType="map" resultType="com.sp.app.model.Challenge">
-  SELECT
-    c.challengeId, c.title, c.description, c.thumbnail,
-    c.rewardPoints,
-    TO_CHAR(c.regDate,'YYYY-MM-DD HH24:MI:SS') AS challengeRegDate,
-    c.challengeType,
-    TO_CHAR(s.startDate,'YYYY-MM-DD') AS startDate,
-    TO_CHAR(s.endDate,'YYYY-MM-DD')   AS endDate,
-    s.requireDays,
-    s.status AS specialStatus
-  FROM challenge c
-  JOIN specialChallenge s ON s.challengeId = c.challengeId
-  WHERE c.challengeType = 'SPECIAL'
-    AND s.status IN (0, 1)
-    AND (SYSDATE BETWEEN s.startDate AND s.endDate OR SYSDATE &lt; s.startDate)
+  <!-- (추가) 오늘 요일 챌린지 1개 -->
+  <select id="getTodayDaily" parameterType="int" resultType="com.sp.app.model.Challenge">
+    SELECT <include refid="baseColumns"/>, d.weekday
+    FROM challenge c
+    JOIN dailyChallenge d ON d.challengeId = c.challengeId
+    WHERE c.challengeType = 'DAILY'
+      AND d.weekday = #{todayDow}
+    FETCH FIRST 1 ROWS ONLY
+  </select>
 
-  <choose>
-    <!-- 종료일 빠른 순 (커서: endDate, challengeId) -->
-    <when test="sort == 'CLOSE_DATE'">
-      <if test="lastEndDate != null and lastEndDate != ''">
-        AND (
-          s.endDate &gt; TO_DATE(#{lastEndDate}, 'YYYY-MM-DD')
-          OR (s.endDate = TO_DATE(#{lastEndDate}, 'YYYY-MM-DD') AND c.challengeId &gt; #{lastId})
-        )
-      </if>
-      ORDER BY s.endDate ASC NULLS LAST, c.challengeId ASC
-    </when>
+  <!-- 스페셜 목록(더보기/키셋) -->
+  <select id="listSpecialMore" parameterType="map" resultType="com.sp.app.model.Challenge">
+    SELECT
+      c.challengeId, c.title, c.description, c.thumbnail,
+      c.rewardPoints,
+      TO_CHAR(c.regDate,'YYYY-MM-DD HH24:MI:SS') AS challengeRegDate,
+      c.challengeType,
+      TO_CHAR(s.startDate,'YYYY-MM-DD') AS startDate,
+      TO_CHAR(s.endDate,'YYYY-MM-DD')   AS endDate,
+      s.requireDays,
+      s.status AS specialStatus
+    FROM challenge c
+    JOIN specialChallenge s ON s.challengeId = c.challengeId
+    WHERE c.challengeType = 'SPECIAL'
+      AND s.status IN (0, 1)
+      AND (SYSDATE BETWEEN s.startDate AND s.endDate OR SYSDATE &lt; s.startDate)
 
-    <!-- 인기순 -->
-    <when test="sort == 'POPULAR'">
-      <if test="lastId != null">
-        AND c.challengeId &lt; #{lastId}
-      </if>
-      ORDER BY c.rewardPoints DESC, c.challengeId DESC
-    </when>
+    <choose>
+      <!-- 종료일 빠른 순 (커서: endDate, challengeId) -->
+      <when test="sort == 'CLOSE_DATE'">
+        <if test="lastEndDate != null and lastEndDate != ''">
+          AND (
+            s.endDate &gt; TO_DATE(#{lastEndDate}, 'YYYY-MM-DD')
+            OR (s.endDate = TO_DATE(#{lastEndDate}, 'YYYY-MM-DD') AND c.challengeId &gt; #{lastId})
+          )
+        </if>
+        ORDER BY s.endDate ASC NULLS LAST, c.challengeId ASC
+      </when>
 
-    <!-- 최신순 -->
-    <otherwise>
-      <if test="lastId != null">
-        AND c.challengeId &lt; #{lastId}
-      </if>
-      ORDER BY c.challengeId DESC
-    </otherwise>
-  </choose>
+      <!-- 인기순 -->
+      <when test="sort == 'POPULAR'">
+        <if test="lastId != null">
+          AND c.challengeId &lt; #{lastId}
+        </if>
+        ORDER BY c.rewardPoints DESC, c.challengeId DESC
+      </when>
 
-  FETCH FIRST #{size} ROWS ONLY
-</select>
+      <!-- 최신순 -->
+      <otherwise>
+        <if test="lastId != null">
+          AND c.challengeId &lt; #{lastId}
+        </if>
+        ORDER BY c.challengeId DESC
+      </otherwise>
+    </choose>
 
-
+    FETCH FIRST #{size} ROWS ONLY
+  </select>
 
   <!-- 상세 보기 -->
   <select id="findDailyDetail" parameterType="long" resultType="com.sp.app.model.Challenge">
-    SELECT
-      <include refid="baseColumns"/>,
-      d.weekday
+    SELECT <include refid="baseColumns"/>, d.weekday
     FROM challenge c
     JOIN dailyChallenge d ON d.challengeId = c.challengeId
     WHERE c.challengeId = #{challengeId}
@@ -93,9 +99,7 @@
 
   <!-- 해당 요일 1건 조회 -->
   <select id="selectDailyByWeekday" parameterType="int" resultType="com.sp.app.model.Challenge">
-    SELECT
-      <include refid="baseColumns"/>,
-      d.weekday
+    SELECT <include refid="baseColumns"/>, d.weekday
     FROM dailyChallenge d
     JOIN challenge c ON c.challengeId = d.challengeId
     WHERE c.challengeType = 'DAILY'
@@ -104,7 +108,7 @@
   </select>
 
   <!-- 오늘 참여 여부(요일: 당일 1회 제한) -->
-  <select id="countTodayDailyJoin" parameterType="map" resultType="Integer">
+  <select id="countTodayDailyJoin" parameterType="map" resultType="int">
     SELECT NVL(COUNT(*),0)
     FROM challengeParticipation p
     WHERE p.memberId = #{memberId}
@@ -112,27 +116,83 @@
       AND TRUNC(p.participateDate) = TRUNC(SYSDATE)
   </select>
 
-  <!-- 참여 등록 -->
+  <!-- 시퀀스 -->
   <select id="nextParticipationId" resultType="long">
     SELECT participation_seq.NEXTVAL FROM dual
   </select>
 
+  <select id="nextPostId" resultType="long">
+    SELECT cert_post_seq.NEXTVAL FROM dual
+  </select>
+
+  <select id="nextPhotoId" resultType="long">
+    SELECT cert_photo_seq.NEXTVAL FROM dual
+  </select>
+
+  <!-- 참여 등록 -->
   <insert id="insertParticipation" parameterType="com.sp.app.model.Challenge">
     INSERT INTO challengeParticipation (
       participationId, challengeId, memberId, participateDate, status, cancelAt
     ) VALUES (
       #{participationId}, #{challengeId}, #{memberId}, SYSDATE,
-      NVL(#{participationStatus},0),
-      <if test="cancelAt != null and cancelAt != ''">
+     <choose>
+      <when test="participationStatus != null">#{participationStatus}</when>
+      <otherwise>0</otherwise>
+    </choose>,
+    <choose>
+      <when test="cancelAt != null and cancelAt != ''">
         TO_DATE(#{cancelAt}, 'YYYY-MM-DD')
+      </when>
+      <otherwise>NULL</otherwise>
+    </choose>
+  )
+</insert>
+
+  <!-- (추가) 참여 상태/취소일 갱신 : 넘겨준 필드만 SET -->
+  <update id="updateParticipation" parameterType="com.sp.app.model.Challenge">
+    UPDATE challengeParticipation
+    <set>
+      <if test="participationStatus != null">
+        status = #{participationStatus},
       </if>
-      <if test="cancelAt == null or cancelAt == ''">
-        NULL
+      <if test="cancelAt != null and cancelAt != ''">
+        cancelAt = TO_DATE(#{cancelAt}, 'YYYY-MM-DD'),
       </if>
+    </set>
+    WHERE participationId = #{participationId}
+  </update>
+
+  <!-- 인증 게시글 INSERT
+       - SPECIAL: dayNumber = 1~3
+       - DAILY  : dayNumber = NULL -->
+  <insert id="insertCertificationPost" parameterType="com.sp.app.model.Challenge">
+    INSERT INTO certificationPost (
+      postId, participationId, dayNumber, content, regDate, approvalStatus, isPublic
+    ) VALUES (
+      #{postId},
+      #{participationId},
+      <choose>
+        <when test="challengeType == 'SPECIAL'">
+          #{dayNumber}
+        </when>
+        <otherwise>
+          NULL
+        </otherwise>
+      </choose>,
+      #{content},
+      SYSDATE,
+      #{approvalStatus},
+      #{isPublic}
     )
   </insert>
 
-  <!-- 스페셜 진행률 (인증글 dayNumber 1~3 카운트) -->
+  <!-- 인증 사진 INSERT (사진 있을 때만 호출) -->
+  <insert id="insertCertificationPhoto" parameterType="com.sp.app.model.Challenge">
+    INSERT INTO certificationPhoto (photoId, postId, photoUrl, regDate)
+    VALUES (#{photoId}, #{postId}, #{photoUrl}, SYSDATE)
+  </insert>
+
+  <!-- 스페셜 진행률 (1~3일) -->
   <select id="selectSpecialProgress" parameterType="long" resultType="map">
     SELECT
       c.dayNumber AS dayNumber,
