@@ -13,7 +13,8 @@ public interface TipBoardMapper {
 	public long tipBoardSeq();
 	public void insertTipBoard(TipBoard dto) throws SQLException;
 	public void updateOrderNo(Map<String, Object> map) throws SQLException;
-	public void updateTipBoard(long tipId) throws SQLException;
+	public void updateTipBoard(TipBoard dto) throws SQLException;
+	public void deleteTipBoard(long tipId) throws SQLException;
 	
 	public int dataCount(Map<String, Object> map);
 	public List<TipBoard> listTipBoard(Map<String, Object> map);

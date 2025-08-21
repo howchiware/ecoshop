@@ -7,9 +7,8 @@
 	</select>
 	<insert id="insertTipBoard" parameterType="com.sp.app.model.TipBoard">
 		INSERT INTO tipBoard(tipId, memberId, subject, content, groupNum, depth, orderNo, parent, 
-		hitCount, regDate, block, report, saveFilename, originalFilename)
-		VALUES (#{tipId}, #{memberId}, #{subject}, #{content}, #{groupNum}, #{depth}, #{orderNo}, #{parent}, 0, SYSDATE, 0, 0,
-		#{saveFilename})
+		hitCount, regDate, block, report)
+		VALUES (#{tipId}, #{memberId}, #{subject}, #{content}, #{groupNum}, #{depth}, #{orderNo}, #{parent}, 0, SYSDATE, 0, 0)
 	</insert>
 	
 	<sql id="where-list">
@@ -51,6 +50,72 @@
 		ORDER BY groupNum DESC, orderNo ASC
 		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
+	
+	<select id="findById" parameterType="Long" resultType="com.sp.app.model.TipBoard">
+		SELECT tipId, t.memberId, name, subject, content, groupNum, depth, orderNo, parent, regDate, hitCount
+		FROM tipBoard t
+		JOIN member2 m ON t.memberId = m.memberId
+		WHERE tipId = #{tipId}
+	</select>
+	
+	<update id="updateHitCount" parameterType="Long">
+		UPDATE tipBoard SET hitCount = hitCount + 1
+		WHERE tipId = #{tipId}
+	</update>
+	
+	<select id="findByPrev" parameterType="map" resultType="com.sp.app.model.TipBoard">
+		SELECT tipId, subject
+		FROM tipBoard t
+		JOIN member2 m ON t.memberId = m.memberId
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list"/>
+			</if>
+			<![CDATA[
+				AND ( (groupNum = #{groupNum} AND orderNo < #{orderNo})
+					  OR (groupNum > #{groupNum}) )
+			]]>
+		</where>
+		ORDER BY groupNum ASC, orderNo DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<select id="findByNext" parameterType="map" resultType="com.sp.app.model.TipBoard">
+		SELECT tipId, subject
+		FROM tipBoard t
+		JOIN member2 m ON t.memberId = m.memberId
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list"/>
+			</if>
+			<![CDATA[
+				AND ( (groupNum = #{groupNum} AND orderNo > #{orderNo})
+					  OR (groupNum < #{groupNum}) )
+			]]>
+		</where>
+		ORDER BY groupNum DESC, orderNo ASC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<update id="updateOrderNo" parameterType="map">
+		UPDATE tipBoard SET orderNo = orderNo + 1
+		WHERE groupNum = #{groupNum} AND orderNo &gt; #{orderNo}
+	</update>
+	
+	<update id="updateTipBoard" parameterType="com.sp.app.model.TipBoard">
+		UPDATE tipBoard SET subject = #{subject}, content = #{content}
+		WHERE tipId = #{tipId} AND memberId = #{memberId}
+	</update>
+	
+	<delete id="deleteTipBoard" parameterType="Long">
+		DELETE FROM tipBoard
+		WHERE tipId IN
+			( SELECT tipId FROM tipBoard START WITH tipId = #{tipId}
+				CONNECT BY PRIOR tipId = parent )
+	</delete>
+	
+	
+	
 	
 	
 	

@@ -10,8 +10,8 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/free.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/dairyWrite.css" type="text/css">
+<%-- <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/free.css" type="text/css"> --%>
+<%-- <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/dairyWrite.css" type="text/css"> --%>
 <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/quill-resize-module@2.0.4/dist/resize.css" rel="stylesheet">
 </head>
@@ -22,13 +22,11 @@
 
 <main class="container my-5">
 	
-	<jsp:include page="/WEB-INF/views/layout/freeHeader.jsp"/>
-	
 	<div class="page-header">
 		<h2>${mode=='update'?'팁 수정':'팁 등록'}</h2>
 	</div>
 
-	<form name="dairyForm" class="write-form" method="post" enctype="multipart/form-data">
+	<form name="tipForm" class="write-form" method="post" enctype="multipart/form-data">
 		<div class="mb-3">
 			<label for="subject" class="form-label">제목</label>
 			<input type="text" id="subject" name="subject" class="form-control" placeholder="제목을 입력해주세요." value="${dto.subject}" maxlength="50">
@@ -79,7 +77,6 @@
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/quill-resize-module@2.0.4/dist/resize.js"></script>
 <script src="${pageContext.request.contextPath}/dist/js/qeditor.js"></script>
-<script src="${pageContext.request.contextPath}/dist/jsFree/dairyWrite.js"></script>
 
 <script type="text/javascript">
 function hasContent(htmlContent) {
@@ -91,8 +88,9 @@ function hasContent(htmlContent) {
 	
 	return htmlContent.length > 0;
 }
+
 function sendOk() {
-    const f = document.dairyForm;
+    const f = document.tipForm;
     
     // 제목 체크
     let str = f.subject.value.trim();
@@ -102,7 +100,6 @@ function sendOk() {
         return;
     }
     
-    // 내용 체크
     const htmlViewEL = document.querySelector('textarea#html-view');
     let htmlContent = htmlViewEL ? htmlViewEL.value : quill.root.innerHTML;
     if(! hasContent(htmlContent)) {
@@ -111,20 +108,8 @@ function sendOk() {
         else quill.focus();
         return;
     }
-    f.content.value = htmlContent;
-
-    // 첫 번째 이미지 src 추출
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = htmlContent;
-    const firstImg = tempDiv.querySelector('img');
-    if(firstImg) {
-        // 전체 경로에서 파일명만 저장
-        const src = firstImg.getAttribute('src');
-        const filename = src.split('/').pop();
-        f.saveFilename.value = filename; // hidden input에 설정
-    } else {
-        f.saveFilename.value = ''; // 이미지 없으면 빈값
-    }
+    
+	f.content.value = htmlContent;
 
     f.action = '${pageContext.request.contextPath}/tipBoard/${mode}';
     f.submit();

@@ -93,5 +93,78 @@ public class TipBoardServiceImpl implements TipBoardService{
 		return list;
 	}
 
+	@Override
+	public void updateHitCount(long tipId) throws Exception {
+		try {
+			mapper.updateHitCount(tipId);
+		} catch (Exception e) {
+			log.info("updateHitCount : ", e);
+			
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public TipBoard findById(long tipId) {
+		TipBoard dto = null;
+		try {
+			dto = mapper.findById(tipId);
+		} catch (Exception e) {
+			log.info("findById : ", e);
+		}
+		return dto;
+	}
+
+	@Override
+	public TipBoard findByPrev(Map<String, Object> map) {
+		TipBoard dto = null;
+		try {
+			dto = mapper.findByPrev(map);
+		} catch (Exception e) {
+			log.info("findByPrev : ", e);
+		}
+		return dto;
+	}
+
+	@Override
+	public TipBoard findByNext(Map<String, Object> map) {
+		TipBoard dto = null;
+		try {
+			dto = mapper.findByNext(map);
+		} catch (Exception e) {
+			log.info("findByNext : ", e);
+		}
+		return dto;
+	}
+
+	@Override
+	public void updateTipBoard(TipBoard dto) throws Exception {
+		try {
+			mapper.updateTipBoard(dto);;
+		} catch (Exception e) {
+			log.info("updateTipBoard : ", e);
+			
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public void deleteTipBoard(long tipId, Long memberId, int userLevel) throws Exception {
+		try {
+			TipBoard dto = findById(tipId);
+			if (dto == null || (userLevel < 51 && dto.getMemberId() != memberId)) {
+				return;
+			}
+
+			mapper.deleteTipBoard(tipId);
+		} catch (Exception e) {
+			log.info("deleteBoard : ", e);
+			
+			throw e;
+		}
+	}
+
 }
 	
