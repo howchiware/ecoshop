@@ -32,9 +32,11 @@ public class SpringMvcConfiguration implements WebMvcConfigurer {
 		excludePaths.add("/notice/**");
 		excludePaths.add("/workshop/**");
 		excludePaths.add("/challenge/**");
-		excludePaths.add("/free/**");
 		excludePaths.add("/customer/**");
 		excludePaths.add("/tip/**");
+		
+		excludePaths.add("/free/dairyList");
+		
 		
 		excludePaths.add("/favicon.ico");
 		
