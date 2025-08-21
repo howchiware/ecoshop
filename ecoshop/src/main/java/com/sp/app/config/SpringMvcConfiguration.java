@@ -25,12 +25,15 @@ public class SpringMvcConfiguration implements WebMvcConfigurer {
 		excludePaths.add("/member/complete");
 		excludePaths.add("/member/pwdFind");
 		excludePaths.add("/products/**");
+		excludePaths.add("/review/**");
+		excludePaths.add("/inquiry/**");
 		excludePaths.add("/gonggu/**");
 		excludePaths.add("/event/**");
+		excludePaths.add("/notice/**");
 		excludePaths.add("/workshop/**");
 		excludePaths.add("/challenge/**");
 		excludePaths.add("/free/**");
-		excludePaths.add("/cusmotmer/**");
+		excludePaths.add("/customer/**");
 		excludePaths.add("/tip/**");
 		
 		excludePaths.add("/favicon.ico");
