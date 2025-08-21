@@ -105,15 +105,15 @@
 	</delete>
 	
 	<insert id="insertReply" parameterType="com.sp.app.model.Free">
-		INSERT freeReply(replyId, content, regDate, parentNum, block, report, fredId, memberId, nickname)
-		VALUES(freeReply_seq.NEXTVAL, #{content} , SYSDATE, #{parentNum}, 0, 0, #{fredId}, #{memberId}, #{nickname});
+		INSERT INTO freeReply(replyId, content, regDate, parentNum, block, report, freeId, memberId)
+		VALUES(replyId_seq.NEXTVAL, #{content} , SYSDATE, #{parentNum}, 0, 0, #{freeId}, #{memberId})
 	</insert>
 	
 	<select id="replyCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*), 0)
 		FROM freeReply
-		WHERE fredId = #{fredId} AND parentNum = 0 AND block = 0
-		<if test="userLevel lt 51">
+		WHERE freeId = #{freeId} AND parentNum = 0 AND block = 0
+		<if test="userLevel &lt; 51">
 			AND ( report = 1 OR memberId = #{memberId} )
 		</if>
 	</select>
@@ -121,7 +121,7 @@
 	<select id="listReply" parameterType="map" resultType="com.sp.app.model.Free">
 		SELECT fr1.replyId, fr1.memberId, freeId, name, content, fr1.regDate, block, m2.nickname, report, NVL(answerCount, 0) answerCount
 		FROM freeReply fr1
-		JOIN member2 m2 ON fb.memberId = m2.memberId
+		JOIN member2 m2 ON fr1.memberId = m2.memberId
 		LEFT OUTER JOIN (
 			SELECT parentNum, COUNT(*) answerCount
 			FROM freeReply
@@ -130,9 +130,9 @@
 				AND ( report = 0 OR memberId = #{memberId} )
 			</if>
 			GROUP BY parentNum
-		) fr2 ON fr1.replyId = fr2.replyId
+		) fr2 ON fr1.replyId = fr2.parentNum
 		WHERE freeId = #{freeId} AND fr1.parentNum = 0 AND fr1.block = 0
-		<if test="userLevel lt 51">
+		<if test="userLevel &lt; 51">
 			AND ( report = 1 OR fr1.memberId = #{memberId} )
 		</if>
 		ORDER BY fr1.replyId DESC
@@ -148,22 +148,24 @@
 	</delete>
 	
 	<select id="listReplyAnswer" parameterType="map" resultType="com.sp.app.model.Free">
-		SELECT replyId, freeId, fr.memberId, name, m2.nickname, content, regDate, profile_photo, parentNum, report
+		SELECT fr.replyId, fr.freeId, m2.memberId, m2.nickname, fr.content, fr.regDate, parentNum, fr.report
 		FROM freeReply fr
-		JOIN member2 m2 ON fr.member_id = m2.memberId AND block = 0
+		JOIN member2 m2 ON fr.memberId = m2.memberId
 		WHERE parentNum = #{parentNum}
+		AND fr.block = 0
 		<if test="userLevel lt 51">
-			AND ( showReply = 1 OR fr.memberId = #{memberId} )
+			AND ( report = 0 OR fr.memberId = #{memberId} )
 		</if>
 		ORDER BY replyId DESC
 	</select>
 	
-	<select id="replyAnswerCount" parameterType="map" resultType="Integer">
+	<select id="replyAnswerCount" parameterType="map" resultType="int">
 		SELECT NVL(COUNT(*), 0)
 		FROM freeReply
-		WHERE parentNum = #{parentNum} AND block = 0
-		<if test="userLevel lt 51">
-			AND ( report = 1 OR memberId = #{memberId} )
+		WHERE parentNum = #{parentNum} 
+		AND block = 0
+		<if test="userLevel &lt; 51">
+			AND ( report = 0 OR memberId = #{memberId} )
 		</if>
 	</select>
 	

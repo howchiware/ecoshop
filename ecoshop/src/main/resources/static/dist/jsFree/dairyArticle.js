@@ -27,7 +27,7 @@ function listPage(page) {
 // 댓글 등록
 $(function(){
 	$('button.btnSendReply').click(function(){
-		const $div = $(this).closest('div.reply-form');
+		const $div = $(this).closest('div.reply-form-body');
 
 		let content = $div.find('textarea').val().trim();
 		if(! content) {
@@ -37,7 +37,7 @@ $(function(){
 		
 		let url = CONTEXT_PATH + '/free/insertReply';
 		let params = {freeId: FREE_ID, content:content, parentNum:0}; 
-		
+
 		const fn = function(data){
 			$div.find('textarea').val('');
 			
@@ -78,15 +78,15 @@ $(function(){
 // 댓글 삭제
 $(function(){
 	$('div#listReply').on('click', '.deleteReply', function(){
-		if(! confirm('댓글을 삭제하시겠습니까 ? ')) {
+		if(! confirm('댓글을 삭제하시겠습니까?')) {
 		    return false;
 		}
 		
-		let replyNum = $(this).attr('data-replyNum');
+		let replyId = $(this).attr('data-replyId');
 		let page = $(this).attr('data-pageNo');
 		
 		let url = CONTEXT_PATH + '/free/deleteReply';
-		let params = {replyNum:replyNum, mode:'reply'};
+		let params = {replyId:replyId, mode:'reply'};
 		
 		const fn = function(data){
 			listPage(page);
@@ -99,7 +99,7 @@ $(function(){
 // 답글 리스트
 function listReplyAnswer(parentNum) {
 	let url = CONTEXT_PATH + '/free/listReplyAnswer';
-	let params = 'parentNum=' + parentNum;
+	let params = { parentNum: parentNum };
 	let selector = 'div#listReplyAnswer' + parentNum;
 	
 	const fn = function(data){
@@ -125,50 +125,56 @@ function countReplyAnswer(parentNum) {
 
 // 답글 버튼
 $(function(){
-	$('div#listReply').on('click', 'button.btnReplyAnswerLayout', function(){
-		const $trReplyAnswer = $(this).closest('tr').next();
-		
-		let isHidden = $trReplyAnswer.hasClass('d-none');
-		let replyNum = $(this).attr('data-replyNum');
-		
-		if(isHidden) {
-			listReplyAnswer(replyNum);
-			countReplyAnswer(replyNum);
-		}
-		
-		$trReplyAnswer.toggleClass('d-none');
-	});
-	
+    $('div#listReply').on('click', 'button.btnReplyAnswerLayout', function(){
+        const replyId = $(this).data('reply-id');
+		if (!replyId) {
+		        console.error("replyId가 존재하지 않습니다.");
+		        return false;
+		    }
+        const $replyItem = $(this).closest('.reply-item');
+        const $replyAnswer = $replyItem.find('.reply-answer');
+
+        let isHidden = $replyAnswer.hasClass('d-none');
+        
+        if (isHidden) {
+            listReplyAnswer(replyId);
+            countReplyAnswer(replyId);
+        }
+
+        $replyAnswer.toggleClass('d-none');
+    });
 });
+
 
 // 답글 등록
 $(function(){
 	$('div#listReply').on('click', 'button.btnSendReplyAnswer', function(){
-		let replyNum = $(this).attr('data-replyNum');
-		const $td = $(this).closest('td');
+		const replyId = $(this).data('reply-id');
+		const $form = $(this).closest('.answer-form');  
 		
-		let content = $td.find('textarea').val().trim();
-		if(! content) {
-			$td.find('textarea').focus();
+		let content = $form.find('textarea').val().trim();
+		if(!content) {
+			$form.find('textarea').focus();
 			return false;
 		}
 		
 		let url = CONTEXT_PATH + '/free/insertReply';
-		let params = {freeId: FREE_ID, content:content, parentNum:replyNum};
+		let params = {freeId: FREE_ID, content: content, parentNum: replyId};
 		
 		const fn = function(data){
-			$td.find('textarea').val('');
+			$form.find('textarea').val('');
 			
 			let state = data.state;
 			if(state === 'true') {
-				listReplyAnswer(replyNum);
-				countReplyAnswer(replyNum);
+				listReplyAnswer(replyId);
+				countReplyAnswer(replyId);
 			}
 		};
 		
 		ajaxRequest(url, 'post', params, 'json', fn);
 	});
 });
+
 
 // 답글 삭제
 $(function(){
@@ -177,11 +183,11 @@ $(function(){
 		    return false;
 		}
 		
-		let replyNum = $(this).attr('data-replyNum');
+		let replyId = $(this).attr('data-replyId');
 		let parentNum = $(this).attr('data-parentNum');
 		
 		let url = CONTEXT_PATH + '/free/deleteReply';
-		let params = {replyNum:replyNum, mode:'answer'};
+		let params = {replyId:replyId, mode:'answer'};
 		
 		const fn = function(data){
 			listReplyAnswer(parentNum);
@@ -191,3 +197,4 @@ $(function(){
 		ajaxRequest(url, 'post', params, 'json', fn);
 	});
 });
+

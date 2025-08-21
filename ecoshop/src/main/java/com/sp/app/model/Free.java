@@ -35,5 +35,8 @@ public class Free {
 	private Long parentNum;
 	private int replyBlock;
 	private int replyReport;
+	
+	private int replyCount;
+	private int answerCount;
 
 }

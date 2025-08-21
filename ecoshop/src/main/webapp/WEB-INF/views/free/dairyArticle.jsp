@@ -5,7 +5,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<title>ECOMORE - 일상이야기</title>
+<title>ECOMORE</title>
 <meta content="width=device-width, initial-scale=1" name="viewport" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -72,22 +72,23 @@
         </div>
     </div>
     
-    <div class="reply-session">
-		<div class="reply-form">
-			<div class="form-header">
-				<span class="small-title">댓글</span><span> - 타인을 비방하거나 개인정보를 유출하는 글의 게시를 삼가해 주세요.</span>
-			</div>
-			
-			<div class="mb-2">
-				<textarea class="form-control" name="content"></textarea>
-			</div>
-			<div class="text-end">
-				<button type="button" class="btn-default btn-md btnSendReply">댓글 등록</button>
-			</div>
-		</div>
-		<div id="listReply"></div>
-	</div>
-    
+    <div class="reply-session mt-5">
+    <div class="reply-form-card">
+        <div class="reply-form-header">
+            <h5 class="form-title">댓글 작성</h5>
+            <p class="form-guide">건전한 소통 문화를 함께 만들어주세요.</p>
+        </div>
+        <div class="reply-form-body">
+            <textarea class="form-control" name="content" rows="4" placeholder="댓글을 입력하세요..."></textarea>
+            <div class="text-end mt-2">
+                <button type="button" class="btn btn-primary btn-sm btnSendReply">댓글 등록</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="listReply" class="mt-4"></div>
+</div>
+
 </main>
 
     <footer>
