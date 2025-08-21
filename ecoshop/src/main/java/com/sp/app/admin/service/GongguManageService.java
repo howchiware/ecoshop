@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.sp.app.admin.model.GongguManage;
-import com.sp.app.admin.model.CategoryManage;
 import com.sp.app.admin.model.GongguDeliveryRefundInfo;
 
 public interface GongguManageService {
@@ -18,7 +17,9 @@ public interface GongguManageService {
 	public GongguManage findById(long gongguProductId);
 	
 	public List<GongguManage> listProduct(Map<String, Object> map);
-	public CategoryManage findByCategory(long categoryId);
+	
+	public GongguManage findByCategory(long categoryId);
+	public List<GongguManage> listCategory();
 	
 	// 배송정책
 	public GongguDeliveryRefundInfo listDeliveryRefundInfo();

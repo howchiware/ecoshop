@@ -7,7 +7,6 @@ import java.util.Objects;
 import org.springframework.stereotype.Service;
 
 import com.sp.app.admin.mapper.GongguManageMapper;
-import com.sp.app.admin.model.CategoryManage;
 import com.sp.app.admin.model.GongguDeliveryRefundInfo;
 import com.sp.app.admin.model.GongguManage;
 import com.sp.app.common.StorageService;
@@ -32,15 +31,23 @@ public class GongguManageServiceImpl implements GongguManageService {
 		}
 		return result;
 	}
+	
+	public String removeHtmlTags(String content) {
+	    return content.replaceAll("<[^>]*>", ""); 
+	}
 
 	@Override
 	public void insertGongguProduct(GongguManage dto, String uploadPath) throws Exception {
 		try {
 			dto.setStartDate(dto.getSday() + " " + dto.getStime() + ":00");
 			dto.setEndDate(dto.getEday() + " " + dto.getEtime() + ":00");
-			
+			dto.setCategoryId(dto.getCategoryId());
+			dto.setLimitCount(dto.getLimitCount());
 			String filename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
 			dto.setGongguThumbnail(filename);
+			String cleanedContent = removeHtmlTags(dto.getContent());
+		    dto.setContent(cleanedContent);
+
 			
 			gongguManageMapper.insertProduct(dto);
 		} catch (Exception e) {
@@ -52,27 +59,34 @@ public class GongguManageServiceImpl implements GongguManageService {
 
 	@Override
 	public void updateGongguProduct(GongguManage dto, String uploadPath) throws Exception {
-		try {
-			dto.setStartDate(dto.getSday() + " " + dto.getStime() + ":00");
-			dto.setEndDate(dto.getEday() + " " + dto.getEtime() + ":00");
-			
-			String filename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
-			if (filename != null) {
-				// 이전 파일 지우기
-				if (dto.getGongguThumbnail().length() != 0) {
-					deleteUploadFile(uploadPath, dto.getGongguThumbnail());
-				}
+	    try {
+	        dto.setStartDate(dto.getSday() + " " + dto.getStime() + ":00");
+	        dto.setEndDate(dto.getEday() + " " + dto.getEtime() + ":00");
+	        dto.setCategoryId(dto.getCategoryId());
+	        dto.setLimitCount(dto.getLimitCount());
+	        String cleanedContent = removeHtmlTags(dto.getContent());
+	        dto.setContent(cleanedContent);
 
-				dto.setGongguThumbnail(filename);
-			}			
-			
-			gongguManageMapper.updateProduct(dto);
-		} catch (Exception e) {
-			log.info("updateProduct : ", e);
-			
-			throw e;
-		}
+	        String filename = null;
+	        if (dto.getSelectFile() != null && !dto.getSelectFile().isEmpty()) {
+	            filename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
+	            if (filename != null) {
+	                if (dto.getGongguThumbnail().length() != 0) {
+	                    deleteUploadFile(uploadPath, dto.getGongguThumbnail());
+	                }
+	                dto.setGongguThumbnail(filename); 
+	            }
+	        }
+
+	        gongguManageMapper.updateProduct(dto);
+
+	    } catch (Exception e) {
+	    	log.info("updateProduct : ", e);
+	    	
+	        throw e;
+	    }
 	}
+
 	
 	@Override
 	public void deleteGongguProduct(long gongguProductId, String pathString) throws Exception {
@@ -191,9 +205,22 @@ public class GongguManageServiceImpl implements GongguManageService {
 		}
 	}
 
+
 	@Override
-	public CategoryManage findByCategory(long categoryId) {
-CategoryManage dto = null;
+	public List<GongguManage> listCategory() {
+		List<GongguManage> list = null;
+		
+		try {
+			list = gongguManageMapper.listCategory();
+		} catch (Exception e) {
+			log.info("listCategory : ", e);
+		}
+		return list;
+	}
+
+	@Override
+	public GongguManage findByCategory(long categoryId) {
+		GongguManage dto = null;
 		
 		try {
 			dto = gongguManageMapper.findByCategory(categoryId);
@@ -203,6 +230,4 @@ CategoryManage dto = null;
 		
 		return dto;
 	}
-
-
 }

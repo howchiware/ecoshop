@@ -3,18 +3,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.admin.mapper.GongguManageMapper">
 	<!-- 공동구매 상품등록 --> 
-	<select id="findByCategory" parameterType="Long" resultType="com.sp.app.admin.model.CategoryManage">
+	<select id="findByCategory" parameterType="Long" resultType="com.sp.app.admin.model.GongguManage">
 		SELECT categoryId, categoryName, enabled
 		FROM productCategory
 		WHERE categoryId = #{categoryId}
 	</select>
+	
+	<select id="listCategory" resultType="com.sp.app.admin.model.GongguManage">
+		SELECT categoryId, categoryName
+		FROM productCategory
+		ORDER BY orderNo ASC
+	</select>
 
 	<insert id="insertProduct" parameterType="com.sp.app.admin.model.GongguManage">
 		INSERT INTO gongguProduct(gongguProductId, gongguProductName, content, gongguThumbnail, 
-		        startDate, endDate, productShow, regDate)
+		        startDate, endDate, productShow, regDate, categoryId, limitCount)
 		VALUES (gongguProduct_seq.NEXTVAL, #{gongguProductName}, #{content}, #{gongguThumbnail}, 
 				TO_DATE(#{startDate}, 'YYYY-MM-DD HH24:MI:SS'), 
-				TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'), #{productShow}, SYSDATE)
+				TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'), #{productShow}, SYSDATE, #{categoryId}, #{limitCount})
 	</insert>
 	
 	<update id="updateProduct" parameterType="com.sp.app.admin.model.GongguManage">
@@ -22,7 +28,7 @@
 			gongguThumbnail = #{gongguThumbnail}, 
 			startDate = TO_DATE(#{startDate}, 'YYYY-MM-DD HH24:MI:SS'),
 			endDate = TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'),
-			productShow = #{productShow}
+			productShow = #{productShow}, categoryId = #{categoryId}, limitCount = #{limitCount}
 		WHERE gongguProductId = #{gongguProductId}
 	</update>
 	
@@ -32,14 +38,12 @@
 	</delete>
 	
 	<select id="findById" parameterType="Long" resultType="com.sp.app.admin.model.GongguManage">
-		SELECT g.gongguProductId, g.categoryId, c.categoryName, p.productId, p.productCode, p.productName,
-			g.gongguProductName, g.originalPrice, g.gongguPrice, g.gongguThumbnail, g.regDate,
-			g.productShow, g.content, g.detailInfo, g.updateDate, NVL(g.limitCount, 0) limitCount
-		FROM gongguProduct g
-		JOIN gongguPackage k ON g.gongguProductId = k.gongguProductId
-		JOIN product p ON k.productCode = p.productCode
-		JOIN productCategory c ON g.categoryId = c.categoryId
-		WHERE g.gongguProductId = #{gongguProductId}
+		SELECT gongguProductId, gongguProductName, content, gongguThumbnail, 
+		        TO_CHAR(startDate, 'YYYY-MM-DD HH24:MI') startDate, 
+		        TO_CHAR(endDate, 'YYYY-MM-DD HH24:MI') endDate,
+		        productShow, regDate
+		FROM gongguProduct
+		WHERE gongguProductId = #{gongguProductId}
 	</select>
 	
 	  
@@ -171,9 +175,4 @@
 	    DELETE FROM deliveryFee
 	</delete>
 	
-	<select id="listCategory" resultType="com.sp.app.admin.model.CategoryManage">
-		SELECT categoryId, categoryName
-		FROM productCategory
-		ORDER BY orderNo ASC
-	</select>
 </mapper>

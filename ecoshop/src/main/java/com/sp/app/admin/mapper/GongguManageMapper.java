@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.sp.app.admin.model.CategoryManage;
 import com.sp.app.admin.model.GongguDeliveryRefundInfo;
 import com.sp.app.admin.model.GongguManage;
 import com.sp.app.admin.model.GongguPackage;
@@ -23,7 +22,8 @@ public interface GongguManageMapper {
 	public GongguManage findById(long productId);
 	
 	public void insertGongguPackage(GongguPackage dto) throws SQLException;
-	public CategoryManage findByCategory(long categoryId);
+	public GongguManage findByCategory(long categoryId);
+	public List<GongguManage> listCategory();
 	
 	// 배송정책
 	public GongguDeliveryRefundInfo listDeliveryRefundInfo();

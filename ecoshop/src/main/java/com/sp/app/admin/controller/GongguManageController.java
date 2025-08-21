@@ -1,10 +1,12 @@
 package com.sp.app.admin.controller;
 
+import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,12 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.sp.app.admin.model.CategoryManage;
 import com.sp.app.admin.model.GongguDeliveryRefundInfo;
 import com.sp.app.admin.model.GongguInquiryManage;
 import com.sp.app.admin.model.GongguManage;
 import com.sp.app.admin.model.GongguReviewManage;
-import com.sp.app.admin.service.CategoryManageService;
 import com.sp.app.admin.service.GongguManageService;
 import com.sp.app.admin.service.GongguReviewInquiryManageService;
 import com.sp.app.common.PaginateUtil;
@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GongguManageController {
     private final GongguManageService gongguManageService;
     private final StorageService storageService;
-    private final CategoryManageService categoryManageService;
+
     private final PaginateUtil paginateUtil;
     private final GongguReviewInquiryManageService gongguReviewInquiryManageService;
     private String uploadPath;
@@ -50,18 +50,31 @@ public class GongguManageController {
     
     @GetMapping("write")
  	public String gongguProductAddForm(Model model) {
+    	try {
+    	List<GongguManage> listCategory = gongguManageService.listCategory();
 
 		model.addAttribute("mode", "write");
-
+		model.addAttribute("listCategory", listCategory);
+		
+    	} catch (Exception e) {
+			log.info("writeForm : ", e);
+		}
+		
  		return "admin/gonggu/write";
  	}
     
     @PostMapping("write")
-    public String writeSubmit(GongguManage dto, Model model) throws Exception {
+    public String writeSubmit(GongguManage dto,
+    		@RequestParam(name = "categoryId") long categoryId,
+    		@RequestParam(name = "limitCount") int limitCount, 
+    		Model model) throws Exception {
     	try {
+    		dto.setCategoryId(categoryId);
+    		dto.setLimitCount(limitCount);
 			gongguManageService.insertGongguProduct(dto, uploadPath);
 		} catch (Exception e) {
-			log.info("productWriteSubmit : ",e);;
+			log.info("productWriteSubmit : ",e);
+			return "admin/gonggu/write";
 		}
     	
     	return "redirect:/admin/gonggu/listProduct";
@@ -69,6 +82,8 @@ public class GongguManageController {
  	
     @GetMapping("listProduct")
  	public String listProduct(
+ 			@RequestParam(name = "categoryId", defaultValue = "0") long categoryId,
+ 			@RequestParam(name = "productShow", defaultValue = "1") int productShow,
  			@RequestParam(name = "state", defaultValue = "1") int state,
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
 			@RequestParam(name = "kwd", defaultValue = "") String kwd,		
@@ -83,15 +98,17 @@ public class GongguManageController {
 			
 			kwd = URLDecoder.decode(kwd, "UTF-8");
 			
-			Map<String, Object> map = new HashMap<String, Object>();
+			GongguManage listCategory = gongguManageService.findByCategory(categoryId); 
 			
+			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("state", state);
 			map.put("schType", schType);
 			map.put("kwd", kwd);
+			map.put("categoryId", categoryId);
+			map.put("productShow", productShow);
 			
 			dataCount = gongguManageService.dataCountGongguProduct(map);
 			total_page = paginateUtil.pageCount(dataCount, size);
-			
 			current_page = Math.min(current_page, total_page);
 			
 			int offset = (current_page - 1) * size;
@@ -123,14 +140,15 @@ public class GongguManageController {
 			
 			String paging = paginateUtil.paging(current_page, total_page, listUrl);
 
+			model.addAttribute("listCategory", listCategory);
 			model.addAttribute("listProduct", listProduct);
 			model.addAttribute("dataCount", dataCount);
 			model.addAttribute("state", state);
 			model.addAttribute("schType", schType);
 			model.addAttribute("kwd", kwd);
-			
+			model.addAttribute("productShow", productShow);
+			model.addAttribute("categoryId", categoryId);
 			model.addAttribute("articleUrl", articleUrl);
-			
 			model.addAttribute("page", current_page);
 			model.addAttribute("size", size);
 			model.addAttribute("total_page", total_page);
@@ -140,11 +158,124 @@ public class GongguManageController {
 			log.info("listProduct : ", e);
 		}
 		
-		return "admin/gonggu/display";
+		return "admin/gonggu/list";
 	}
     
     
- 	
+    
+    
+    
+    
+    @GetMapping("article")
+	public String article(
+			@RequestParam(name = "gongguProductId") long gongguProductId,
+			@RequestParam(name = "state", defaultValue = "1") int state,
+			@RequestParam(name = "schType", defaultValue = "all") String schType,
+			@RequestParam(name = "kwd", defaultValue = "") String kwd,
+			@RequestParam(name = "page") String page,
+			Model model) throws Exception {
+		
+		String query = "page=" + page;
+		try {
+			kwd = URLDecoder.decode(kwd, "utf-8");
+
+			if(state != 1) {
+				query += "&state=" + state;
+			}
+			if (! kwd.isBlank()) {
+				query += "&schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "UTF-8");
+			}
+			
+			GongguManage dto = Objects.requireNonNull(gongguManageService.findById(gongguProductId));
+			
+			model.addAttribute("dto", dto);
+			model.addAttribute("query", query);
+			model.addAttribute("page", page);
+			
+			return "admin/gonggu/article";
+			
+		} catch (NullPointerException e) {
+			log.info("article : ", e);
+		} catch (Exception e) {
+			log.info("article : ", e);
+		}
+		
+		return "redirect:/admin/gonggu/listProduct?" + query;
+	}
+	
+	@GetMapping("update")
+	public String updateForm(
+			@RequestParam(name = "gongguProductId") long gongguProductId,
+			@RequestParam(name = "categoryId", defaultValue = "0") long categoryId,
+			@RequestParam(name = "page") String page,
+			Model model) throws Exception {
+		
+		try {
+			List<GongguManage> listCategory = gongguManageService.listCategory();
+
+			GongguManage dto = Objects.requireNonNull(gongguManageService.findById(gongguProductId));
+			
+			model.addAttribute("dto", dto);
+			model.addAttribute("page", page);	
+			model.addAttribute("categoryId", categoryId);
+			model.addAttribute("mode", "update");
+			model.addAttribute("listCategory", listCategory);
+			
+			return "admin/gonggu/write";
+			
+		} catch (NullPointerException e) {
+			log.error("updateForm : ", e);
+		} catch (Exception e) {
+			log.error("updateForm : ", e);
+		}
+		
+		return "redirect:/admin/gonggu/listProduct?page=" + page;
+	}
+
+	@PostMapping("update")
+	public String updateSubmit(
+			GongguManage dto,
+			@RequestParam(name = "page") String page,
+			Model model) throws Exception {
+		
+		try {
+			gongguManageService.updateGongguProduct(dto, uploadPath);
+		} catch (Exception e) {
+		}
+		
+		return "redirect:/admin/gonggu/listProduct?page=" + page;
+	}
+	
+	@GetMapping("delete")
+	public String delete(
+			@RequestParam(name = "state", defaultValue = "1") int state,
+			@RequestParam(name = "gongguProductId") long gongguProductId,
+			@RequestParam(name = "page") String page,
+			@RequestParam(name = "gongguThumbnail") String gongguThumbnail,
+			@RequestParam(name = "schType", defaultValue = "all") String schType,
+			@RequestParam(name = "kwd", defaultValue = "") String kwd) throws Exception {
+
+		String query = "page=" + page;
+		try {
+			kwd = URLDecoder.decode(kwd, "utf-8");
+			if(state != 1) {
+				query += "&state=" + state;
+			}
+			if (! kwd.isBlank()) {
+				query += "&schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "UTF-8");
+			}
+			
+			String pathString = uploadPath + File.separator + gongguThumbnail;
+			gongguManageService.deleteGongguProduct(gongguProductId, pathString);
+			
+		} catch (Exception e) {
+			log.error("delete : ", e);
+		}
+
+		return "redirect:/admin/gonggu/listProduct?" + query;
+	}	
+    
+	
     @GetMapping("productReview")
     public String getProductReview(@RequestParam(value="memberId", required = false) Long memberId, Model model) {
     	
@@ -252,14 +383,6 @@ public class GongguManageController {
     	}
     	
     	return "redirect:/admin/gonggu/gongguReview";
-    }
-
-    @GetMapping("category")
-    public String category(@RequestParam(value="categoryId", required = false) Long categoryId, Model model) throws Exception {
-    	List<CategoryManage> categoryList = categoryManageService.listCategory();
-    	
-    	model.addAttribute("categoryList", categoryList);
-    	return "admin/category/category";
     }
 
     

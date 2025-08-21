@@ -13,7 +13,6 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/board.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css_gonggu/productAdd.css" type="text/css">
 
 <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/quill-resize-module@2.0.4/dist/resize.css" rel="stylesheet">
@@ -34,6 +33,18 @@
 				<div class="outside">
 					<form name="gongguProductForm" method="post" enctype="multipart/form-data">
 						<table class="table write-form">
+							<tr>
+								<td class="col-md-2 bg-light">카테고리</td>
+								<td>
+									<select name="categoryId" id="categoryId">
+										<option value="">카테고리 선택</option>
+											<c:forEach var="vo" items="${listCategory}">
+												<option value="${vo.categoryId}" ${categoryId==vo.categoryId?"selected":""}>${vo.categoryName}</option>
+											</c:forEach>
+									</select>	
+												
+								</td>
+							</tr>
 							<tr>
 								<td class="col-md-2 bg-light">제 목</td>
 								<td><input type="text" name="gongguProductName" class="form-control"
@@ -71,7 +82,14 @@
 									</div>
 								</td>
 							</tr>
-
+							
+							<tr>
+								<td class="col-md-2 bg-light">재고</td>
+								<td>
+									<input type="number" name="limitCount" class="form-control" value="${dto.limitCount}">
+								</td>
+							</tr>
+							
 							<tr>
 								<td class="col-md-2 bg-light">출력여부</td>
 								<td>
@@ -119,8 +137,8 @@
 							<c:if test="${mode=='update'}">
 								<input type="hidden" name="gongguProductId"
 									value="${dto.gongguProductId}">
-								<input type="hidden" name="imageFilename"
-									value="${dto.imageFilename}">
+								<input type="hidden" name="gongguThumbnail"
+									value="${dto.gongguThumbnail}">
 								<input type="hidden" name="page" value="${page}">
 							</c:if>
 						</div>
@@ -145,7 +163,7 @@ window.addEventListener('DOMContentLoaded', evt => {
 	const imageViewer = document.querySelector('form .image-viewer');
 	const inputEL = document.querySelector('form input[name=selectFile]');
 	
-	let uploadImage = '${dto.imageFilename}';
+	let uploadImage = '${dto.gongguThumbnail}';
 	let img;
 	if( uploadImage ) { // 수정인 경우
 		img = '${pageContext.request.contextPath}/uploads/gonggu/' + uploadImage;
