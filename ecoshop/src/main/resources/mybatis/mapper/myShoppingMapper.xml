@@ -2,124 +2,13 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.mapper.MyShoppingMapper">
-	<!-- 장바구니 등록 -->
-	<insert id="insertCart" parameterType="com.sp.app.model.ProductOrder">
-		INSERT INTO cart(cartNum, member_id, productNum, stockNum, qty, reg_date)
-		VALUES (cart_seq.NEXTVAL, #{member_id}, #{productNum}, #{stockNum}, #{qty}, SYSDATE)
-	</insert>
-	
-	<!-- 장바구니 수정 -->
-	<update id="updateCart" parameterType="com.sp.app.model.ProductOrder">
-		UPDATE cart SET qty = #{qty}, reg_date = SYSDATE
-		WHERE stockNum = #{stockNum} AND member_id = #{member_id}
-	</update>
 
-	<select id="findByCartId" parameterType="map" resultType="com.sp.app.model.ProductOrder">
-		SELECT cartNum, member_id, productNum, stockNum, qty, reg_date
-		FROM cart
-		WHERE stockNum = #{stockNum} AND member_id = #{member_id}
-	</select>
-	
-	<!-- 유저의 장바구니 리스트 -->	
-	<select id="listCart" resultType="com.sp.app.model.ProductOrder" parameterType="Long">
-    	SELECT ct.cartNum, ct.member_id, ct.stockNum, ct.qty, ct.reg_date,
-    		ps.productNum, ps.detailNum, ps.detailNum2, ps.totalStock,
-    		p.productName, p.price, p.savedMoney, p.discountRate, p.delivery, p.thumbnail, p.optionCount,
-    		po1.optionNum, po1.optionName,
-    		po2.optionNum optionNum2, po2.optionName optionName2,
-    		d1.detailNum, d1.optionValue,
-    		d2.detailNum detailNum2, d2.optionValue optionValue2
-    	FROM cart ct
-    	JOIN productStock ps ON ct.stockNum = ps.stockNum 
-    	JOIN product p ON ps.productNum = p.productNum
-    	LEFT OUTER JOIN (
-            SELECT productNum, optionNum, optionName, parentOption 
-            FROM productOption 
-            WHERE parentOption IS NULL
-    	) po1 ON ps.productNum = po1.productNum
-		LEFT OUTER JOIN (
-            SELECT optionNum, optionName, parentOption
-            FROM productOption
-			WHERE parentOption IS NOT NULL
-        ) po2 ON po1.optionNum = po2.parentOption
-    	LEFT OUTER JOIN optionDetail d1 ON ps.detailNum = d1.detailNum
-    	LEFT OUTER JOIN optionDetail d2 ON ps.detailNum2 = d2.detailNum
-		WHERE ct.member_id = #{member_id}
-		ORDER BY cartNum DESC
-	</select>
-	
-	<delete id="deleteCart" parameterType="map">
-		DELETE FROM cart
-		WHERE member_id = #{member_id} 
-		<if test="gubun == 'item' ">
-			AND stockNum = #{stockNum}
-		</if>
-		<if test="gubun == 'list' ">
-			AND stockNum IN
-			<foreach collection="list" item="stockNum" index="index"
-				open="(" separator="," close=")">
-				#{stockNum}
-			</foreach>
-		</if>
-	</delete>
-
-	<!-- 장바구니 등록 후 15일이 지난 내역 삭제 -->
-	<delete id="deleteCartExpiration">
-		DELETE FROM cart
-		WHERE reg_date + 15 &lt; SYSDATE
-	</delete>
-
-	<!-- 찜 등록 -->
-	<insert id="insertLike" parameterType="map">
-		INSERT INTO wish(wishNum, member_id, productNum, wish_date)
-		VALUES (wish_seq.NEXTVAL, #{member_id}, #{productNum}, SYSDATE)
-	</insert>
-	
-	<!-- 30개를 초과하는 경우 오래된 찜 삭제 -->	
-    <delete id="deleteOldestLikes" parameterType="Long">
-        DELETE FROM wish
-        WHERE wishNum IN (
-            SELECT wishNum
-            FROM (
-                SELECT wishNum, ROW_NUMBER() OVER (ORDER BY wishNum DESC) as rn
-                FROM wish
-                WHERE member_id = #{member_id}
-            )
-            WHERE rn &gt; 30
-        )
-    </delete>
-
-	<!-- 유저의 찜리스트 -->
-	<select id="listLike" resultType="com.sp.app.model.ProductLike" parameterType="Long">
-    	SELECT w.wishNum, w.member_id, w.productNum, wish_date,
-    		p.productName, p.price, p.savedMoney, p.discountRate, p.delivery, p.thumbnail
-    	FROM wish w
-    	JOIN product p ON w.productNum = p.productNum
-		WHERE w.member_id = #{member_id}
-		ORDER BY wishNum DESC
-	</select>
-
-	<select id="findByLikeId" resultType="com.sp.app.model.ProductLike" parameterType="map">
-    	SELECT wishNum, member_id, productNum, wish_date
-    	FROM wish
-		WHERE member_id = #{member_id} AND  productNum = #{productNum}
-		ORDER BY wishNum DESC
-	</select>
-	    
-	<!-- 찜 삭제 -->
-	<delete id="deleteLike" parameterType="map">
-		DELETE FROM wish
-		WHERE member_id = #{member_id} 
-		<if test="productNum != null">
-			AND productNum = #{productNum}		
-		</if>
-	</delete>
 
 	<!-- 데스터네이션(배송지) 등록 -->
 	<insert id="insertDestination" parameterType="com.sp.app.model.Destination">
-		INSERT INTO myDestination(num, member_id, addressName, recipientName, defaultDest, 
+		INSERT INTO myDestination(myDestinationId, memberId, addressName, recipientName, defaultDest, 
 			tel, zip, addr1, addr2, pickup, accessInfo, passcode, accessSave)
-		VALUES (myDestinationId_seq.NEXTVAL, #{member_id}, #{addressName, jdbcType=VARCHAR}, 
+		VALUES (myDestinationId_seq.NEXTVAL, #{memberId}, #{addressName, jdbcType=VARCHAR}, 
 			#{recipientName}, #{defaultDest},
 			#{tel}, #{zip}, #{addr1}, #{addr2}, 
 			#{pickup, jdbcType=VARCHAR}, #{accessInfo, jdbcType=VARCHAR}, 
@@ -165,31 +54,31 @@
 			tel = #{tel}, zip = #{zip}, addr1 = #{addr1}, addr2 = #{addr2},
 			pickup = #{pickup, jdbcType=VARCHAR}, accessInfo = #{accessInfo, jdbcType=VARCHAR}, 
 			passcode = #{passcode, jdbcType=VARCHAR} 
-		WHERE num = #{num} AND member_id = #{member_id}
+		WHERE myDestinationId = #{myDestinationId} AND memberId = #{memberId}
 	</update>
 	
 	<update id="updateDefaultDestination" parameterType="map">
 		UPDATE myDestination SET defaultDest = #{defaultDest}
-		WHERE member_id = #{member_id}
-		<if test="num != null">
-			AND num = #{num}
+		WHERE memberId = #{memberId}
+		<if test="myDestinationId != null">
+			AND myDestinationId = #{myDestinationId}
 		</if>
 	</update>
 
 	<delete id="deleteDestination" parameterType="map">
 		DELETE FROM myDestination
-		WHERE member_id = #{member_id} AND num = #{num}
+		WHERE memberId = #{memberId} AND myDestinationId = #{myDestinationId}
 	</delete>
 
 	<!-- 10개를 초과하는 경우 오래된 배송지 삭제 -->	
     <delete id="deleteOldestDestination" parameterType="Long">
         DELETE FROM myDestination
-        WHERE num IN (
-            SELECT num
+        WHERE myDestinationId IN (
+            SELECT myDestinationId
             FROM (
-                SELECT num, ROW_NUMBER() OVER (ORDER BY defaultDest DESC, num DESC) as rn
+                SELECT myDestinationId, ROW_NUMBER() OVER (ORDER BY defaultDest DESC, myDestinationId DESC) as rn
                 FROM myDestination
-                WHERE member_id = #{member_id}
+                WHERE memberId = #{memberId}
             )
             WHERE rn &gt; 10
         )
