@@ -33,6 +33,7 @@ body {
   box-sizing: border-box;
   min-height: calc(100vh - 60px);
   background-color: #f9f9f9;
+  font-size: 15px;
 }
 
 .outside {
@@ -67,7 +68,6 @@ body {
   margin: 0 2px;
 }
 
-/* 공통 버튼 스타일 */
 .btn-manage {
   background: #fff;
   border: 1px solid #000;
@@ -104,10 +104,10 @@ body {
  
       <!-- 카테고리 목록 -->
       <div class="outside">
-      <table class="table table-bordered align-middle">
+      <table class="table table-sm align-middle">
         <thead class="table-light">
           <tr>
-            <th style="width:10%">번호</th>
+            <th style="width:7%">번호</th>
             <th>카테고리명</th>
             <th style="width:20%">관리</th>
           </tr>
@@ -156,13 +156,12 @@ body {
     </div>
   </main>
 
-  <!-- 카테고리 등록/수정 모달 -->
   <div class="modal fade" id="categoryModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <form method="post" action="${ctx}/admin/workshop/category/write">
           <div class="modal-header">
-            <h5 class="modal-title fw-bold"><i class="bi bi-tags"></i> 카테고리 등록</h5>
+            <h5 class="modal-title fw-bold"> 카테고리 등록</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
@@ -199,7 +198,7 @@ body {
       categoryModal.querySelector('#categoryId').value = categoryId;
       categoryModal.querySelector('#categoryName').value = categoryName;
     } else {
-      modalTitle.innerHTML = '<i class="bi bi-tags"></i> 카테고리 등록';
+      modalTitle.innerHTML = '카테고리 등록';
       form.action = '${ctx}/admin/workshop/category/write';
       form.reset();
       categoryModal.querySelector('#categoryId').value = '';

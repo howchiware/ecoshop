@@ -16,9 +16,34 @@
 	</c:otherwise>
 </c:choose>
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/dist/css/admin.css">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
+
+<style type="text/css">
+.btn-primary {
+	background: #fff;
+	border: 1px solid #000;
+	border-radius: 4px;
+	padding: 3px 10px;
+	color: #000;
+	font-size: 0.9rem;
+	transition: background 0.2s, color 0.2s;
+	cursor: pointer;
+	height: 30px;
+	width: 51px;
+}
+
+.outside {
+	background: #fff;
+	border: 1px solid #dee2e6;
+	border-radius: 8px;
+	padding: 20px;
+	margin-bottom: 20px;
+}
+</style>
 </head>
 <body>
 
@@ -55,7 +80,7 @@
 				</c:if>
 
 				<!-- 기본 정보 -->
-				<h5 class="mt-4">| 기본 정보</h5>
+				<h5 class="mt-4">기본 정보</h5>
 				<div class="mb-3 row">
 					<label class="col-sm-2 col-form-label">워크샵명</label>
 					<div class="col-sm-6">
@@ -93,7 +118,7 @@
 				</div>
 
 				<!-- 운영 정보 -->
-				<h5 class="mt-4">| 운영 정보</h5>
+				<h5 class="mt-4">운영 정보</h5>
 
 				<div class="mb-3 row">
 					<label class="col-sm-2 col-form-label">정원</label>
@@ -146,7 +171,7 @@
 				</div>
 
 				<!-- 콘텐츠 -->
-				<h5 class="mt-4">| 콘텐츠</h5>
+				<h5 class="mt-4">콘텐츠</h5>
 				<div class="mb-3 row">
 					<label class="col-sm-2 col-form-label">대표 사진</label>
 					<div class="col-sm-6">
@@ -181,14 +206,14 @@
 					<div class="col-sm-10 offset-sm-2">
 						<c:choose>
 							<c:when test="${mode eq 'update'}">
-								<button type="submit" class="btn btn-primary">수정</button>
+								<button type="submit" class="btn-primary">수정</button>
 							</c:when>
 							<c:otherwise>
-								<button type="submit" class="btn btn-primary">등록</button>
+								<button type="submit" class="btn-primary">등록</button>
 							</c:otherwise>
 						</c:choose>
-						<a href="${ctx}/admin/workshop/list?page=${page}"
-							class="btn btn-secondary">취소</a>
+						<button type="button" class="btn-primary"
+							onclick="window.location.href='${ctx}/admin/workshop/list?page=${page}'">취소</button>
 					</div>
 				</div>
 			</form>

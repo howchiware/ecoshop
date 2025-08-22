@@ -35,6 +35,15 @@ body {
 	padding: 20px;
 	min-height: calc(100vh - 60px);
 	background-color: #f9f9f9;
+	font-size: 15px;
+}
+
+select.form-control {
+	font-size: 15px;
+}
+
+select.form-select {
+	font-size: 15px;
 }
 
 /* 공통 카드 */
@@ -119,11 +128,11 @@ body {
 				</div>
 			</form>
 			
-				<table class="table table-bordered align-middle">
-					<thead>
+				<table class="table table-sm align-middle">
+					<thead class="table-light">
 						<tr>
-							<th style="width: 5%">번호</th>
-							<th style="width: 25%">질문</th>
+							<th style="width: 7%">번호</th>
+							<th style="width: 30%">질문</th>
 							<th>답변</th>
 							<th style="width: 15%">관리</th>
 						</tr>
