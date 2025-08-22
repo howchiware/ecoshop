@@ -70,25 +70,23 @@
 					</div>
 					<table class="table table-hover board-list">
 						<thead>
-							<tr>
-								<th width="110">상품코드</th>
-								<th>상품명</th>
-								<th width="110">가격</th>
-								<th width="80">변경</th>
-							</tr>
+						    <tr>
+						        <th width="110">상품코드</th>
+						        <th>상품명</th>
+						        <th width="80">가격</th>
+						        <th width="80">삭제</th> </tr>
 						</thead>
 						<tbody class="product-list">
-							<c:forEach var="vo" items="${productList}">
-								<tr>
-									<td data-productCode="${vo.productCode}">${vo.productCode}</td>
-									<td class="left" data-productName="${vo.productName}">${vo.productName}</td>
-									<td data-price="${vo.price}">${vo.price}</td>
-									<td>
-										<button type="button" class="btn-default btn-sm btn-delete"
-											title="삭제" data-packageNum="${vo.packageNum}">삭제</button>
-									</td>
-								</tr>
-							</c:forEach>
+						    <c:forEach var="vo" items="${productList}">
+						        <tr>
+						            <td data-productCode="${vo.productCode}">${vo.productCode}</td>
+						            <td class="left" data-productName="${vo.productName}">${vo.productName}</td>
+						            <td><fmt:formatNumber value="${vo.price}" pattern="#,###원" /></td> <td>
+						                <button type="button" class="btn-default btn-sm btn-delete"
+						                    title="삭제" data-packageNum="${vo.packageNum}">삭제</button>
+						            </td>
+						        </tr>
+						    </c:forEach>
 						</tbody>
 					</table>
 
@@ -101,7 +99,7 @@
 
 	<div class="modal fade" id="prodectSearchModal" tabindex="-1"
 		aria-labelledby="prodectSearchModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="prodectSearchModalLabel">상품 검색</h5>
@@ -124,11 +122,11 @@
 					<hr>
 					<table class="table table-hover board-list">
 						<thead>
-							<tr>
-								<th width="110">상품코드</th>
-								<th>상품명</th>
-								<th width="80">가격</th>
-							</tr>
+						    <tr>
+						        <th width="110">상품코드</th>
+						        <th>상품명</th>
+						        <th width="80">가격</th> <th width="80">등록</th> 
+						   </tr>
 						</thead>
 						<tbody class="product-search-list">
 						</tbody>
@@ -205,10 +203,12 @@
 					            <tr>
 					                <td>\${productCode}</td>
 					                <td class="left">\${productName}</td>
+					                <td>\${price}</td>
 					                <td>
 					                    <button type="button" class="btn btn-default btn-sm btn-direct-register" 
 					                            data-productCode="\${productCode}" 
-					                            data-productName="\${productName}">등록</button>
+					                            data-productName="\${productName}"
+					                            data-price="\${price}">등록</button>
 					                </td>
 					            </tr>
 					        `;
