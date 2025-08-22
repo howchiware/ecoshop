@@ -10,8 +10,13 @@ import com.sp.app.model.ProductDeliveryRefundInfo;
 
 @Mapper
 public interface ProductMapper {
-	public List<Product> listProductByCategoryId(long categoryId) throws Exception;
+	public int dataCount(Map<String, Object> map);
+	
+	public List<Product> listProductByCategoryId(Map<String, Object> dto) throws Exception;
+	// public List<Product> listProductByCategoryId(long categoryId) throws Exception;
+	public List<Product> listAllProducts() throws Exception;
 	public Product findById(long productId) throws Exception;
+	public Product findByCategoryId(long categoryId);
 	
 	public List<Product> listProductPhoto(long productId);
 	

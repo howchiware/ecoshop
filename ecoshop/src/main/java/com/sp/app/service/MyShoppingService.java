@@ -13,10 +13,10 @@ public interface MyShoppingService {
 	public List<ProductOrder> listCart(Long member_id);
 	public void deleteCart(Map<String, Object> map) throws Exception;
 	
-	public void insertLike(Map<String, Object> map) throws SQLException;
-	public List<ProductLike> listLike(Long member_id);
-	public ProductLike findByLikeId(Map<String, Object> map);
-	public void deleteLike(Map<String, Object> map) throws Exception;
+	public void insertProductLike(Map<String, Object> map) throws SQLException;
+	public List<ProductLike> listProductLike(Long member_id);
+	public ProductLike findByProductLikeId(Map<String, Object> map);
+	public void deleteProductLike(Map<String, Object> map) throws Exception;
 
 	public void insertDestination(Destination dto) throws Exception;
 	public int destinationCount(Long member_id);

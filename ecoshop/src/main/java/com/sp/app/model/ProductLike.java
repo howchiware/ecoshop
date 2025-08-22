@@ -8,9 +8,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ProductLike {
+	private Long productLikeNum;
 	private Long memberId;
 	private Long productCode;
-	private String likeDate;
+	private String productLikeDate;
 	private String productName;
 	private int price;
 	private int salePrice;

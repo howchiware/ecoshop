@@ -83,5 +83,51 @@
             WHERE rn &gt; 10
         )
     </delete>
+    
+    <!-- 찜 등록 -->
+    <insert id="insertProductLike" parameterType="map">
+    	INSERT INTO productLike(productLikeNum, productCode, memberId, productLikeDate)
+    	VALUES(productLike_seq.NEXTVAL, #{productCode}, #{memberId}, SYSDATE)
+    </insert>
+    
+   	<!-- 30개를 초과하는 경우 오래된 찜 삭제 -->	
+    <delete id="deleteOldestProductLikes" parameterType="Long">
+        DELETE FROM productLike
+        WHERE productLikeNum IN (
+            SELECT productLikeNum
+            FROM (
+                SELECT productLikeNum, ROW_NUMBER() OVER (ORDER BY productLikeNum DESC) as rn
+                FROM productLike
+                WHERE memberId = #{memberId}
+            )
+            WHERE rn &gt; 30
+        )
+    </delete>
+    
+	<!-- 유저의 찜리스트 -->
+	<select id="listProductLike" resultType="com.sp.app.model.ProductLike" parameterType="Long">
+    	SELECT pl.productLikeNum, pl.memberId, pl.productCode, productLikeDate,
+    		p.productName, p.price, p.point, p.thumbnail
+    	FROM productLike pl
+    	JOIN product p ON pl.productCode = p.productCode
+		WHERE pl.memberId = #{memberId}
+		ORDER BY productLikeNum DESC
+    </select>
+
+    <select id="findByProductLikeId" resultType="com.sp.app.model.ProductLike" parameterType="map">
+        SELECT productLikeNum, memberId, productCode, productLikeDate
+    	FROM productLike
+		WHERE memberId = #{memberId} AND  productCode = #{productCode}
+		ORDER BY productLikeNum DESC
+    </select>
+    
+	<!-- 찜 삭제 -->
+	<delete id="deleteProductLike" parameterType="map">
+    	DELETE FROM productLike
+		WHERE memberId = #{memberId} 
+		<if test="productCode != null">
+			AND productCode = #{productCode}		
+		</if>
+    </delete>
 </mapper>
 	

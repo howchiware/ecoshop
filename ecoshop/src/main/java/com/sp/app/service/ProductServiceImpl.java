@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.sp.app.mapper.ProductMapper;
 import com.sp.app.model.Product;
 import com.sp.app.model.ProductDeliveryRefundInfo;
-import com.sp.app.model.ProductReview;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,14 +19,30 @@ public class ProductServiceImpl implements ProductService {
 	private final ProductMapper productMapper;
 	
 	@Override
-	public List<Product> listProductByCategoryId(long categoryId) throws Exception {
+	public List<Product> listProductByCategoryId(Map<String, Object> map) throws Exception {
+		List<Product> list = null;
 		try {
-			return productMapper.listProductByCategoryId(categoryId);
+			list = productMapper.listProductByCategoryId(map);
+			
 		} catch (Exception e) {
 			log.info("listProductByCategoryId :", e);
 		}
 		
-		return null;
+		return list;
+	}
+	
+
+	@Override
+	public List<Product> listAllProducts() throws Exception {
+		List<Product> list = null;
+		try {
+			list = productMapper.listAllProducts();
+			
+		} catch (Exception e) {
+			log.info("listAllProducts :", e);
+		}
+		
+		return list;
 	}
 
 	@Override
@@ -37,6 +52,19 @@ public class ProductServiceImpl implements ProductService {
 			dto = productMapper.findById(productId);
 		} catch (Exception e) {
 			log.info("findById :", e);
+		}
+		
+		return dto;
+	}
+	
+	@Override
+	public Product findByCategoryId(long categoryId) {
+		Product dto = null;
+		
+		try {
+			dto = productMapper.findByCategoryId(categoryId);
+		} catch (Exception e) {
+			log.info("findByCategoryId : ", e);
 		}
 		
 		return dto;
@@ -124,5 +152,17 @@ public class ProductServiceImpl implements ProductService {
 		
 		return list;
 	}
+
+	@Override
+	public int dataCount(Map<String, Object> map) {
+		int result = 0;
+		try {
+			result = productMapper.dataCount(map);
+		} catch (Exception e) {
+			log.info("dataCount : ", e);
+		}
+		return result;
+	}
+
 
 }

@@ -40,27 +40,56 @@ public class MyShoppingServiceImpl implements MyShoppingService {
 	}
 
 	@Override
-	public void insertLike(Map<String, Object> map) throws SQLException {
-		// TODO Auto-generated method stub
+	public void insertProductLike(Map<String, Object> map) throws SQLException {
+		try {
+			mapper.insertProductLike(map);
+			
+			Long memberId = (Long)map.get("memberId");
+			
+			// 최근 30개만 남기고 삭제
+			mapper.deleteOldestProductLikes(memberId);
+		} catch (Exception e) {
+			log.info("insertProductLike : ", e);
+			
+			throw e;
+		}
+	}
+
+	@Override
+	public List<ProductLike> listProductLike(Long member_id) {
+		List<ProductLike> list = null;
 		
-	}
-
-	@Override
-	public List<ProductLike> listLike(Long member_id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ProductLike findByLikeId(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void deleteLike(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
+		try {
+			list = mapper.listProductLike(member_id);
+		} catch (Exception e) {
+			log.info("listProductLike : ", e);
+		}
 		
+		return list;
+	}
+
+	@Override
+	public ProductLike findByProductLikeId(Map<String, Object> map) {
+		ProductLike dto = null;
+		
+		try {
+			dto = mapper.findByProductLikeId(map);
+		} catch (Exception e) {
+			log.info("findByProductLikeId : ", e);
+		}
+		
+		return dto;
+	}
+
+	@Override
+	public void deleteProductLike(Map<String, Object> map) throws Exception {
+		try {
+			mapper.deleteProductLike(map);
+		} catch (Exception e) {
+			log.info("deleteProductLike : ", e);
+			
+			throw e;
+		}
 	}
 
 	@Override
