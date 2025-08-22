@@ -1,9 +1,7 @@
 package com.sp.app.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sp.app.common.MyUtil;
 import com.sp.app.model.Challenge;
@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ChallengeController {
 	// 사용자 화면
 	private final ChallengeService service;
-	private final MyUtil myUtil; // 나중에 보고 제거 가능 
+	private final MyUtil myUtil;
 	
 	
 	// 메인(사용자 목록) : 데일리 + 스페셜(첫 로드) 
@@ -42,28 +42,21 @@ public class ChallengeController {
             Model model
     ) {
         try {
-            // 데일리, 요일버튼 목록(weekday, challengeUd 포함)
             List<Challenge> weekly = service.listDailyAll();
             
-            
-            // 파라미터 없으면 '오늘'로
-            int javaDow = java.time.LocalDate.now().getDayOfWeek().getValue(); // // 1=Mon..7=Sun
-            int todayDow0to6 = javaDow % 7; // 0=Sun..6=Sat
+            int javaDow = java.time.LocalDate.now().getDayOfWeek().getValue();
+            int todayDow0to6 = javaDow % 7;
             int targetWeekday = (weekday != null ? weekday : todayDow0to6);
             
-            
-            // 해당 요일 카드 1건 
             Challenge today = service.getDailyByWeekday(targetWeekday);
 
-            // 스페셜(더보기 첫 로드)
             List<Challenge> special = service.listSpecialMore(null, size, sort, null);
 
             model.addAttribute("weekly", weekly);
             model.addAttribute("today", today);
             model.addAttribute("list", special);
             
-         // 뷰에서 버튼 활성화/스크롤용
-            model.addAttribute("targetWeekday", targetWeekday); // 버튼 활성화용
+            model.addAttribute("targetWeekday", targetWeekday);
             model.addAttribute("size", (size == null ? 6 : size));
             model.addAttribute("sort", sort);
         } catch (Exception e) {
@@ -91,81 +84,88 @@ public class ChallengeController {
 			return List.of();
 	}
 			
-		// 상세 (페이지 이동)
-			@GetMapping("detail/{challengeId}")
-			public String detail(
-					@PathVariable("challengeId") long challengeId,
-					Model model
-			) {
-				try {
-					// SPECIAL 우선 조회, 없으면 DAILY 조회
-					Challenge dto = service.findSpecialDetail(challengeId);
-					if(dto == null) dto = service.findDailyDetail(challengeId);
-					if(dto == null) return "redirect:/challenge/list";
+	// 상세 (페이지 이동)
+	@GetMapping("detail/{challengeId}")
+	public String detail(
+		@PathVariable("challengeId") long challengeId,
+		Model model
+	) {
+		try {
+			Challenge dto = service.findSpecialDetail(challengeId);
+			if(dto == null) dto = service.findDailyDetail(challengeId);
+			if(dto == null) return "redirect:/challenge/list";
 					
-					model.addAttribute("dto", dto);
-					return "challenge/article";
-				} catch (Exception e) {
-					log.info("detail : ", e);
-				}
+			model.addAttribute("dto", dto);
+			return "challenge/article";
+		} catch (Exception e) {
+			log.info("detail : ", e);
+		}
 				
-				return "redirect:/challenge/list";
-			}
-			
-			//오늘 요일 챌린지 참가 (AJAX) 
-		    @ResponseBody
-		    @PostMapping("join/daily")
-		    public Map<String, Object> joinDaily(
-		            @RequestParam("challengeId") long challengeId,
-		            HttpSession session
-		    ) throws Exception {
-		        Map<String, Object> res = new HashMap<>();
-		        String state = "false";
-
-		        try {
-		            SessionInfo info = (SessionInfo) session.getAttribute("member");
-		            if (info == null) {
-		                res.put("state", "login");
-		                return res;
-		            }
-
-		            // 오늘 중복 참가 방지
-		            int count = service.countTodayDailyJoin(info.getMemberId(), challengeId);
-		            if (count > 0) {
-		                res.put("state", "joined");
-		                return res;
-		            }
-
-		            // 참여 등록
-		            Long pid = Objects.requireNonNull(service.nextParticipationId());
-		            Challenge dto = new Challenge();
-		            dto.setParticipationId(pid);
-		            dto.setChallengeId(challengeId);
-		            dto.setMemberId(info.getMemberId());
-		            dto.setParticipationStatus(0); // 진행
-
-		            service.insertParticipation(dto);
-		            state = "true";
-		        } catch (Exception e) {
-		            log.info("joinDaily :", e);
-		        }
-
-		        res.put("state", state);
-		        return res;
-		    }
-		    
-		    // 스페셜 진행률 (AJAX, 1~3일) 
-		    @ResponseBody
-		    @GetMapping("progress/{participationId}")
-		    public List<Map<String, Object>> specialProgress(@PathVariable long participationId) {
-		        try {
-		            return service.selectSpecialProgress(participationId);
-		        } catch (Exception e) {
-		            log.info("specialProgress :", e);
-		        }
-		        return List.of();
-		    }
-			
+		return "redirect:/challenge/list";
+	}
 	
-	
+	// 데일리 챌린지 참여 페이지 (GET)
+	@GetMapping("join/daily/{challengeId}")
+    public String dailyJoinForm(
+    		@PathVariable("challengeId") long challengeId,
+    		Model model,
+    		HttpSession session) {
+        SessionInfo info = (SessionInfo) session.getAttribute("member");
+        if (info == null) {
+            return "redirect:/member/login";
+        }
+        
+        try {
+        	Challenge dto = service.findDailyDetail(challengeId);
+        	if (dto == null) {
+        		return "redirect:/challenge/list";
+        	}
+        	
+        	model.addAttribute("dto", dto);
+        } catch (Exception e) {
+        	log.info("dailyJoinForm :", e);
+        }
+        
+        return "challenge/join";
+    }
+
+	// 데일리 챌린지 참여 폼 제출 (POST)
+	@PostMapping("dailySubmit")
+    public String dailySubmit(
+            Challenge dto,
+            @RequestParam("photoFile") MultipartFile photoFile,
+            HttpSession session,
+            RedirectAttributes reAttr
+    ) {
+        SessionInfo info = (SessionInfo) session.getAttribute("member");
+        if (info == null) {
+            return "redirect:/member/login";
+        }
+
+        try {
+            dto.setMemberId(info.getMemberId());
+            // 데일리 챌린지 타입 설정
+            dto.setChallengeType("DAILY"); 
+            service.submitDailyChallenge(dto, photoFile);
+            reAttr.addFlashAttribute("message", "챌린지 참여가 완료되었습니다. 포인트가 지급됩니다.");
+        } catch (Exception e) {
+            log.info("dailySubmit : ", e);
+            reAttr.addFlashAttribute("message", "챌린지 참여에 실패했습니다. 다시 시도해주세요.");
+        } // addFlashAttribute : 사용자에게 일회성 알림 메시지 보이는 기능 - 리다이렉트와 함께 사용 
+
+        // 성공 후 메인 페이지로 리다이렉트
+        return "redirect:/challenge/list";
+    }
+    
+    // 스페셜 진행률 (AJAX, 1~3일) 
+    @ResponseBody
+    @GetMapping("progress/{participationId}")
+    public List<Map<String, Object>> specialProgress(@PathVariable("participationId") long participationId) {
+        try {
+            return service.selectSpecialProgress(participationId);
+        } catch (Exception e) {
+            log.info("specialProgress :", e);
+        }
+        return List.of();
+    }
 }

@@ -134,7 +134,7 @@ public class FreeController {
 							@RequestParam(name = "page") String page,
 							@RequestParam(name = "schType", defaultValue = "all") String schType,
 							@RequestParam(name = "kwd", defaultValue = "") String kwd,
-							Model model, HttpSession session) throws Exception {
+							Model model, HttpSession session, HttpServletRequest request) throws Exception {
 		
 		String query = "page=" + page;
 		
@@ -143,7 +143,7 @@ public class FreeController {
 			if(! kwd.isBlank()) {
 				query += "&schType=" + schType + "&kwd=" + myUtil.encodeUrl(kwd);
 			}
-			
+		    
 			service.updateHitCount(freeId);
 			
 			Free dto = Objects.requireNonNull(service.findByDairy(freeId));
@@ -249,7 +249,7 @@ public class FreeController {
 		try {
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
 			
-			int size = 7;
+			int size = 5;
 			int total_page = 0;
 			int dataCount = 0;
 			
@@ -285,7 +285,7 @@ public class FreeController {
 			throw e;
 		}
 		
-		return "free/listReply";
+		return "free/dairyListReply";
 	}
 	
 	@ResponseBody
@@ -300,6 +300,7 @@ public class FreeController {
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
 			
 			dto.setMemberId(info.getMemberId());
+			dto.setNickname(info.getNickname());
 			service.insertReply(dto);
 			
 		} catch (Exception e) {
@@ -345,6 +346,7 @@ public class FreeController {
 			
 		} catch (Exception e) {
 			log.info("listReplyAnswer : ", e);
+			throw e;
 		}
 		
 		return "free/listReplyAnswer";

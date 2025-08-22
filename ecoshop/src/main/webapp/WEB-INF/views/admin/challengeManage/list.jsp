@@ -2,51 +2,57 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
+<c:set var="cp" value="${pageContext.request.contextPath}" />
+<c:set var="NOIMG" value="${cp}/uploads/challenge/no-image.png" />
+
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>관리자 - 챌린지 목록</title>
+  <meta charset="UTF-8">
+  <title>관리자 - 챌린지 목록</title>
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/main2.css" type="text/css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+  <!-- CSS -->
+  <link rel="stylesheet" href="<c:url value='/dist/css/main2.css'/>" type="text/css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- JS -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="<c:url value='/dist/js/util-jquery.js'/>"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<style>
-  .table thead th { white-space:nowrap; }
-  .badge { font-size:12px; }
-  .admin-main-container { display:flex; }
-  .admin-sidebar { width:250px; flex-shrink:0; }
-  .admin-content { flex-grow:1; margin-left:20px; }
+  <style>
+    .table thead th { white-space:nowrap; }
+    .badge { font-size:12px; }
+    .admin-main-container { display:flex; }
+    .admin-sidebar { width:250px; flex-shrink:0; }
+    .admin-content { flex-grow:1; margin-left:20px; }
+    .thumb { width: 72px; height: 48px; object-fit: cover; border-radius: 8px; border:1px solid #eaeef4; }
 
-  /* Paging UI */
-  .paging-wrap{
-    display:flex; justify-content:center; align-items:center;
-    gap:10px; margin:26px 0 10px; font-size:18px;
-  }
-  .paging-wrap a, .paging-wrap span{
-    display:inline-flex; align-items:center; justify-content:center;
-    min-width:44px; height:44px; padding:0 14px;
-    border:1px solid #e5e7eb; border-radius:9999px;
-    background:#fff; color:#334155; text-decoration:none;
-    box-shadow:0 1px 2px rgba(0,0,0,.04);
-  }
-  .paging-wrap a:hover{ background:#f8fafc; }
-  .paging-wrap .current,
-  .paging-wrap span.current,
-  .paging-wrap span:has(> b){
-    background:#0d6efd; border-color:#0d6efd; color:#fff; font-weight:700;
-  }
-  .paging-wrap a[rel="prev"], .paging-wrap a.prev,
-  .paging-wrap a[rel="next"], .paging-wrap a.next{ padding:0 16px; min-width:48px; }
-</style>
+    /* Paging UI */
+    .paging-wrap{
+      display:flex; justify-content:center; align-items:center;
+      gap:10px; margin:26px 0 10px; font-size:18px;
+    }
+    .paging-wrap a, .paging-wrap span{
+      display:inline-flex; align-items:center; justify-content:center;
+      min-width:44px; height:44px; padding:0 14px;
+      border:1px solid #e5e7eb; border-radius:9999px;
+      background:#fff; color:#334155; text-decoration:none;
+      box-shadow:0 1px 2px rgba(0,0,0,.04);
+    }
+    .paging-wrap a:hover{ background:#f8fafc; }
+    .paging-wrap .current,
+    .paging-wrap span.current,
+    .paging-wrap span:has(> b){
+      background:#0d6efd; border-color:#0d6efd; color:#fff; font-weight:700;
+    }
+    .paging-wrap a[rel="prev"], .paging-wrap a.prev,
+    .paging-wrap a[rel="next"], .paging-wrap a.next{ padding:0 16px; min-width:48px; }
+  </style>
 </head>
 <body>
+
 <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
-<c:set var="cp" value="${pageContext.request.contextPath}" />
 
 <div class="container my-4 admin-main-container">
   <div class="admin-sidebar">
@@ -56,18 +62,19 @@
   <div class="admin-content">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h3 class="mb-0">챌린지 목록</h3>
-      <a href="${cp}/admin/challengeManage/write" class="btn btn-success">등록</a>
+      <a href="<c:url value='/admin/challengeManage/write'/>" class="btn btn-outline-secondary">등록</a>
     </div>
 
-    <form class="row g-2 mb-3" method="get" action="${cp}/admin/challengeManage/list">
+    <!-- 검색 -->
+    <form class="row g-2 mb-3" method="get" action="<c:url value='/admin/challengeManage/list'/>">
       <div class="col-md-3">
         <input type="text" class="form-control" name="kwd" value="${kwd}" placeholder="제목/내용 검색">
       </div>
       <div class="col-md-3">
         <select name="challengeType" class="form-select">
           <option value="">전체 타입</option>
-          <option value="DAILY"  <c:if test="${challengeType=='DAILY'}">selected</c:if>>DAILY</option>
-          <option value="SPECIAL"<c:if test="${challengeType=='SPECIAL'}">selected</c:if>>SPECIAL</option>
+          <option value="DAILY"   <c:if test="${challengeType=='DAILY'}">selected</c:if>>DAILY</option>
+          <option value="SPECIAL" <c:if test="${challengeType=='SPECIAL'}">selected</c:if>>SPECIAL</option>
         </select>
       </div>
       <div class="col-md-3">
@@ -96,76 +103,107 @@
     <div class="table-responsive">
       <table class="table table-hover align-middle">
         <thead>
-          <tr>
-            <th style="width:90px;">ID</th>
-            <th>제목</th>
-            <th style="width:120px;">타입</th>
-            <th style="width:120px;">요일/기간</th>
-            <th style="width:150px;">등록일</th>
-            <th style="width:160px;">관리</th>
-          </tr>
+        <tr>
+          <th style="width:80px;">썸네일</th>
+          <th>제목</th>
+          <th style="width:120px;">타입</th>
+          <th style="width:180px;">요일/기간</th>
+          <th style="width:120px;">포인트</th>
+          <th style="width:160px;">등록일</th>
+          <th style="width:180px;">관리</th>
+        </tr>
         </thead>
         <tbody>
-          <c:forEach var="d" items="${list}">
-            <%-- 상세 링크를 c:url로 안전하게 생성(인코딩 포함) --%>
-            <c:url var="articleLink" value="${cp}/admin/challengeManage/article">
-              <c:param name="challengeId" value="${d.challengeId}"/>
-              <c:param name="page" value="${page}"/>
-              <c:if test="${not empty kwd}">
-                <c:param name="kwd" value="${kwd}"/>
-              </c:if>
-              <c:if test="${not empty challengeType}">
-                <c:param name="challengeType" value="${challengeType}"/>
-              </c:if>
-              <c:if test="${weekday ne null}">
-                <c:param name="weekday" value="${weekday}"/>
-              </c:if>
-            </c:url>
+        <c:forEach var="d" items="${list}">
+          <!-- 썸네일 URL -->
+          <c:choose>
+            <c:when test="${not empty d.thumbnail}">
+              <c:url var="thumbUrl" value="/uploads/challenge/${d.thumbnail}"/>
+            </c:when>
+            <c:otherwise>
+              <c:set var="thumbUrl" value="${NOIMG}"/>
+            </c:otherwise>
+          </c:choose>
 
-            <tr>
-              <td>${d.challengeId}</td>
-              <td><a href="${articleLink}">${d.title}</a></td>
-              <td>
-                <c:choose>
-                  <c:when test="${d.challengeType=='DAILY'}"><span class="badge bg-info">DAILY</span></c:when>
-                  <c:when test="${d.challengeType=='SPECIAL'}"><span class="badge bg-primary">SPECIAL</span></c:when>
-                  <c:otherwise><span class="badge bg-secondary">-</span></c:otherwise>
-                </c:choose>
-              </td>
-              <td>
-                <c:choose>
-                  <c:when test="${d.challengeType=='DAILY'}">
-                    <span class="badge bg-light text-dark">
-                      <c:choose>
-                        <c:when test="${d.weekday==0}">일</c:when>
-                        <c:when test="${d.weekday==1}">월</c:when>
-                        <c:when test="${d.weekday==2}">화</c:when>
-                        <c:when test="${d.weekday==3}">수</c:when>
-                        <c:when test="${d.weekday==4}">목</c:when>
-                        <c:when test="${d.weekday==5}">금</c:when>
-                        <c:otherwise>토</c:otherwise>
-                      </c:choose>
-                    </span>
-                  </c:when>
-                  <c:when test="${d.challengeType=='SPECIAL'}">
-                    <small>${d.startDate} ~ ${d.endDate}</small>
-                  </c:when>
-                </c:choose>
-              </td>
-              <td>${d.challengeRegDate}</td>
-              <td>
-                <a class="btn btn-sm btn-outline-secondary"
-                   href="${cp}/admin/challengeManage/update?challengeId=${d.challengeId}">수정</a>
-                <a class="btn btn-sm btn-outline-danger"
-                   href="${cp}/admin/challengeManage/delete?challengeId=${d.challengeId}&page=${page}"
-                   onclick="return confirm('삭제하시겠습니까?');">삭제</a>
-              </td>
-            </tr>
-          </c:forEach>
+          <!-- 상세 링크: 파라미터 보존 -->
+          <c:url var="articleLink" value="/admin/challengeManage/article">
+            <c:param name="challengeId" value="${d.challengeId}"/>
+            <c:param name="page" value="${page}"/>
+            <c:if test="${not empty kwd}">
+              <c:param name="kwd" value="${kwd}"/>
+            </c:if>
+            <c:if test="${not empty challengeType}">
+              <c:param name="challengeType" value="${challengeType}"/>
+            </c:if>
+            <c:if test="${weekday ne null}">
+              <c:param name="weekday" value="${weekday}"/>
+            </c:if>
+          </c:url>
 
-          <c:if test="${empty list}">
-            <tr><td colspan="6" class="text-center text-muted py-5">데이터가 없습니다.</td></tr>
-          </c:if>
+          <!-- 수정/삭제 링크 -->
+          <c:url var="updateLink" value="/admin/challengeManage/update">
+            <c:param name="challengeId" value="${d.challengeId}"/>
+            <c:param name="page" value="${page}"/>
+          </c:url>
+          <c:url var="deleteLink" value="/admin/challengeManage/delete">
+            <c:param name="challengeId" value="${d.challengeId}"/>
+            <c:param name="page" value="${page}"/>
+          </c:url>
+
+          <tr>
+            <td>
+              <img class="thumb" src="${thumbUrl}" alt="thumb"
+                   onerror="this.onerror=null; this.src='${NOIMG}'">
+            </td>
+            <td>
+              <a href="${articleLink}" class="text-decoration-none fw-semibold">
+                <c:out value="${d.title}"/>
+              </a>
+              <div class="text-muted small text-truncate" style="max-width:520px;">
+                <c:out value="${d.description}"/>
+              </div>
+            </td>
+            <td>
+              <c:choose>
+                <c:when test="${d.challengeType=='DAILY'}"><span class="badge bg-info">DAILY</span></c:when>
+                <c:when test="${d.challengeType=='SPECIAL'}"><span class="badge bg-primary">SPECIAL</span></c:when>
+                <c:otherwise><span class="badge bg-secondary">-</span></c:otherwise>
+              </c:choose>
+            </td>
+            <td>
+              <c:choose>
+                <c:when test="${d.challengeType=='DAILY'}">
+                  <span class="badge bg-light text-dark">
+                    <c:choose>
+                      <c:when test="${d.weekday==0}">일</c:when>
+                      <c:when test="${d.weekday==1}">월</c:when>
+                      <c:when test="${d.weekday==2}">화</c:when>
+                      <c:when test="${d.weekday==3}">수</c:when>
+                      <c:when test="${d.weekday==4}">목</c:when>
+                      <c:when test="${d.weekday==5}">금</c:when>
+                      <c:otherwise>토</c:otherwise>
+                    </c:choose>
+                  </span>
+                </c:when>
+                <c:when test="${d.challengeType=='SPECIAL'}">
+                  <small><c:out value="${d.startDate}"/> ~ <c:out value="${d.endDate}"/></small>
+                </c:when>
+                <c:otherwise>-</c:otherwise>
+              </c:choose>
+            </td>
+            <td class="fw-semibold"><c:out value="${d.rewardPoints}"/> P</td>
+            <td><c:out value="${d.challengeRegDate}"/></td>
+            <td>
+              <a class="btn btn-sm btn-outline-secondary" href="${updateLink}">수정</a>
+              <a class="btn btn-sm btn-outline-danger" href="${deleteLink}"
+                 onclick="return confirm('삭제하시겠습니까?');">삭제</a>
+            </td>
+          </tr>
+        </c:forEach>
+
+        <c:if test="${empty list}">
+          <tr><td colspan="7" class="text-center text-muted py-5">데이터가 없습니다.</td></tr>
+        </c:if>
         </tbody>
       </table>
     </div>

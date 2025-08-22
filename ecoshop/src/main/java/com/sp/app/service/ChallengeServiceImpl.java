@@ -7,9 +7,13 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.sp.app.common.StorageService;
 import com.sp.app.mapper.ChallengeMapper;
+import com.sp.app.mapper.PointMapper;
 import com.sp.app.model.Challenge;
+import com.sp.app.model.Point;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ChallengeServiceImpl implements ChallengeService {
 	
 	private final ChallengeMapper mapper;
+	private final PointMapper pointMapper;
+	private final StorageService storageService;
 	
 	/** Java DayOfWeek(1=MON..7=SUN) -> 0(SUN)..6(SAT) 변환 */
     private int calcTodayDow() {
@@ -110,7 +116,9 @@ public class ChallengeServiceImpl implements ChallengeService {
 	@Transactional(rollbackFor = Exception.class)
 	public void insertParticipation(Challenge dto) throws Exception {
 		try {
-			if(dto.getParticipationStatus() == null) dto.setParticipationStatus(0);
+			if(dto.getParticipationStatus() == null) {
+				dto.setParticipationStatus(0);
+			}
 			mapper.insertParticipation(dto);
 		} catch (Exception e) {
 			log.info("insertParticipation :", e);
@@ -174,7 +182,69 @@ public class ChallengeServiceImpl implements ChallengeService {
 		}
 		return List.of();
 	}
-	
-	
-	
+
+
+
+	// 추가 : 데일리 챌린지 인증 제출 및 포인트지급
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void submitDailyChallenge(Challenge dto, MultipartFile photoFile) throws Exception {
+		try {
+			// 1. 데일리 챌린지 중복 참여 확인 
+			int count = mapper.countTodayDailyJoin(dto.getMemberId(), dto.getChallengeId());
+			if(count > 0) {
+				throw new IllegalStateException("오늘은 이미 참여한 챌린지입니다.");
+			}
+			// 2. 파일 저장 (사진이 있을 경우)
+            String saveFilename = null;
+            if (photoFile != null && !photoFile.isEmpty()) {
+                String challengePath = storageService.getRealPath("/uploads/challenge");
+                saveFilename = storageService.uploadFileToServer(photoFile, challengePath);
+                dto.setPhotoUrl(saveFilename);
+            }
+
+            // 3. 참여 기록(challengeParticipation) 및 인증 게시글(certificationPost) 저장
+            Long participationId = mapper.nextParticipationId();
+            dto.setParticipationId(participationId);
+            this.insertParticipation(dto);
+
+            Long postId = mapper.nextPostId();
+            dto.setPostId(postId);
+            
+            // 데일리 챌린지는 dayNumber가 NULL
+            dto.setDayNumber(null);
+            dto.setApprovalStatus(3); // 3: 자동승인
+            dto.setIsPublic("Y");
+
+            mapper.insertCertificationPost(dto);
+
+            // 4. 인증 사진(certificationPhoto) 저장 (파일이 업로드된 경우에만)
+            if (saveFilename != null) {
+                Long photoId = mapper.nextPhotoId();
+                dto.setPhotoId(photoId);
+                mapper.insertCertificationPhoto(dto);
+            }
+
+            // 5. 포인트 지급
+            Challenge challengeInfo = mapper.findDailyDetail(dto.getChallengeId());
+            if (challengeInfo != null && challengeInfo.getRewardPoints() > 0) {
+                Point pointDto = new Point();
+                pointDto.setMemberId(dto.getMemberId());
+                pointDto.setReason(challengeInfo.getTitle() + " 챌린지 참여 보상");
+                pointDto.setClassify(1); // 1: 적립
+                pointDto.setPoints(challengeInfo.getRewardPoints());
+                pointDto.setPostId(postId);
+
+                pointMapper.insertPoint(pointDto);
+            }
+
+            // 6. 참여 상태 업데이트
+            dto.setParticipationStatus(4); // 4: 자동승인
+            mapper.updateParticipation(dto);
+
+        } catch (Exception e) {
+            log.error("Failed to submit daily challenge: ", e);
+            throw e;
+        }
+    }
 }

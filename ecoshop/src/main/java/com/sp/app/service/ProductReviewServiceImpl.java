@@ -12,6 +12,7 @@ import com.sp.app.common.StorageService;
 import com.sp.app.exception.StorageException;
 import com.sp.app.mapper.ProductReviewMapper;
 import com.sp.app.model.ProductReview;
+import com.sp.app.model.ReviewHelpful;
 import com.sp.app.model.Summary;
 
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,9 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 			list = mapper.listReview(map);
 			
 			for (ProductReview dto : list) {
+				if(dto.getReviewImg() != null) {
+					dto.setListReviewImg(dto.getReviewImg().split(","));
+				}
 				dto.setName(myUtil.nameMasking(dto.getName()));
 				
 				dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
@@ -106,6 +110,72 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 				throw e;
 			}
 		}
+	}
+
+	@Override
+	public ProductReview viewReviewDetail(long reviewId) {
+		ProductReview dto = null;
+		try {
+			dto = mapper.viewReviewDetail(reviewId);
+			if(dto.getReviewImg() != null) {
+				dto.setListReviewImg(dto.getReviewImg().split(","));
+			}
+		} catch (Exception e) {
+			log.info("viewReviewDetail : ", e);
+			
+			throw e;
+		}
+		return dto;
+	}
+
+	@Override
+	public void deleteReviewHelpful(ReviewHelpful dto) {
+		try {
+			mapper.deleteReviewHelpful(dto);
+		} catch (Exception e) {
+			log.info("viewReviewDetail : ", e);
+			
+			throw e;
+		}
+	}
+
+	@Override
+	public void insertReviewHelpful(ReviewHelpful dto) {
+		try {
+			mapper.insertReviewHelpful(dto);
+		} catch (Exception e) {
+			log.info("insertReviewHelpful : ", e);
+			
+			throw e;
+		}
+	}
+
+	@Override
+	public int countReviewHelpful(long reviewId) {
+		int result = 0;
+		try {
+			result = mapper.countReviewHelpful(reviewId);
+		} catch (Exception e) {
+			log.info("countReviewHelpful : ", e);
+			
+			throw e;
+		}
+		return result;
+	}
+
+	@Override
+	public Integer userReviewHelpful(Map<String, Object> map) {
+		int result = -1;
+		try {
+			if(mapper.userReviewHelpful(map) != null) {
+				result = mapper.userReviewHelpful(map);				
+			}
+		} catch (Exception e) {
+			log.info("userReviewHelpful : ", e);
+			
+			throw e;
+		}
+		return result;
 	}	
 
 }

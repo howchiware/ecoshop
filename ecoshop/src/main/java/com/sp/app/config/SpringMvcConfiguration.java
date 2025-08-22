@@ -34,7 +34,6 @@ public class SpringMvcConfiguration implements WebMvcConfigurer {
 		excludePaths.add("/challenge/**");
 		excludePaths.add("/customer/**");
 		excludePaths.add("/tip/**");
-		
 		excludePaths.add("/free/dairyList");
 		
 		
@@ -42,5 +41,4 @@ public class SpringMvcConfiguration implements WebMvcConfigurer {
 		
 		registry.addInterceptor(new LoginCheckInterceptor()).excludePathPatterns(excludePaths);
 	}
-
 }

@@ -97,4 +97,20 @@
 		UPDATE productStock SET totalStock = totalStock - #{qty}
 		WHERE stockNum = #{stockNum}
 	</update>
+	
+	<select id="didIBuyThis" parameterType="map" resultType="com.sp.app.model.ProductOrder">
+		SELECT od.orderId, od.orderDetailId, od.productCode, od.optionDetailNum, od.optionDetailNum2,
+		        po.memberId, orderDate, totalAmount, productMoney, reviewId, content,
+		        rate, regDate, showReview, answer, answerId, answerDate, block
+		FROM orderDetail od
+		LEFT OUTER JOIN productOrder po ON od.orderId = po.orderId
+		LEFT OUTER JOIN productReview r ON od.orderDetailId = r.reviewId
+		WHERE po.memberId = #{memberId} AND od.productCode = #{productCode} AND reviewId IS NULL
+	</select>
+	
+	<select id="myReviewOfThis" parameterType="Long" resultType="com.sp.app.model.ProductReview">
+		SELECT reviewId, memberId, productCode, content, rate, showReview, regDate, answer, answerId, answerDate, block
+		FROM productReview
+		WHERE reviewId = #{orderDetailId}
+	</select>
 </mapper>

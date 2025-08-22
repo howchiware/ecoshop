@@ -122,40 +122,46 @@ public class ChallengeManageServiceImpl implements ChallengeManageService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateChallenge(Challenge dto, String uploadPath) throws Exception {
-	    try {
-	        // 기존 썸네일 파일명 조회
+		try {
 	        Challenge before = mapper.findById(dto.getChallengeId());
 	        String oldThumbnail = (before != null ? before.getThumbnail() : null);
 
-	        // 썸네일 파일 교체 처리
-	        if (dto.getThumbnailFile() != null && !dto.getThumbnailFile().isEmpty()) {
-	            // 새 파일 업로드
+	        boolean remove = Boolean.TRUE.equals(dto.getRemoveThumbnail());
+
+	        if (remove) {
+	            // 1) 삭제 체크된 경우: 파일 삭제 + DB 값 비우기
+	            if (oldThumbnail != null && !oldThumbnail.isBlank()) {
+	                storageService.deleteFile(uploadPath, oldThumbnail);
+	            }
+	            dto.setThumbnail(null); // DB를 NULL로(아래 매퍼에서 NULL 반영되도록 처리)
+	        } else if (dto.getThumbnailFile() != null && !dto.getThumbnailFile().isEmpty()) {
+	            // 2) 새 파일 업로드
 	            String saveFilename = storageService.uploadFileToServer(dto.getThumbnailFile(), uploadPath);
 	            if (saveFilename != null) {
 	                dto.setThumbnail(saveFilename);
-	                // 기존 파일 삭제
 	                if (oldThumbnail != null && !oldThumbnail.isBlank()) {
 	                    storageService.deleteFile(uploadPath, oldThumbnail);
 	                }
+	            } else {
+	                // 업로드 실패 시 기존 값 유지
+	                dto.setThumbnail(oldThumbnail);
 	            }
 	        } else {
-	            // 새 파일이 없으면 기존 파일명을 그대로 유지
+	            // 3) 변경 없음 → 기존 값 유지
 	            dto.setThumbnail(oldThumbnail);
 	        }
 
-	        // 1) 챌린지 메인 테이블(challenge) 업데이트
+	        // 메인 테이블 업데이트
 	        mapper.updateChallenge(dto);
 
-	        // 2) DAILY/SPECIAL 부가 정보 업데이트
+	        // DAILY/SPECIAL 보조 테이블 업데이트 + 타입 변경 시 정리
 	        if ("DAILY".equals(dto.getChallengeType())) {
 	            mapper.updateDailyChallenge(dto);
-	            // SPECIAL에서 DAILY로 타입을 변경하는 경우, 기존 SPECIAL 정보 삭제
 	            if ("SPECIAL".equals(before.getChallengeType())) {
 	                mapper.deleteSpecial(dto.getChallengeId());
 	            }
 	        } else if ("SPECIAL".equals(dto.getChallengeType())) {
 	            mapper.updateSpecialChallenge(dto);
-	            // DAILY에서 SPECIAL로 타입을 변경하는 경우, 기존 DAILY 정보 삭제
 	            if ("DAILY".equals(before.getChallengeType())) {
 	                mapper.deleteDaily(dto.getChallengeId());
 	            }

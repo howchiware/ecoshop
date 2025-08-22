@@ -61,9 +61,11 @@
 					<label class="review-rate">${dto.rate} / 5</label> 
 				</div>
 	        </div>
-	        <div class="col">
-	            <p style="text-align: right; text-decoration: underline;" onclick="reviewWrite();">구매평 작성하기</p>
-	        </div>
+	        <c:if test="${leaveReview}">
+		        <div class="col">
+		            <p style="text-align: right; text-decoration: underline;" class="reviewWrite-pTag" onclick="reviewWrite();" data-productCode="${dto.productCode}">구매평 작성하기</p>
+		        </div>
+	        </c:if>
 	    </div>
 	
 	    <div class="image-grid">
@@ -273,10 +275,21 @@
 			</div>
 			<div class="modal-body">
 				<div class="review-form p-2">
-					<form name="reviewForm">
+					<form name="reviewForm" class="reviewForm">
 						<div class="row">
 							<div class="col">
 								<span class="fw-bold">상품 리뷰 쓰기</span>
+							</div>
+						</div>
+						<div class="myOrderList">
+							<div class="row p-1">
+								<c:if test="${not empty didIBuyThis}">
+									<div class="col">
+										<span class="pe-3">나의 상품 구매 내역</span>
+										<select name="reviewId" class="myOrder-select" style="border: 1px solid #dee2e6; color: #333">
+										</select>
+									</div>
+								</c:if>
 							</div>
 						</div>
 						<div class="p-1">
@@ -350,5 +363,22 @@
 				<button type="button" class="btn-default btnInquirySendCancel" data-bs-dismiss="modal">취소</button>
 			</div>			
 		</div>
+	</div>
+</div>
+
+<!-- 상품리뷰 상세 모달 -->
+<div class="modal fade" id="reviewDetailDialogModal" tabindex="-1" 
+		data-bs-backdrop="static" data-bs-keyboard="false"
+		aria-labelledby="reviewDetailDialogModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="reviewDetailDialogModalLabel">리뷰 상세 보기</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+			</div>			
+		</div>	
+			
 	</div>
 </div>

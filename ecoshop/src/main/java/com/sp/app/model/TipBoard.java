@@ -9,9 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Tip {
-	private Long tipId;
-	private Long memberId;
+public class TipBoard {
+	private long tipId;
+	private long memberId;
+	private String name;
 	private String subject;
 	private String content;
 	private long groupNum;

@@ -38,4 +38,5 @@ public class ProductReview {
 	private String optionValue2;
 
 	private int	reviewHelpfulCount;
+	private Integer userReviewHelpful;
 }

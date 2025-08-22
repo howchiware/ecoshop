@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sp.app.model.ProductOrder;
+import com.sp.app.model.ProductReview;
 import com.sp.app.model.Point;
 
 public interface ProductOrderService {
@@ -16,4 +17,7 @@ public interface ProductOrderService {
 	public ProductOrder findByProduct(long productNum);
 	public ProductOrder findByOptionDetail(long detailNum);
 	public Point findByUserPoint(Long member_id);
+	
+	public List<ProductOrder> didIBuyThis(Map<String, Object> map);
+	public ProductReview myReviewOfThis(long orderDetailId);
 }

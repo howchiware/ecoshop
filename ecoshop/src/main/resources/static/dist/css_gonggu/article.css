@@ -1,0 +1,60 @@
+body {
+	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
+	background-color: #f7f6f3;
+	color: #333;
+	margin: 0;
+}
+
+@font-face {
+	font-family: 'Pretendard-Regular';
+	src:
+		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+		format('woff');
+	font-style: normal;
+}
+
+.main-container {
+	display: flex;
+}
+
+.right-PANEL {
+	flex-grow: 1;
+	padding: 2rem;
+	overflow-y: auto;
+}
+
+.outside {
+	flex: 1;
+	background-color: #fff;
+	border-radius: 8px;
+	padding: 20px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.title {
+	padding-bottom: 10px;
+}
+
+.image-box {
+  border-radius: 10px;
+  width: 250px; 
+  height: 200px; 
+  overflow: hidden; 
+}
+
+.image-box img {
+  border-radius: 10px 0 0 0;
+  width: 80%; 
+  height: 100%; 
+  object-fit: cover; 
+  object-position: center; 
+  display: block; 
+}
+
+.cardBody {
+	padding-top: 20px;
+}
+
+.cardContainer {
+	border: 10px;
+}

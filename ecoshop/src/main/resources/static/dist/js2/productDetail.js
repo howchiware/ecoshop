@@ -266,6 +266,7 @@ $(function(){
 	});
 });
 
+
 function sendOk(mode) {
 	const contextPath = document.getElementById('web-contextPath').value;
 	

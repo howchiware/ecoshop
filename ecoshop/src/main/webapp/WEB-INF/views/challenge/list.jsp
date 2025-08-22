@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
 <c:set var="cp" value="${pageContext.request.contextPath}" />
+<c:set var="NOIMG" value="${pageContext.request.contextPath}/uploads/challenge/no-image.png" />
 
 <!DOCTYPE html>
 <html>
@@ -103,11 +104,16 @@
       <div class="row justify-content-center">
         <div class="col-lg-10 my-3">
           <div class="daily-card" id="dailyCard">
-            <c:set var="todayThumb"
-                   value="${empty today.thumbnail ? cp.concat('/resources/admin/images/add_photo.png')
-                                                 : cp.concat('/uploads/challenge/').concat(today.thumbnail)}"/>
-            <div class="daily-media"
-                 style="background-image:url('${todayThumb}')"></div>
+            <c:choose>
+              <c:when test="${not empty today.thumbnail}">
+                <c:url var="todayThumb" value="/uploads/challenge/${fn:escapeXml(today.thumbnail)}"/>
+                <div class="daily-media" style="background-image:url('${todayThumb}')"></div>
+              </c:when>
+              <c:otherwise>
+                <div class="daily-media"></div>
+              </c:otherwise>
+            </c:choose>
+
             <div class="daily-body">
               <div class="d-flex justify-content-between align-items-center">
                 <h2 class="daily-title">${empty today.title ? '수요일 플라스틱 제로데이 챌린지' : today.title}</h2>
@@ -137,11 +143,9 @@
 
               <div class="d-flex gap-2">
                 <a class="btn-ghost" href="${cp}/challenge/detail/${today.challengeId}">상세보기</a>
-                <button id="btnJoinToday"
-                        class="btn-primary-grad"
-                        data-challenge-id="${today.challengeId}">
-                  지금 참가하기
-                </button>
+                <a class="btn-primary-grad" href="${cp}/challenge/join/daily/${today.challengeId}">
+				  지금 참가하기
+				</a>
               </div>
 
               <div class="alert alert-warning mt-3" role="alert" style="border-radius:12px;">
@@ -172,10 +176,16 @@
           <div class="card"
                data-id="${s.challengeId}"
                data-end-date="${s.endDate}">
-            <c:set var="thumbUrl"
-                   value="${empty s.thumbnail ? cp.concat('/resources/admin/images/add_photo.png')
-                                              : cp.concat('/uploads/challenge/').concat(s.thumbnail)}"/>
-            <div class="card-thumb" style="background-image:url('${thumbUrl}')"></div>
+            <c:choose>
+              <c:when test="${not empty s.thumbnail}">
+                <c:url var="thumbUrl" value="/uploads/challenge/${fn:escapeXml(s.thumbnail)}"/>
+                <div class="card-thumb" style="background-image:url('${thumbUrl}')"></div>
+              </c:when>
+              <c:otherwise>
+                <div class="card-thumb"></div>
+              </c:otherwise>
+            </c:choose>
+
             <div class="card-body">
               <h3 class="card-title">${s.title}</h3>
               <p class="card-desc">${s.description}</p>
@@ -228,31 +238,6 @@
     }
   })();
 
-  // 오늘(데일리) 참가
-  (function joinTodayInit(){
-    const btn = document.getElementById('btnJoinToday');
-    if(!btn || !btn.dataset.challengeId) return;
-    btn.addEventListener('click', async ()=>{
-      btn.disabled = true;
-      try {
-        const res = await fetch(cp + "/challenge/join/daily", {
-          method: "POST",
-          headers: { "Content-Type":"application/x-www-form-urlencoded" },
-          body: new URLSearchParams({ challengeId: btn.dataset.challengeId })
-        });
-        const data = await res.json();
-        if(data.state==='login')       alert('로그인 후 이용해주세요.');
-        else if(data.state==='joined') alert('오늘은 이미 참가하셨어요!');
-        else if(data.state==='true')   alert('참가 완료! 화이팅 💪');
-        else                           alert('잠시 후 다시 시도해주세요.');
-      } catch(e){
-        alert('네트워크 오류가 발생했습니다.');
-      } finally {
-        btn.disabled = false;
-      }
-    });
-  })();
-
   // 스페셜 - 지금 참가하기(상세로 이동)
   (function joinSpecialInit(){
     const grid = document.getElementById('specialGrid');
@@ -297,9 +282,10 @@
         const frag = document.createDocumentFragment();
 
         items.forEach(function(s){
-          const thumb = (s.thumbnail && s.thumbnail.length>0)
-                        ? (cp + "/uploads/challenge/" + s.thumbnail)
-                        : (cp + "/resources/admin/images/add_photo.png");
+          const hasThumb = !!(s.thumbnail && s.thumbnail.length>0);
+          const thumb = hasThumb ? (cp + "/uploads/challenge/" + s.thumbnail) : null;
+          const bg = hasThumb ? " style=\"background-image:url('" + thumb + "')\"" : "";
+
           const title = s.title || "";
           const desc  = s.description || "";
           const endDt = s.endDate || "";
@@ -309,7 +295,7 @@
           el.dataset.id = s.challengeId;
           el.dataset.endDate = endDt; // 다음 커서용
           el.innerHTML =
-            '<div class="card-thumb" style="background-image:url(\'' + thumb + '\')"></div>' +
+            '<div class="card-thumb"' + bg + '></div>' +
             '<div class="card-body">' +
               '<h3 class="card-title">' + title + '</h3>' +
               '<p class="card-desc">' + desc + '</p>' +

@@ -1,5 +1,6 @@
 package com.sp.app.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,10 @@ import com.sp.app.admin.model.CategoryManage;
 import com.sp.app.admin.service.CategoryManageService;
 import com.sp.app.model.Product;
 import com.sp.app.model.ProductDeliveryRefundInfo;
+import com.sp.app.model.ProductOrder;
+import com.sp.app.model.ProductReview;
 import com.sp.app.model.SessionInfo;
+import com.sp.app.service.ProductOrderService;
 import com.sp.app.service.ProductService;
 
 import jakarta.servlet.http.HttpSession;
@@ -30,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/products/*")
 public class ProductController {
 
+	private final ProductOrderService orderService;
 	private final CategoryManageService categoryManageService;
 	private final ProductService productService;
 	
@@ -143,6 +148,37 @@ public class ProductController {
 			ProductDeliveryRefundInfo deliveryRefundInfo = productService.listDeliveryRefundInfo();
 			List<ProductDeliveryRefundInfo> deliveryFee = productService.listDeliveryFee();
 			
+			// 상품을 구매하였는데 리뷰를 안 남긴 경우
+			Map<String, Object> orderMap = new HashMap<String, Object>();
+			List<ProductOrder> didIBuyThis = null;
+
+			if(info != null) {
+				orderMap.put("memberId", info.getMemberId());
+				orderMap.put("productCode", productId);				
+				didIBuyThis = orderService.didIBuyThis(orderMap);
+			}
+			
+			/*
+			List<ProductReview> myReviewOfThis = new ArrayList<>();
+			for(ProductOrder order : didIBuyThis) {
+				ProductReview review = orderService.myReviewOfThis(order.getOrderDetailId());
+				if(review != null) {
+					myReviewOfThis.add(review);					
+				}
+			}
+			System.out.println(didIBuyThis.size());
+			System.out.println(myReviewOfThis.size());
+			
+			boolean leaveReview = false;
+			if(didIBuyThis.size() > myReviewOfThis.size()) {
+				leaveReview = true;
+			}
+			System.out.println(leaveReview);
+			*/
+			boolean leaveReview = false;
+			if(didIBuyThis != null && didIBuyThis.size() > 0) {
+				leaveReview = true;
+			}
 			
 			model.addAttribute("dto", dto);
 			model.addAttribute("listOption", listOption);
@@ -150,6 +186,8 @@ public class ProductController {
 			model.addAttribute("listPhoto", listPhoto);
 			model.addAttribute("deliveryRefundInfo", deliveryRefundInfo);
 			model.addAttribute("deliveryFee", deliveryFee);
+			model.addAttribute("didIBuyThis", didIBuyThis);
+			model.addAttribute("leaveReview", leaveReview);
 			
 			return "products/productInfo";
 			
