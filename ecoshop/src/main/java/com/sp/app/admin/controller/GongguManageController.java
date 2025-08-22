@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -510,7 +509,6 @@ public class GongguManageController {
 	}
  	
  	// 패키지 상품 등록
- 	@Transactional(rollbackFor = {Exception.class})
  	@ResponseBody
  	@PostMapping("insertPackage")
  	public Map<String, ?> insertGongguPackage(
@@ -558,7 +556,6 @@ public class GongguManageController {
  	
  	
  	// 패키지 상품 삭제
- 	@Transactional(rollbackFor = {Exception.class})
  	@ResponseBody
  	@PostMapping("deletePackage")
  	public Map<String, ?> deleteGongguPackage(@RequestParam("packageNum") long packageNum) throws Exception {

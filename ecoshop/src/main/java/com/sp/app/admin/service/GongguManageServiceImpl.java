@@ -309,6 +309,7 @@ public class GongguManageServiceImpl implements GongguManageService {
 	}
 
 	// 패키지 구성 넣기
+	@Transactional(rollbackFor = {Exception.class})
 	@Override
 	public void insertGongguPackage(GongguPackageManage dto) throws Exception {
 	    try {
@@ -332,7 +333,7 @@ public class GongguManageServiceImpl implements GongguManageService {
 	    }
 	}
 
-
+	@Transactional(rollbackFor = {Exception.class})
 	@Override
 	public void deleteGongguPackage(long packageNum) throws Exception {
 		try {
