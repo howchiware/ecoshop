@@ -9,13 +9,11 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -46,10 +44,10 @@ import lombok.extern.slf4j.Slf4j;
 public class GongguManageController {
     private final GongguManageService gongguManageService;
     private final StorageService storageService;
+    private final ProductManageService productManageService;
 
     private final PaginateUtil paginateUtil;
     private final GongguReviewInquiryManageService gongguReviewInquiryManageService;
-    private final ProductManageService productManageService;
     private String uploadPath;
 
     @PostConstruct
@@ -169,11 +167,6 @@ public class GongguManageController {
 		
 		return "admin/gonggu/list";
 	}
-    
-    
-    
-    
-    
     
     @GetMapping("article")
 	public String article(
@@ -479,7 +472,7 @@ public class GongguManageController {
  			@RequestParam(name = "state", defaultValue = "1") int state,
 			@RequestParam(name = "page") String page,
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
-			@RequestParam(name = "kwd", defaultValue = "") String kwd,		
+			@RequestParam(name = "kwd", defaultValue = "") String kwd,
 			Model model, HttpServletRequest req) throws Exception {
  		String query = "page=" + page;
 		try {
@@ -498,7 +491,7 @@ public class GongguManageController {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("gongguProductId", gongguProductId);
 			
-			List<ProductManage> productList = productManageService.listProduct(map);
+			List<GongguPackageManage> productList = gongguManageService.listPackage(map);
 			
 			model.addAttribute("gongguProductId", gongguProductId);
 			model.addAttribute("dto", dto);
@@ -517,48 +510,78 @@ public class GongguManageController {
 	}
  	
  	// 패키지 상품 등록
+ 	@Transactional(rollbackFor = {Exception.class})
  	@ResponseBody
- 	@PostMapping("product")
- 	public Map<String, ?> productContain(GongguPackageManage dto) throws Exception {
- 		
- 		Map<String, Object> model = new HashMap<String, Object>();
- 		String state = "true";
- 		try {
- 			gongguManageService.insertGongguPackage(dto);
- 		} catch (Exception e) {
- 			state = "false";
- 		}
- 		
- 		model.put("state", state);
- 		return model;
+ 	@PostMapping("insertPackage")
+ 	public Map<String, ?> insertGongguPackage(
+ 	    @RequestParam("productCode") long productCode,
+ 	    @RequestParam("gongguProductId") long gongguProductId) throws Exception {
+
+ 	    Map<String, Object> model = new HashMap<>();
+ 	    String state = "true";
+
+ 	    try {
+ 	        GongguManage gongguInfo = gongguManageService.findById(gongguProductId);
+ 	        if (gongguInfo == null) {
+ 	            state = "false";
+ 	            model.put("state", state);
+ 	            return model;
+ 	        }
+
+ 	        ProductManage productInfo = productManageService.findById(productCode);
+ 	        if (productInfo == null) {
+ 	            state = "false";
+ 	            model.put("state", state);
+ 	            return model;
+ 	        }
+ 	        
+ 	        GongguPackageManage dto = new GongguPackageManage();
+ 	        dto.setProductCode(productCode);
+ 	        dto.setGongguProductId(gongguProductId);
+ 	        dto.setStock(gongguInfo.getLimitCount());
+ 	        dto.setProductName(productInfo.getProductName());
+ 	        dto.setPrice(productInfo.getPrice());
+
+ 	        gongguManageService.insertGongguPackage(dto);
+ 	       
+ 	        model.put("state", state);
+ 	        model.put("item", dto); 
+ 	        
+ 	    } catch (Exception e) {
+ 	        log.error("insertPackage : " ,e);
+ 	        state = "false";
+ 	        model.put("state", state);
+ 	    }
+ 	    
+ 	    return model;
  	}
-
+ 	
+ 	
  	// 패키지 상품 삭제
+ 	@Transactional(rollbackFor = {Exception.class})
  	@ResponseBody
- 	@DeleteMapping("product/{packageNum}")
- 	public Map<String, ?> productContainDelete(@PathVariable("packageNum") long packageNum) throws Exception {
-
- 		Map<String, Object> model = new HashMap<String, Object>();
- 		String state = "true";
- 		try {
- 			gongguManageService.deleteGongguPackage(packageNum);
- 		} catch (Exception e) {
- 			state = "false";
- 		}
- 		
- 		model.put("state", state);
- 		return model;
+ 	@PostMapping("deletePackage")
+ 	public Map<String, ?> deleteGongguPackage(@RequestParam("packageNum") long packageNum) throws Exception {
+ 	    Map<String, Object> model = new HashMap<String, Object>();
+ 	    String state = "true";
+ 	    try {
+ 	        gongguManageService.deleteGongguPackage(packageNum);
+ 	    } catch (Exception e) {
+ 	        state = "false";
+ 	    }
+ 	    model.put("state", state);
+ 	    return model;
  	}
  	
  	// 상품 검색
  	@ResponseBody
- 	@GetMapping("search")
+ 	@GetMapping("listProduct/search")
  	public Map<String, ?> productContainSearch(@RequestParam Map<String, Object> map) throws Exception {
  		Map<String, Object> model = new HashMap<String, Object>();
  		
  		String state = "true";
  		try {
- 			List<GongguPackageManage> list = gongguManageService.productSearch(map);
+ 			List<ProductManage> list = gongguManageService.productSearch(map);
  		
  			model.put("list", list);
  		} catch (Exception e) {

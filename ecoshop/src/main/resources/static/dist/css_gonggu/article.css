@@ -58,3 +58,12 @@ body {
 .cardContainer {
 	border: 10px;
 }
+
+.main-container {
+  position: relative;
+  margin-left: 250px;
+  padding: 20px;
+  box-sizing: border-box;
+  min-height: calc(100vh - 60px);
+  background-color: #f9f9f9;
+}

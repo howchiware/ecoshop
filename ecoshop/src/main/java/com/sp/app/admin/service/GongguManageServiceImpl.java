@@ -2,6 +2,7 @@ package com.sp.app.admin.service;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -14,6 +15,7 @@ import com.sp.app.admin.mapper.GongguManageMapper;
 import com.sp.app.admin.model.GongguDeliveryRefundInfo;
 import com.sp.app.admin.model.GongguManage;
 import com.sp.app.admin.model.GongguPackageManage;
+import com.sp.app.admin.model.ProductManage;
 import com.sp.app.common.StorageService;
 import com.sp.app.exception.StorageException;
 
@@ -105,15 +107,14 @@ public class GongguManageServiceImpl implements GongguManageService {
 	                }
 	                dto.setGongguThumbnail(filename); 
 	            }
+	        }
 	       
 	        gongguManageMapper.updateProduct(dto);
 
 	        if(! dto.getAddFiles().isEmpty()) {
-	        	insertProductPhoto(dto, uploadPath);
+	            insertProductPhoto(dto, uploadPath);
 	        }
-	        
-	        
-	        }
+
 	    } catch (Exception e) {
 	    	log.info("updateProduct : ", e);
 	    	
@@ -310,12 +311,27 @@ public class GongguManageServiceImpl implements GongguManageService {
 	// 패키지 구성 넣기
 	@Override
 	public void insertGongguPackage(GongguPackageManage dto) throws Exception {
-		try {
+	    try {
+	        GongguManage gongguDto = gongguManageMapper.findById(dto.getGongguProductId());
+	        
+	        if (gongguDto != null) {
+	            dto.setStock(gongguDto.getLimitCount());
+	        }
+	        
 	        gongguManageMapper.insertGongguPackage(dto);
+	        
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("gongguProductId", dto.getGongguProductId());
+	        
+	        List<GongguPackageManage> packageList = gongguManageMapper.listPackage(map);
+	        dto.setPackageNum(packageList.get(0).getPackageNum());
+	        
 	    } catch (Exception e) {
-	    	log.error("insertGongguPackage : ", e);
+	        log.error("insertGongguPackage : ", e);
+	        throw e;
 	    }
 	}
+
 
 	@Override
 	public void deleteGongguPackage(long packageNum) throws Exception {
@@ -328,12 +344,24 @@ public class GongguManageServiceImpl implements GongguManageService {
 
 
 	@Override
-	public List<GongguPackageManage> productSearch(Map<String, Object> map) {
-		List<GongguPackageManage> list = null;
+	public List<ProductManage> productSearch(Map<String, Object> map) {
+	    List<ProductManage> list = null; 
 	    try {
 	        list = gongguManageMapper.productSearch(map);
 	    } catch (Exception e) {
 	    	log.error("productSearch : ", e);
+	    }
+	    return list;
+	}
+
+	@Override
+	public List<GongguPackageManage> listPackage(Map<String, Object> map) throws Exception {
+		List<GongguPackageManage> list = null;
+	    try {
+	        list = gongguManageMapper.listPackage(map);
+	    } catch (Exception e) {
+	        log.error("listPackage : ", e);
+	        throw e;
 	    }
 	    return list;
 	}

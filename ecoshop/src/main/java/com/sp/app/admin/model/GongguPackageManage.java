@@ -14,7 +14,7 @@ import lombok.Setter;
 public class GongguPackageManage {
     private long gongguProductId;
     private long productCode;
-    private long productName;
+    private String productName;
     private long packageNum;
     private int stock;
     private int price;

@@ -7,14 +7,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>상품 등록/수정</title>
+<title>패키지 상세</title>
 <jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp" />
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/dist/css/paginate.css">
 <link rel="stylesheet"
@@ -65,166 +63,234 @@
 					</div>
 					<hr>
 					<div class="row packageList-container">
-						<div class="col-md-4">패키지 상품구성</div>
-						<div class="btn col-md-4 offset-md-4">
+						<div class="col-md-6">패키지 상품구성</div>
+						<div class="col-md-6 text-end">
 							<button type="button" class="btn-default btn-append">상품등록</button>
 						</div>
-						<table class="table table-hover board-list">
-							<thead>
+					</div>
+					<table class="table table-hover board-list">
+						<thead>
+							<tr>
+								<th width="110">상품코드</th>
+								<th>상품명</th>
+								<th width="110">가격</th>
+								<th width="80">변경</th>
+							</tr>
+						</thead>
+						<tbody class="product-list">
+							<c:forEach var="vo" items="${productList}">
 								<tr>
-									<th width="110">상품코드</th>
-									<th>상품명</th>
-									<th width="110">가격</th>
-									<th width="80">변경</th>
+									<td data-productCode="${vo.productCode}">${vo.productCode}</td>
+									<td class="left" data-productName="${vo.productName}">${vo.productName}</td>
+									<td data-price="${vo.price}">${vo.price}</td>
+									<td>
+										<button type="button" class="btn-default btn-sm btn-delete"
+											title="삭제" data-packageNum="${vo.packageNum}">삭제</button>
+									</td>
 								</tr>
-							</thead>
-							<tbody class="product-list">
-								<c:forEach var="vo" items="${productList}">
-									<tr>
-										<td data-productCode="${vo.productCode}">${vo.productCode}</td>
-										<td class="left" data-productName="${vo.productName}">${vo.productName}</td>
-										<td data-price="${vo.price}">${vo.price}</td>										
-										<td>
-											<button type="button" class="btn-default btn-sm btn-delete" title="삭제" data-packageNum="${vo.packageNum}">삭제</button>
-										</td>
-									</tr>
-								</c:forEach>
-							</tbody>					
-						</table>
-						
-						<div class="page-navigation">
-							${dataCount == 0 ? "등록된 정보가 없습니다." : paging}
-						</div>
-						
+							</c:forEach>
+						</tbody>
+					</table>
+
+					<div class="page-navigation">${dataCount == 0 ? "등록된 정보가 없습니다." : paging}
 					</div>
 				</div>
 			</div>
 		</div>
 	</main>
+
+	<div class="modal fade" id="prodectSearchModal" tabindex="-1"
+		aria-labelledby="prodectSearchModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="prodectSearchModalLabel">상품 검색</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col">
+							<form name="searchForm" class="search-form form-inline">
+								<select name="schType" class="form-select w-25">
+									<option value="productName">상품명</option>
+									<option value="productCode">상품코드</option>
+								</select> <input type="text" name="kwd" class="form-control"
+									placeholder="검색어를 입력하세요">
+								<button type="button" class="btn btn-primary btn-productSearch">검색</button>
+							</form>
+						</div>
+					</div>
+					<hr>
+					<table class="table table-hover board-list">
+						<thead>
+							<tr>
+								<th width="110">상품코드</th>
+								<th>상품명</th>
+								<th width="80">가격</th>
+							</tr>
+						</thead>
+						<tbody class="product-search-list">
+						</tbody>
+					</table>
+					</div>
+			</div>
+		</div>
+	</div>
+
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script
+		src="${pageContext.request.contextPath}/dist/jsGonggu/sendAjaxRequest.js"></script>
+
 	<script type="text/javascript">
 		function deleteOk() {
 			let params = 'gongguProductId=${dto.gongguProductId}&${query}&gongguThumbnail=${dto.gongguThumbnail}';
-			let url = '${pageContext.request.contextPath}/admin/gonggu/delete?'
-					+ params;
+			let url = '${pageContext.request.contextPath}/admin/gonggu/delete?' + params;
 			if (confirm('위 자료를 삭제 하시 겠습니까 ? ')) {
 				location.href = url;
 			}
 		}
-	</script>
-	<script type="text/javascript">
-	window.addEventListener('load', () => {
-		const inputEL = document.querySelector('#keyword'); 
-		inputEL.addEventListener('keydown', function (evt) {
-			if(evt.key === 'Enter') {
-				searchList();
+
+		window.addEventListener('load', () => {
+			const inputEL = document.querySelector('#keyword'); 
+			if (inputEL) {
+				inputEL.addEventListener('keydown', function (evt) {
+					if(evt.key === 'Enter') {
+						searchList();
+					}
+				});
 			}
 		});
-	});
-	
-	function searchList() {
-		let kwd = document.querySelector('#keyword').value.trim();
-		if(! kwd) {
-			return;
+		
+		function searchList() {
+			let kwd = document.querySelector('#keyword').value.trim();
+			if(! kwd) {
+				return;
+			}
+			
+			let params = 'kwd=' + encodeURIComponent(kwd);
+			let url = '${pageContext.request.contextPath}/admin/listProduct/${gongguProductId}';
+			location.href = url + '?' + params;
 		}
 		
-		let params = 'kwd=' + encodeURIComponent(kwd);
-		
-		let url = '${pageContext.request.contextPath}/admin/listProduct/${gongguProductId}';
-		location.href = url + '?' + params;
-	}
-	
-	$(function(){
-		// 상품 검색 대화상자
-		$('.btn-search').on('click', function(){
-			$('.search-form select[name=schType]').val('prodectName');
-		    $('.search-form input[name=kwd]').val('');
-			$('.product-search-list').empty();
+		$(function(){
+			$('.btn-append').on('click', function(){
+				$('.search-form select[name=schType]').val('productName');
+				$('.search-form input[name=kwd]').val('');
+				$('.product-search-list').empty(); 
+				$('#prodectSearchModal').modal('show');
+			});
+			let gongguProductId = '${dto.gongguProductId}'; 
 			
-			$('#prodectSearchModal').modal('show');		
-		});
-		
-		$('.btn-productSearch').on('click', function(){
-			$('.product-search-list').empty();
-			
-			let schType = $('.search-form select[name=schType]').val();
-		    let kwd = $('.search-form input[name=kwd]').val();
-		    
-		    let params = {schType:schType, kwd:kwd};
-		    let url = '${pageContext.request.contextPath}/admin/listProduct/search';
+			$('.btn-productSearch').on('click', function(){
+				$('.product-search-list').empty(); 
+				
+				let schType = $('.search-form select[name=schType]').val();
+				let kwd = $('.search-form input[name=kwd]').val();
+				
+				let params = {schType:schType, kwd:kwd, gongguProductId: gongguProductId};
+				let url = '${pageContext.request.contextPath}/admin/gonggu/listProduct/search';
 
-		    const fn = function(data) {
-		    	let out = '';
-		    	for(let item of data.list) {
-		    		let productCode = item.productCode;
-		    		let productName = item.productName;
-		    		
-		    		out += `
-		    			<div class="row mb-2 p-2 border-bottom">
-		    				<div class="col-3 text-center">\${productCode}</div>
-		    				<div class="col ps-2 search-productName" data-productCode="\${productCode}">\${productName}</div>
-		    			</div>
-		    		`;
-		    	}
-		    	
-		    	$('.product-search-list').html(out);
-			};
+				const fn = function(data) {
+				    let out = '';
+				    if (data.list && data.list.length > 0) {
+					    for(let item of data.list) {
+					        let productCode = item.productCode;
+					        let productName = item.productName;
+					        let price = item.price;
+					        out += `
+					            <tr>
+					                <td>\${productCode}</td>
+					                <td class="left">\${productName}</td>
+					                <td>
+					                    <button type="button" class="btn btn-default btn-sm btn-direct-register" 
+					                            data-productCode="\${productCode}" 
+					                            data-productName="\${productName}">등록</button>
+					                </td>
+					            </tr>
+					        `;
+					    }
+				    } else {
+				    	out = '<tr><td colspan="4">검색 결과가 없습니다.</td></tr>';
+				    }
+				    $('.product-search-list').html(out); 
+				};
+				
+				sendAjaxRequest(url, 'get', params, 'json', fn);
+			});
 			
-			ajaxRequest(url, 'get', params, 'json', fn);
-		});
-		
-		$('.product-search-list').on('click', '.search-productName', function(){
-			let productCode = $(this).attr('data-productCode');
-			let productName = $(this).text().trim();
-			
-			$('.saveProduct-form input[name=productCode]').val(productCode);
-			$('.saveProduct-form input[name=productName]').val(productName);
-			
-			$('#prodectSearchModal').modal('hide');
-		});
-		
-		// 상품 등록 대화상자
-		$('.btn-append').on('click', function(){
-			$('.saveProduct-form input[name=productCode]').val('');
-			$('.saveProduct-form input[name=productName]').val('');
-			$('.saveProduct-form input[name=packageNum]').val('0');
-			
-			$('.saveProduct-form input[name=mode]').val('insert');
-			
-			$('.saveProduct-form .btn-productSave').text('등록');
+			$('.product-search-list').on('click', '.btn-direct-register', function(){
+				let $row = $(this).closest('tr');
+				let productCode = $(this).data('productcode');
+			    
+			    let params = {
+			    	productCode: productCode,
+			    	gongguProductId: '${dto.gongguProductId}'
+			    };
+			    
+			    let url = '${pageContext.request.contextPath}/admin/gonggu/insertPackage';
+				
+			    const fn = function(data) {
+			        if(data.state === 'true') {
+			            // ✅ 등록 성공 시 모달에서 행 숨기기
+                        $row.hide();
+                        
+                        // ✅ 패키지 리스트에 동적으로 행 추가
+                        let item = data.item;
+                        let newRow = `
+                            <tr>
+                                <td>\${item.productCode}</td>
+                                <td class="left">\${item.productName}</td>
+                                <td>\${item.price}</td>
+                                <td>
+                                    <button type="button" class="btn btn-default btn-sm btn-delete" 
+                                            title="삭제" data-packageNum="\${item.packageNum}">삭제</button>
+                                </td>
+                            </tr>
+                        `;
+                        $('.product-list').append(newRow);
+                        
+                        // 모달 닫기
+                        $('#prodectSearchModal').modal('hide');
+                        
+			        } else {
+			            alert(data.message || '상품 등록이 실패 했습니다.');
+			        }
+			    };
+				
+				sendAjaxRequest(url, 'post', params, 'json', fn);
+			});
+				
+			$('body').on('click', '.btn-delete', function(){
+			    let packageNum = $(this).attr('data-packageNum');
+			    let $row = $(this).closest('tr');
 
-			$('#prodectSaveModal').modal('show');		
-		});
-		
-		// 상품 등록 완료
-		$('.btn-productSave').on('click', function(){
-			let productCode = $('.saveProduct-form input[name=productCode]').val();
-			let productName = $('.saveProduct-form input[name=productName]').val();
-
-			if( ! productCode ) {
-				return false;
-			}
-
-			const fn = function(data) {
-				if(data.state === 'true') {
-					let reloadUrl = '${pageContext.request.contextPath}/admin/listProduct/${gongguProductId}';
-					location.href = reloadUrl;
-				} else {
-					alert('상품 등록이 실패 했습니다.');
-				}
-			};
-			
-		// 상품 삭제 버튼
-		$('.btn-delete').on('click', function(){
-			let packageNum = $(this).attr('data-packageNum');
-			
-			let url = '${pageContext.request.contextPath}/admin/gonggu/deletePackage?gongguProductId=${dto.gongguProductId}&packageNum=' + packageNum;
-			if(confirm('해당 상품을 패키지 구성에서 삭제하시겠습니까?')) {
-				location.href = url;
-			}
-		});
-
-	});
-
+			    if(confirm('해당 상품을 패키지 구성에서 삭제하시겠습니까?')) {
+			        let url = '${pageContext.request.contextPath}/admin/gonggu/deletePackage';
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: {
+                            packageNum: packageNum
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            if(data.state === 'true') {
+                                $row.remove();
+                            } else {
+                                alert(data.message || '삭제에 실패했습니다.');
+                            }
+                        },
+                        error: function() {
+                            alert('삭제 중 오류가 발생했습니다.');
+                        }
+                    });
+			    }
+			});
+		}); 
 	</script>
 </body>
 </html>

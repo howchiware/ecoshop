@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.sp.app.admin.model.GongguDeliveryRefundInfo;
 import com.sp.app.admin.model.GongguManage;
 import com.sp.app.admin.model.GongguPackageManage;
+import com.sp.app.admin.model.ProductManage;
 
 @Mapper
 public interface GongguManageMapper {
@@ -25,7 +26,8 @@ public interface GongguManageMapper {
 	// 패키지 구성 넣기 
 	public void insertGongguPackage(GongguPackageManage dto) throws SQLException;
 	public void deleteGongguPackage(long packageNum) throws SQLException;
-	public List<GongguPackageManage> productSearch(Map<String, Object> map);
+	public List<ProductManage> productSearch(Map<String, Object> map);
+	public List<GongguPackageManage> listPackage(Map<String, Object> map);
 	
 	// 카테고리
 	public GongguManage findByCategory(long categoryId);
