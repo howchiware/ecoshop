@@ -7,13 +7,10 @@
 <meta charset="UTF-8" />
 <title>참여자 관리</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/workshop.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
-.main-container .container {
-  margin-left: 250px;
-  max-width: calc(100% - 250px);
-}
-
 .section-title {
   padding-bottom: .75rem;
   margin-bottom: 1rem;

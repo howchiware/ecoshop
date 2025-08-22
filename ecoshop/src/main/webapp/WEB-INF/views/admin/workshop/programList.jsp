@@ -7,17 +7,23 @@
 <meta charset="UTF-8">
 <title>프로그램 목록</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
 <style type="text/css">
-.main-container .container {
-	margin-left: 250px;
-	max-width: calc(100% - 250px);
-}
-
 .program-content {
 	white-space: pre-wrap
+}
+
+.btn-manage {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 4px;
+  padding: 3px 10px;
+  color: #000;
+  font-size: 0.9rem;
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
 }
 </style>
 </head>
@@ -32,10 +38,14 @@
 		<div class="container py-3">
 
 			<!-- 상단 바 -->
-			<div class="d-flex justify-content-between align-items-center mb-3">
-				<h4 class="m-0">프로그램 관리</h4>
-				<div class="d-flex gap-2">
-					<a class="btn btn-outline-secondary"
+			<div class="d-flex align-items-center justify-content-between mb-3">
+				<h3 class="m-0">프로그램 관리</h3>
+			</div>
+			
+			<hr>
+			
+				<div class="d-flex justify-content-end mb-2">
+					<a class="btn-manage btn-register"
 						href="${ctx}/admin/workshop/program/write">등록</a>
 				</div>
 			</div>
