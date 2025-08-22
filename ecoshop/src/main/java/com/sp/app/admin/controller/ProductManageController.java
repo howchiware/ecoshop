@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.app.admin.model.CategoryManage;
+import com.sp.app.admin.model.GongguReviewManage;
 import com.sp.app.admin.model.ProductDeliveryRefundInfoManage;
 import com.sp.app.admin.model.ProductInquiryManage;
 import com.sp.app.admin.model.ProductManage;
@@ -435,57 +436,131 @@ public class ProductManageController {
 		
 		return "admin/products/productReviewInquiry";
 	}
-	    
+	
     @GetMapping(value = "reviewList")
     public String getProductReviewList(
-    		@RequestParam(value = "productName", required = false) String productName, 
-    		@RequestParam(value = "kwd", required = false) String kwd, 
-    		Model model) {
-    	Map<String, Object> map = new HashMap<>();
-        map.put("productName", productName);
-        map.put("kwd", kwd);
+    		@RequestParam(value = "productName", required = false, defaultValue = "") String productName, 
+    		@RequestParam(value = "kwd", required = false, defaultValue = "") String kwd, 
+    		@RequestParam(name = "pageNo", defaultValue = "1") int current_page,
+    		Model model, HttpServletRequest req) {
     	
-        List<ProductReviewManage> reviewList = productReviewInquiryManageService.searchReviews(map);
-      
-        model.addAttribute("reviewList", reviewList);
-        model.addAttribute("productName", productName);
-        model.addAttribute("kwd", kwd);
+		try {
+			
+	    	HttpSession session = req.getSession();
+	    	SessionInfo info = (SessionInfo)session.getAttribute("member");
+	    	
+	    	int size = 5;
+			int dataCount = 0;
+	    	
+	    	long managerId = info.getMemberId();
+	    	String managerName = info.getName();
+	    	
+	    	Map<String, Object> map = new HashMap<>();
+	        map.put("productName", productName);
+	        map.put("kwd", kwd);
+	        
+	        dataCount = productReviewInquiryManageService.dataCountReview(map);
+			int total_page = paginateUtil.pageCount(dataCount, size);
+	
+			current_page = Math.min(current_page, total_page);
+	
+			int offset = (current_page - 1) * size;
+			if(offset < 0) offset = 0;
+	
+			map.put("offset", offset);
+			map.put("size", size);
+			
+	        List<ProductReviewManage> reviewList = productReviewInquiryManageService.searchReviews(map);
+	        
+	        if(reviewList != null) {
+		        for(ProductReviewManage dto : reviewList) {
+		        	if(dto.getAnswer() != null) {
+		        		String answerName = productReviewInquiryManageService.answerNameFindById(dto.getAnswerId());
+		        		dto.setAnswerName(answerName);        		
+		        	}
+		        }
+	        }
+	        
+	        String paging = paginateUtil.pagingMethod(current_page, total_page, "listReview");
+	        
+	        model.addAttribute("reviewList", reviewList);
+	        model.addAttribute("productName", productName);
+	        model.addAttribute("kwd", kwd);
+	        model.addAttribute("managerId", managerId);
+	        model.addAttribute("managerName", managerName);
+			model.addAttribute("dataCount", dataCount);
+			model.addAttribute("size", size);
+			model.addAttribute("pageNo", current_page);
+			model.addAttribute("paging", paging);
+			model.addAttribute("total_page", total_page);
+			
+		} catch (Exception e) {
+			log.info("getProductReviewList : ", e);
+		}
         
         return "admin/products/reviewList";
     }
     
     @GetMapping(value = "inquiryList")
     public String getInquiryList(
-    		@RequestParam(value = "productName", required = false) String productName, 
-    		@RequestParam(value = "kwd", required = false) String kwd, 
+    		@RequestParam(value = "productName", required = false, defaultValue = "") String productName, 
+    		@RequestParam(value = "kwd", required = false, defaultValue = "") String kwd, 
+    		@RequestParam(name = "pageNo", defaultValue = "1") int current_page,
     		Model model,
     		HttpServletRequest req) {
     	
-    	HttpSession session = req.getSession();
-    	SessionInfo info = (SessionInfo)session.getAttribute("member");
-    	
-    	long managerId = info.getMemberId();
-    	String managerName = info.getName();
-    	
-    	Map<String, Object> map = new HashMap<>();
-        map.put("productName", productName);
-        map.put("kwd", kwd);
-        
-        List<ProductInquiryManage> inquiryList = productReviewInquiryManageService.searchInquirys(map);
-        
-        for(ProductInquiryManage dto : inquiryList) {
-        	if(dto.getAnswer() != null) {
-        		String answerName = productReviewInquiryManageService.answerNameFindById(dto.getAnswerId());
-        		System.out.println(answerName);
-        		dto.setAnswerName(answerName);        		
-        	}
-        }
-        
-        model.addAttribute("inquiryList", inquiryList);
-        model.addAttribute("productName", productName);
-        model.addAttribute("kwd", kwd);
-        model.addAttribute("managerId", managerId);
-        model.addAttribute("managerName", managerName);
+    	try {
+    		HttpSession session = req.getSession();
+	    	SessionInfo info = (SessionInfo)session.getAttribute("member");
+	    	
+	    	int size = 5;
+			int dataCount = 0;
+	    	
+	    	long managerId = info.getMemberId();
+	    	String managerName = info.getName();
+	    	
+	    	Map<String, Object> map = new HashMap<>();
+	        map.put("productName", productName);
+	        map.put("kwd", kwd);
+	        
+	        dataCount = productReviewInquiryManageService.dataCountInquiry(map);
+			int total_page = paginateUtil.pageCount(dataCount, size);
+	
+			current_page = Math.min(current_page, total_page);
+	
+			int offset = (current_page - 1) * size;
+			if(offset < 0) offset = 0;
+	
+			map.put("offset", offset);
+			map.put("size", size);
+			
+			List<ProductInquiryManage> inquiryList = productReviewInquiryManageService.searchInquirys(map);
+	        
+	        if(inquiryList != null) {
+		        for(ProductInquiryManage dto : inquiryList) {
+		        	if(dto.getAnswer() != null) {
+		        		String answerName = productReviewInquiryManageService.answerNameFindById(dto.getAnswerId());
+		        		dto.setAnswerName(answerName);        		
+		        	}
+		        }
+	        }
+	        
+	        String paging = paginateUtil.pagingMethod(current_page, total_page, "listInquiry");
+	        
+	        model.addAttribute("inquiryList", inquiryList);
+	        model.addAttribute("productName", productName);
+	        model.addAttribute("kwd", kwd);
+	        model.addAttribute("managerId", managerId);
+	        model.addAttribute("managerName", managerName);
+			model.addAttribute("dataCount", dataCount);
+			model.addAttribute("size", size);
+			model.addAttribute("pageNo", current_page);
+			model.addAttribute("paging", paging);
+			model.addAttribute("total_page", total_page);
+			
+		} catch (Exception e) {
+			log.info("getInquiryList : ", e);
+		}
         
         return "admin/products/inquiryList";
     }
@@ -527,6 +602,54 @@ public class ProductManageController {
     		
     	} catch (Exception e) {
     		log.info("deleteInquiry : ", e);
+    	}
+    	
+    	return "redirect:/admin/products/productReviewInquiry";
+    }
+    
+    @GetMapping("reviewPage")
+	public String reviewPage(@RequestParam(value="memberId", required = false) Long memberId, Model model) {
+		
+		return "admin/products/productReviewInquiry";
+	}
+	
+    @PostMapping("writeReviewAnswer")
+    public String writeReviewAnswer(ProductReviewManage dto,
+    		Model model) {
+    	try {
+    		productReviewInquiryManageService.updateReviewAnswer(dto);
+		} catch (Exception e) {
+			log.info("writeReviewAnswer : ", e);
+		}
+    	
+    	return "redirect:/admin/products/productReviewInquiry";
+    }
+
+    @GetMapping("deleteReviewAnswer")
+    public String deleteReviewAnswer(@RequestParam(name="reviewId") long reviewId,
+    		Model model,
+    		HttpServletRequest req) {
+    	try {
+        	
+    		productReviewInquiryManageService.deleteReviewAnswer(reviewId);        		
+        	
+    	} catch (Exception e) {
+    		log.info("deleteReviewAnswer : ", e);
+    	}
+    	
+    	return "redirect:/admin/products/productReviewInquiry";
+    }
+    
+    @GetMapping("deleteReview")
+    public String deleteReview(@RequestParam(name="reviewId") long reviewId,
+    		Model model,
+    		HttpServletRequest req) {
+    	try {
+    		
+    		productReviewInquiryManageService.deleteReview(reviewId);        		
+    		
+    	} catch (Exception e) {
+    		log.info("deleteReview : ", e);
     	}
     	
     	return "redirect:/admin/products/productReviewInquiry";

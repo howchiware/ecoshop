@@ -3,6 +3,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.admin.mapper.ProductReviewInquiryManageMapper">
 
+	<select id="dataCountReview" parameterType="Map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) count
+		FROM productReview pr
+		LEFT OUTER JOIN product p ON p.productCode = pr.productCode
+		JOIN member1 m1 ON pr.memberId = m1.memberId
+		JOIN member2 m2 ON m1.memberId = m2.memberId
+		<where>
+	        <if test="productName != null and !productName.isEmpty()">
+	            AND p.productName LIKE '%' || #{productName} || '%'
+	        </if>
+	        <if test="kwd != null and !kwd.isEmpty()">
+	            AND (pr.content LIKE '%' || #{kwd} || '%' OR m2.name LIKE '%' || #{kwd} || '%')
+	        </if>
+	    </where>
+	</select>
+
+	<select id="dataCountInquiry" parameterType="Map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) count
+		FROM productInquiry pi
+		LEFT OUTER JOIN product p ON pi.productCode = p.productCode
+		JOIN member1 m1 ON pi.memberId = m1.memberId
+		JOIN member2 m2 ON m1.memberId = m2.memberId
+		<where>
+	        <if test="productName != null and !productName.isEmpty()">
+	            AND p.productName LIKE '%' || #{productName} || '%'
+	        </if>
+	        <if test="kwd != null and !kwd.isEmpty()">
+	            AND (pi.content LIKE '%' || #{kwd} || '%' OR m2.name LIKE '%' || #{kwd} || '%')
+	        </if>
+	    </where>
+	</select>
+
 	<select id="findAllReviews" resultType="com.sp.app.admin.model.ProductReviewManage">
 	SELECT reviewId, m2.name AS userName, pr.content, pr.regDate, p.productId, pr.productCode, pr.memberId, pr.showReview, pr.answerId, pr.answerDate, pr.answer, p.productName, pr.rate
 	FROM productReview pr
@@ -24,20 +56,27 @@
 	</select>
 	
 	<select id="findReviewsBySearch" parameterType="map" resultType="com.sp.app.admin.model.ProductReviewManage">
-    SELECT reviewId, m2.name AS userName, pr.content, pr.regDate, (CASE WHEN pr.answer IS NOT NULL THEN 1 ELSE 0 END) AS status, p.productId, pr.productCode, pr.memberId, pr.showReview, pr.answerId, pr.answerDate, pr.answer, p.productName, pr.rate
-    FROM productReview pr
-    JOIN member1 m1 ON pr.memberId = m1.memberId
-    JOIN member2 m2 ON m1.memberId = m2.memberId
-    JOIN product p ON pr.productCode = p.productCode
-    <where>
-        <if test="productName != null and !productName.isEmpty()">
-            AND p.productName LIKE '%' || #{productName} || '%'
-        </if>
-        <if test="kwd != null and !kwd.isEmpty()">
-            AND (pr.content LIKE '%' || #{kwd} || '%' OR m2.name LIKE '%' || #{kwd} || '%')
-        </if>
-    </where>
-    ORDER BY pr.regDate DESC
+	    SELECT pr.reviewId, m2.name AS userName, pr.content, pr.regDate, (CASE WHEN pr.answer IS NOT NULL THEN 1 ELSE 0 END) AS status, p.productId, pr.productCode, pr.memberId, pr.showReview, 
+	    pr.answerId, pr.answerDate, pr.answer, p.productName, pr.rate, reviewImg
+	    FROM productReview pr
+	    JOIN member1 m1 ON pr.memberId = m1.memberId
+	    JOIN member2 m2 ON m1.memberId = m2.memberId
+	    JOIN product p ON pr.productCode = p.productCode
+	    LEFT OUTER JOIN (
+			SELECT reviewId, LISTAGG(reviewImg, ',') WITHIN GROUP(ORDER BY reviewId) reviewImg
+			FROM productReviewDetail
+			GROUP BY reviewId
+		) rd ON pr.reviewId = rd.reviewId
+	    <where>
+	        <if test="productName != null and !productName.isEmpty()">
+	            AND p.productName LIKE '%' || #{productName} || '%'
+	        </if>
+	        <if test="kwd != null and !kwd.isEmpty()">
+	            AND (pr.content LIKE '%' || #{kwd} || '%' OR m2.name LIKE '%' || #{kwd} || '%')
+	        </if>
+	    </where>
+	    ORDER BY pr.regDate DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 	
 	<select id="findInquirysBySearch" parameterType="map" resultType="com.sp.app.admin.model.ProductInquiryManage">
@@ -57,6 +96,7 @@
 	        </if>
 	    </where>
 	    ORDER BY i.regDate DESC
+	    OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 	
 	<update id="updateAnswer" parameterType="com.sp.app.admin.model.ProductInquiryManage">
@@ -76,5 +116,24 @@
 	
 	<delete id="deleteInquiry" parameterType="Long">
 		DELETE FROM productInquiry WHERE inquiryId = #{inquiryId}
+	</delete>
+	
+	<update id="updateReviewAnswer" parameterType="com.sp.app.admin.model.ProductReviewManage">
+		UPDATE productReview SET answer = #{answer}, answerDate = SYSDATE, answerId = #{answerId}
+		WHERE reviewId = #{reviewId}
+	</update>
+	
+	<select id="reviewAnswerNameFindById" parameterType="Long" resultType="String">
+	    SELECT name
+	    FROM member2
+	    WHERE memberId = #{answerId}
+	</select>
+	
+	<update id="deleteReviewAnswer" parameterType="Long">
+		UPDATE productReview SET answerId = null, answer = null, answerDate = null WHERE reviewId = #{reviewId}
+	</update>
+	
+	<delete id="deleteReview" parameterType="Long">
+		DELETE FROM productReview WHERE reviewId = #{reviewId}
 	</delete>
 </mapper>

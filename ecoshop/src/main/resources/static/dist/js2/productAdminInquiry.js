@@ -234,3 +234,27 @@ $(function(){
 		location.href = 'deleteInquiry?inquiryId=' + inquiryId;
 	});
 });
+
+
+function listInquiry(page) {
+	let searchType = document.getElementById('searchType').value;
+	let searchValue = document.getElementById('searchValue').value;
+	let productName = '';
+	let kwd = '';
+	if(searchType === 'productName' && searchValue !== ''){
+		productName = document.getElementById('searchValue').value;
+	} else if(searchType === 'kwd') {
+		kwd = document.getElementById('searchValue').value;
+	}
+	
+	let url = 'inquiryList';
+	// let params = 'num=${dto.num}&pageNo=' + page;
+	let params = {productName:productName, kwd:kwd, pageNo:page};
+	let selector = 'div#content-area';
+
+	const fn = function(data){
+		$(selector).html(data);
+	};
+
+	ajaxRequest(url, 'get', params, 'text', fn);
+}

@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
 <form name="inquiryAnswerForm" method="post">
+	<p>총 ${dataCount}개의 문의 (${pageNo} / ${total_page} 페이지)</p>
 	<table class="table table-borderless board-list">
 	    <thead>
 	        <tr class="border-bottom">
@@ -86,11 +87,9 @@
 						</tr>
 	            </c:forEach>
 	        </c:if>
-	        <c:if test="${empty inquiryList}">
-	            <tr>
-	                <td colspan="6" style="text-align: center;">등록된 내용이 없습니다.</td>
-	            </tr>
-	        </c:if>
 	    </tbody>
 	</table>
+	<div class="page-navigation">
+		${dataCount==0 ? "등록된 내용이 없습니다." : paging}
+	</div>
 </form>

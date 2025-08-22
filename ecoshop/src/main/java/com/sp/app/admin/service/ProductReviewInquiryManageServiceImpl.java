@@ -6,8 +6,10 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.sp.app.admin.mapper.ProductReviewInquiryManageMapper;
+import com.sp.app.admin.model.GongguReviewManage;
 import com.sp.app.admin.model.ProductInquiryManage;
 import com.sp.app.admin.model.ProductReviewManage;
+import com.sp.app.model.ProductReview;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,17 @@ public class ProductReviewInquiryManageServiceImpl implements ProductReviewInqui
 		List<ProductReviewManage> list = null;
         try {
             list = productReviewInquiryManageMapper.findAllReviews();
+            for (ProductReviewManage dto : list) {
+				if(dto.getReviewImg() != null) {
+					dto.setListReviewImg(dto.getReviewImg().split(","));
+				}
+				
+				dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+				
+				if(dto.getAnswer() != null) {
+					dto.setAnswer(dto.getAnswer().replaceAll("\n", "<br>"));
+				}
+			}
         } catch (Exception e) {
             log.error("getReviewList :", e);
         }
@@ -46,6 +59,19 @@ public class ProductReviewInquiryManageServiceImpl implements ProductReviewInqui
 		
 		try {
 			list = productReviewInquiryManageMapper.findReviewsBySearch(map);
+			
+            for (ProductReviewManage dto : list) {
+				if(dto.getReviewImg() != null) {
+					System.out.println(dto.getReviewImg());
+					dto.setListReviewImg(dto.getReviewImg().split(","));
+				}
+				
+				dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+				
+				if(dto.getAnswer() != null) {
+					dto.setAnswer(dto.getAnswer().replaceAll("\n", "<br>"));
+				}
+			}
 		} catch (Exception e) {
 			log.info("searchReviews: ", e);
 		}
@@ -57,6 +83,15 @@ public class ProductReviewInquiryManageServiceImpl implements ProductReviewInqui
 		List<ProductInquiryManage> list = null;
 		try {
 			list = productReviewInquiryManageMapper.findInquirysBySearch(map);
+			
+            for (ProductInquiryManage dto : list) {
+
+				dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+				
+				if(dto.getAnswer() != null) {
+					dto.setAnswer(dto.getAnswer().replaceAll("\n", "<br>"));
+				}
+			}
 		} catch (Exception e) {
 			log.info("searchInquirys: ", e);
 		}
@@ -102,5 +137,72 @@ public class ProductReviewInquiryManageServiceImpl implements ProductReviewInqui
 			log.info("deleteInquiry: ", e);
 		}
 	}
+	
+	@Override
+	public void updateReviewAnswer(ProductReviewManage dto) {
+		try {
+			productReviewInquiryManageMapper.updateReviewAnswer(dto);
+		} catch (Exception e) {
+			log.info("updateReviewAnswer: ", e);
+		}
+	}
+
+	@Override
+	public String reviewAnswerNameFindById(long answerId) {
+		String name = null;
+		
+		try {
+			name = productReviewInquiryManageMapper.reviewAnswerNameFindById(answerId);
+		} catch (Exception e) {
+			log.info("reviewAnswerNameFindById: ", e);
+		}
+		
+		return name;
+	}
+
+	@Override
+	public void deleteReviewAnswer(long reviewId) {
+		try {
+			productReviewInquiryManageMapper.deleteReviewAnswer(reviewId);
+		} catch (Exception e) {
+			log.info("gongguDeleteAnswer: ", e);
+		}
+	}
+
+	@Override
+	public void deleteReview(long reviewId) {
+		try {
+			productReviewInquiryManageMapper.deleteReview(reviewId);
+		} catch (Exception e) {
+			log.info("gongguDeleteInquiry: ", e);
+		}
+	}
+
+	@Override
+	public int dataCountReview(Map<String, Object> map) {
+		int dataCountReview = 0;
+		
+		try {
+			dataCountReview = productReviewInquiryManageMapper.dataCountReview(map);
+		} catch (Exception e) {
+			log.info("dataCountReview : ", e);
+		}
+		
+		return dataCountReview;
+	}
+
+	@Override
+	public int dataCountInquiry(Map<String, Object> map) {
+		int dataCountInquiry = 0;
+		
+		try {
+			dataCountInquiry = productReviewInquiryManageMapper.dataCountInquiry(map);
+		} catch (Exception e) {
+			log.info("dataCountInquiry : ", e);
+		}
+		
+		return dataCountInquiry;
+	}
+	
 
 }

@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css_product/productReview.css">
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css_product/productAdminInquiry.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/paginate.css">
 
 </head>
 <body>
@@ -59,7 +60,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script src="${pageContext.request.contextPath}/dist/jsProduct/sendAjaxRequest.js"></script>
 	<script src="${pageContext.request.contextPath}/dist/jsProduct/showReviewTab.js"></script>
-	<script src="${pageContext.request.contextPath}/dist/js2/productAdminInquiry.js"></script>
-	<script src="${pageContext.request.contextPath}/dist/js2/productAdminReview.js"></script>
+	<script src="${pageContext.request.contextPath}/dist/jsProduct/productAdminInquiry.js"></script>
+	<script src="${pageContext.request.contextPath}/dist/jsProduct/productAdminReview.js"></script>
 </body>
 </html>

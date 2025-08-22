@@ -4,6 +4,7 @@
 <%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
 
 <form name="reviewAnswerForm" method="post">
+	<p>총 ${dataCount}개의 리뷰 (${pageNo} / ${total_page} 페이지)</p>
 	<table class="table table-borderless board-list">
 	    <thead>
 	        <tr class="border-bottom">
@@ -36,7 +37,7 @@
 	                        </c:choose>
 	                    </td>
 	                    <td>
-	                        <button type="button" class="small-btn deleteReview" data-gongguReviewId="${dto.gongguReviewId}">삭제</button>
+	                        <button type="button" class="small-btn deleteReview" data-reviewId="${dto.reviewId}">삭제</button>
 	                    </td>
 	                </tr>
 	                <tr class="reviewDetailTr d-none">
@@ -57,8 +58,14 @@
 											<p class="content">${dto.content}</p>
 										</div>
 										<div class="">
-											<c:if test="${not empty dto.photoFileName}">
-										        <img src="${pageContext.request.contextPath}/uploads/products/review/${dto.photoFileName}" alt="리뷰 사진">
+											<c:if test="${not empty dto.listReviewImg}">
+												<div class="row gx-1 mt-2 mb-1 p-1">
+													<c:forEach var="vo" items="${dto.listReviewImg}">
+								                        <div class="col-md-auto md-img">
+								                            <img class="border rounded reviewImg" src="${pageContext.request.contextPath}/uploads/review/${vo}">
+								                        </div>
+								                    </c:forEach>
+								                </div>
 										    </c:if>
 									    </div>
 										<c:choose>
@@ -75,11 +82,11 @@
 															<p class="answerP" readonly>${dto.answer}</p>
 														</div>
 														<div>
-															<button type="button" class="small-btn updateAnswer"
+															<button type="button" class="small-btn reviewUpdateAnswer"
 																data-reviewId="${dto.reviewId}"
 																data-managerId="${managerId}"
 																data-managerName="${managerName}">수정</button>
-															<button type="button" class="small-btn removeAnswer"
+															<button type="button" class="small-btn reviewRemoveAnswer"
 																data-reviewId="${dto.reviewId}">삭제</button>
 														</div>
 													</div>
@@ -88,7 +95,7 @@
 											<c:otherwise>
 												<div class="reviewDetailAnswerAdd"
 													id="reviewDetailAnswerAdd">
-													<button type="button" class="small-btn addAnswer"
+													<button type="button" class="small-btn reviewAddAnswer"
 														data-reviewId="${dto.reviewId}"
 														data-managerId="${managerId}"
 														data-managerName="${managerName}">등록</button>
@@ -102,11 +109,9 @@
 					</tr>
 	            </c:forEach>
 	        </c:if>
-	        <c:if test="${empty reviewList}">
-	            <tr>
-	                <td colspan="6" style="text-align: center;">등록된 내용이 없습니다.</td>
-	            </tr>
-	        </c:if>
 	    </tbody>
 	</table>
+	<div class="page-navigation">
+		${dataCount==0 ? "등록된 내용이 없습니다." : paging}
+	</div>
 </form>

@@ -21,6 +21,11 @@ public class ProductReviewManage {
     private long answerId; 
     private Date  answerDate;
     private String answer;   
+    private String answerName;
+    
+	private long reviewPhotoId;
+	private String reviewImg;
+	private String[] listReviewImg;
    
     private String productName; 
     private Integer rate;
