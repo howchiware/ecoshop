@@ -5,12 +5,32 @@
 <head>
 <meta charset="UTF-8">
 <title>담당자 관리</title>
+<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <style>
-.main-container .container {
-	margin-left: 250px;
-	max-width: calc(100% - 250px);
+body {
+	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
+	background-color: #f7f6f3;
+	color: #333;
+	margin: 0;
+}
+
+@font-face {
+	font-family: 'Pretendard-Regular';
+	src:
+		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+		format('woff');
+	font-style: normal;
+}
+
+.main-container {
+  position: relative;
+  margin-left: 250px; /* 사이드바 너비만큼 띄우기 */
+  padding: 20px;
+  box-sizing: border-box;
+  min-height: calc(100vh - 60px);
+  background-color: #f9f9f9;
 }
 </style>
 </head>

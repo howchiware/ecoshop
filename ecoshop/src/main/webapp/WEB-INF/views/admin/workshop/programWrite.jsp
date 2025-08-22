@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>프로그램 등록</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link

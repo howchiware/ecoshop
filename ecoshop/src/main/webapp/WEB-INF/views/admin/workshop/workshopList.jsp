@@ -7,14 +7,10 @@
 <meta charset="UTF-8">
 <title>워크샵 목록</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style type="text/css">
-.main-container .container {
-	margin-left: 250px;
-	max-width: calc(100% - 250px);
-}
+
 </style>
 </head>
 <body>
