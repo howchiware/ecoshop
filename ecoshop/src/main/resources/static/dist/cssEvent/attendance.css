@@ -1,0 +1,149 @@
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-style: normal;
+}
+body {
+    background-color: #f4f7f6;
+}
+* {
+  font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
+}
+
+.attendance-header {
+  max-width: 600px;
+  margin: 60px auto 40px auto;
+  text-align: center;
+}
+.attendance-header h1 {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  font-weight: 800;
+  margin-bottom: 1rem; 
+}
+.attendance-header p {
+  font-size: 1.1rem;
+  color: #8492a6;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.attendance-card {
+    max-width: 800px;
+    margin: 0 auto 60px auto;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    padding: 40px 50px;
+}
+
+.progress-container {
+    margin-bottom: 2rem; 
+}
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    color: #34495e;
+    margin-bottom: 0.75rem; /* 수정 */
+    font-size: 0.9rem;
+}
+.progress {
+    height: 12px;
+    border-radius: 6px;
+}
+.progress-bar {
+    background-color: #27ae60;
+}
+
+.attendance-calendar {
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 10px; 
+	text-align: center;
+    margin: 1.5rem 0; 
+}
+.attendance-calendar th {
+    padding: 10px 5px;
+    font-weight: 600;
+    color: #95a5a6;
+    user-select: none;
+    font-size: 0.9rem;
+}
+.attendance-calendar td {
+	background-color: #ecf0f1;
+	border-radius: 12px;
+	height: 90px;
+	width: calc(100% / 7);
+	vertical-align: top; /* 숫자를 상단에 위치시키기 위해 유지 */
+	padding-top: 10px; /* 숫자와 상단 테두리 사이 여백 */
+	position: relative; /* 자식 요소의 기준점이 됨 (가장 중요) */
+    font-weight: 700;
+    color: #7f8c8d;
+}
+.attendance-calendar th:nth-child(6), .attendance-calendar td:nth-child(6) { color: #3498db; }
+.attendance-calendar th:nth-child(7), .attendance-calendar td:nth-child(7) { color: #e74c3c; }
+
+.attended {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.attendance-icon {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background-color: rgba(189, 195, 199, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+     margin-top: 25px;
+}
+
+.attendance-icon i {
+  font-size: 20px;
+  color: white;
+}
+
+.attended .attendance-icon {
+	background-color: #27ae60;
+    animation: pop 0.4s ease-out;
+}
+
+@keyframes pop {
+    0% { transform: scale(0.8); }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+.button-wrap {
+    text-align: center;
+    margin-top: 2rem;
+}
+.attendance-btn {
+    font-weight: 600;
+    font-size: 1.1rem;           
+    padding: 12px 40px;        
+    background-color: #2ecc71;
+    color: #fff;             
+    border: none;
+    border-radius: 30px;      
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.attendance-btn:hover {
+    background-color: #27ae60;
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.5);
+    transform: translateY(-2px);
+}
+.attendance-btn:disabled {
+    background-color: #bdc3c7;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}

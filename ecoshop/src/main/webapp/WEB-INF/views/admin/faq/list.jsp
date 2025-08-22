@@ -4,96 +4,6 @@
 
 <head>
 <style>
-.accordion-item {
-  border: none;
-  border-radius: 6px;
-  margin-bottom: 0.75rem;
-  overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-
-.accordion-button {
-  font-weight: 500;
-  background-color: #f8f9fa;
-  color: #000; /* 기본 제목 검정 */
-  transition: all 0.2s ease-in-out;
-}
-.accordion-button:hover {
-  background-color: rgba(35, 77, 60, 0.08);
-}
-.accordion-button:not(.collapsed) {
-  background-color: var(--theme-green) !important;
-  color: #fff !important;
-}
-
-/* 카테고리 텍스트 강조 */
-.accordion-button .faq-category {
-  font-weight: 700;
-  color: var(--theme-green);
-  margin-right: 6px;
-}
-
-.accordion-body {
-  background-color: #fff;
-  font-size: 0.95rem;
-  color: #000; /* 본문 검정 */
-}
-
-.accordion-body label {
-  font-weight: 500;
-  color: #000; /* 라벨 검정 */
-}
-
-.faq-content {
-  white-space: pre-line;
-  line-height: 1.6;
-}
-
-/* 버튼 영역 */
-.btn-outline-primary {
-  color: var(--theme-green) !important;
-  border-color: var(--theme-green) !important;
-}
-.btn-outline-primary:hover {
-  background-color: var(--theme-green) !important;
-  border-color: var(--theme-green) !important;
-  color: #fff !important;
-}
-
-.btn-outline-danger {
-  color: var(--theme-red) !important;
-  border-color: var(--theme-red) !important;
-}
-.btn-outline-danger:hover {
-  background-color: var(--theme-red) !important;
-  border-color: var(--theme-red) !important;
-  color: #fff !important;
-}
-
-.board-section {
-    background-color: #e6f4ea;
-    padding: 20px;
-    border-radius: 8px;
-    color: #000;
-}
-
-.board-section h2,
-.board-section p,
-.board-section td,
-.board-section th {
-    color: #000;
-}
-
-.board-section a {
-    color: #000;
-    text-decoration: none;
-}
-.board-section a:hover {
-    color: #0d6efd;
-    text-decoration: underline;
-}
-
-
 
 </style>
 </head>
@@ -146,9 +56,9 @@
 
             <div class="row mt-2">
               <div class="col text-end">
-                <button type="button" class="btn btn-sm btn-outline-primary"
+                <button type="button" class="my-btn btn btn-sm"
                         onclick="updateFaq('${dto.faqId}', '${pageNo}');">수정</button>
-                <button type="button" class="btn btn-sm btn-outline-danger"
+                <button type="button" class="my-btn btn btn-sm"
                         onclick="deleteFaq('${dto.faqId}', '${pageNo}');">삭제</button>
               </div>
             </div>

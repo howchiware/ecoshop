@@ -1,0 +1,193 @@
+:root {
+	--color-primary: #4a69bd;
+	--color-primary-darker: #3b5496;
+	--color-primary-lighter: #eef2f9;
+	--color-bg: #f8f9fa;
+	--color-content-bg: #ffffff;
+	--color-text-primary: #2c3e50;
+	--color-text-secondary: #8492a6;
+	--color-border: #e0e6ed;
+	--color-danger: #e74c3c;
+}
+
+html {
+	overflow-y: scroll;
+}
+
+body {
+	background-color: var(--color-bg);
+}
+
+* {
+	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
+	box-sizing: border-box;
+}
+
+@font-face {
+	font-family: 'Pretendard-Regular';
+	src:
+		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+		format('woff');
+	font-style: normal;
+}
+
+.title {
+	margin-top: 0;
+	margin-bottom: .5rem;
+	font-weight: 500;
+	line-height: 1.2;
+	color: var(--bs-heading-color);
+}
+
+.right-panel {
+	padding: 30px;
+}
+
+.board-container {
+	background-color: var(--color-content-bg);
+	padding: 2rem;
+	border-radius: 12px;
+	border: 1px solid var(--color-border);
+	box-shadow: 0 8px 16px rgba(132, 146, 166, 0.07);
+}
+
+.board-controls {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+	margin-bottom: 2rem;
+}
+
+.nav-pills .nav-link {
+	color: #000;
+}
+
+.nav-pills .nav-link:hover {
+	background-color: #d6d6d6;
+	color: #222;
+}
+
+.nav-pills .nav-link.active {
+	background-color: #bdbdbd !important;
+	color: #000 !important;
+	box-shadow: none;
+}
+
+.my-btn {
+	background: #fff;
+	border: 1px solid black !important;
+	border-radius: 4px;
+	padding: 3px 10px
+}
+
+.my-tab {
+	color: #000 !important;
+}
+
+.my-tab:hover {
+	background-color: #E2E2E2;
+	border-radius: 4px;
+}
+
+.my-tab.active {
+    background-color: #E2E2E2 !important;
+    border-radius: 4px;
+}
+
+.faq-content {
+	white-space: pre-line;
+	line-height: 1.6;
+	color: var(--color-text-primary);
+	margin-top: 1rem;
+	padding-top: 1rem;
+	border-top: 1px dashed var(--color-border);
+}
+
+.write-form td {
+	vertical-align: middle;
+}
+
+.write-form td:first-child {
+	text-align: center;
+	font-weight: 600;
+	width: 120px;
+	background-color: #fcfcfc;
+	border-right: 1px solid var(--color-border);
+}
+
+textarea.form-control {
+	resize: none;
+	min-height: 200px;
+}
+
+.modal-body .btn-accent {
+	background-color: var(--color-primary) !important;
+	border-color: var(--color-primary) !important;
+	color: white;
+}
+
+.modal-body .btn-default {
+	background-color: #f8f9fa;
+	border-color: #dee2e6;
+	color: #343a40;
+}
+
+.modal-backdrop {
+	z-index: 9998 !important;
+}
+
+.modal {
+	z-index: 9999 !important;
+}
+
+body.modal-open {
+	overflow: hidden;
+	padding-right: 0 !important;
+}
+
+.modal-dialog {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+}
+
+.page-navigation {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 6px;
+	margin-top: 2rem;
+	flex-wrap: wrap;
+}
+
+.page-navigation a, .page-navigation strong, .page-navigation span {
+	background: #fff;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 3px 10px;
+	color: #333;
+	font-weight: 500;
+	text-decoration: none;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.page-navigation a:hover {
+	background: #e0e0e0;
+	border-color: #999;
+}
+
+.page-navigation .disabled {
+	background: #f8f8f8;
+	border-color: #ddd;
+	color: #aaa;
+	cursor: not-allowed;
+}
+
+.page-navigation strong, .page-navigation span {
+	background: #ccc;
+	border-color: #999;
+	color: #333;
+}

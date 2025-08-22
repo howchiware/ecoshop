@@ -198,3 +198,37 @@ $(function(){
 	});
 });
 
+
+// 좋아요
+$(function(){
+    $('button.btnSendFreeLike').click(function(){
+        const freeId = $(this).data("freeid");
+        const $i = $(this).find('i');
+        let userLiked = $i.hasClass('bi-heart-fill');
+
+        let msg = userLiked ? '게시글 공감을 취소하시겠습니까 ? ' : '게시글에 공감하십니까 ?';
+        if(!confirm(msg)) return false;
+
+		let url = CONTEXT_PATH + "/free/freeLike/" + FREE_ID;
+        let method = userLiked ? 'delete' : 'post';
+        let params = null;
+
+        const fn = function(data) {
+            if(data.state === 'true') {
+                if(userLiked) {
+                    $i.removeClass('bi-heart-fill text-danger').addClass('bi-heart');
+                } else {
+                    $i.removeClass('bi-heart').addClass('bi-heart-fill text-danger');
+                }
+		
+                $('span#freeLikeCount').text(data.freeLikeCount);
+            } else if(data.state === 'liked') {
+                alert('게시글 공감은 한번만 가능합니다.');
+            } else {
+                alert('게시글 공감 여부 처리가 실패했습니다.');
+            }
+        };
+
+        ajaxRequest(url, method, params, 'json', fn);
+    });
+});

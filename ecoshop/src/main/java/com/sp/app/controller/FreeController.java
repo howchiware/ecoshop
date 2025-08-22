@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -158,10 +160,15 @@ public class FreeController {
 			Free prevDto = service.findByPrev(map);
 			Free nextDto = service.findByNext(map);
 			
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			map.put("memberId", info.getMemberId());
+			boolean isUserLiked = service.isUserFreeLiked(map);
+			
 			model.addAttribute("dto", dto);
 			model.addAttribute("prevDto", prevDto);
 			model.addAttribute("nextDto", nextDto);
 			model.addAttribute("query", query);
+			model.addAttribute("isUserLiked", isUserLiked);
 			
 			return "free/dairyArticle";
 			
@@ -373,6 +380,68 @@ public class FreeController {
 		}
 		
 		model.put("count", count);
+		return model;
+	}
+	
+	@ResponseBody
+	@PostMapping("freeLike/{freeId}")
+	public Map<String, ?> insertFreeLike(@PathVariable(name = "freeId") long freeId, HttpSession session) {
+		
+		Map<String, Object> model = new HashMap<>();
+		
+		String state = "true";
+		int freeLikeCount = 0;
+		
+		try {
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			
+			Map<String, Object> paramMap = new HashMap<>();
+			paramMap.put("freeId", freeId);
+			paramMap.put("memberId", info.getMemberId());
+			
+			service.insertFreeLike(paramMap);
+			
+			freeLikeCount = service.freeLikeCount(freeId);
+			
+		} catch (DuplicateKeyException e) {
+			state = "liked";
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		model.put("state", state);
+		model.put("freeLikeCount", freeLikeCount);
+		
+		return model;
+	}
+	
+	@ResponseBody
+	@DeleteMapping("freeLike/{freeId}")
+	public Map<String, ?> deleteFreeLike(@PathVariable(name = "freeId") long freeId,
+			HttpSession session) {
+		Map<String, Object> model = new HashMap<>();
+		
+		String state = "true";
+		int freeLikeCount = 0;
+		
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			
+			Map<String, Object> paramMap = new HashMap<>();
+			paramMap.put("freeId", freeId);
+			paramMap.put("memberId", info.getMemberId());
+			
+			service.deleteFreeLike(paramMap);
+			
+			freeLikeCount = service.freeLikeCount(freeId);
+			
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		model.put("state", state);
+		model.put("freeLikeCount", freeLikeCount);
+		
 		return model;
 	}
 	

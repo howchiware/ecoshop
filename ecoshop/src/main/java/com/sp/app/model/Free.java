@@ -38,5 +38,6 @@ public class Free {
 	
 	private int replyCount;
 	private int answerCount;
-
+	
+	private int freeLikeCount;
 }

@@ -53,9 +53,14 @@
 	</select>
 	
 	<select id="findByDairy" parameterType="Long" resultType="com.sp.app.model.Free">
-		SELECT fb.freeId, fb.subject, fb.content, fb.hitCount, TO_CHAR(fb.regDate, 'YYYY-MM-DD') regDate, fb.block, fb.report, m2.memberId, m2.nickname
+		SELECT fb.freeId, fb.subject, fb.content, fb.hitCount, TO_CHAR(fb.regDate, 'YYYY-MM-DD') regDate, fb.block, fb.report, m2.memberId, m2.nickname, NVL(freeLikeCount, 0) freeLikeCount
 		FROM freeBoard fb
 		JOIN member2 m2 ON m2.memberId = fb.memberId
+		LEFT OUTER JOIN (
+			SELECT freeId, COUNT(*) freeLikeCount
+			FROM freeLike
+			GROUP BY freeId
+		) fl ON fl.freeId = fb.freeId
 		WHERE fb.freeId = #{freeId} AND block = 0
 	</select>
 	
@@ -132,8 +137,8 @@
 			GROUP BY parentNum
 		) fr2 ON fr1.replyId = fr2.parentNum
 		WHERE freeId = #{freeId} AND fr1.parentNum = 0 AND fr1.block = 0
-		<if test="userLevel &lt; 51">
-			AND ( report = 1 OR fr1.memberId = #{memberId} )
+		<if test="userLevel lt 51">
+			AND ( report = 0 OR fr1.memberId = #{memberId} )
 		</if>
 		ORDER BY fr1.replyId DESC
 		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
@@ -156,7 +161,7 @@
 		<if test="userLevel lt 51">
 			AND ( report = 0 OR fr.memberId = #{memberId} )
 		</if>
-		ORDER BY replyId DESC
+		ORDER BY replyId ASC
 	</select>
 	
 	<select id="replyAnswerCount" parameterType="map" resultType="int">
@@ -170,8 +175,29 @@
 	</select>
 	
 	<update id="updateReplyShowHide" parameterType="map">
-		UPDATE freeReply SET report = #{report}
+		UPDATE freeReply SET report = 1
 		WHERE replyId = #{replyId} AND memberId = #{memberId}
 	</update>
+	
+	<insert id="insertFreeLike" parameterType="map">
+		INSERT INTO freeLike(freeId, memberId) VALUES (#{freeId}, #{memberId})
+	</insert>
+	
+	<delete id="deleteFreeLike" parameterType="map">
+		DELETE FROM freeLike
+		WHERE freeId = #{freeId} AND memberId = #{memberId}
+	</delete>
+      
+	<select id="freeLikeCount" parameterType="Long" resultType="Integer">
+		SELECT COUNT(*)
+		FROM freeLike
+		WHERE freeId = #{freeId}
+	</select>
+
+	<select id="hasUserFreeLiked" parameterType="map" resultType="com.sp.app.model.Free">
+		SELECT freeId, memberId
+		FROM freeLike
+		WHERE freeId = #{freeId} AND memberId = #{memberId}
+	</select>
 
 </mapper>

@@ -2,35 +2,9 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
-<%-- update.jsp 파일 상단의 style 태그를 이 코드로 교체하세요. --%>
 <style>
-.info-table { 
-    margin-bottom: 2rem; 
-}
-.info-table th {
-    width: 120px;
-    background-color: #fcfcfd;
-    font-weight: 600;
-    color: var(--color-text-secondary);  
-    padding-left: 20px; 
-    vertical-align: middle;
-}
-.info-table td {
-    background-color: #fff;
-
-}
-.question-content {
-    white-space: pre-wrap;
-    background-color: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 6px;
-    min-height: 150px;
-    color: #343a40;
-    text-align: left;
-}
-
 textarea[name="questionAnswer"] {
-    resize: none; /* 크기 조정 비활성화 */
+    resize: none;
 }
 </style>
 <div class="container-fluid">
@@ -81,7 +55,7 @@ textarea[name="questionAnswer"] {
                     <textarea class="form-control" id="answer" name="questionAnswer" rows="8" placeholder="고객의 문의에 대한 답변을 입력하세요."></textarea>
                 </div>
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary">답변 등록하기</button>
+                    <button type="submit" class="btn my-btn">답변 등록하기</button>
                 </div>
             </c:otherwise>
         </c:choose>

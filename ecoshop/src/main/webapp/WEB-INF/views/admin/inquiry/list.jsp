@@ -37,12 +37,12 @@
                 <td>
                     <c:choose>
 				        <c:when test="${dto.status == 1}">
-				            <button type="button" class="btn btn-sm btn-outline-secondary" 
+				            <button type="button" class="btn btn-sm btn-outline-secondary my-btn2" 
 				                    onclick="viewInquiry(${dto.inquiryId}, ${pageNo});">답변 확인</button>
 				        </c:when>
 				        
 				        <c:otherwise>
-				            <button type="button" class="btn btn-sm btn-primary" 
+				            <button type="button" class="btn btn-sm my-btn" 
 				                    onclick="viewInquiry(${dto.inquiryId}, ${pageNo});">답변하기</button>
 				        </c:otherwise>
 				    </c:choose>

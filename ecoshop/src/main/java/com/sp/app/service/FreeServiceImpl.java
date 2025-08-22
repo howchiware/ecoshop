@@ -2,6 +2,7 @@ package com.sp.app.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 
@@ -249,6 +250,56 @@ public class FreeServiceImpl implements FreeService {
 			throw e;
 		}
 		
+	}
+
+	@Override
+	public int freeLikeCount(long freeId) {
+		int result = 0;
+		
+		try {
+			result = mapper.freeLikeCount(freeId);
+		} catch (Exception e) {
+			log.info("freeLikeCount", e);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public boolean isUserFreeLiked(Map<String, Object> map) {
+		boolean result = false;
+		
+		try {
+			Free dto = mapper.hasUserFreeLiked(map);
+			if(dto != null) {
+				result = true;
+			}
+			result = Objects.nonNull(mapper.hasUserFreeLiked(map));
+		} catch (Exception e) {
+			log.info("isUserFreeLiked: ", e);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public void insertFreeLike(Map<String, Object> map) throws Exception {
+		try {
+			mapper.insertFreeLike(map);
+		} catch (Exception e) {
+			log.info("insertFreeLike : ", e);
+			throw e;
+		}
+	}
+
+	@Override
+	public void deleteFreeLike(Map<String, Object> map) throws Exception {
+		try {
+			mapper.deleteFreeLike(map);
+		} catch (Exception e) {
+			log.info("deleteFreeLike : ", e);
+			throw e;
+		}
 	}
 	
 	

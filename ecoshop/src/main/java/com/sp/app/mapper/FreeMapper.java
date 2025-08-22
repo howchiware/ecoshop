@@ -29,5 +29,10 @@ public interface FreeMapper {
 
 	public List<Free> listReplyAnswer(Map<String, Object> map);
 	public int replyAnswerCount(Map<String, Object> map);
-	public void updateReplyShowHide(Map<String, Object> map) throws SQLException;	
+	public void updateReplyShowHide(Map<String, Object> map) throws SQLException;
+	
+	public void insertFreeLike(Map<String, Object> map) throws SQLException;
+	public void deleteFreeLike(Map<String, Object> map) throws SQLException;
+	public int freeLikeCount(long freeId);
+	public Free hasUserFreeLiked(Map<String, Object> map);
 }

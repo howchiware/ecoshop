@@ -12,11 +12,6 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/free.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/dairyArticle.css" type="text/css">
-<style>
-    .card-header h3 { font-weight: 700; }
-    .card-body img { max-width: 100%; border-radius: 8px; margin-bottom: 1rem; }
-    .card-body p { white-space: pre-wrap; line-height: 1.8; }
-</style>
 </head>
 <body>
     <header>
@@ -37,6 +32,14 @@
         <div class="card-body">
             <p>${dto.content}</p>
         </div>
+        
+        <div class="btn-like-wrapper">
+		    <button type="button" class="btnSendFreeLike" title="좋아요">
+		        <i class="bi ${isUserLiked ? 'bi-heart-fill text-danger' : 'bi-heart' }"></i>
+		        <span id="freeLikeCount">${dto.freeLikeCount}</span>
+		    </button>
+		</div>
+        
     </div>
 
     <div class="post-navigation">
@@ -62,13 +65,35 @@
     
     <div class="row button-group">
         <div class="col-md-6">
+        	<%-- 
             <c:if test="${sessionScope.member.memberId == dto.memberId}">
                 <button type="button" class="btn btn-default" onclick="location.href='${pageContext.request.contextPath}/free/update?freeId=${dto.freeId}&${query}';">수정</button>
                 <button type="button" class="btn btn-outline-danger" onclick="deleteOk();">삭제</button>
             </c:if>
+             --%>
+            
+             
+            <c:choose>
+				<c:when test="${sessionScope.member.memberId==dto.memberId}">
+					<button type="button" class="btn btn-default" onclick="location.href='${pageContext.request.contextPath}/free/update?freeId=${dto.freeId}&${query}';">수정</button>
+				</c:when>
+				<c:otherwise>
+					<button type="button" class="btn-default btnPostsReport" data-freeid="${dto.freeId}">신고</button>
+				</c:otherwise>
+			</c:choose>
+			<c:choose>
+				<c:when test="${sessionScope.member.memberId==dto.memberId || sessionScope.member.userLevel>50}">
+					<button type="button" class="btn-default" onclick="deleteOk();">삭제</button>
+				</c:when>
+				<c:otherwise>
+					<button type="button" class="btn-default" disabled>차단</button>
+				</c:otherwise>
+			</c:choose>
+            
+            
         </div>
         <div class="col-md-6 text-end">
-            <button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/free/dairyList?${query}';">목록</button>
+            <button data-freeid="${dto.freeId}" type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/free/dairyList?${query}';">목록</button>
         </div>
     </div>
     
@@ -79,7 +104,7 @@
             <p class="form-guide">건전한 소통 문화를 함께 만들어주세요.</p>
         </div>
         <div class="reply-form-body">
-            <textarea class="form-control" name="content" rows="4" placeholder="댓글을 입력하세요..."></textarea>
+            <textarea class="form-control" name="content" rows="4" placeholder="댓글을 입력하세요"></textarea>
             <div class="text-end mt-2">
                 <button type="button" class="btn btn-primary btn-sm btnSendReply">댓글 등록</button>
             </div>
