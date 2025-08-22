@@ -1,8 +1,8 @@
 package com.sp.app.admin.controller;
 
-import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -265,13 +265,15 @@ public class GongguManageController {
 				query += "&schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "UTF-8");
 			}
 			
-			String pathString = uploadPath + File.separator + gongguThumbnail;
-			gongguManageService.deleteGongguProduct(gongguProductId, pathString);
+			List<Long> gongguProductIds = new ArrayList<>();
+			gongguProductIds.add(gongguProductId);
+			
+			gongguManageService.deleteGongguProduct(gongguProductIds, uploadPath);
 			
 		} catch (Exception e) {
 			log.error("delete : ", e);
 		}
-
+		
 		return "redirect:/admin/gonggu/listProduct?" + query;
 	}	
     

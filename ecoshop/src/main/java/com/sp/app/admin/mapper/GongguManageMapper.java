@@ -13,6 +13,7 @@ import com.sp.app.admin.model.GongguPackage;
 @Mapper
 public interface GongguManageMapper {
 	// 상품등록
+	public long gongguProductSeq();
 	public void insertProduct(GongguManage dto) throws SQLException;
 	public void updateProduct(GongguManage dto) throws SQLException;
 	public void deleteProduct(long gongguProductId) throws SQLException;
@@ -24,6 +25,10 @@ public interface GongguManageMapper {
 	public void insertGongguPackage(GongguPackage dto) throws SQLException;
 	public GongguManage findByCategory(long categoryId);
 	public List<GongguManage> listCategory();
+	
+	public List<GongguManage> listProductPhoto(long gongguProductId);
+	public void insertProductPhoto(GongguManage dto) throws SQLException;
+	public void deleteProductPhoto(long gongguProductDetailId) throws SQLException;
 	
 	// 배송정책
 	public GongguDeliveryRefundInfo listDeliveryRefundInfo();

@@ -3,6 +3,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.admin.mapper.GongguManageMapper">
 	<!-- 공동구매 상품등록 --> 
+	<select id="gongguProductSeq" resultType="Long">
+		SELECT gongguProduct_seq.NEXTVAL FROM dual
+	</select>
+	
 	<select id="findByCategory" parameterType="Long" resultType="com.sp.app.admin.model.GongguManage">
 		SELECT categoryId, categoryName, enabled
 		FROM productCategory
@@ -18,9 +22,14 @@
 	<insert id="insertProduct" parameterType="com.sp.app.admin.model.GongguManage">
 		INSERT INTO gongguProduct(gongguProductId, gongguProductName, content, gongguThumbnail, 
 		        startDate, endDate, productShow, regDate, categoryId, limitCount)
-		VALUES (gongguProduct_seq.NEXTVAL, #{gongguProductName}, #{content}, #{gongguThumbnail}, 
+		VALUES (#{gongguProductId}, #{gongguProductName}, #{content}, #{gongguThumbnail}, 
 				TO_DATE(#{startDate}, 'YYYY-MM-DD HH24:MI:SS'), 
 				TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'), #{productShow}, SYSDATE, #{categoryId}, #{limitCount})
+	</insert>
+	
+	<insert id="insertProductPhoto" parameterType="com.sp.app.admin.model.GongguManage">
+		INSERT INTO gongguProductDetail(gongguProductDetailId, gongguProductId, detailPhoto)
+		VALUES(gongguProductDetail_seq.NEXTVAL, #{gongguProductId}, #{detailPhoto})
 	</insert>
 	
 	<update id="updateProduct" parameterType="com.sp.app.admin.model.GongguManage">
@@ -46,13 +55,7 @@
 		WHERE gongguProductId = #{gongguProductId}
 	</select>
 	
-	  
-	<!-- 공동구매 등록시 사진 -->
-	<!--
-	<insert id="insertProductPhoto" parameterType="com.sp.app.admin.model.GongguManage">
-		INSERT INTO gongguProductDetail(gongguProductDetailId, gongguProductId, detailPhoto)
-		VALUES(gongguProductDetail_seq.NEXTVAL, #{gongguProductId}, #{detailPhoto})
-	</insert>
+
 	
 	<select id="listProductPhoto" parameterType="Long" resultType="com.sp.app.admin.model.GongguManage">
 		SELECT gongguProductDetailId, gongguProductId, detailPhoto
@@ -64,16 +67,8 @@
 		DELETE FROM gongguProductDetail
 		WHERE gongguProductId = #{gongguProductId}
 	</delete>
-	
-	<select id="findPhotoById" parameterType="long" resultType="long">
-	    SELECT gongguProductDetailId
-	    FROM gongguProductDetail
-	    WHERE gongguProductDetailId = #{gongguProductDetailId}
-	</select>
-	-->
-	
+
 	<!-- 공동구매 리스트 검색 -->
-	
 	<sql id="where-list">
 	    <if test="schType=='all'">
 	    	<![CDATA[
