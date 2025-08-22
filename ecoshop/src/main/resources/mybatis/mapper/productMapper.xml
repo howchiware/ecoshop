@@ -2,10 +2,58 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.mapper.ProductMapper">
-	<select id="listProductByCategoryId" resultType="com.sp.app.model.Product">
-        SELECT *
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) count
+		FROM product
+		WHERE categoryId = #{categoryId}
+	</select>
+	
+	<!-- 
+	<select id="listProductByCategoryId" parameterType="map" resultType="com.sp.app.model.Product">
+        SELECT productId, productCode, categoryId, productName, price, thumbnail, sale, reg_date, optionCount,
+        		productShow, update_date, point, content, detailInfo
         FROM product
-        WHERE categoryId = #{categoryId}
+        WHERE categoryId = #{categoryId} AND productShow = 1
+        OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+    </select>
+    -->
+    <select id="listAllProducts" resultType="com.sp.app.model.Product">
+        SELECT productId, productCode, categoryId, productName, price, thumbnail, sale, reg_date, optionCount,
+        		productShow, update_date, point, content, detailInfo
+        FROM product
+    </select>
+    
+    <select id="listProductByCategoryId" parameterType="long" resultType="com.sp.app.model.Product">
+		SELECT productId, p.productCode, categoryId, productName, price, thumbnail, sale, reg_date, optionCount,
+        		productShow, update_date, point, content, detailInfo, NVL(reviewCount, 0) reviewCount, NVL(orderCount, 0) orderCount
+        FROM product p
+        LEFT OUTER JOIN (
+	        SELECT productCode, NVL(COUNT(*), 0) reviewCount
+			FROM productReview
+			GROUP BY productCode) pr ON p.productCode = pr.productCode
+        LEFT OUTER JOIN (
+            SELECT productCode, NVL(COUNT(*), 0) orderCount
+			FROM orderDetail
+			GROUP BY productCode) od ON p.productCode = od.productCode
+        WHERE categoryId = 5 AND productShow = 1
+        <choose>
+			<when test="sortBy==4">
+				ORDER BY reviewCount DESC
+			</when>
+			<when test="sortBy==3">
+				ORDER BY price ASC  
+			</when>
+			<when test="sortBy==2">
+				ORDER BY price DESC
+			</when>
+			<when test="sortBy==1">
+				ORDER BY orderCount DESC
+			</when>
+			<when test="sortBy==0">
+				ORDER BY reg_date ASC
+			</when>
+		</choose>
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
     </select>
     
     <select id="findById" parameterType="Long" resultType="com.sp.app.model.Product">
@@ -41,6 +89,13 @@
 		WHERE p.productShow = 1 AND p.productCode = #{productCode}
 		FETCH FIRST 1 ROWS ONLY
     </select>
+    
+    <!-- 카테고리 -->
+	<select id="findByCategoryId" parameterType="Long" resultType="com.sp.app.model.Product">
+		SELECT categoryId, categoryName, enabled, orderNo
+		FROM productCategory
+		WHERE categoryId = #{categoryId}
+	</select>
     
     <!-- 상품 상세 사진 -->
     <select id="listProductPhoto" parameterType="Long"  resultType="com.sp.app.model.Product">

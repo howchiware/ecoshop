@@ -220,7 +220,7 @@
 								
 								<div class="row mt-2 mb-2">
 									<div class="col pe-1">
-										<button type="button" class="btn-default btn-lg w-100 btn-productLike" data-productCode="1" ${empty sessionScope.member.memberId ? "disabled" : ""}>찜하기&nbsp;&nbsp;<i class="bi ${dto.userWish==1 ? 'bi-heart-fill text-danger':'bi-heart'}"></i></button>
+										<button type="button" class="btn-default btn-lg w-100 btn-productLike" data-productCode="${dto.productCode}" ${empty sessionScope.member.memberId ? "disabled" : ""}>찜하기&nbsp;&nbsp;<i class="bi ${dto.userProductLike==1 ? 'bi-heart-fill text-danger':'bi-heart'}"></i></button>
 									</div>
 									<div class="col ps-1">
 										<button type="button" class="btn-default btn-lg w-100 btn-productCart" onclick="sendOk('cart');" ${empty sessionScope.member.memberId || dto.totalStock < 1 ? "disabled" : ""}>장바구니&nbsp;&nbsp;<i class="bi bi-cart-plus"></i></button>
@@ -257,6 +257,7 @@
 
 <script src="${pageContext.request.contextPath}/dist/js2/productDetail.js"></script>
 <script src="${pageContext.request.contextPath}/dist/js2/productDetail2.js"></script>
+<script src="${pageContext.request.contextPath}/dist/jsProduct/productLike.js"></script>
 
 <footer>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>	

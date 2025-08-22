@@ -1,4 +1,4 @@
-// 공동구매 페이지 카테고리 ajax
+// 카테고리 ajax
 function showCategoryTab(clickButton) {
 	const url = clickButton.getAttribute('data-url');
 	document.querySelectorAll('.category-container .nav-tab').forEach(div => {
@@ -48,3 +48,32 @@ $(function(){
 		location.href = productId;
 	});
 });
+
+function changeSortSelect(){
+	let sortBy = $("#productsSortBy option:selected").val();
+	listProducts(1);
+}
+
+function listProducts(page) {
+	let categoryId = '';
+	document.querySelectorAll('.category-container .nav-tab').forEach(div => {
+		if(div.classList.contains('active')){
+			categoryId = div.getAttribute('data-cat-id');
+		}
+	});
+	let sortBy = $("#productsSortBy option:selected").val();
+
+	if(! sortBy){
+		sortBy = 0;
+	}
+	
+	let url = 'products';
+	let requestParams = {categoryId:categoryId, page:page, sortBy:sortBy};
+	let selector = 'div.list-container';
+	
+	const fn = function(data) {
+		$(selector).html(data);
+	};
+
+	ajaxRequest(url, 'get', requestParams, 'text', fn);
+}

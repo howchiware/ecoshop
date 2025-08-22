@@ -53,6 +53,6 @@ public class Product {
 	private int inquiryCount;
 	
 	// 유저의 상품 찜 여부
-	private int userWish;
+	private int userProductLike;
 	
 }

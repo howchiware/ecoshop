@@ -1,6 +1,5 @@
 package com.sp.app.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,14 +15,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.app.admin.model.CategoryManage;
 import com.sp.app.admin.service.CategoryManageService;
+import com.sp.app.common.PaginateUtil;
 import com.sp.app.model.Product;
 import com.sp.app.model.ProductDeliveryRefundInfo;
 import com.sp.app.model.ProductOrder;
-import com.sp.app.model.ProductReview;
 import com.sp.app.model.SessionInfo;
+import com.sp.app.service.MyShoppingService;
 import com.sp.app.service.ProductOrderService;
+import com.sp.app.service.ProductReviewService;
 import com.sp.app.service.ProductService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,18 +36,37 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/products/*")
 public class ProductController {
 
+	private final ProductReviewService reviewService;
 	private final ProductOrderService orderService;
 	private final CategoryManageService categoryManageService;
 	private final ProductService productService;
+	private final MyShoppingService myShoppingService;
+	private final PaginateUtil paginateUtil;
 	
 	@GetMapping("main")
-	public String productsList(Model model) throws Exception {
+	public String productsList(@RequestParam(name = "categoryId", defaultValue = "1") long categoryId,
+			@RequestParam(name = "page", defaultValue = "1") int current_page,
+			Model model,
+			HttpServletRequest req, HttpSession session) throws Exception {
+		
 		try {
 			List<CategoryManage> listCategory = categoryManageService.listCategory();
 			model.addAttribute("listCategory", listCategory);
-
+			
 			if (! listCategory.isEmpty()) {
-		        List<Product> listProduct = productService.listProductByCategoryId(listCategory.get(0).getCategoryId());
+				
+		        List<Product> listProduct = productService.listAllProducts();
+		        /*
+		        for(Product dto : listProduct) {
+		        	Map<String, Object> reviewMap = new HashMap<String, Object>();
+		        	
+		        	reviewMap.put("productCode", dto.getProductCode());
+		        	
+		        	int reviewCount = reviewService.dataCount(reviewMap);
+		        	dto.setReviewCount(reviewCount);
+		        }
+		        */
+		        
 		        model.addAttribute("listProduct", listProduct);
 		    }
 		} catch (Exception e) {
@@ -56,10 +77,76 @@ public class ProductController {
 	} 
 	
 	@GetMapping("products")
-	public String productsByCategory(@RequestParam(value = "categoryId") long categoryId, Model model) throws Exception {
+	public String productsByCategory(
+			@RequestParam(name = "categoryId", defaultValue = "1") long categoryId,
+			@RequestParam(name = "sortBy", defaultValue = "0") int sortBy,
+			@RequestParam(name = "page", defaultValue = "1") int current_page,
+			Model model,
+			HttpServletRequest req, HttpSession session) throws Exception {
+		
 		try {
-			List<Product> listProduct = productService.listProductByCategoryId(categoryId);
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			
+			int size = 12;
+			int total_page;
+			int dataCount;
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("categoryId", categoryId);
+			map.put("sortBy", sortBy);
+			
+			// Product categoryDto = Objects.requireNonNull(productService.findByCategoryId(categoryId));
+			
+			dataCount = productService.dataCount(map);
+			System.out.println(dataCount);
+			total_page = paginateUtil.pageCount(dataCount, size);
+			
+			current_page = Math.min(current_page, total_page);
+
+			int offset = (current_page - 1) * size;
+			if(offset < 0) offset = 0;
+			
+			map.put("offset", offset);
+			map.put("size", size);
+			if(info != null) {
+				map.put("memberId", info.getMemberId());
+			}
+			
+			List<Product> listProduct = productService.listProductByCategoryId(map);
+	        
+	        for(Product dto : listProduct) {
+	        	Map<String, Object> reviewMap = new HashMap<String, Object>();
+	        	
+	        	reviewMap.put("productCode", dto.getProductCode());
+	        	
+	        	int reviewCount = reviewService.dataCount(reviewMap);
+	        	dto.setReviewCount(reviewCount);
+	        	
+	        	if(info != null) {
+					// 찜 여부
+					Map<String, Object> productLikemap = new HashMap<>();
+					productLikemap.put("memberId", info.getMemberId());
+					productLikemap.put("productId", dto.getProductId());
+					productLikemap.put("productCode", dto.getProductCode());
+					
+					dto.setUserProductLike(myShoppingService.findByProductLikeId(productLikemap)== null ? 0 : 1);
+				}
+	        }
+	        String cp = req.getContextPath();
+			String listUrl = cp + "/products/main?categoryId=" + categoryId;
+			
+			String paging = paginateUtil.paging(current_page, total_page, listUrl);
+			
 			model.addAttribute("listProduct", listProduct);
+			model.addAttribute("categoryId", categoryId);
+			//model.addAttribute("categoryName", categoryDto.getCategoryName());
+			model.addAttribute("page", current_page);
+			model.addAttribute("dataCount", dataCount);
+			model.addAttribute("size", size);
+			model.addAttribute("total_page", total_page);
+			model.addAttribute("paging", paging);
+	        
+			
 		} catch (Exception e) {
 			log.error("productsByCategory : ", e);
 			throw e;
@@ -67,6 +154,137 @@ public class ProductController {
 		
 		return "products/listDetail";
 	}
+	
+	
+	
+	/*
+	@GetMapping("main")
+	public String productsList(@RequestParam(name = "categoryId", defaultValue = "1") long categoryId,
+			@RequestParam(name = "page", defaultValue = "1") int current_page,
+			Model model,
+			HttpServletRequest req, HttpSession session) throws Exception {
+		
+		try {
+			List<CategoryManage> listCategory = categoryManageService.listCategory();
+			model.addAttribute("listCategory", listCategory);
+			
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			
+			int size = 12;
+			int total_page;
+			int dataCount;
+
+			if (! listCategory.isEmpty()) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("categoryId", categoryId);
+				
+				dataCount = productService.dataCount(map);
+				total_page = paginateUtil.pageCount(dataCount, size);
+				
+				current_page = Math.min(current_page, total_page);
+
+				int offset = (current_page - 1) * size;
+				if(offset < 0) offset = 0;
+				
+				map.put("offset", offset);
+				map.put("size", size);
+				if(info != null) {
+					map.put("memberId", info.getMemberId());
+				}
+				
+		        List<Product> listProduct = productService.listProductByCategoryId(map);
+		        
+		        for(Product dto : listProduct) {
+		        	Map<String, Object> reviewMap = new HashMap<String, Object>();
+		        	
+		        	reviewMap.put("productCode", dto.getProductCode());
+		        	
+		        	int reviewCount = reviewService.dataCount(reviewMap);
+		        	dto.setReviewCount(reviewCount);
+		        }
+		        String cp = req.getContextPath();
+				String listUrl = cp + "/products/products?categoryId=" + categoryId;
+				
+				String paging = paginateUtil.paging(current_page, total_page, listUrl);
+		        
+		        for(Product dto : listProduct) {
+		        	System.out.println(dto.getReviewCount());
+		        }
+		        model.addAttribute("listProduct", listProduct);
+		        model.addAttribute("page", current_page);
+				model.addAttribute("dataCount", dataCount);
+				model.addAttribute("size", size);
+				model.addAttribute("total_page", total_page);
+				model.addAttribute("paging", paging);
+		    }
+		} catch (Exception e) {
+			log.error("productsList: ", e);
+			throw e;
+		}
+		return "products/main";
+	} 
+	
+	@GetMapping("products")
+	public String productsByCategory(@RequestParam(name = "categoryId", defaultValue = "1") long categoryId,
+			@RequestParam(name = "page", defaultValue = "1") int current_page,
+			Model model,
+			HttpServletRequest req, HttpSession session) throws Exception {
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			
+			int size = 12;
+			int total_page;
+			int dataCount;
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("categoryId", categoryId);
+			
+			dataCount = productService.dataCount(map);
+			total_page = paginateUtil.pageCount(dataCount, size);
+			
+			current_page = Math.min(current_page, total_page);
+
+			int offset = (current_page - 1) * size;
+			if(offset < 0) offset = 0;
+			
+			map.put("offset", offset);
+			map.put("size", size);
+			if(info != null) {
+				map.put("memberId", info.getMemberId());
+			}
+
+			
+			List<Product> listProduct = productService.listProductByCategoryId(map);
+	        
+	        for(Product dto : listProduct) {
+	        	Map<String, Object> reviewMap = new HashMap<String, Object>();
+	        	
+	        	reviewMap.put("productCode", dto.getProductCode());
+	        	
+	        	int reviewCount = reviewService.dataCount(reviewMap);
+	        	dto.setReviewCount(reviewCount);
+	        }
+	        
+	        String cp = req.getContextPath();
+			String listUrl = cp + "/products/products?categoryId=" + categoryId;
+			
+			String paging = paginateUtil.paging(current_page, total_page, listUrl);
+	        
+			model.addAttribute("listProduct", listProduct);
+	        model.addAttribute("page", current_page);
+			model.addAttribute("dataCount", dataCount);
+			model.addAttribute("size", size);
+			model.addAttribute("total_page", total_page);
+			model.addAttribute("paging", paging);
+			
+		} catch (Exception e) {
+			log.error("productsByCategory : ", e);
+			throw e;
+		}
+		
+		return "products/listDetail";
+	}
+	*/
 
 /*
 	// AJAX - JSON
@@ -100,7 +318,7 @@ public class ProductController {
 				map.put("productId", dto.getProductId());
 				map.put("productCode", dto.getProductCode());
 				
-				// dto.setUserWish(myShoppingService.findByWishId(map)== null ? 0 : 1);
+				dto.setUserProductLike(myShoppingService.findByProductLikeId(map)== null ? 0 : 1);
 			}
 			
 			// 추가 이미지

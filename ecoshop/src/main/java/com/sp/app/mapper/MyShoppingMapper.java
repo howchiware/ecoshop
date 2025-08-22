@@ -21,11 +21,11 @@ public interface MyShoppingMapper {
 	public void deleteCartExpiration() throws SQLException;
 	
 	// 찜
-	public void insertLike(Map<String, Object> map) throws SQLException;
-	public void deleteOldestLikes(Long member_id) throws SQLException;
-	public List<ProductLike> listLike(Long member_id);
-	public ProductLike findByLikeId(Map<String, Object> map);
-	public void deleteLike(Map<String, Object> map) throws SQLException;
+	public void insertProductLike(Map<String, Object> map) throws SQLException;
+	public void deleteOldestProductLikes(Long member_id) throws SQLException;
+	public List<ProductLike> listProductLike(Long member_id);
+	public ProductLike findByProductLikeId(Map<String, Object> map);
+	public void deleteProductLike(Map<String, Object> map) throws SQLException;
 
 	// 배송지
 	public void insertDestination(Destination dto) throws SQLException;
