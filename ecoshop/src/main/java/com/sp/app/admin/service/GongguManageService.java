@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sp.app.admin.model.GongguManage;
+import com.sp.app.admin.model.GongguPackageManage;
 import com.sp.app.admin.model.GongguDeliveryRefundInfo;
 
 public interface GongguManageService {
@@ -27,6 +28,10 @@ public interface GongguManageService {
 	public void insertProductPhoto(GongguManage dto, String uploadPath) throws SQLException;
 	public boolean deleteUploadPhoto(String uploadPath, String detailPhoto);
 	
+	// 패키지 상품등록
+	public void insertGongguPackage(GongguPackageManage dto) throws Exception;
+	public void deleteGongguPackage(long packageNum) throws Exception;
+	public List<GongguPackageManage> productSearch(Map<String, Object> map);
 	
 	// 배송정책
 	public GongguDeliveryRefundInfo listDeliveryRefundInfo();

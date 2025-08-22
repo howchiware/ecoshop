@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sp.app.admin.mapper.GongguManageMapper;
 import com.sp.app.admin.model.GongguDeliveryRefundInfo;
 import com.sp.app.admin.model.GongguManage;
+import com.sp.app.admin.model.GongguPackageManage;
 import com.sp.app.common.StorageService;
 import com.sp.app.exception.StorageException;
 
@@ -304,6 +305,37 @@ public class GongguManageServiceImpl implements GongguManageService {
 			
 			throw e;
 		}
+	}
+
+	// 패키지 구성 넣기
+	@Override
+	public void insertGongguPackage(GongguPackageManage dto) throws Exception {
+		try {
+	        gongguManageMapper.insertGongguPackage(dto);
+	    } catch (Exception e) {
+	    	log.error("insertGongguPackage : ", e);
+	    }
+	}
+
+	@Override
+	public void deleteGongguPackage(long packageNum) throws Exception {
+		try {
+			gongguManageMapper.deleteGongguPackage(packageNum);
+	    } catch (Exception e) {
+	    	log.error("deleteGongguPackage : ", e);
+	    }
+	}
+
+
+	@Override
+	public List<GongguPackageManage> productSearch(Map<String, Object> map) {
+		List<GongguPackageManage> list = null;
+	    try {
+	        list = gongguManageMapper.productSearch(map);
+	    } catch (Exception e) {
+	    	log.error("productSearch : ", e);
+	    }
+	    return list;
 	}
 
 }

@@ -11,9 +11,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GongguPackage {
+public class GongguPackageManage {
     private long gongguProductId;
     private long productCode;
+    private long productName;
     private long packageNum;
     private int stock;
     private int price;

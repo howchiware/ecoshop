@@ -141,6 +141,40 @@
 		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 	
+	<!-- 패키지 구성 넣기 -->
+	<insert id="insertGongguPackage" parameterType="com.sp.app.admin.model.GongguPackageManage">
+		INSERT INTO gongguPackage(packageNum, stock, productCode, gongguProductId, price, productName)
+		VALUES (gongguPackage_seq.NEXTVAL, #{stock}, #{productCode}, #{gongguProductId}, #{price}, #{productName})
+	</insert>
+	
+	<delete id="deleteGongguPackage" parameterType="Long">
+	    DELETE FROM gongguPackage
+	</delete>
+	
+	<select id="productSearch" parameterType="map" resultType="com.sp.app.admin.model.GongguPackageManage">
+    SELECT g.packageNum, g.stock, g.productCode, g.gongguProductId, g.price, p.productName  
+    FROM gongguPackage g
+    LEFT JOIN product p ON g.productCode = p.productCode  
+    WHERE g.gongguProductId = #{gongguProductId} 
+    <if test="kwd != null and kwd != '' ">
+        <choose>
+            <when test="schType == 'productName'">
+                AND p.productName LIKE '%' || #{kwd} || '%'
+            </when>
+            <when test="schType == 'productCode'">
+                AND g.productCode LIKE '%' || #{kwd} || '%'
+            </when>
+            <otherwise>
+                AND (
+                    p.productName LIKE '%' || #{kwd} || '%'
+                    OR g.productCode LIKE '%' || #{kwd} || '%'
+                )
+            </otherwise>
+        </choose>
+    </if>
+    ORDER BY g.packageNum DESC
+	</select>
+	
 	<!-- 배송정책 -->
 	<select id="listDeliveryRefundInfo" resultType="com.sp.app.admin.model.GongguDeliveryRefundInfo">
 	    SELECT deliveryInfo, refundInfo
