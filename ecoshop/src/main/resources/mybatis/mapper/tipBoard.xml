@@ -52,10 +52,15 @@
 	</select>
 	
 	<select id="findById" parameterType="Long" resultType="com.sp.app.model.TipBoard">
-		SELECT tipId, t.memberId, name, subject, content, groupNum, depth, orderNo, parent, regDate, hitCount
+		SELECT t.tipId, t.memberId, name, subject, content, groupNum, depth, orderNo, parent, regDate, hitCount, NVL(tipLikeCount, 0) tipLikeCount
 		FROM tipBoard t
 		JOIN member2 m ON t.memberId = m.memberId
-		WHERE tipId = #{tipId}
+		LEFT OUTER JOIN (
+			SELECT tipId, COUNT(*) tipLikeCount
+			FROM tipLike
+			GROUP BY tipId
+		) bc ON t.tipId = bc.tipId
+		WHERE t.tipId = #{tipId}
 	</select>
 	
 	<update id="updateHitCount" parameterType="Long">
@@ -113,6 +118,29 @@
 			( SELECT tipId FROM tipBoard START WITH tipId = #{tipId}
 				CONNECT BY PRIOR tipId = parent )
 	</delete>
+	
+	<!-- 좋아요 -->
+	<insert id="insertTipBoardLike" parameterType="map">
+		INSERT INTO tipLike(memberId, tipId) VALUES (#{memberId}, #{tipId})
+	</insert>
+	
+	<delete id="deleteTipBoardLike" parameterType="map">
+		DELETE FROM tipLike
+		WHERE  tipId = #{tipId} AND memberId = #{memberId}
+	</delete>
+	
+	<select id = "tipLikeCount" parameterType="Long" resultType="Integer">
+		SELECT COUNT(*)
+		FROM tipLike
+		WHERE tipId = #{tipId}
+	</select>
+
+	<select id="hasUserTipBoardLiked" parameterType="map" resultType="com.sp.app.model.TipBoard">
+		SELECT tipId, memberId
+		FROM tipLike
+		WHERE tipId = #{tipId} AND memberId = #{memberId}
+	</select>
+	
 	
 	
 	

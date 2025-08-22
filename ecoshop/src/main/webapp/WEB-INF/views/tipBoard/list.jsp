@@ -88,7 +88,7 @@
          <div class="col-md-3">
              <label for="schType" class="form-label">검색 조건</label> 
              <select id="schType" name="schType" class="form-select">
-                 <option value="nickname" ${schType=="nickname"?"selected":""}>작성자</option>
+                 <option value="name" ${schType=="name"?"selected":""}>작성자</option>
                  <option value="subject" ${schType=="subject"?"selected":""}>제목</option>
              </select>
          </div>

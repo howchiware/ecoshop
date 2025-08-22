@@ -5,12 +5,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.app.common.MyUtil;
 import com.sp.app.common.PaginateUtil;
@@ -56,6 +60,7 @@ public class TipBoardController {
 			
 			current_page = Math.min(current_page, total_page);
 			
+			
 			int offset = (current_page - 1) * size;
 			if(offset < 0) offset = 0;
 
@@ -69,14 +74,14 @@ public class TipBoardController {
 			String listUrl = cp + "/tipBoard/list";
 			String articleUrl = cp + "/tipBoard/article?page=" + current_page;
 			
-			if (! kwd.isBlank()) { 
-				query += "&schType=" + schType + "&kwd=" + myUtil.encodeUrl(kwd);
+			if (!kwd.isBlank()) { 
+			    query += "&schType=" + schType + "&kwd=" + myUtil.encodeUrl(kwd);
 			}
 			
 			listUrl += "?" + query;
 			articleUrl += "&" + query;
 			
-			String paging = paginateUtil.paging(current_page, total_page, articleUrl);
+			String paging = paginateUtil.paging(current_page, total_page, listUrl);
 			
 			model.addAttribute("list", list);
 			model.addAttribute("dataCount", dataCount);
@@ -123,10 +128,11 @@ public class TipBoardController {
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
 			@RequestParam(name = "kwd", defaultValue = "") String kwd,
 			@RequestParam(name = "size") int size,
-			Model model) throws Exception {
+			Model model,
+			HttpSession session) throws Exception {
 
 		String query = "page=" + page + "&size=" + size;
-		try {
+                                                                                                                                                                                                                                                                                                                                             		try {
 			kwd = myUtil.decodeUrl(kwd);
 			if (! kwd.isBlank()) {
 				query += "&schType=" + schType + "&kwd=" + myUtil.encodeUrl(kwd);
@@ -136,17 +142,22 @@ public class TipBoardController {
 			
 			TipBoard dto = Objects.requireNonNull(service.findById(tipId));
 
-			dto.setContent(myUtil.htmlSymbols(dto.getContent()));
-			dto.setName(myUtil.nameMasking(dto.getName()));
+			//dto.setContent(myUtil.htmlSymbols(dto.getContent()));
+			//dto.setName(myUtil.nameMasking(dto.getName()));
 
 			Map<String, Object> map = new HashMap<>();
 			map.put("schType", schType);
 			map.put("kwd", kwd);
 			map.put("groupNum", dto.getGroupNum());
 			map.put("orderNo", dto.getOrderNo());
+			map.put("tipId", tipId);
 			
 			TipBoard prevDto = service.findByPrev(map);
 			TipBoard nextDto = service.findByNext(map);
+			
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			map.put("memberId", info.getMemberId());
+			boolean isUserLiked = service.isUserTipBoardLiked(map);
 
 			model.addAttribute("dto", dto);
 			model.addAttribute("prevDto", prevDto);
@@ -154,6 +165,7 @@ public class TipBoardController {
 			model.addAttribute("query", query);
 			model.addAttribute("size", size);
 			model.addAttribute("page", page);
+			model.addAttribute("isUserLiked", isUserLiked);
 			
 			return "tipBoard/article";
 			
@@ -284,5 +296,68 @@ public class TipBoardController {
 		}
 
 		return "redirect:/tipBoard/list?" + query;
+	}
+	
+	@ResponseBody
+	@PostMapping("tipBoardLike/{tipId}")
+	public Map<String, ?> insertTipBoardLike(
+			@PathVariable(name = "tipId") long tipId,
+			HttpSession session) {
+		Map<String, Object> model = new HashMap<>();
+		
+		String state = "true";
+		int tipLikeCount = 0;
+		
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			
+			Map<String, Object> paramMap = new HashMap<>();
+			paramMap.put("tipId", tipId);
+			paramMap.put("memberId", info.getMemberId());
+			
+			service.insertTipBoardLike(paramMap);
+			
+			tipLikeCount = service.tipLikeCount(tipId);
+			
+		} catch (DuplicateKeyException e) {
+			state = "liked";
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		model.put("state", state);
+		model.put("tipLikeCount", tipLikeCount);
+		
+		return model;
+	}
+	
+	@ResponseBody
+	@DeleteMapping("tipBoardLike/{tipId}")
+	public Map<String, ?> deleteBoardLike(@PathVariable(name = "tipId") long tipId,
+			HttpSession session) {
+		Map<String, Object> model = new HashMap<>();
+		
+		String state = "true";
+		int tipLikeCount = 0;
+		
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			
+			Map<String, Object> paramMap = new HashMap<>();
+			paramMap.put("tipId", tipId);
+			paramMap.put("memberId", info.getMemberId());
+			
+			service.deleteTipBoardLike(paramMap);
+			
+			tipLikeCount = service.tipLikeCount(tipId);
+			
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		model.put("state", state);
+		model.put("tipLikeCount", tipLikeCount);
+		
+		return model;
 	}
 }

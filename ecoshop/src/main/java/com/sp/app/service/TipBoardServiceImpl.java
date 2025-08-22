@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.sp.app.common.MyUtil;
 import com.sp.app.mapper.TipBoardMapper;
 import com.sp.app.model.TipBoard;
 
@@ -21,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TipBoardServiceImpl implements TipBoardService{
 	private final TipBoardMapper mapper;
-	private final MyUtil myUtil;
+
 	
 	@Override
 	public void insertTipBoard(TipBoard dto, String mode) throws Exception {
@@ -81,8 +80,8 @@ public class TipBoardServiceImpl implements TipBoardService{
 				gap = dateTime.until(today, ChronoUnit.HOURS);
 				dto.setGap(gap);
 				
-				dto.setContent(myUtil.htmlSymbols(dto.getContent()));
-				dto.setName(myUtil.nameMasking(dto.getName()));				
+				//dto.setContent(myUtil.htmlSymbols(dto.getContent()));
+				//dto.setName(myUtil.nameMasking(dto.getName()));				
 
 				dto.setRegDate(dto.getRegDate().substring(0, 10));
 			}
@@ -164,6 +163,57 @@ public class TipBoardServiceImpl implements TipBoardService{
 			
 			throw e;
 		}
+	}
+	
+	@Override
+	public void insertTipBoardLike(Map<String, Object> map) throws Exception {
+		try {
+			mapper.insertTipBoardLike(map);
+		} catch (Exception e) {
+			log.info("insertTipBoardLike : ", e);
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public void deleteTipBoardLike(Map<String, Object> map) throws Exception {
+		try {
+			mapper.deleteTipBoardLike(map);
+		} catch (Exception e) {
+			log.info("deleteTipBoardLike : ", e);
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public int tipLikeCount(long tipId) {
+		int result = 0;
+		
+		try {
+			result = mapper.tipLikeCount(tipId);
+		} catch (Exception e) {
+			log.info("tipLikeCount : ", e);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public boolean isUserTipBoardLiked(Map<String, Object> map) {
+		boolean result = false;
+		try {
+			TipBoard dto = mapper.hasUserTipBoardLiked(map);
+			if(dto != null) {
+				result = true; 
+			}
+
+		} catch (Exception e) {
+			log.info("isUserTipBoardLiked : ", e);
+		}
+		
+		return result;
 	}
 
 }

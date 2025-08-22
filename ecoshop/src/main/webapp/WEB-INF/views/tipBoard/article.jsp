@@ -33,8 +33,13 @@
             </div>
         </div>
         <div class="card-body">
-            <p>${dto.content}</p>
-        </div>
+		    <c:out value="${dto.content}" escapeXml="false"/>
+		</div>
+		<div>
+			<div class="text-center p-3" style="border-bottom: none;">
+				<button type="button" class="btn-default btnSendTipBoardLike" title="좋아요"><i class="bi ${isUserLiked ? 'bi-heart-fill text-danger' : 'bi-heart' }"></i>&nbsp;&nbsp;<span id="tipLikeCount">${dto.tipLikeCount}</span></button>
+			</div>
+		</div>
     </div>
 
     <div class="post-navigation">
@@ -94,7 +99,43 @@
 <script src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
-
+$(function(){
+	$('button.btnSendTipBoardLike').click(function(){
+		const $i = $(this).find('i');
+		let userLiked = $i.hasClass('bi-heart-fill');
+		
+		let msg = userLiked ? '게시글 공감을 취소하시겠습니까 ? ' : '게시글에 공감하십니까 ?';
+		if(! confirm( msg )) {
+			return false;
+		}
+		
+		let url = '${pageContext.request.contextPath}/tipBoard/tipBoardLike/${dto.tipId}';
+		let method = userLiked ? 'delete' : 'post';
+		let params = null;
+		
+		const fn = function(data) {
+			let state = data.state;
+			
+			if(state === 'true') {
+				if(userLiked) {
+					$i.removeClass('bi-heart-fill text-danger').addClass('bi-heart');
+				} else {
+					$i.removeClass('bi-heart').addClass('bi-heart-fill text-danger');
+				}
+				
+				let count = data.tipLikeCount;
+				$('span#tipLikeCount').text(count);
+			} else if(state === 'liked') {
+				alert('게시글 공감은 한번만 가능합니다.');
+			} else {
+				alert('게시글 공감 여부 처리가 실패했습니다.');
+			}
+		};
+		
+		ajaxRequest(url, method, params, 'json', fn);
+	});
+});
 </script>
+<!--<script src="${pageContext.request.contextPath}/dist/jsFree/dairyArticle.js"></script>  -->
 </body>
 </html>

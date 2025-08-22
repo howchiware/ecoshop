@@ -18,5 +18,9 @@ public interface TipBoardService {
 	
 	public void updateTipBoard(TipBoard dto) throws Exception;
 	public void deleteTipBoard(long tipId, Long memberId, int userLevel) throws Exception;
-
+	
+	public void insertTipBoardLike(Map<String, Object> map) throws Exception;
+	public void deleteTipBoardLike(Map<String, Object> map) throws Exception;
+	public int tipLikeCount (long tipId);
+	public boolean isUserTipBoardLiked(Map<String, Object> map);
 }

@@ -24,4 +24,9 @@ public interface TipBoardMapper {
 	public TipBoard findByPrev(Map<String, Object> map);
 	public TipBoard findByNext(Map<String, Object> map);
 	
+	public void insertTipBoardLike(Map<String, Object> map) throws SQLException;
+	public void deleteTipBoardLike(Map<String, Object> map) throws SQLException;
+	public int tipLikeCount(long tipId);
+	public TipBoard hasUserTipBoardLiked(Map<String, Object> map);
+	
 }
