@@ -24,7 +24,7 @@ public class GongguController {
 
 	private final CategoryManageService categoryManageService;
 	private final GongguService gongguService;
-	
+
 	@GetMapping("list")
 	public String gongguList(Model model) throws Exception {
 		try {
@@ -34,7 +34,7 @@ public class GongguController {
 			if (!listCategory.isEmpty()) {
 		        List<GongguProduct> list = gongguService.listPackageByCategoryId(listCategory.get(0).getCategoryId());
 		        model.addAttribute("list", list);
-		       	}
+		    }
 		} catch (Exception e) {
 			log.error("gongguList: ", e);
 			throw e;
@@ -54,5 +54,4 @@ public class GongguController {
 		
 		return "gonggu/listDetail";
 	}
-
 }

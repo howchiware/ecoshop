@@ -18,6 +18,7 @@ public class GongguProduct {
     private long gongguProductId;
     private String gongguProductName;
     private String gongguThumbnail;
+    private long sale;
     private long originalPrice;
     private long gongguPrice;
     private String regDate;

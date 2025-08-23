@@ -18,15 +18,26 @@ public class GongguServiceImpl implements GongguService {
 	
 	@Override
 	public List<GongguProduct> listPackageByCategoryId(long categoryId) throws Exception {
-		try {
-			return gongguMapper.listPackageByCategoryId(categoryId);
-		} catch (Exception e) {
-			log.info("listPackageByCategoryId :", e);
-		}
-		
-		return null;
-		
+	    try {
+	        List<GongguProduct> dtoList = gongguMapper.listPackageByCategoryId(categoryId);
 
+            if (dtoList != null) {
+                for (GongguProduct dto : dtoList) {
+                    long originalPrice = dto.getOriginalPrice();
+                    long sale = dto.getSale();
+                    
+                    long gongguPrice = originalPrice;
+                    if (sale > 0) {
+                        gongguPrice = (long) (originalPrice - (originalPrice * sale / 100.0));
+                    }
+                    dto.setGongguPrice(gongguPrice);
+                }
+            }
+	        return dtoList;
+	    } catch (Exception e) {
+	        log.error("listPackageByCategoryId : ", e);
+	    }
+
+	    return null;
 	}
-
 }

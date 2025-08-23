@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.mapper.GongguMapper">
-	<select id="listPackageByCategoryId" resultType="com.sp.app.model.GongguProduct">
-        SELECT *
-        FROM gongguProduct
-        WHERE categoryId = #{categoryId} AND productShow = 1
-    </select>
+	<select id="listPackageByCategoryId" parameterType="Long" resultType="com.sp.app.model.GongguProduct">
+	    SELECT
+	        g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
+	        g.startDate, g.endDate, g.limitCount, g.regDate,
+	        g.sale, g.productShow, g.categoryId,
+	        NVL(SUM(p.price), 0) AS originalPrice
+	    FROM gongguProduct g
+	    LEFT OUTER JOIN gongguPackage p ON g.gongguProductId = p.gongguProductId
+	    WHERE g.categoryId = #{categoryId} AND g.productShow = 1
+	    GROUP BY g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
+	        g.startDate, g.endDate, g.limitCount, g.regDate,
+	        g.sale, g.productShow, g.categoryId
+	</select>
 </mapper>

@@ -6,14 +6,14 @@
         <c:forEach var="dto" items="${listGongguProduct}">
             <div class="col">
                 <div class="card">
-                    <img src="${pageContext.request.contextPath}/dist/images/${dto.gongguThumbnail}" style="position: absolute; width: 100%; height: 100%;" alt="${dto.gongguProductName}">
+                    <img src="/uploads/gonggu/${dto.gongguThumbnail}" alt="${dto.gongguProductName}" style="position: absolute; width: 100%; height: 100%;">
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="card-name">${dto.gongguProductName}</h5>
                         <i class="bi bi-heart heart-icon"></i>
                     </div>
-                    <p class="card-price">${dto.gongguPrice}원</p>
+                    <p class="card-price"><span class="fs-5 textgp">${dto.gongguPrice}원</span>&nbsp;&nbsp;<span class="text-decoration-line-through textgp">${dto.originalPrice}원</span></p>
                     <a href="#" class="card-link"><i class="bi bi-chat-right"></i></a>&nbsp;&nbsp;32
                 </div>
             </div>
