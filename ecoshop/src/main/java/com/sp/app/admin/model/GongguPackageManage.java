@@ -18,5 +18,6 @@ public class GongguPackageManage {
     private long packageNum;
     private int stock;
     private int price;
+    private String thumbnail;
 }
 

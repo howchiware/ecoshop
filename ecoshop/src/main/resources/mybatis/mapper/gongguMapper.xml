@@ -5,6 +5,6 @@
 	<select id="listPackageByCategoryId" resultType="com.sp.app.model.GongguProduct">
         SELECT *
         FROM gongguProduct
-        WHERE categoryId = #{categoryId}
+        WHERE categoryId = #{categoryId} AND productShow = 1
     </select>
 </mapper>

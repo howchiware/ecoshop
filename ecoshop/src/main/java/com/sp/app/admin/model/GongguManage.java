@@ -20,7 +20,7 @@ public class GongguManage {
     private String gongguProductName;
     private String gongguThumbnail;
     private int originalPrice;
-    private int gongguPrice;
+    private int sale;
     private String regDate;
     private Integer limitCount;
     private String updateDate;
@@ -39,15 +39,10 @@ public class GongguManage {
     private long categoryId; 
     private String categoryName;
     
-    private int gongguProductCount;
-    
+    private int gongguProductCount; 
     private int delivery;
-    
     private MultipartFile selectFile;
     
-    
-    
-   
     private long gongguProductDetailId;
 	private String detailPhoto;
 	private long fileNum;

@@ -37,6 +37,8 @@ public interface GongguManageMapper {
 	public List<GongguManage> listProductPhoto(long gongguProductId);
 	public void insertProductPhoto(GongguManage dto) throws SQLException;
 	public void deleteProductPhoto(long gongguProductDetailId) throws SQLException;
+	public void deleteSingleProductPhoto(long gongguProductDetailId) throws Exception;
+	public GongguManage findByProductDetailId(long gongguProductDetailId);
 	
 	// 배송정책
 	public GongguDeliveryRefundInfo listDeliveryRefundInfo();

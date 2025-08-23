@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,10 +41,6 @@ public class GongguManageServiceImpl implements GongguManageService {
 		}
 		return result;
 	}
-	
-	public String removeHtmlTags(String content) {
-	    return content.replaceAll("<[^>]*>", ""); 
-	}
 
 	@Transactional(rollbackFor = {Exception.class})
 	@Override
@@ -54,8 +52,8 @@ public class GongguManageServiceImpl implements GongguManageService {
 			dto.setLimitCount(dto.getLimitCount());
 			String filename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
 			dto.setGongguThumbnail(filename);
-			String cleanedContent = removeHtmlTags(dto.getContent());
-		    dto.setContent(cleanedContent);
+			dto.setContent(dto.getContent());
+			dto.setDetailInfo(dto.getDetailInfo());
 		    
 		    long gongguProductId = gongguManageMapper.gongguProductSeq();
 		    dto.setGongguProductId(gongguProductId);
@@ -95,9 +93,8 @@ public class GongguManageServiceImpl implements GongguManageService {
 	        dto.setEndDate(dto.getEday() + " " + dto.getEtime() + ":00");
 	        dto.setCategoryId(dto.getCategoryId());
 	        dto.setLimitCount(dto.getLimitCount());
-	        String cleanedContent = removeHtmlTags(dto.getContent());
-	        dto.setContent(cleanedContent);
-
+	        dto.setDetailInfo(dto.getDetailInfo());
+	        
 	        String filename = null;
 	        if (dto.getSelectFile() != null && !dto.getSelectFile().isEmpty()) {
 	            filename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
@@ -108,7 +105,10 @@ public class GongguManageServiceImpl implements GongguManageService {
 	                dto.setGongguThumbnail(filename); 
 	            }
 	        }
-	       
+	        
+	        String updatedDetailInfo = processHtmlContentImages(dto.getDetailInfo(), uploadPath);
+	        dto.setDetailInfo(updatedDetailInfo);
+	        
 	        gongguManageMapper.updateProduct(dto);
 
 	        if(! dto.getAddFiles().isEmpty()) {
@@ -121,7 +121,47 @@ public class GongguManageServiceImpl implements GongguManageService {
 	        throw e;
 	    }
 	}
+	
+	private String processHtmlContentImages(String htmlContent, String uploadPath) {
+	    if (htmlContent == null || htmlContent.trim().isEmpty()) {
+	        return htmlContent;
+	    }
 
+	    Pattern pattern = Pattern.compile("<img[^>]*src=\"([^\"]+)\"");
+	    Matcher matcher = pattern.matcher(htmlContent);
+
+	    StringBuffer sb = new StringBuffer();
+	    
+	    while (matcher.find()) {
+	        String imagePath = matcher.group(1);
+	        
+	        if (imagePath.startsWith("/uploads/editor/")) {
+	            try {
+	                String tempDirectoryPath = storageService.getRealPath("/uploads/editor");
+	                
+	                String filename = imagePath.substring(imagePath.lastIndexOf("/") + 1);
+	                
+	                String newFilename = storageService.transferFile(tempDirectoryPath, filename, uploadPath);
+	                
+	                if (newFilename != null) {
+	                    String newUrl = "/uploads/gonggu/" + newFilename;
+	                    matcher.appendReplacement(sb, "<img src=\"" + newUrl + "\"");
+	                } else {
+	                    matcher.appendReplacement(sb, matcher.group(0));
+	                }
+	            } catch (Exception e) {
+	                log.error("HTML 이미지 처리 중 오류 발생: " + imagePath, e);
+	                matcher.appendReplacement(sb, matcher.group(0));
+	            }
+	        } else {
+	            matcher.appendReplacement(sb, matcher.group(0));
+	        }
+	    }
+	    matcher.appendTail(sb);
+
+	    return sb.toString();
+	}
+	
 	@Override
 	public boolean deleteUploadPhoto(String uploadPath, String photoName) {
 		return storageService.deleteFile(uploadPath, photoName);
@@ -356,15 +396,31 @@ public class GongguManageServiceImpl implements GongguManageService {
 	}
 
 	@Override
+	public void deleteSingleProductPhoto(long gongguProductDetailId, String uploadPath) throws Exception {
+	    try {
+	        GongguManage dto = gongguManageMapper.findByProductDetailId(gongguProductDetailId);
+	        
+	        if (dto != null && !dto.getDetailPhoto().isBlank()) {
+	            storageService.deleteFile(uploadPath, dto.getDetailPhoto());
+	        }
+	        gongguManageMapper.deleteSingleProductPhoto(gongguProductDetailId);
+	    } catch (Exception e) {
+	        log.error("deleteSingleProductPhoto 에러 : ", e);
+	        throw e;
+	    }
+	}
+
+	@Override
 	public List<GongguPackageManage> listPackage(Map<String, Object> map) throws Exception {
-		List<GongguPackageManage> list = null;
+	    List<GongguPackageManage> list = null;
 	    try {
 	        list = gongguManageMapper.listPackage(map);
 	    } catch (Exception e) {
-	        log.error("listPackage : ", e);
+	        log.error("listPackage 에러: ", e);
 	        throw e;
 	    }
 	    return list;
 	}
+
 
 }

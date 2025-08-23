@@ -41,8 +41,8 @@
 						<div class="col-md-6">
 							<div class="cardBody">
 								<h5 class="cardTitle">${dto.gongguProductName}</h5>
-								<p class="cardText">기간 : ${dto.startDate} - ${dto.endDate}</p>
-								<p class="cardText">내용 : ${dto.content}</p>
+								<p class="cardText">기간 : ${dto.startDate} ~ ${dto.endDate}</p>
+								<p class="cardText">재고 : ${dto.limitCount}개</p>
 								<p class="cardText">
 									<small class="text-body-secondary">등록일 : ${dto.regDate}</small>
 								</p>
@@ -53,7 +53,7 @@
 				<div class="row mb-2">
 					<div class="col">
 						<button type="button" class="btn-default"
-							onclick="location.href='${pageContext.request.contextPath}/admin/gonggu/update?gongguProductId=${dto.gongguProductId}&page=${page}';">수정</button>
+							onclick="location.href='${pageContext.request.contextPath}/admin/gonggu/update?gongguProductId=${dto.gongguProductId}&categoryId=${dto.categoryId}&page=${page}';">수정</button>
 						<button type="button" class="btn-default btn-gongguDelete"
 							onclick="deleteOk();">삭제</button>
 					</div>
@@ -72,21 +72,13 @@
 						<thead>
 						    <tr>
 						        <th width="110">상품코드</th>
+						        <th width="80">상품사진</th>
 						        <th>상품명</th>
 						        <th width="80">가격</th>
 						        <th width="80">삭제</th> </tr>
 						</thead>
 						<tbody class="product-list">
-						    <c:forEach var="vo" items="${productList}">
-						        <tr>
-						            <td data-productCode="${vo.productCode}">${vo.productCode}</td>
-						            <td class="left" data-productName="${vo.productName}">${vo.productName}</td>
-						            <td><fmt:formatNumber value="${vo.price}" pattern="#,###원" /></td> <td>
-						                <button type="button" class="btn-default btn-sm btn-delete"
-						                    title="삭제" data-packageNum="${vo.packageNum}">삭제</button>
-						            </td>
-						        </tr>
-						    </c:forEach>
+						    
 						</tbody>
 					</table>
 
@@ -124,6 +116,7 @@
 						<thead>
 						    <tr>
 						        <th width="110">상품코드</th>
+						        <th width="80">상품사진</th>
 						        <th>상품명</th>
 						        <th width="80">가격</th> <th width="80">등록</th> 
 						   </tr>
@@ -144,6 +137,41 @@
 		src="${pageContext.request.contextPath}/dist/jsGonggu/sendAjaxRequest.js"></script>
 
 	<script type="text/javascript">
+        function fetchPackageProducts() {
+            let gongguProductId = '${dto.gongguProductId}';
+            let url = '${pageContext.request.contextPath}/admin/gonggu/listPackage';
+            let params = { gongguProductId: gongguProductId };
+
+            const fn = function(data) {
+                let out = '';
+                if (data.list && data.list.length > 0) {
+                    for(let item of data.list) {
+                    	let productCode = item.productCode;
+                        let productName = item.productName;
+                        let price = item.price;
+                        let thumbnail = item.thumbnail;
+                        out += `
+                            <tr>
+                                <td>\${item.productCode}</td>
+                                <td><img src="${pageContext.request.contextPath}/uploads/products/\${item.thumbnail}" style="width:50px; height:auto;"></td> 
+                                <td class="left">\${item.productName}</td>
+                                <td>\${item.price}</td>
+                                <td>
+                                    <button type="button" class="btn btn-default btn-sm btn-delete"
+                                            title="삭제" data-packageNum="\${item.packageNum}">삭제</button>
+                                </td>
+                            </tr>
+                        `;
+                    }
+                } else {
+                    out = '<tr><td colspan="5">등록된 상품이 없습니다.</td></tr>';
+                }
+                $('.product-list').html(out);
+            };
+
+            sendAjaxRequest(url, 'get', params, 'json', fn);
+        }
+
 		function deleteOk() {
 			let params = 'gongguProductId=${dto.gongguProductId}&${query}&gongguThumbnail=${dto.gongguThumbnail}';
 			let url = '${pageContext.request.contextPath}/admin/gonggu/delete?' + params;
@@ -175,6 +203,8 @@
 		}
 		
 		$(function(){
+            fetchPackageProducts();
+			
 			$('.btn-append').on('click', function(){
 				$('.search-form select[name=schType]').val('productName');
 				$('.search-form input[name=kwd]').val('');
@@ -199,14 +229,17 @@
 					        let productCode = item.productCode;
 					        let productName = item.productName;
 					        let price = item.price;
+                            let thumbnail = item.thumbnail;
 					        out += `
 					            <tr>
 					                <td>\${productCode}</td>
+                                    <td><img src="${pageContext.request.contextPath}/uploads/products/\${thumbnail}" style="width:50px; height:auto;"></td>
 					                <td class="left">\${productName}</td>
 					                <td>\${price}</td>
 					                <td>
 					                    <button type="button" class="btn btn-default btn-sm btn-direct-register" 
 					                            data-productCode="\${productCode}" 
+					                            data-thumbnail="\${thumbnail}"
 					                            data-productName="\${productName}"
 					                            data-price="\${price}">등록</button>
 					                </td>
@@ -214,7 +247,7 @@
 					        `;
 					    }
 				    } else {
-				    	out = '<tr><td colspan="4">검색 결과가 없습니다.</td></tr>';
+				    	out = '<tr><td colspan="5">검색 결과가 없습니다.</td></tr>';
 				    }
 				    $('.product-search-list').html(out); 
 				};
@@ -235,25 +268,10 @@
 				
 			    const fn = function(data) {
 			        if(data.state === 'true') {
-			            // ✅ 등록 성공 시 모달에서 행 숨기기
                         $row.hide();
                         
-                        // ✅ 패키지 리스트에 동적으로 행 추가
-                        let item = data.item;
-                        let newRow = `
-                            <tr>
-                                <td>\${item.productCode}</td>
-                                <td class="left">\${item.productName}</td>
-                                <td>\${item.price}</td>
-                                <td>
-                                    <button type="button" class="btn btn-default btn-sm btn-delete" 
-                                            title="삭제" data-packageNum="\${item.packageNum}">삭제</button>
-                                </td>
-                            </tr>
-                        `;
-                        $('.product-list').append(newRow);
+                        fetchPackageProducts();
                         
-                        // 모달 닫기
                         $('#prodectSearchModal').modal('hide');
                         
 			        } else {

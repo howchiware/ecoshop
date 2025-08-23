@@ -39,7 +39,7 @@
 									<select name="categoryId" id="categoryId">
 										<option value="">카테고리 선택</option>
 											<c:forEach var="vo" items="${listCategory}">
-												<option value="${vo.categoryId}" ${categoryId==vo.categoryId?"selected":""}>${vo.categoryName}</option>
+												<option value="${vo.categoryId}" ${dto.categoryId==vo.categoryId?'selected':''}>${vo.categoryName}</option>
 											</c:forEach>
 									</select>	
 												
@@ -91,6 +91,20 @@
 							</tr>
 							
 							<tr>
+								<td class="col-md-2 bg-light">할인율</td>
+								<td>
+									<input type="number" name="sale" class="form-control" value="${dto.sale}">
+								</td>
+							</tr>
+							
+							<tr>
+								<td class="col-md-2 bg-light">간단한 소개글</td>
+								<td>
+									<textarea name="content" class="form-control">${dto.content}</textarea>
+								</td>
+							</tr>
+							
+							<tr>
 								<td class="col-md-2 bg-light">출력여부</td>
 								<td>
 									<div class="py-2">
@@ -105,15 +119,15 @@
 									</div>
 								</td>
 							</tr>
-
+							
 							<tr>
-								<td class="col-md-2 bg-light">내 용</td>
+								<td class="col-md-2 bg-light">패키지 상세 내용</td>
 								<td>
-									<div id="editor">${dto.content}</div> <input type="hidden"
-									name="content">
+									<div id="editor">${dto.detailInfo}</div> <input type="hidden"
+									name="detailInfo" value="">
 								</td>
 							</tr>
-
+							
 							<tr>
 								<td class="col-md-2 bg-light">대표이미지</td>
 								<td>
@@ -136,8 +150,8 @@
 											</label>
 											<div class="image-upload-list">
 												<c:forEach var="vo" items="${listFile}">
-													<img class="image-uploaded" src="${pageContext.request.contextPath}/uploads/gonggu/${vo.filename}"
-														data-fileNum="${vo.fileNum}" data-filename="${vo.filename}">
+													<img class="image-uploaded" src="${pageContext.request.contextPath}/uploads/gonggu/${vo.detailPhoto}"
+														data-fileNum="${vo.gongguProductDetailId}" data-filename="${vo.detailPhoto}">
 												</c:forEach>
 											</div>
 										</div>
@@ -161,274 +175,254 @@
 						</div>
 					</form>
 				</div>
-
-			</div>
+                </div>
 	</main>
 
-	<!-- Quill Rich Text Editor -->
 	<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
-	<!-- Quill Editor Image Resize JS -->
 	<script
 		src="https://cdn.jsdelivr.net/npm/quill-resize-module@2.0.4/dist/resize.js"></script>
-	<!-- Quill Editor 적용 JS -->
 	<script src="${pageContext.request.contextPath}/dist/js/qeditor.js"></script>
 
 	<script type="text/javascript">
 
-// 단일 이미지 추가
-window.addEventListener('DOMContentLoaded', evt => {
-	const imageViewer = document.querySelector('form .image-viewer');
-	const inputEL = document.querySelector('form input[name=selectFile]');
-	
-	let uploadImage = '${dto.gongguThumbnail}';
-	let img;
-	if( uploadImage ) { // 수정인 경우
-		img = '${pageContext.request.contextPath}/uploads/gonggu/' + uploadImage;
-	} else {
-		img = '${pageContext.request.contextPath}/dist/images/add_photo.png';
-	}
-	imageViewer.textContent = '';
-	imageViewer.style.backgroundImage = 'url(' + img + ')';
-	
-	inputEL.addEventListener('change', ev => {
-		let file = ev.target.files[0];
-		if(! file) {
-			let img;
-			if( uploadImage ) { // 수정인 경우
-				img = '${pageContext.request.contextPath}/uploads/gonggu/' + uploadImage;
-			} else {
-				img = '${pageContext.request.contextPath}/dist/images/add_photo.png';
-			}
-			imageViewer.textContent = '';
-			imageViewer.style.backgroundImage = 'url(' + img + ')';
-			
-			return;
-		}
+	window.addEventListener('DOMContentLoaded', evt => {
+		const imageViewer = document.querySelector('form .image-viewer');
+		const inputEL = document.querySelector('form input[name=selectFile]');
 		
-		if(! file.type.match('image.*')) {
-			inputEL.focus();
-			return;
-		}
-		
-		const reader = new FileReader();
-		reader.onload = e => {
-			imageViewer.textContent = '';
-			imageViewer.style.backgroundImage = 'url(' + e.target.result + ')';
-		};
-		reader.readAsDataURL(file);
-	});
-	
-});
-
-function isValidDateString(dateString) {
-	try {
-		const date = new Date(dateString);
-		const [year, month, day] = dateString.split("-").map(Number);
-		
-		return date instanceof Date && !isNaN(date) && date.getDate() === day;
-	} catch(e) {
-		return false;
-	}
-}
-
-function hasContent(htmlContent) {
-	htmlContent = htmlContent.replace(/<p[^>]*>/gi, ''); 
-	htmlContent = htmlContent.replace(/<\/p>/gi, '');
-	htmlContent = htmlContent.replace(/<br\s*\/?>/gi, ''); 
-	htmlContent = htmlContent.replace(/&nbsp;/g, ' ');
-	htmlContent = htmlContent.replace(/\s/g, ''); 
-	
-	return htmlContent.length > 0;
-}
-
-function sendOk() {
-	const f = document.gongguProductForm;
-	const mode = '${mode}';
-	let str;
-	
-	str = f.gongguProductName.value.trim();
-	if( ! str ) {
-		alert('제목을 입력하세요. ');
-		f.gongguProductName.focus();
-		return;
-	}
-
-	if(! isValidDateString(f.sday.value)) {
-		alert('날짜를 입력하세요.');
-		f.sday.focus();
-		return;
-	}
-	
-	if(! f.stime.value) {
-		alert('시간을 입력하세요.');
-		f.stime.focus();
-		return;
-	}
-
-	if(! isValidDateString(f.eday.value)) {
-		alert('날짜를 입력하세요.');
-		f.eday.focus();
-		return;
-	}
-	
-	if(! f.etime.value) {
-		alert('시간을 입력하세요.');
-		f.etime.focus();
-		return;
-	}
-	
-	let sd = new Date(f.sday.value + ' ' + f.stime.value);
-	let ed = new Date(f.eday.value + ' ' + f.etime.value);
-	
-	if( sd.getTime() >= ed.getTime() ) {
-		alert('시작날짜는 종료날짜보다 크거나 같을 수 없습니다.');
-		f.sday.focus();
-		return;
-	}
-
-	if( mode === 'write' && new Date().getTime() > ed.getTime() ) {
-		alert('종료날짜는 현재 시간보다 작을수 없습니다.');
-		f.eday.focus();
-		return;
-	}
-	
-	b = false;
-	for(let s of f.productShow) {
-		if( s.checked ) {
-			b = true;
-			break;
-		}
-	}
-	if( ! b ) {
-		alert('표시 여부를 선택하세요.');
-		f.productShow[0].focus();
-		return false;
-	}
-	
-	const htmlViewEL = document.querySelector('textarea#html-view');
-	let htmlContent = htmlViewEL ? htmlViewEL.value : quill.root.innerHTML;
-	if(! hasContent(htmlContent)) {
-		alert('내용을 입력하세요. ');
-		if(htmlViewEL) {
-			htmlViewEL.focus();
+		let uploadImage = '${dto.gongguThumbnail}';
+		let img;
+		if( uploadImage ) {
+			img = '${pageContext.request.contextPath}/uploads/gonggu/' + uploadImage;
 		} else {
-			quill.focus();
+			img = '${pageContext.request.contextPath}/dist/images/add_photo.png';
 		}
-		return;
-	}
-	f.content.value = htmlContent;
-
-	if( (mode === 'write') && (! f.selectFile.value) ) {
-		alert('이미지 파일을 추가 하세요. ');
-		f.selectFile.focus();
-		return;
-	}	
-	
-	f.action = '${pageContext.request.contextPath}/admin/gonggu/${mode}';
-	f.submit();
-}
-
-//다중 이미지 ---
-//수정인 경우 이미지 파일 삭제
-window.addEventListener('DOMContentLoaded', evt => {
-	const fileUploadList = document.querySelectorAll('form .image-upload-list .image-uploaded');
-	
-	for(let el of fileUploadList) {
-		el.addEventListener('click', () => {
-			/*
-			let listEl = document.querySelectorAll('form .image-upload-list .image-uploaded');
-			if(listEl.length <= 1) {
-				alert('등록된 이미지가 2개 이상인 경우만 삭제 가능합니다.');
-				return false;
-			}
-			*/
-			
-			if(! confirm('선택한 파일을 삭제 하시겠습니까 ?')) {
-				return false;
-			}
-				
-			let url = '${pageContext.request.contextPath}/admin/products/deleteFile';
-			// let fileNum = el.getAttribute('data-fileNum');
-			let fileNum = el.dataset.filenum;
-			let filename = el.dataset.filename;
-
-			$.ajaxSetup({ beforeSend: function(e) { e.setRequestHeader('AJAX', true); } });
-			$.post(url, {fileNum:fileNum, filename:filename}, function(data){
-				el.remove();
-			}, 'json').fail(function(xhr){
-				console.log(xhr.responseText);
-			});
-			
-		});
-	}
-});
-
-//다중 이미지 추가
-window.addEventListener('DOMContentLoaded', evt => {
-	var sel_files = [];
-	
-	const imageListEL = document.querySelector('form .image-upload-list');
-	const inputEL = document.querySelector('form input[name=addFiles]');
-	
-	// sel_files[] 에 저장된 file 객체를 <input type="file">로 전송하기
-	const transfer = () => {
-		let dt = new DataTransfer();
-		for(let f of sel_files) {
-			dt.items.add(f);
-		}
-		inputEL.files = dt.files;
-	}
-
-	inputEL.addEventListener('change', ev => {
-		if(! ev.target.files || ! ev.target.files.length) {
-			transfer();
-			return;
-		}
+		imageViewer.textContent = '';
+		imageViewer.style.backgroundImage = 'url(' + img + ')';
 		
-		for(let file of ev.target.files) {
-			if(! file.type.match('image.*')) {
-				continue;
+		inputEL.addEventListener('change', ev => {
+			let file = ev.target.files[0];
+			if(! file) {
+				let img;
+				if( uploadImage ) {
+					img = '${pageContext.request.contextPath}/uploads/gonggu/' + uploadImage;
+				} else {
+					img = '${pageContext.request.contextPath}/dist/images/add_photo.png';
+				}
+				imageViewer.textContent = '';
+				imageViewer.style.backgroundImage = 'url(' + img + ')';
+				
+				return;
 			}
-
-			sel_files.push(file);
-     	
-			let node = document.createElement('img');
-			node.classList.add('image-item');
-			node.setAttribute('data-filename', file.name);
-
+			
+			if(! file.type.match('image.*')) {
+				inputEL.focus();
+				return;
+			}
+			
 			const reader = new FileReader();
 			reader.onload = e => {
-				node.setAttribute('src', e.target.result);
+				imageViewer.textContent = '';
+				imageViewer.style.backgroundImage = 'url(' + e.target.result + ')';
 			};
 			reader.readAsDataURL(file);
-     	
-			imageListEL.appendChild(node);
-		}
+		});
 		
-		transfer();		
 	});
-	
-	imageListEL.addEventListener('click', (e)=> {
-		if(e.target.matches('.image-item')) {
-			if(! confirm('선택한 파일을 삭제 하시겠습니까 ?')) {
-				return false;
-			}
+
+	function isValidDateString(dateString) {
+		try {
+			const date = new Date(dateString);
+			const [year, month, day] = dateString.split("-").map(Number);
 			
-			let filename = e.target.getAttribute('data-filename');
-			
-			for(let i = 0; i < sel_files.length; i++) {
-				if(filename === sel_files[i].name){
-					sel_files.splice(i, 1);
-					break;
-				}
-			}
-		
-			transfer();
-			
-			e.target.remove();
+			return date instanceof Date && !isNaN(date) && date.getDate() === day;
+		} catch(e) {
+			return false;
 		}
-	});	
-});
-</script>
+	}
+
+	function hasContent(htmlContent) {
+		htmlContent = htmlContent.replace(/<p[^>]*>/gi, ''); 
+		htmlContent = htmlContent.replace(/<\/p>/gi, '');
+		htmlContent = htmlContent.replace(/<br\s*\/?>/gi, ''); 
+		htmlContent = htmlContent.replace(/&nbsp;/g, ' ');
+		htmlContent = htmlContent.replace(/\s/g, ''); 
+		
+		return htmlContent.length > 0;
+	}
+
+	function sendOk() {
+		const f = document.gongguProductForm;
+		const mode = '${mode}';
+		let str;
+		
+		str = f.gongguProductName.value.trim();
+		if( ! str ) {
+			alert('제목을 입력하세요. ');
+			f.gongguProductName.focus();
+			return;
+		}
+
+		if(! isValidDateString(f.sday.value)) {
+			alert('날짜를 입력하세요.');
+			f.sday.focus();
+			return;
+		}
+		
+		if(! f.stime.value) {
+			alert('시간을 입력하세요.');
+			f.stime.focus();
+			return;
+		}
+
+		if(! isValidDateString(f.eday.value)) {
+			alert('날짜를 입력하세요.');
+			f.eday.focus();
+			return;
+		}
+		
+		if(! f.etime.value) {
+			alert('시간을 입력하세요.');
+			f.etime.focus();
+			return;
+		}
+		
+		let sd = new Date(f.sday.value + ' ' + f.stime.value);
+		let ed = new Date(f.eday.value + ' ' + f.etime.value);
+		
+		if( sd.getTime() >= ed.getTime() ) {
+			alert('시작날짜는 종료날짜보다 크거나 같을 수 없습니다.');
+			f.sday.focus();
+			return;
+		}
+
+		if( mode === 'write' && new Date().getTime() > ed.getTime() ) {
+			alert('종료날짜는 현재 시간보다 작을수 없습니다.');
+			f.eday.focus();
+			return;
+		}
+		
+		b = false;
+		for(let s of f.productShow) {
+			if( s.checked ) {
+				b = true;
+				break;
+			}
+		}
+		if( ! b ) {
+			alert('표시 여부를 선택하세요.');
+			f.productShow[0].focus();
+			return false;
+		}
+		
+		const detailInfoContent = quill.root.innerHTML;
+		f.detailInfo.value = detailInfoContent;
+
+		const simpleContent = f.content.value.trim();
+		
+		if(! hasContent(detailInfoContent) && ! hasContent(simpleContent)) {
+			alert('내용을 입력하세요. ');
+			quill.focus();
+			return;
+		}
+
+		if( (mode === 'write') && (! f.selectFile.value) ) {
+			alert('이미지 파일을 추가 하세요. ');
+			f.selectFile.focus();
+			return;
+		}	
+		
+		f.action = '${pageContext.request.contextPath}/admin/gonggu/${mode}';
+		f.submit();
+	}
+
+	window.addEventListener('DOMContentLoaded', evt => {
+	    const fileUploadList = document.querySelectorAll('form .image-upload-list .image-uploaded');
+
+	    for(let el of fileUploadList) {
+	        el.addEventListener('click', () => {
+
+	            if(! confirm('선택한 파일을 삭제 하시겠습니까 ?')) {
+	                return false;
+	            }
+
+	            let url = '${pageContext.request.contextPath}/admin/gonggu/deleteFile';
+	            let fileNum = el.dataset.filenum;
+
+	            $.ajaxSetup({ beforeSend: function(e) { e.setRequestHeader('AJAX', true); } });
+	            $.post(url, {fileNum:fileNum}, function(data){
+	                el.remove();
+	            }, 'json').fail(function(xhr){
+	                console.log(xhr.responseText);
+	            });
+
+	        });
+	    }
+	});
+
+	window.addEventListener('DOMContentLoaded', evt => {
+		var sel_files = [];
+		
+		const imageListEL = document.querySelector('form .image-upload-list');
+		const inputEL = document.querySelector('form input[name=addFiles]');
+		
+		const transfer = () => {
+			let dt = new DataTransfer();
+			for(let f of sel_files) {
+				dt.items.add(f);
+			}
+			inputEL.files = dt.files;
+		}
+
+		inputEL.addEventListener('change', ev => {
+			if(! ev.target.files || ! ev.target.files.length) {
+				transfer();
+				return;
+			}
+			
+			for(let file of ev.target.files) {
+				if(! file.type.match('image.*')) {
+					continue;
+				}
+
+				sel_files.push(file);
+	     	
+				let node = document.createElement('img');
+				node.classList.add('image-item');
+				node.setAttribute('data-filename', file.name);
+
+				const reader = new FileReader();
+				reader.onload = e => {
+					node.setAttribute('src', e.target.result);
+				};
+				reader.readAsDataURL(file);
+	     	
+				imageListEL.appendChild(node);
+			}
+			
+			transfer();		
+		});
+		
+		imageListEL.addEventListener('click', (e)=> {
+			if(e.target.matches('.image-item')) {
+				if(! confirm('선택한 파일을 삭제 하시겠습니까 ?')) {
+					return false;
+				}
+				
+				let filename = e.target.getAttribute('data-filename');
+				
+				for(let i = 0; i < sel_files.length; i++) {
+					if(filename === sel_files[i].name){
+						sel_files.splice(i, 1);
+						break;
+					}
+				}
+			
+				transfer();
+				
+				e.target.remove();
+			}
+		});	
+	});
+	</script>
 </body>
 </html>

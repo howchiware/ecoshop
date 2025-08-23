@@ -1,5 +1,6 @@
 package com.sp.app.admin.controller;
 
+import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -77,6 +78,7 @@ public class GongguManageController {
     	try {
     		dto.setCategoryId(categoryId);
     		dto.setLimitCount(limitCount);
+    		
 			gongguManageService.insertGongguProduct(dto, uploadPath);
 		} catch (Exception e) {
 			log.info("productWriteSubmit : ",e);
@@ -207,20 +209,21 @@ public class GongguManageController {
 	@GetMapping("update")
 	public String updateForm(
 			@RequestParam(name = "gongguProductId") long gongguProductId,
-			@RequestParam(name = "categoryId", defaultValue = "0") long categoryId,
+			@RequestParam(name = "categoryId") long categoryId,
 			@RequestParam(name = "page") String page,
 			Model model) throws Exception {
 		
 		try {
 			List<GongguManage> listCategory = gongguManageService.listCategory();
-
+			 
 			GongguManage dto = Objects.requireNonNull(gongguManageService.findById(gongguProductId));
+			List<GongguManage> listFile = gongguManageService.listProductPhoto(gongguProductId);
 			
 			model.addAttribute("dto", dto);
 			model.addAttribute("page", page);	
-			model.addAttribute("categoryId", categoryId);
 			model.addAttribute("mode", "update");
 			model.addAttribute("listCategory", listCategory);
+			model.addAttribute("listFile", listFile);
 			
 			return "admin/gonggu/write";
 			
@@ -235,16 +238,17 @@ public class GongguManageController {
 
 	@PostMapping("update")
 	public String updateSubmit(
-			GongguManage dto,
-			@RequestParam(name = "page") String page,
-			Model model) throws Exception {
-		
-		try {
-			gongguManageService.updateGongguProduct(dto, uploadPath);
-		} catch (Exception e) {
-		}
-		
-		return "redirect:/admin/gonggu/listProduct?page=" + page;
+	    GongguManage dto,
+	    @RequestParam(name = "page") String page) throws Exception {
+
+	    try {
+	        gongguManageService.updateGongguProduct(dto, uploadPath);
+	    } catch (Exception e) {
+	        log.error("updateSubmit error: ", e);
+	        return "redirect:/admin/gonggu/update?gongguProductId=" + dto.getGongguProductId() + "&categoryId=" + dto.getCategoryId() + "&page=" + page;
+	    }
+
+	    return "redirect:/admin/gonggu/listProduct?categoryId=" + dto.getCategoryId() + "&page=" + page;
 	}
 	
 	@GetMapping("delete")
@@ -278,6 +282,22 @@ public class GongguManageController {
 		return "redirect:/admin/gonggu/listProduct?" + query;
 	}	
     
+	@PostMapping("deleteFile")
+	@ResponseBody
+	public Map<String, Object> deleteFile(@RequestParam("fileNum") long fileNum) {
+	    Map<String, Object> model = new HashMap<>();
+	    String state = "true";
+
+	    try {
+	        gongguManageService.deleteSingleProductPhoto(fileNum, uploadPath);
+	    } catch (Exception e) {
+	        state = "false";
+	        log.error("deleteFile : ", e);
+	    }
+
+	    model.put("state", state);
+	    return model;
+	}
 	
     @GetMapping("productReview")
     public String getProductReview(@RequestParam(value="memberId", required = false) Long memberId, Model model) {
@@ -539,6 +559,7 @@ public class GongguManageController {
  	        dto.setStock(gongguInfo.getLimitCount());
  	        dto.setProductName(productInfo.getProductName());
  	        dto.setPrice(productInfo.getPrice());
+ 	        dto.setThumbnail(productInfo.getThumbnail());
 
  	        gongguManageService.insertGongguPackage(dto);
  	       
@@ -588,6 +609,24 @@ public class GongguManageController {
  		model.put("state", state);
  		return model;
  	}
+ 	
+ 	// 패키지 상품 목록 조회
+ 	@ResponseBody
+ 	@GetMapping("listPackage")
+ 	public Map<String, ?> listPackage(
+ 	    @RequestParam("gongguProductId") long gongguProductId) throws Exception {
 
+ 	    Map<String, Object> map = new HashMap<>();
+ 	    map.put("gongguProductId", gongguProductId);
+ 	    try {
+ 	        List<GongguPackageManage> list = gongguManageService.listPackage(map);
+ 	        map.put("state", "true");
+ 	       	map.put("list", list);
+ 	    } catch (Exception e) {
+ 	    	map.put("state", "false");
+ 	        log.error("listPackage : ", e);
+ 	    }
+ 	    return map;
+ 	}
 
 }

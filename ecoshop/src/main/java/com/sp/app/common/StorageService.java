@@ -16,7 +16,9 @@ public interface StorageService {
 	public ResponseEntity<?> downloadZipFile(String[] sources, String[] originals, String zipFilename);
 	
 	public boolean deleteFile(String pathString);
-	public boolean deleteFile(String directoryPath, String filename);
+	public boolean deleteFile(String uploadPath, String filename);
 	
 	public List<String> listAllFiles(String directoryPath);
+	
+	String transferFile(String sourceDirectoryPath, String filename, String targetDirectoryPath);
 }

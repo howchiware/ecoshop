@@ -28,13 +28,13 @@
 		parameterType="com.sp.app.admin.model.GongguManage">
 		INSERT INTO gongguProduct(gongguProductId,
 		gongguProductName, content, gongguThumbnail,
-		startDate, endDate, productShow, regDate, categoryId, limitCount)
+		startDate, endDate, productShow, regDate, categoryId, limitCount, sale, detailInfo)
 		VALUES
 		(#{gongguProductId}, #{gongguProductName}, #{content},
 		#{gongguThumbnail},
 		TO_DATE(#{startDate}, 'YYYY-MM-DD HH24:MI:SS'),
 		TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'), #{productShow}, SYSDATE, #{categoryId},
-		#{limitCount})
+		#{limitCount}, #{sale}, #{detailInfo})
 	</insert>
 
 	<insert id="insertProductPhoto"
@@ -52,8 +52,8 @@
 		gongguThumbnail = #{gongguThumbnail},
 		startDate = TO_DATE(#{startDate}, 'YYYY-MM-DD HH24:MI:SS'),
 		endDate = TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'),
-		productShow = #{productShow}, categoryId = #{categoryId}, limitCount =
-		#{limitCount}
+		productShow = #{productShow}, categoryId = #{categoryId}, limitCount = #{limitCount}, sale = #{sale},
+		detailInfo = #{detailInfo}, updateDate = SYSDATE
 		WHERE gongguProductId = #{gongguProductId}
 	</update>
 
@@ -69,7 +69,7 @@
 		gongguThumbnail,
 		TO_CHAR(startDate, 'YYYY-MM-DD HH24:MI') startDate,
 		TO_CHAR(endDate, 'YYYY-MM-DD HH24:MI') endDate,
-		productShow, regDate, limitCount
+		productShow, regDate, limitCount, categoryId, sale, detailInfo
 		FROM gongguProduct
 		WHERE gongguProductId = #{gongguProductId}
 	</select>
@@ -82,10 +82,20 @@
 	</select>
 
 	<delete id="deleteProductPhoto" parameterType="Long">
-		DELETE FROM
-		gongguProductDetail
+		DELETE FROM gongguProductDetail
 		WHERE gongguProductId = #{gongguProductId}
 	</delete>
+	
+	<select id="findByProductDetailId" parameterType="Long" resultType="com.sp.app.admin.model.GongguManage">
+        SELECT gongguProductDetailId, detailPhoto
+        FROM gongguProductDetail
+        WHERE gongguProductDetailId = #{gongguProductDetailId}
+    </select>
+    
+    <delete id="deleteSingleProductPhoto" parameterType="Long">
+        DELETE FROM gongguProductDetail
+        WHERE gongguProductDetailId = #{gongguProductDetailId}
+    </delete>
 
 	<!-- 공동구매 리스트 검색 -->
 	<sql id="where-list">
@@ -181,7 +191,7 @@
 
 	<select id="productSearch" parameterType="map"
 		resultType="com.sp.app.admin.model.ProductManage">
-		SELECT productCode, productName, price
+		SELECT productCode, productName, price, thumbnail
 		FROM product
 		<where>
 			optionCount = 0
@@ -204,8 +214,9 @@
 </select>
 
 	<select id="listPackage" parameterType="map" resultType="com.sp.app.admin.model.GongguPackageManage">
-    SELECT packageNum, productCode, productName, price
-    FROM gongguPackage
+    SELECT g.packageNum, p.productCode, p.productName, p.price, p.thumbnail
+    FROM gongguPackage g
+    JOIN product p ON g.productCode = p.productCode
     WHERE gongguProductId = #{gongguProductId}
     ORDER BY packageNum DESC
 	</select>

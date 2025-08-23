@@ -28,6 +28,7 @@ public interface GongguManageService {
 	public void deleteProductPhoto(long gongguProductId, String uploadPath) throws Exception;
 	public void insertProductPhoto(GongguManage dto, String uploadPath) throws SQLException;
 	public boolean deleteUploadPhoto(String uploadPath, String detailPhoto);
+	public void deleteSingleProductPhoto(long gongguProductDetailId, String uploadPath) throws Exception;
 	
 	// 패키지 상품등록
 	public void insertGongguPackage(GongguPackageManage dto) throws Exception;

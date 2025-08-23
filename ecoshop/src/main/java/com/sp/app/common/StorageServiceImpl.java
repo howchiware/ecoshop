@@ -245,4 +245,26 @@ public class StorageServiceImpl implements StorageService {
 		}
 	}
 
+	@Override
+	public String transferFile(String sourceDirectoryPath, String filename, String targetDirectoryPath) {
+	    try {
+	        Path sourcePath = Paths.get(sourceDirectoryPath, filename);
+	        Path targetDir = Paths.get(targetDirectoryPath);
+	        
+	        if (!Files.exists(targetDir)) {
+	            Files.createDirectories(targetDir);
+	        }
+
+	        String newFilename = fileManager.generateUniqueFileName(targetDirectoryPath, filename.substring(filename.lastIndexOf(".")));
+	        Path targetPath = targetDir.resolve(newFilename);
+	        
+	        Files.move(sourcePath, targetPath);
+
+	        return newFilename;
+
+	    } catch (IOException e) {
+	        throw new StorageException("파일 이동 실패.", e);
+	    }
+	}
+
 }
