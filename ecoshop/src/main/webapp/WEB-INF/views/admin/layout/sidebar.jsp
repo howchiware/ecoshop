@@ -48,7 +48,7 @@
       <ul class="submenu">
         <li><a href="/admin/gonggu/listProduct"> 패키지 등록 및 조회</a></li>
         <li><a href="/admin/gonggu/deliveryWrite"> 배송 정책 및 배송비</a></li>
-        <li><a href="/admin/gonggu/productReview"> 리뷰 및 Q&A 관리</a></li>
+        <li><a href="/admin/gonggu/productReview"> 리뷰 및 Q&amp;A 관리</a></li>
       </ul>
     </li>
     <li><a href=""> 주문 상태 관리</a></li>
@@ -123,7 +123,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const sidebar = document.getElementById("sidebar");
     const allLinks = document.querySelectorAll(".sidebar-menu a");
 
-    // --- 기능 1: 서브메뉴 토글 (원본 코드 유지) ---
     document.querySelectorAll(".sidebar-menu > li > a").forEach(function(menu) {
         menu.addEventListener("click", function(e) {
             let submenu = this.nextElementSibling;
@@ -134,18 +133,14 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // --- 기능 2: 스크롤 위치 기억 및 복원 (추가된 기능) ---
-    // 페이지 로드 시: 저장된 스크롤 위치가 있으면 복원
     const savedScrollTop = sessionStorage.getItem('sidebarScrollTop');
     if (savedScrollTop) {
         sidebar.scrollTop = parseInt(savedScrollTop, 10);
     }
 
-    // 링크 클릭 시: 현재 스크롤 위치 저장
     allLinks.forEach(function(link) {
         link.addEventListener('click', function() {
             const href = link.getAttribute('href');
-            // 페이지를 이동하는 링크일 경우에만 스크롤 위치 저장
             if (href && href !== '#') {
                 sessionStorage.setItem('sidebarScrollTop', sidebar.scrollTop);
             }
