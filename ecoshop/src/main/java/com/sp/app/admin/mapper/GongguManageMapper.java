@@ -29,7 +29,7 @@ public interface GongguManageMapper {
 	public void deleteGongguPackage(long packageNum) throws SQLException;
 	public List<ProductManage> productSearch(Map<String, Object> map);
 	public List<GongguPackageManage> listPackage(Map<String, Object> map);
-	public int sumPackagePrices(long gongguProductId);
+	public long sumPackagePrices(long gongguProductId);
 	public GongguPackageManage findPacById(long packageNum) throws Exception;
 	
 	// 카테고리
