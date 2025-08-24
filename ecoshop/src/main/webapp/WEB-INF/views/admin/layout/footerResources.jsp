@@ -10,4 +10,4 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
 <!-- Core JS Files -->
-<script src="${pageContext.request.contextPath}/dist/js/core2.js"></script>
+<%-- <script src="${pageContext.request.contextPath}/dist/js/core2.js"></script> --%>
