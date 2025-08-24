@@ -110,42 +110,39 @@ public class ReguideServiceImpl implements ReguideService {
 
 	@Override
 	public void updateReguide(Reguide dto, String uploadPath) throws Exception {
-		try {
-			if(dto.getSelectFile() != null && ! dto.getSelectFile().isEmpty()) {
-				if(! dto.getImageFilename().isBlank()) {
-					deleteUploadFile(uploadPath, dto.getImageFilename());
-				}
-				
-				String saveFilename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
-				dto.setImageFilename(saveFilename);
-			}
-			mapper.updateReguide(dto);
-		} catch (Exception e) {
-			log.info("updateReguide : ", e);
-			
-			throw e;
-		}
-		
+	    try {
+	        if (dto.getSelectFile() != null && !dto.getSelectFile().isEmpty()) {
+
+	            if (dto.getImageFilename() != null && !dto.getImageFilename().isBlank()) {
+	                deleteUploadFile(uploadPath, dto.getImageFilename());
+	            }
+
+	            String saveFilename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
+	            dto.setImageFilename(saveFilename);
+	        }
+	        mapper.updateReguide(dto);
+	    } catch (Exception e) {
+	        log.info("updateReguide : ", e);
+	        throw e;
+	    }
 	}
 	
 
 	@Override
 	public void deleteReguide(long guidId, Long memberId, int userLevel, String uploadPath, String filename)
-			throws Exception {
-		try {
-			if (filename != null) {
-				deleteUploadFile(uploadPath, filename);
-			}
+	        throws Exception {
+	    try {
 
-			 mapper.deleteReguide(guidId);
-		} catch (Exception e) {
-			log.info("deleteReguide : ", e);
-			
-			throw e;
-		}
-		
+	        if (filename != null && !filename.isBlank()) {
+	            deleteUploadFile(uploadPath, filename);
+	        }
+
+	        mapper.deleteReguide(guidId);
+	    } catch (Exception e) {
+	        log.info("deleteReguide : ", e);
+	        throw e;
+	    }
 	}
-
 	@Override
 	public boolean deleteUploadFile(String uploadPath, String filename) {
 		// TODO Auto-generated method stub

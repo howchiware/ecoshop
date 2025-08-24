@@ -86,8 +86,7 @@
 		FETCH FIRST 1 ROWS ONLY
 	</select>
 
-	<select id="findByNext" parameterType="map"
-		resultType="com.sp.app.model.Reguide">
+	<select id="findByNext" parameterType="map" resultType="com.sp.app.model.Reguide">
 		SELECT guidId, subject
 		FROM reguide r
 		JOIN member2 m ON r.memberId = m.memberId
@@ -101,8 +100,7 @@
 		FETCH FIRST 1 ROWS ONLY
 	</select>
 
-	<update id="updateReguide"
-		parameterType="com.sp.app.model.Reguide">
+	<update id="updateReguide" parameterType="com.sp.app.model.Reguide">
 		UPDATE reguide SET subject = #{subject}, categoryCode = #{categoryCode}, content = #{content}, imageFilename = #{imageFilename}
 		WHERE guidId = #{guidId} AND memberId = #{memberId}
 	</update>
@@ -114,11 +112,11 @@
 
 	<!-- 카테고리 -->
 	<insert id="insertCategory" parameterType="com.sp.app.model.ReguideCategory">
-    <selectKey keyProperty="categoryCode" resultType="long" order="AFTER">
-        SELECT reCategory_seq.CURRVAL FROM dual
-    </selectKey>
-	    INSERT INTO reCategory (categoryCode, categoryName)
-	    VALUES ( reCategory_seq.NEXTVAL, #{categoryName} )
+    <selectKey keyProperty="categoryCode" resultType="long" order="BEFORE">
+	    SELECT reCategory_seq.NEXTVAL FROM dual
+	</selectKey>
+	INSERT INTO reCategory (categoryCode, categoryName)
+	VALUES ( #{categoryCode}, #{categoryName} )
 	</insert>
 	
 	<select id="listCategory" resultType="com.sp.app.model.ReguideCategory">
