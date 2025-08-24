@@ -22,12 +22,15 @@ public interface GongguManageMapper {
 	public int dataCountGongguProduct(Map<String, Object> map);
 	public List<GongguManage> listGongguProduct(Map<String, Object> map);
 	public GongguManage findById(long productId);
+	public void updateOnlyOriginalPrice(Map<String, Object> map);
 	
 	// 패키지 구성 넣기 
 	public void insertGongguPackage(GongguPackageManage dto) throws SQLException;
 	public void deleteGongguPackage(long packageNum) throws SQLException;
 	public List<ProductManage> productSearch(Map<String, Object> map);
 	public List<GongguPackageManage> listPackage(Map<String, Object> map);
+	public long sumPackagePrices(long gongguProductId);
+	public GongguPackageManage findPacById(long packageNum) throws Exception;
 	
 	// 카테고리
 	public GongguManage findByCategory(long categoryId);

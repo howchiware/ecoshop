@@ -57,7 +57,7 @@ public class ProductManageController {
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
 			@RequestParam(name = "kwd", defaultValue = "") String kwd,		
 			@RequestParam(name = "categoryId", defaultValue = "0") long categoryId,
-			@RequestParam(name = "period", defaultValue = "") String period,
+			@RequestParam(name = "period", defaultValue = "reg_date") String period,
 			@RequestParam(name = "periodStart", defaultValue = "") String periodStart,
 			@RequestParam(name = "periodEnd", defaultValue = "") String periodEnd,
 			@RequestParam(name = "priceLowest", defaultValue = "") String priceLowest,

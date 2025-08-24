@@ -9,13 +9,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>전체상품리스트</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
 <script type="text/javascript" src="${pageContext.request.contextPath}/dist/vendor/jquery/js/jquery.min.js"></script>
-
 <script type="text/javascript" src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/paginate.css">
 
 <style type="text/css">
 
@@ -178,12 +176,12 @@ text-align: center;
 											    </select>
 											    <input type="date" name="periodStart" id="periodStart"> ~ 
 											    <input type="date" name="periodEnd" id="periodEnd">
-											    <button type="button" name="today" class="dateBtn today">오늘</button>
-											    <button type="button" name="yesterday" class="dateBtn yesterday">어제</button>
-											    <button type="button" name="week" class="dateBtn week">일주일</button>
-											    <button type="button" name="oneMonth" class="dateBtn oneMonth">1개월</button>
-											    <button type="button" name="threeMonths" class="dateBtn threeMonths">3개월</button>
-											    <button type="button" name="total" class="dateBtn total">전체</button>
+											    <button type="button" class="dateBtn today">오늘</button>
+											    <button type="button" class="dateBtn yesterday">어제</button>
+											    <button type="button" class="dateBtn week">일주일</button>
+											    <button type="button" class="dateBtn oneMonth">1개월</button>
+											    <button type="button" class="dateBtn threeMonths">3개월</button>
+											    <button type="button" class="dateBtn total">전체</button>
 											</td>
 										</tr>
 										<tr>
@@ -204,7 +202,7 @@ text-align: center;
 	
 									<div class="btn-area">
 										<button class="btn-accent" type="button" onclick="searchList();" style="background: #fff; border: 1px solid black; border-radius: 4px; padding: 3px 10px;">조회</button>
-										<button class="btn-accent" type="reset">초기화</button>
+										<button class="btn-accent" type="reset" onclick="location.href='${pageContext.request.contextPath}/admin/products/listProduct';">초기화</button>
 										<!-- 
 										<input type="hidden" name="size" value="${size}">
 										<input type="hidden" name="categoryId" value="${categoryId}">
@@ -550,6 +548,74 @@ function deleteProductSelect() {
 	f.action = '${pageContext.request.contextPath}/admin/products/deleteProductSelect;';
 	f.submit();
 }
+
+$('button.dateBtn').click(function(){
+	
+	let periodStartEl = $(this).closest('td').find('input#periodStart');
+	let periodEndEl = $(this).closest('td').find('input#periodEnd');
+
+	const today = new Date();
+	
+	let startYear = '';
+	let startMonth = '';
+	let startDay = '';
+	
+	let endYear = today.getFullYear();
+	let endMonth = ('0' + (today.getMonth() + 1)).slice(-2);
+	let endDay = ('0' + today.getDate()).slice(-2);	
+	
+	if($(this).hasClass('today')){
+		startYear = today.getFullYear();
+		startMonth = ('0' + (today.getMonth() + 1)).slice(-2);
+		startDay = ('0' + today.getDate()).slice(-2);	
+
+	}
+	if($(this).hasClass('yesterday')){
+		const yesterday = new Date();
+		yesterday.setDate(today.getDate() - 1);
+		
+		startYear = yesterday.getFullYear();
+		startMonth = ('0' + (yesterday.getMonth() + 1)).slice(-2);
+		startDay = ('0' + yesterday.getDate()).slice(-2);	
+	}
+	if($(this).hasClass('week')){
+		const oneWeekAge = new Date();
+		oneWeekAge.setDate(today.getDate() - 7);
+		
+		startYear = oneWeekAge.getFullYear();
+		startMonth = ('0' + (oneWeekAge.getMonth() + 1)).slice(-2);
+		startDay = ('0' + oneWeekAge.getDate()).slice(-2);	
+		
+	}
+	if($(this).hasClass('oneMonth')){
+		const oneMonthAgo = new Date();
+		oneMonthAgo.setMonth(today.getMonth() - 1);
+		
+		startYear = oneMonthAgo.getFullYear();
+		startMonth = ('0' + (oneMonthAgo.getMonth() + 1)).slice(-2);
+		startDay = ('0' + oneMonthAgo.getDate()).slice(-2);		
+	}
+	if($(this).hasClass('threeMonths')){
+		const threeMonthsAgo = new Date();
+		threeMonthsAgo.setMonth(today.getMonth() - 3);
+		
+		startYear = threeMonthsAgo.getFullYear();
+		startMonth = ('0' + (threeMonthsAgo.getMonth() + 1)).slice(-2);
+		startDay = ('0' + threeMonthsAgo.getDate()).slice(-2);		
+	}
+	if($(this).hasClass('total')){
+		startYear = '2000';
+		startMonth = '01';
+		startDay = '01';		
+	}
+	
+
+	let dateStartString = startYear + '-' + startMonth  + '-' + startDay;
+	let dateEndString = endYear + '-' + endMonth  + '-' + endDay;
+	periodStartEl.val(dateStartString);
+	periodEndEl.val(dateEndString);
+	
+});
 
 </script>
 

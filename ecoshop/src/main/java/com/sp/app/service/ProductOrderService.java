@@ -20,4 +20,6 @@ public interface ProductOrderService {
 	
 	public List<ProductOrder> didIBuyThis(Map<String, Object> map);
 	public ProductReview myReviewOfThis(long orderDetailId);
+	
+	public void insertPoint(ProductOrder dto) throws Exception;
 }

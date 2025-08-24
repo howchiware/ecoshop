@@ -30,4 +30,6 @@ public interface ProductOrderMapper {
 	public Point findByUserPoint(Long member_id);
 	public List<ProductOrder> didIBuyThis(Map<String, Object> map);
 	public ProductReview myReviewOfThis(long orderDetailId);
+	
+	public void insertPoint(ProductOrder dto) throws Exception;
 }

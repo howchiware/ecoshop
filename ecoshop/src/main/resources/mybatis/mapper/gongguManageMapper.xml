@@ -24,17 +24,16 @@
 		orderNo ASC
 	</select>
 
-	<insert id="insertProduct"
-		parameterType="com.sp.app.admin.model.GongguManage">
-		INSERT INTO gongguProduct(gongguProductId,
-		gongguProductName, content, gongguThumbnail,
-		startDate, endDate, productShow, regDate, categoryId, limitCount, sale, detailInfo)
-		VALUES
-		(#{gongguProductId}, #{gongguProductName}, #{content},
-		#{gongguThumbnail},
-		TO_DATE(#{startDate}, 'YYYY-MM-DD HH24:MI:SS'),
-		TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'), #{productShow}, SYSDATE, #{categoryId},
-		#{limitCount}, #{sale}, #{detailInfo})
+	<insert id="insertProduct" parameterType="com.sp.app.admin.model.GongguManage">
+	    INSERT INTO gongguProduct(gongguProductId,
+	    gongguProductName, content, gongguThumbnail,
+	    startDate, endDate, productShow, regDate, categoryId, limitCount, sale, originalPrice, detailInfo)
+	    VALUES
+	    (#{gongguProductId}, #{gongguProductName}, #{content},
+	    #{gongguThumbnail},
+	    TO_DATE(#{startDate}, 'YYYY-MM-DD HH24:MI:SS'),
+	    TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'), #{productShow}, SYSDATE, #{categoryId},
+	    #{limitCount}, #{sale}, 0, #{detailInfo})
 	</insert>
 
 	<insert id="insertProductPhoto"
@@ -47,13 +46,12 @@
 
 	<update id="updateProduct"
 		parameterType="com.sp.app.admin.model.GongguManage">
-		UPDATE gongguProduct SET gongguProductName =
-		#{gongguProductName}, content = #{content},
+		UPDATE gongguProduct SET gongguProductName = #{gongguProductName}, content = #{content},
 		gongguThumbnail = #{gongguThumbnail},
 		startDate = TO_DATE(#{startDate}, 'YYYY-MM-DD HH24:MI:SS'),
 		endDate = TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'),
 		productShow = #{productShow}, categoryId = #{categoryId}, limitCount = #{limitCount}, sale = #{sale},
-		detailInfo = #{detailInfo}, updateDate = SYSDATE
+		detailInfo = #{detailInfo}, updateDate = SYSDATE, originalPrice = #{originalPrice}
 		WHERE gongguProductId = #{gongguProductId}
 	</update>
 
@@ -69,7 +67,7 @@
 		gongguThumbnail,
 		TO_CHAR(startDate, 'YYYY-MM-DD HH24:MI') startDate,
 		TO_CHAR(endDate, 'YYYY-MM-DD HH24:MI') endDate,
-		productShow, regDate, limitCount, categoryId, sale, detailInfo
+		productShow, regDate, limitCount, categoryId, sale, detailInfo, originalPrice
 		FROM gongguProduct
 		WHERE gongguProductId = #{gongguProductId}
 	</select>
@@ -145,8 +143,9 @@
 		SELECT g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
 		TO_CHAR(g.startDate, 'YYYY-MM-DD HH24:MI') startDate,
 		TO_CHAR(g.endDate, 'YYYY-MM-DD HH24:MI') endDate, g.productShow,
-		TO_CHAR(g.regDate, 'YYYY-MM-DD') regDate, NVL(t.gongguProductCount, 0)
-		gongguProductCount
+		TO_CHAR(g.regDate, 'YYYY-MM-DD') regDate,
+		NVL(t.gongguProductCount, 0) gongguProductCount,
+		NVL(g.originalPrice, 0) AS originalPrice, g.sale AS sale
 		FROM gongguProduct g
 		LEFT OUTER JOIN (
 		SELECT gongguProductId, NVL(COUNT(gongguProductId), 0) gongguProductCount
@@ -211,16 +210,34 @@
 				)
 			</if>
 		</where>
-</select>
-
-	<select id="listPackage" parameterType="map" resultType="com.sp.app.admin.model.GongguPackageManage">
-    SELECT g.packageNum, p.productCode, p.productName, p.price, p.thumbnail
-    FROM gongguPackage g
-    JOIN product p ON g.productCode = p.productCode
-    WHERE gongguProductId = #{gongguProductId}
-    ORDER BY packageNum DESC
+	</select>
+	
+	<select id="findPacById" parameterType="long" resultType="com.sp.app.admin.model.GongguPackageManage">
+		SELECT packageNum, price, gongguProductId
+		FROM gongguPackage
+		WHERE packageNum = #{packageNum}
 	</select>
 
+	<select id="listPackage" parameterType="map" resultType="com.sp.app.admin.model.GongguPackageManage">
+	    SELECT g.packageNum, p.productCode, p.productName, p.price, p.thumbnail
+	    FROM gongguPackage g
+	    JOIN product p ON g.productCode = p.productCode
+	    WHERE gongguProductId = #{gongguProductId}
+	    ORDER BY packageNum DESC
+	</select>
+	
+	<select id="sumPackagePrices" parameterType="Long" resultType="long">
+	    SELECT NVL(SUM(price), 0)
+	    FROM gongguPackage 
+	    WHERE gongguProductId = #{gongguProductId}
+	</select>
+	
+	<update id="updateOnlyOriginalPrice" parameterType="map">
+	    UPDATE gongguProduct
+	    SET originalPrice = #{originalPrice}
+	    WHERE gongguProductId = #{gongguProductId}
+	</update>
+	
 	<!-- 배송정책 -->
 	<select id="listDeliveryRefundInfo"
 		resultType="com.sp.app.admin.model.GongguDeliveryRefundInfo">

@@ -19,8 +19,9 @@ public class GongguManage {
     private long gongguProductId;
     private String gongguProductName;
     private String gongguThumbnail;
-    private int originalPrice;
-    private int sale;
+    private long originalPrice;
+    private long sale;
+    private long gongguPrice;
     private String regDate;
     private Integer limitCount;
     private String updateDate;

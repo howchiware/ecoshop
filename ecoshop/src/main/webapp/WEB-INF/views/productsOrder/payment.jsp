@@ -286,10 +286,6 @@ function sendOk() {
 	buyer_addr = buyer_addr.trim();
 	let buyer_postcode = '${orderUser.zip}'; // 구매자 우편번호
 	
-	// 결제 API로 결제 진행
-	
-	
-	
 	// 결제가 성공한 경우 ------------------------
 	
 	// 결제 방식, 카드번호, 승인번호, 결제 날짜

@@ -1,6 +1,5 @@
 package com.sp.app.admin.controller;
 
-import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -105,9 +104,7 @@ public class GongguManageController {
 			int dataCount;
 			
 			kwd = URLDecoder.decode(kwd, "UTF-8");
-			
-			GongguManage listCategory = gongguManageService.findByCategory(categoryId); 
-			
+
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("state", state);
 			map.put("schType", schType);
@@ -126,6 +123,19 @@ public class GongguManageController {
 			map.put("size", size);
 			
 			List<GongguManage> listProduct = gongguManageService.listProduct(map);
+
+			for (GongguManage dto : listProduct) {
+				long originalPrice = dto.getOriginalPrice(); 	  
+				long sale = dto.getSale();
+			    
+				long gongguPrice = originalPrice;
+			    if (sale > 0) {
+			        gongguPrice = originalPrice - (long)(originalPrice * sale / 100.0);
+			    }
+			    dto.setGongguPrice(gongguPrice);
+			}
+		    
+			GongguManage listCategory = gongguManageService.findByCategory(categoryId); 
 			
 			String cp = req.getContextPath();
 			
@@ -560,18 +570,21 @@ public class GongguManageController {
  	        dto.setProductName(productInfo.getProductName());
  	        dto.setPrice(productInfo.getPrice());
  	        dto.setThumbnail(productInfo.getThumbnail());
-
+ 	        
  	        gongguManageService.insertGongguPackage(dto);
- 	       
+ 	        gongguManageService.updateOriginalPrice(gongguProductId);
+ 	        GongguManage updatedGongguInfo = gongguManageService.findById(gongguProductId);
+ 	        
+ 	        model.put("originalPrice", updatedGongguInfo.getOriginalPrice());
+ 	        model.put("gongguPrice", updatedGongguInfo.getGongguPrice());
  	        model.put("state", state);
  	        model.put("item", dto); 
  	        
  	    } catch (Exception e) {
  	        log.error("insertPackage : " ,e);
  	        state = "false";
- 	        model.put("state", state);
  	    }
- 	    
+ 	    model.put("state", state);
  	    return model;
  	}
  	
@@ -579,13 +592,25 @@ public class GongguManageController {
  	// 패키지 상품 삭제
  	@ResponseBody
  	@PostMapping("deletePackage")
- 	public Map<String, ?> deleteGongguPackage(@RequestParam("packageNum") long packageNum) throws Exception {
+ 	public Map<String, ?> deleteGongguPackage(
+ 	        @RequestParam("packageNum") long packageNum) throws Exception {
  	    Map<String, Object> model = new HashMap<String, Object>();
  	    String state = "true";
  	    try {
+ 	        GongguPackageManage packageDto = gongguManageService.findPacById(packageNum);
+ 	        long gongguProductId = packageDto.getGongguProductId();
+
  	        gongguManageService.deleteGongguPackage(packageNum);
+
+ 	        GongguManage updatedGongguInfo = gongguManageService.findById(gongguProductId);
+
+ 	        model.put("state", "true");
+ 	        model.put("originalPrice", updatedGongguInfo.getOriginalPrice());
+ 	        model.put("gongguPrice", updatedGongguInfo.getGongguPrice());
+
  	    } catch (Exception e) {
  	        state = "false";
+ 	        log.error("deleteGongguPackage error: ", e);
  	    }
  	    model.put("state", state);
  	    return model;
@@ -628,5 +653,6 @@ public class GongguManageController {
  	    }
  	    return map;
  	}
+ 
 
 }

@@ -32,9 +32,12 @@ public interface GongguManageService {
 	
 	// 패키지 상품등록
 	public void insertGongguPackage(GongguPackageManage dto) throws Exception;
-	public void deleteGongguPackage(long packageNum) throws Exception;
+	public long deleteGongguPackage(long packageNum) throws Exception;
 	public List<ProductManage> productSearch(Map<String, Object> map);
 	public List<GongguPackageManage> listPackage(Map<String, Object> map) throws Exception;
+	public long calculateOriginalPrice(long gongguProductId) throws Exception;
+	public void updateOriginalPrice(long gongguProductId) throws Exception;
+	public GongguPackageManage findPacById(long packageNum);
 	
 	// 배송정책
 	public GongguDeliveryRefundInfo listDeliveryRefundInfo();

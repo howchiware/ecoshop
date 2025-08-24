@@ -45,29 +45,31 @@ public class GongguManageServiceImpl implements GongguManageService {
 	@Transactional(rollbackFor = {Exception.class})
 	@Override
 	public void insertGongguProduct(GongguManage dto, String uploadPath) throws Exception {
-		try {
-			dto.setStartDate(dto.getSday() + " " + dto.getStime() + ":00");
-			dto.setEndDate(dto.getEday() + " " + dto.getEtime() + ":00");
-			dto.setCategoryId(dto.getCategoryId());
-			dto.setLimitCount(dto.getLimitCount());
-			String filename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
-			dto.setGongguThumbnail(filename);
-			dto.setContent(dto.getContent());
-			dto.setDetailInfo(dto.getDetailInfo());
-		    
-		    long gongguProductId = gongguManageMapper.gongguProductSeq();
-		    dto.setGongguProductId(gongguProductId);
-			
-			gongguManageMapper.insertProduct(dto);
-			
-			if(! dto.getAddFiles().isEmpty()) {
-				insertProductPhoto(dto, uploadPath);
-			}
-		} catch (Exception e) {
-			log.info("insertProduct : ", e);
-			
-			throw e;
-		}
+	    try {
+	        dto.setStartDate(dto.getSday() + " " + dto.getStime() + ":00");
+	        dto.setEndDate(dto.getEday() + " " + dto.getEtime() + ":00");
+	        dto.setCategoryId(dto.getCategoryId());
+	        dto.setLimitCount(dto.getLimitCount());
+	        String filename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
+	        dto.setGongguThumbnail(filename);
+	        dto.setContent(dto.getContent());
+	        dto.setDetailInfo(dto.getDetailInfo());
+	        
+	        dto.setSale(dto.getSale());
+	        dto.setOriginalPrice(0);
+	        
+	        long gongguProductId = gongguManageMapper.gongguProductSeq();
+	        dto.setGongguProductId(gongguProductId);
+	        
+	        gongguManageMapper.insertProduct(dto);
+	        
+	        if(! dto.getAddFiles().isEmpty()) {
+	            insertProductPhoto(dto, uploadPath);
+	        }
+	    } catch (Exception e) {
+	        log.info("insertProduct : ", e);
+	        throw e;
+	    }
 	}
 	
 	public void insertProductPhoto(GongguManage dto, String uploadPath) throws SQLException {
@@ -215,13 +217,23 @@ public class GongguManageServiceImpl implements GongguManageService {
 				
 			dto.setEday(dto.getEndDate().substring(0, 10));
 			dto.setEtime(dto.getEndDate().substring(11));
+			
+			if (dto != null) {
+				long price = dto.getOriginalPrice(); 
+				long sale = dto.getSale(); 
 
-		} catch (NullPointerException e) {
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return dto;
+				long gongguPrice = price; 
+
+	            if (sale > 0 && price > 0) {
+	                gongguPrice = (long) (price - (price * sale / 100.0));
+	            }
+	            dto.setGongguPrice(gongguPrice);
+	        }
+	    } catch (Exception e) {
+	        log.error("findById : ", e);
+	        throw e;
+	    }
+	    return dto;
 	}
 
 
@@ -360,6 +372,7 @@ public class GongguManageServiceImpl implements GongguManageService {
 	        }
 	        
 	        gongguManageMapper.insertGongguPackage(dto);
+	        updateOriginalPrice(dto.getGongguProductId());
 	        
 	        Map<String, Object> map = new HashMap<>();
 	        map.put("gongguProductId", dto.getGongguProductId());
@@ -375,14 +388,21 @@ public class GongguManageServiceImpl implements GongguManageService {
 
 	@Transactional(rollbackFor = {Exception.class})
 	@Override
-	public void deleteGongguPackage(long packageNum) throws Exception {
-		try {
-			gongguManageMapper.deleteGongguPackage(packageNum);
-	    } catch (Exception e) {
-	    	log.error("deleteGongguPackage : ", e);
-	    }
-	}
+	public long deleteGongguPackage(long packageNum) throws Exception {
+	    GongguPackageManage dto = gongguManageMapper.findPacById(packageNum);
+	    long gongguProductId = dto.getGongguProductId();
+	    
+	    gongguManageMapper.deleteGongguPackage(packageNum);
+	    
+	    long originalPrice = gongguManageMapper.sumPackagePrices(gongguProductId);
 
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("gongguProductId", gongguProductId);
+	    map.put("originalPrice", originalPrice);
+	    gongguManageMapper.updateOnlyOriginalPrice(map);
+	    
+	    return gongguProductId; 
+	}
 
 	@Override
 	public List<ProductManage> productSearch(Map<String, Object> map) {
@@ -405,7 +425,7 @@ public class GongguManageServiceImpl implements GongguManageService {
 	        }
 	        gongguManageMapper.deleteSingleProductPhoto(gongguProductDetailId);
 	    } catch (Exception e) {
-	        log.error("deleteSingleProductPhoto 에러 : ", e);
+	        log.error("deleteSingleProductPhoto : ", e);
 	        throw e;
 	    }
 	}
@@ -416,11 +436,51 @@ public class GongguManageServiceImpl implements GongguManageService {
 	    try {
 	        list = gongguManageMapper.listPackage(map);
 	    } catch (Exception e) {
-	        log.error("listPackage 에러: ", e);
+	        log.error("listPackage : ", e);
 	        throw e;
 	    }
 	    return list;
 	}
 
+	@Override
+	public long calculateOriginalPrice(long gongguProductId) throws Exception {
+		long originalPrice = 0;
+	    try {
+	        originalPrice = gongguManageMapper.sumPackagePrices(gongguProductId);
+	    } catch (Exception e) {
+	        log.error("calculateOriginalPrice : ", e);
+	        throw e;
+	    }
+	    return originalPrice;
+	}
+	
+	@Transactional(rollbackFor = {Exception.class})
+	@Override
+	public void updateOriginalPrice(long gongguProductId) throws Exception {
+	    try {
+	    	long originalPrice = gongguManageMapper.sumPackagePrices(gongguProductId);
+
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("gongguProductId", gongguProductId);
+	        map.put("originalPrice", originalPrice);
+	        
+	        gongguManageMapper.updateOnlyOriginalPrice(map); 
+	        
+	    } catch (Exception e) {
+	        log.error("updateOriginalPrice : ", e);
+	        throw e;
+	    }
+	}
+
+	@Override
+	public GongguPackageManage findPacById(long packageNum) {
+	    GongguPackageManage dto = null;
+	    try {
+	        dto = gongguManageMapper.findPacById(packageNum);
+	    } catch (Exception e) {
+	        log.error("findPacById : ", e);
+	    }
+	    return dto;
+	}
 
 }

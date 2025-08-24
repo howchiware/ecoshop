@@ -63,7 +63,7 @@
 					</div>
 					<hr>
 					<div class="row packageList-container">
-						<div class="col-md-6">패키지 상품구성</div>
+						<div class="col-md-6">패키지 상품구성 | 공동구매가격 : <span id="gongguPriceDisplay">${dto.gongguPrice}</span></div>
 						<div class="col-md-6 text-end">
 							<button type="button" class="btn-default btn-append">상품등록</button>
 						</div>
@@ -175,7 +175,7 @@
 		function deleteOk() {
 			let params = 'gongguProductId=${dto.gongguProductId}&${query}&gongguThumbnail=${dto.gongguThumbnail}';
 			let url = '${pageContext.request.contextPath}/admin/gonggu/delete?' + params;
-			if (confirm('위 자료를 삭제 하시 겠습니까 ? ')) {
+			if (confirm('패키지를 삭제 하시겠습니까 ? ')) {
 				location.href = url;
 			}
 		}
@@ -270,6 +270,9 @@
 			        if(data.state === 'true') {
                         $row.hide();
                         
+                        $('#originalPrice').text(data.originalPrice);
+                        $('#gongguPrice').text(data.gongguPrice);
+
                         fetchPackageProducts();
                         
                         $('#prodectSearchModal').modal('hide');
@@ -284,28 +287,29 @@
 				
 			$('body').on('click', '.btn-delete', function(){
 			    let packageNum = $(this).attr('data-packageNum');
-			    let $row = $(this).closest('tr');
-
+			    
 			    if(confirm('해당 상품을 패키지 구성에서 삭제하시겠습니까?')) {
 			        let url = '${pageContext.request.contextPath}/admin/gonggu/deletePackage';
-                    $.ajax({
-                        url: url,
-                        type: 'POST',
-                        data: {
-                            packageNum: packageNum
-                        },
-                        dataType: 'json',
-                        success: function(data) {
-                            if(data.state === 'true') {
-                                $row.remove();
-                            } else {
-                                alert(data.message || '삭제에 실패했습니다.');
-                            }
-                        },
-                        error: function() {
-                            alert('삭제 중 오류가 발생했습니다.');
-                        }
-                    });
+			        $.ajax({
+			            url: url,
+			            type: 'POST',
+			            data: {
+			                packageNum: packageNum
+			            },
+			            dataType: 'json',
+			            success: function(data) {
+			                if(data.state === 'true') {
+			                    fetchPackageProducts();
+			                    
+			                    $('#gongguPriceDisplay').text(data.gongguPrice);
+			                } else {
+			                    alert(data.message || '삭제에 실패했습니다.');
+			                }
+			            },
+			            error: function() {
+			                alert('삭제 중 오류가 발생했습니다.');
+			            }
+			        });
 			    }
 			});
 		}); 

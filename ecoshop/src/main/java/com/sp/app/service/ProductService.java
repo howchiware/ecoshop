@@ -10,6 +10,7 @@ public interface ProductService {
 	public int dataCount(Map<String, Object> map);
 	public List<Product> listProductByCategoryId(Map<String, Object> map) throws Exception;
 	public List<Product> listAllProducts() throws Exception;
+	public List<Product> listFiveProducts() throws Exception;
 	// public List<Product> listProductByCategoryId(long categoryId) throws Exception;
 	public Product findById(long productId) throws Exception;
 	public Product findByCategoryId(long categoryId);

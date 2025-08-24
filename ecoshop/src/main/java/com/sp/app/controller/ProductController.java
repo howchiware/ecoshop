@@ -56,6 +56,7 @@ public class ProductController {
 			if (! listCategory.isEmpty()) {
 				
 		        List<Product> listProduct = productService.listAllProducts();
+		        List<Product> listFiveProduct = productService.listFiveProducts();
 		        /*
 		        for(Product dto : listProduct) {
 		        	Map<String, Object> reviewMap = new HashMap<String, Object>();
@@ -68,6 +69,7 @@ public class ProductController {
 		        */
 		        
 		        model.addAttribute("listProduct", listProduct);
+		        model.addAttribute("listFiveProduct", listFiveProduct);
 		    }
 		} catch (Exception e) {
 			log.error("productsList: ", e);
@@ -415,6 +417,84 @@ public class ProductController {
 		}
 		
 		return "redirect:/products/main";
+	}
+	
+	@ResponseBody
+	@GetMapping("viewProductDetail")
+	public Map<String, ?> viewProductDetail(@RequestParam("productCode") long productCode,
+			HttpSession session) throws Exception{
+
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			
+			// 상품
+			Product dto = Objects.requireNonNull(productService.findById(productCode));
+			
+			if(info != null) {
+				// 찜 여부
+				Map<String, Object> map = new HashMap<>();
+				map.put("memberId", info.getMemberId());
+				map.put("productId", dto.getProductId());
+				map.put("productCode", dto.getProductCode());
+				
+				dto.setUserProductLike(myShoppingService.findByProductLikeId(map)== null ? 0 : 1);
+			}
+			
+			// 추가 이미지
+			List<Product> listPhoto = productService.listProductPhoto(productCode);
+			
+			// 옵션명
+			List<Product> listOption = productService.listProductOption(productCode);
+			
+			// 옵션1 옵션값
+			List<Product> listOptionDetail = null;
+			if(listOption.size() > 0) {
+				listOptionDetail = productService.listOptionDetail(listOption.get(0).getOptionNum());
+			}
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			List<Product> listStock = null;
+			if(dto.getOptionCount() < 2) {
+				map.put("productId", dto.getProductId());
+				map.put("productCode", dto.getProductCode());
+				listStock = productService.listOptionDetailStock(map);
+				
+				if(dto.getOptionCount() == 0 && listStock.size() > 0) {
+					// 옵션이 없는 경우 재고 수량
+					dto.setStockNum(listStock.get(0).getStockNum());
+					dto.setTotalStock(listStock.get(0).getTotalStock());
+				} else if(dto.getOptionCount() > 0) {
+					// 옵션이 하나인 경우 재고 수량
+					for(Product vo : listOptionDetail) {
+						for(Product ps : listStock) {
+							if(vo.getOptionDetailNum() == ps.getOptionDetailNum()) {
+								vo.setStockNum(ps.getStockNum());
+								vo.setTotalStock(ps.getTotalStock());
+								break;
+							}
+						}
+					}
+				}
+			}
+			
+			// 추가 이미지
+			dto.setPhotoName(dto.getThumbnail());
+			listPhoto.add(0, dto);
+			
+			model.put("dto", dto);
+			model.put("listOption", listOption);
+			model.put("listOptionDetail", listOptionDetail);
+			model.put("listPhoto", listPhoto);
+			
+			
+		} catch (NullPointerException e) {
+		} catch (Exception e) {
+			log.info("viewProductDetail : ", e);
+		}
+		
+		return model;
 	}
 	
 	@GetMapping("listOptionDetail2")
