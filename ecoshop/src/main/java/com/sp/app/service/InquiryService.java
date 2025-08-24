@@ -16,5 +16,5 @@ public interface InquiryService {
 	public Inquiry findByInq(Long inquiryId);
 	public List<InquiryManage> listCategory(Map<String, Object> map); 
 	public int dataCount(Map<String, Object> map);
-	public InquiryManage getInquiryStats();
+	
 }

@@ -10,14 +10,6 @@
 	--color-danger: #e74c3c;
 }
 
-html {
-	overflow-y: scroll;
-}
-
-body {
-	background-color: var(--color-bg);
-}
-
 * {
 	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
 	box-sizing: border-box;
@@ -30,15 +22,22 @@ body {
 		format('woff');
 	font-style: normal;
 }
+
+html {
+	overflow-y: scroll;
+}
+
+body {
+	background-color: var(--color-bg);
+}
 .content {
 	padding: 30px;
 }
-.title {
-	margin-top: 0;
-	margin-bottom: .5rem;
-	font-weight: 500;
-	line-height: 1.2;
-	color: var(--bs-heading-color);
+.title h3 {
+    font-weight: 500;
+    font-size: 1.75rem;
+    color: var(--primary-text-color);
+    margin-bottom: 0;
 }
 
 .box {

@@ -4,8 +4,8 @@
 <mapper namespace="com.sp.app.mapper.ReportsMapper">
 	<insert id="insertReports" parameterType="com.sp.app.model.Reports">
 		INSERT INTO reports(reportId, target, targetNum, reporterId, contentType, 
-			contenTitle, reasonCode, reasonDetail, reportDate, reportIp, reportStatus)
-		VALUES (reports_seq.NEXTVAL, #{target}, #{targetNum}, #{reporterId}, #{contentType}, #{contentTtle}, #{reasonCode}, #{reasonDetail, jdbcType=VARCHAR}, SYSDATE, #{reportIp}, 1)
+			contentTitle, reasonCode, reasonDetail, reportDate, reportIp, reportStatus)
+		VALUES (reports_seq.NEXTVAL, #{target}, #{targetNum}, #{reporterId}, #{contentType}, #{contentTitle}, #{reasonCode}, #{reasonDetail, jdbcType=VARCHAR}, SYSDATE, #{reportIp}, 1)
 	</insert>
 	
 	<sql id="where-list">
@@ -167,7 +167,7 @@
 				p.memberId writerId, m.name writer, block
 			</when>
 			<otherwise>
-				'${target}' target, p.reportId targetNum, p.subject, p.content, p.memberId writerId, 
+				'${target}' target,  p.${pkColumnName} targetNum, p.subject, p.content, p.memberId writerId, 
 				m.name writer, block
 			</otherwise>
 		</choose>
@@ -178,6 +178,15 @@
 		FROM ${target} p
 		JOIN member2 m ON p.memberId = m.memberId
 		WHERE ${fieldName} = #{reportId}
+	</select>
+	
+	<select id="getReportStats" resultType="com.sp.app.model.Reports">
+	    SELECT
+	        (SELECT COUNT(*) FROM reports WHERE reportStatus = 1) AS waitReport,
+	        (SELECT COUNT(*) FROM reports WHERE reportStatus = 2) AS compReport,
+	        (SELECT COUNT(*) FROM reports WHERE reportStatus = 3) AS cancleReport,
+	        (SELECT COUNT(*) FROM reports WHERE reportStatus = 1 OR reportStatus = 0) AS allReport
+	    FROM DUAL
 	</select>
 	
 </mapper>

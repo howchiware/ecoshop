@@ -8,10 +8,8 @@
 <title>관리자 페이지</title>
 <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/admin.css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/cssBlockAndInquiry/blockAndInquiry.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssBlockAndInquiry/blockAndInquiry.css">
 </head>
 <body>
 
@@ -34,11 +32,11 @@
 						<div class="card-body">
 							<div class="stat-item">
 								<h4>1:1 문의 답변 처리율</h4>
-								<p class="stat-value">${rate}%</p>
+								<p class="stat-value">${rateInquiry}%</p>
 							</div>
 							<div class="stat-item">
 								<h4>신규 신고 접수</h4>
-								<p class="stat-value">${empty weeklyStats.newReportCount ? 0 : weeklyStats.newReportCount}
+								<p class="stat-value">${empty waitReport ? 0 : waitReport}
 									건</p>
 							</div>
 						</div>
@@ -76,7 +74,7 @@
 							<h3 class="card-title">처리 대기 중인 신고</h3>
 						</div>
 						<div class="card-body">
-							<p class="kpi-metric">${empty pendingReportCount ? 0 : pendingReportCount}<small>건</small>
+							<p class="kpi-metric">${empty waitReport ? 0 : waitReport}<small>건</small>
 							</p>
 							<ul class="item-list">
 								<c:forEach var="dto" items="${recentReports}" begin="0" end="4">

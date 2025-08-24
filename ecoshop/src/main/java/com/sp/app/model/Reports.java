@@ -36,4 +36,9 @@ public class Reports {
 	private int block; // 블라인드 처리
 	
 	private String mode;
+	
+	private int waitReport;
+    private int allReport;
+    private int compReport;
+    private int cancleReport;
 }
