@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.ReguideMapper">
+	<select id="reguideSeq" resultType="long">
+		SELECT reguide_seq.NEXTVAL
+		FROM dual
+	</select>
+	<insert id="insertReguide"
+		parameterType="com.sp.app.model.Reguide">
+		INSERT INTO reguide(guidId, memberId, categoryCode,
+		subject, content,
+		hitCount, regDate, imageFilename)
+		VALUES ( reguide_seq.NEXTVAL, #{memberId},
+		#{categoryCode}, #{subject}, #{content}, 0, SYSDATE, #{imageFilename})
+	</insert>
+	
+
+	<sql id="where-list">
+		<choose>
+			<when test="schType == 'all' ">
+				( INSTR(subject, #{kwd}) &gt; 0
+				OR INSTR(content, #{kwd}) &gt; 0)
+			</when>
+			<when test="schType == 'regDate' ">
+				( INSTR(TO_CHAR(regDate, 'YYYYMMDD'), #{kwd}) &gt; 0
+				OR TO_CHAR(regDate, 'YYYY-MM-DD') = #{kwd} )
+			</when>
+			<otherwise>
+				INSTR(${schType}, #{kwd}) &gt; 0
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM reguide r
+		JOIN member2 m ON r.memberId = m.memberId
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list" />
+			</if>
+		</where>
+	</select>
+
+	<select id="listReguide" parameterType="map"
+		resultType="com.sp.app.model.Reguide">
+		SELECT guidId, name, r.memberId, subject, regDate, hitCount,
+		imageFilename
+		FROM reguide r
+		JOIN member2 m ON r.memberId = m.memberId
+		<where>
+			<if test="kwd != null and kwd != ''">
+				<include refid="where-list" />
+			</if>
+		</where>
+		ORDER BY guidId DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+
+	<select id="findById" parameterType="Long"
+		resultType="com.sp.app.model.Reguide">
+		SELECT r.guidId, r.memberId, name, subject, content, regDate, 'yyyy-mm-dd',
+		hitCount, imageFilename
+		FROM reguide r
+		JOIN member2 m ON r.memberId = m.memberId
+		WHERE r.guidId = #{guidId}
+	</select>
+
+	<update id="updateHitCount" parameterType="Long">
+		UPDATE reguide SET hitCount = hitCount + 1
+		WHERE guidId = #{guidId}
+	</update>
+
+	<select id="findByPrev" parameterType="map"
+		resultType="com.sp.app.model.Reguide">
+		SELECT guidId, subject
+		FROM reguide r
+		JOIN member2 m ON r.memberId = m.memberId
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list" />
+			</if>
+			AND (guidId &gt; #{guidId})
+		</where>
+		ORDER BY guidId ASC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+
+	<select id="findByNext" parameterType="map"
+		resultType="com.sp.app.model.Reguide">
+		SELECT guidId, subject
+		FROM reguide r
+		JOIN member2 m ON r.memberId = m.memberId
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list" />
+			</if>
+			AND (guidId &lt; #{guidId})
+		</where>
+		ORDER BY guidId DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+
+	<update id="updateReguide"
+		parameterType="com.sp.app.model.Reguide">
+		UPDATE reguide SET subject = #{subject}, categoryCode = #{categoryCode}, content = #{content}, imageFilename = #{imageFilename}
+		WHERE guidId = #{guidId} AND memberId = #{memberId}
+	</update>
+
+	<delete id="deleteReguide" parameterType="Long">
+		DELETE FROM reguide
+		WHERE guidId = #{guidId}
+	</delete>
+
+	<!-- 카테고리 -->
+	<insert id="insertCategory" parameterType="com.sp.app.model.ReguideCategory">
+    <selectKey keyProperty="categoryCode" resultType="long" order="AFTER">
+        SELECT reCategory_seq.CURRVAL FROM dual
+    </selectKey>
+	    INSERT INTO reCategory (categoryCode, categoryName)
+	    VALUES ( reCategory_seq.NEXTVAL, #{categoryName} )
+	</insert>
+	
+	<select id="listCategory" resultType="com.sp.app.model.ReguideCategory">
+	    SELECT categoryCode, categoryName
+	    FROM reCategory
+	    ORDER BY categoryCode
+	</select>
+</mapper>

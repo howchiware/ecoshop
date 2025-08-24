@@ -50,7 +50,7 @@
 	<select id="findByPrev" parameterType="map" resultType="com.sp.app.admin.model.PromotionManage">
 		SELECT promotionId, subject, postingStatus
 		FROM promotion p
-		JOIN member2 m ON p.member_id = m.member_id
+		JOIN member2 m ON p.memberId = m.memberId
 		<where>
 			<if test="kwd != null and kwd != '' ">
 				<include refid="where-list"/>
@@ -65,7 +65,7 @@
 	<select id="findByNext" parameterType="map" resultType="com.sp.app.admin.model.PromotionManage">
 		SELECT promotionId, subject, postingStatus
 		FROM promotion p
-		JOIN member2 m ON p.member_id = m.member_id
+		JOIN member2 m ON p.memberId = m.memberId
 		<where>
 			<if test="kwd != null and kwd != '' ">
 				<include refid="where-list"/>

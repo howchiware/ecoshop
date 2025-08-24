@@ -82,7 +82,7 @@
     </header>
 
 <main class="container my-5">
-	
+	<h2 class="mb-4 fw-bold">제로웨이스트 팁</h2>
 	
 	<form name="searchForm" class="search-form row g-3 align-items-end" method="get">
          <div class="col-md-3">
@@ -101,31 +101,33 @@
          </div>
      </form>
 	
-	<table class="table table-hover">
-		<thead>
-			<tr class="text-center">
-				<th>번호</th>
-				<th>제목</th>
-				<th>작성자</th>
-				<th>작성일</th>
-				<th>조회수</th>
+	<table class="table table-hover align-middle">
+		<thead class="table-light text-center">
+			<tr>
+				<th style="width: 80px;">번호</th>
+                <th>제목</th>
+                <th style="width: 120px;">작성자</th>
+                <th style="width: 120px;">작성일</th>
+                <th style="width: 80px;">조회수</th>
 			</tr>
 		</thead>
 		<tbody>
 			<c:forEach var="dto" items="${list}" varStatus="status">
 				<tr>
-					<td>${dataCount - (page-1) * size - status.index}</td>
-					<td class="left">
+					<td class="text-center">${dataCount - (page-1) * size - status.index}</td>
+					<td class="left" style="padding-left: 30px;">
 						<c:forEach var="n" begin="1" end="${dto.depth}">&nbsp;&nbsp;</c:forEach>
 						<c:if test="${dto.depth!=0}">└&nbsp;</c:if>
 						<a href="${articleUrl}&tipId=${dto.tipId}" class="text-reset">${dto.subject}</a>
+						<!--  
 						<c:if test="${dto.gap < 1}">
 							<span class="new-text">New</span>
 						</c:if>
+						-->
 					</td>
-					<td>${dto.name}</td>
-					<td>${dto.regDate}</td>
-					<td>${dto.hitCount}</td>
+					<td class="text-center">${dto.name}</td>
+					<td class="text-center">${dto.regDate}</td>
+					<td class="text-center">${dto.hitCount}</td>
 				</tr>
 			</c:forEach>
 		</tbody>

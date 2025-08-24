@@ -1,5 +1,7 @@
 package com.sp.app.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,20 +11,16 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Reguide {
 	private long guidId;
+	private long memberId;
+	private int categoryCode;
 	private String name;
-	private int notice;
 	private String subject;
 	private String content;
 	private int hitCount;
-	private String reg_date;
-	private int showNotice;
-	private String update_date;
+	private String regDate;	
 
-	private long fileNum;
-	private String originalFilename;
-	private String saveFilename;
-	private long fileSize;
-	private int fileCount;
+	private MultipartFile selectFile;
+	private String imageFilename;
 	
 	private long gap;
 }

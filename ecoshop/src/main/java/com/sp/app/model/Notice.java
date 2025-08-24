@@ -36,5 +36,5 @@ public class Notice {
 	
 	private List<MultipartFile> selectFile;
 	private long gap;
-
 }
+
