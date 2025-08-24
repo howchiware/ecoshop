@@ -11,7 +11,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/mypage.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/myProfile.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssMember/editMember.css" type="text/css">
 </head>
 <body>
 
@@ -27,7 +27,7 @@
 			</div>
 
 			<div class="col-md-10">
-				<div class="contentsArea">
+				<div class="contentsArea centered-content">
 					
 					<div class="bg-white box-shadow my-5 p-5">
 						<h3 class="text-center pt-3">패스워드 재확인</h3>
@@ -50,16 +50,12 @@
 							</div>
 							<div class="col-12 text-center">
 								<input type="hidden" name="mode" value="${mode}">
-								<button type="button" class="btn-accent btn-lg w-100"
+								<button type="button" class="btn-accent btn-lg w-50"
 									onclick="sendOk();">
 									확인 <i class="bi bi-check2"></i>
 								</button>
 							</div>
 						</form>
-
-						<div>
-							<p class="form-control-plaintext text-center text-danger">${message}</p>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -72,5 +68,6 @@
 		const CONTEXT_PATH = '${pageContext.request.contextPath}';
 	</script>
 	<script src="${pageContext.request.contextPath}/dist/jsMember/pwd.js"></script>
+	<script src="${pageContext.request.contextPath}/dist/jsMember/menubar.js"></script>
 </body>
 </html>

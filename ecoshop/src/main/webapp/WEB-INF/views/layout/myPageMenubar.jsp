@@ -5,10 +5,10 @@
 <div class="row">
 	<aside >
 		<nav class="sidebar-nav sidebar-compact">
-			<h5 class="nav-section-maintitle">마이페이지</h5>
+			<h5 class="nav-section-maintitle"><a class="unstyled" href="${pageContext.request.contextPath}/member/myPage">마이페이지</a></h5>
 			<h5 class="nav-section-title">마이쇼핑</h5>
 			<ul class="list-unstyled">
-				<li><a href="${pageContext.request.contextPath}/" class="active" data-view="orders">주문/배송 조회</a></li>
+				<li><a href="${pageContext.request.contextPath}/" data-view="orders">주문/배송 조회</a></li>
 				<li><a href="${pageContext.request.contextPath}/" data-view="returns">취소/반품 내역</a></li>
 				<li><a href="${pageContext.request.contextPath}/" data-view="cart">장바구니</a></li>
 				<li><a href="${pageContext.request.contextPath}/" data-view="likes">좋아요</a></li>

@@ -11,7 +11,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/mypage.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/editMember.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssMember/editMember.css" type="text/css">
 </head>
 <body>
 
@@ -27,7 +27,12 @@
 			</div>
 
 			<div class="col-md-10">
+			
+			
 				<div class="contentsArea">
+				<div>
+					<h3 class="pb-2 mb-4 border-bottom sub-title">회원정보 수정</h3>
+				</div>
 					<form name="memberUpdateForm" method="post">
             <div class="row mb-3">
                 <label for="userId" class="col-sm-3 col-form-label">아이디</label>
@@ -117,7 +122,7 @@
             <div class="row">
                 <div class="col-sm-9 offset-sm-3 d-flex justify-content-start gap-2">
                     <button type="button" class="btn btn-primary btn-lg" onclick="updateInfo();">정보수정</button>
-                    <button type="button" class="btn btn-secondary btn-lg" onclick="location.href='${pageContext.request.contextPath}/';">수정취소</button>
+                    <button type="button" class="btn btn-secondary btn-lg" onclick="location.href='${pageContext.request.contextPath}/member/myPage';">수정취소</button>
                 </div>
             </div>
         </form>
