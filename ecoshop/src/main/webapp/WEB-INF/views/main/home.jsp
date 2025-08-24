@@ -133,6 +133,7 @@
 		</div>
 	</section>
 	<!-- 광고 섹션 -->
+	<!-- 
 	<section class="py-5">
 	  <div class="container">
 	    <div class="promotion-carousel-wrapper border rounded shadow-sm overflow-hidden" 
@@ -153,10 +154,10 @@
 	        <div class="carousel-inner h-100">
 	          <c:forEach var="vo" items="${listPromotionManage}" varStatus="status">
 	            <div class="carousel-item ${status.index == 0 ? 'active' : '' } h-100">
-	              <!-- <a href="${pageContext.request.contextPath}/admin/promotion/list?page=1"> -->
+	              <a href="${pageContext.request.contextPath}/admin/promotion/list?page=1"> 
 	                <img src="${pageContext.request.contextPath}/uploads/promotion/${vo.imageFilename}"
 	                     class="d-block w-100 h-100" style="object-fit: cover;" alt="${vo.subject}">
-	             <!-- </a> --> 
+	             </a>
 	            </div>
 	          </c:forEach>
 	
@@ -181,7 +182,7 @@
 	    </div>
 	  </div>
 	</section>
-		
+		 -->
 	<footer>
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp"/>
 	</footer>
