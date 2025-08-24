@@ -185,7 +185,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
 
 
-	// 추가 : 데일리 챌린지 인증 제출 및 포인트지급
+	// 데일리 챌린지 인증 제출 및 포인트지급
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void submitDailyChallenge(Challenge dto, MultipartFile photoFile) throws Exception {
@@ -234,6 +234,8 @@ public class ChallengeServiceImpl implements ChallengeService {
                 pointDto.setClassify(1); // 1: 적립
                 pointDto.setPoints(challengeInfo.getRewardPoints());
                 pointDto.setPostId(postId);
+                // (선택) challengeId 컬럼을 point에 두었다면 여기에 세팅
+                // pointDto.setChallengeId(dto.getChallengeId());
 
                 pointMapper.insertPoint(pointDto);
             }
@@ -247,4 +249,144 @@ public class ChallengeServiceImpl implements ChallengeService {
             throw e;
         }
     }
+
+
+
+	 // SPECIAL 1~3일차 제출
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void submitSpecialDay(Challenge dto, MultipartFile photoFile) throws Exception {
+	    try {
+	        //  입력 파라미터
+	        log.info("[SPECIAL] submit start - memberId={}, challengeId={}, dayNumber={}",
+	                dto.getMemberId(), dto.getChallengeId(), dto.getDayNumber());
+
+	        // 0) 입력검사
+	        if (dto.getContent() == null || dto.getContent().trim().length() < 20) {
+	            throw new IllegalArgumentException("인증글은 20자 이상 작성해야 합니다.");
+	        }
+	        if (photoFile == null || photoFile.isEmpty()) {
+	            throw new IllegalArgumentException("스페셜 챌린지는 사진 업로드가 필요합니다.");
+	        }
+	        if (dto.getDayNumber() == null || dto.getDayNumber() < 1 || dto.getDayNumber() > 3) {
+	            throw new IllegalArgumentException("dayNumber는 1~3 사이여야 합니다.");
+	        }
+
+	        // 1) 기간 체크
+	        Challenge sp = mapper.findSpecialDetail(dto.getChallengeId());
+	        if (sp == null) throw new IllegalStateException("해당 스페셜 챌린지가 존재하지 않습니다.");
+
+	        java.time.LocalDate today = java.time.LocalDate.now();
+	        java.time.LocalDate start = java.time.LocalDate.parse(sp.getStartDate());
+	        java.time.LocalDate end   = java.time.LocalDate.parse(sp.getEndDate());
+	        if (today.isBefore(start) || today.isAfter(end)) {
+	            throw new IllegalStateException("챌린지 기간이 아닙니다.");
+	        }
+
+	        // 2) 참여 레코드(없으면 생성)
+	        Challenge activePart = mapper.selectActiveParticipation(dto.getMemberId(), dto.getChallengeId());
+	        //  활성 참여건
+	        log.info("[SPECIAL] active participation = {}", (activePart == null ? "NONE" : activePart.getParticipationId()));
+
+	        if (activePart == null) {
+	            if (dto.getDayNumber() != 1) {
+	                throw new IllegalStateException("1일차부터 순서대로 인증해야 합니다.");
+	            }
+	            Long participationId = mapper.nextParticipationId();
+	            dto.setParticipationId(participationId);
+	            dto.setParticipationStatus(0); // 진행
+	            insertParticipation(dto);
+	        } else {
+	            dto.setParticipationId(activePart.getParticipationId());
+	        }
+
+	        // 3) 순서/중복 방지
+	        Integer maxDay = mapper.selectMaxDayNumber(dto.getParticipationId()); // null -> 0
+	        int expectedNext = (maxDay == null ? 1 : (maxDay + 1));
+	        int dup = mapper.existsPostByParticipationAndDay(dto.getParticipationId(), dto.getDayNumber());
+
+	        // 순서/중복 체크
+	        log.info("[SPECIAL] maxDay={}, expectedNext={}, dup={}", maxDay, expectedNext, dup);
+
+	        if (dto.getDayNumber() > expectedNext) {
+	            throw new IllegalStateException("이전 일차 인증부터 완료해야 합니다. 다음 예상 일차: " + expectedNext);
+	        }
+	        if (dup > 0) {
+	            throw new IllegalStateException(dto.getDayNumber() + "일차 인증은 이미 등록되었습니다.");
+	        }
+
+	        // 4) 파일 저장
+	        String saveFilename = null;
+	        if (photoFile != null && !photoFile.isEmpty()) {
+	            String challengePath = storageService.getRealPath("/uploads/challenge");
+	            saveFilename = storageService.uploadFileToServer(photoFile, challengePath);
+	            dto.setPhotoUrl(saveFilename);
+	        }
+
+	        // 5) 인증글/사진 INSERT (대기)
+	        Long postId = mapper.nextPostId();
+	        dto.setPostId(postId);
+	        dto.setApprovalStatus(0); // 대기
+	        dto.setIsPublic("Y");
+	        mapper.insertCertificationPost(dto);
+
+	        if (saveFilename != null) {
+	            Long photoId = mapper.nextPhotoId();
+	            dto.setPhotoId(photoId);
+	            mapper.insertCertificationPhoto(dto);
+	        }
+
+	        //  저장 결과
+	        log.info("[SPECIAL] saved postId={}, photoFile={}", postId, saveFilename);
+
+	        // 6) 상태는 진행 유지. 포인트는 관리자 승인 완료 시 별도 로직에서 지급.
+
+	    } catch (Exception e) {
+	        log.error("submitSpecialDay failed:", e);
+	        throw e;
+	    }
+	}
+
+
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void requestSpecialFinalApproval(long participationId, long memberId) throws Exception {
+        Challenge part = mapper.findParticipationById(participationId);
+        if (part == null || !part.getMemberId().equals(memberId)) {
+            throw new IllegalStateException("권한이 없습니다.");
+        }
+        int cnt = mapper.countSpecialPosts(participationId);
+        if (cnt < 3) throw new IllegalStateException("3일 인증이 모두 필요합니다.");
+
+        Challenge upd = new Challenge();
+        upd.setParticipationId(participationId);
+        upd.setParticipationStatus(1); // 승인대기
+        mapper.updateParticipation(upd);
+    }
+
+
+
+	@Override
+	public Integer getNextSpecialDay(long challengeId, long memberId) {
+		try {
+			// 진행/대기 중 참여건(최근 1건)
+			Challenge part = mapper.selectActiveParticipation(memberId, challengeId);
+			if(part == null) return 1; // 아직 시작안했으면 1일차 
+			
+			Long participationId = part.getParticipationId();
+			Integer maxDay = mapper.selectMaxDayNumber(participationId); // null이면 0 취급
+			int doneMax = (maxDay == null ? 0 : maxDay);
+			
+			if(doneMax >= 3) return null; // 1~3일 모두 완료면 null, 아니면 다음 일차
+			return doneMax + 1;
+		} catch (Exception e) {
+			log.warn("getNextSpecialDay error", e);
+			 // 에러 시 보수적으로 1일차 반환
+			return 1; // 1리틴 
+		
+	}
+		
+	}
 }
