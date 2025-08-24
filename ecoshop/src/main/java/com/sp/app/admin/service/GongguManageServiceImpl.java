@@ -14,9 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sp.app.admin.mapper.GongguManageMapper;
-import com.sp.app.admin.model.GongguDeliveryRefundInfo;
 import com.sp.app.admin.model.GongguManage;
 import com.sp.app.admin.model.GongguPackageManage;
+import com.sp.app.admin.model.GongguProductDeliveryRefundInfoManage;
 import com.sp.app.admin.model.ProductManage;
 import com.sp.app.common.StorageService;
 import com.sp.app.exception.StorageException;
@@ -64,7 +64,7 @@ public class GongguManageServiceImpl implements GongguManageService {
 	        gongguManageMapper.insertProduct(dto);
 	        
 	        if(! dto.getAddFiles().isEmpty()) {
-	            insertProductPhoto(dto, uploadPath);
+	        	insertGongguProductPhoto(dto, uploadPath);
 	        }
 	    } catch (Exception e) {
 	        log.info("insertProduct : ", e);
@@ -72,12 +72,12 @@ public class GongguManageServiceImpl implements GongguManageService {
 	    }
 	}
 	
-	public void insertProductPhoto(GongguManage dto, String uploadPath) throws SQLException {
+	public void insertGongguProductPhoto(GongguManage dto, String uploadPath) throws SQLException {
 		for (MultipartFile mf : dto.getAddFiles()) {
 			try {
 				String saveFilename = Objects.requireNonNull(storageService.uploadFileToServer(mf, uploadPath));
 				dto.setDetailPhoto(saveFilename);
-				gongguManageMapper.insertProductPhoto(dto);
+				gongguManageMapper.insertGongguProductPhoto(dto);
 			} catch (NullPointerException e) {
 			} catch (StorageException e) {
 			} catch (Exception e) {
@@ -114,7 +114,7 @@ public class GongguManageServiceImpl implements GongguManageService {
 	        gongguManageMapper.updateProduct(dto);
 
 	        if(! dto.getAddFiles().isEmpty()) {
-	            insertProductPhoto(dto, uploadPath);
+	        	insertGongguProductPhoto(dto, uploadPath);
 	        }
 
 	    } catch (Exception e) {
@@ -182,7 +182,7 @@ public class GongguManageServiceImpl implements GongguManageService {
 				deleteUploadPhoto(uploadPath, dto.getGongguThumbnail());
 			}
 			
-			deleteProductPhoto(dto.getGongguProductId(), pathString);
+			deleteGongguProductPhoto(dto.getGongguProductId(), pathString);
 			
 			gongguManageMapper.deleteProduct(gongguProductId);
 			}
@@ -244,64 +244,64 @@ public class GongguManageServiceImpl implements GongguManageService {
 
 	
 	@Override
-	public GongguDeliveryRefundInfo listDeliveryRefundInfo() {
+	public GongguProductDeliveryRefundInfoManage listGongguDeliveryRefundInfo() {
 		try {
-			GongguDeliveryRefundInfo dto = gongguManageMapper.listDeliveryRefundInfo();
+			GongguProductDeliveryRefundInfoManage dto = gongguManageMapper.listGongguDeliveryRefundInfo();
 			return dto;
 		} catch (Exception e) {
-			log.info("listDeliveryRefundInfo : ", e);
+			log.info("listGongguDeliveryRefundInfo : ", e);
 			throw e;
 
 		}
 	}
 
 	@Override
-	public List<GongguDeliveryRefundInfo> listDeliveryFee() {
+	public List<GongguProductDeliveryRefundInfoManage> listGongguDeliveryFee() {
 		try {
-			List<GongguDeliveryRefundInfo> list = gongguManageMapper.listDeliveryFee();
+			List<GongguProductDeliveryRefundInfoManage> list = gongguManageMapper.listGongguDeliveryFee();
 			return list;
 		} catch (Exception e) {
-			log.info("listDeliveryRefundInfo : ", e);
+			log.info("listGongguDeliveryFee : ", e);
 			throw e;
 		}
 	}
 
 	@Override
-	public void insertProductDeliveryRefundInfo(GongguDeliveryRefundInfo dto) {
+	public void insertGongguDeliveryRefundInfo(GongguProductDeliveryRefundInfoManage dto) {
 		try {
-			gongguManageMapper.insertProductDeliveryRefundInfo(dto);
+			gongguManageMapper.insertGongguDeliveryRefundInfo(dto);
 		} catch (Exception e) {
-			log.info("insertProductDeliveryRefundInfo : ", e);
+			log.info("insertGongguDeliveryRefundInfo : ", e);
 			throw e;
 		}	
 	}
 	
 	@Override
-	public void insertProductDeliveryFee(Map<String, Object> map) {
+	public void insertGongguDeliveryFee(Map<String, Object> map) {
 		try {
-			gongguManageMapper.insertProductDeliveryFee(map);
+			gongguManageMapper.insertGongguDeliveryFee(map);
 		} catch (Exception e) {
-			log.info("insertProductDeliveryFee : ", e);
+			log.info("insertGongguDeliveryFee : ", e);
 			throw e;
 		}
 
 	}
 
 	@Override
-	public void updateProductDeliveryRefundInfo(GongguDeliveryRefundInfo dto) {
+	public void updateGongguDeliveryRefundInfo(GongguProductDeliveryRefundInfoManage dto) {
 		try {
-			gongguManageMapper.updateProductDeliveryRefundInfo(dto);
+			gongguManageMapper.updateGongguDeliveryRefundInfo(dto);
 		} catch (Exception e) {
-			log.info("updateProductDeliveryRefundInfo : ", e);
+			log.info("updateGongguDeliveryRefundInfo : ", e);
 		}
 	}
 
 	@Override
-	public void deleteProductDeliveryFee() {
+	public void deleteGongguDeliveryFee() {
 		try {
-			gongguManageMapper.deleteProductDeliveryFee();
+			gongguManageMapper.deleteGongguDeliveryFee();
 		} catch (Exception e) {
-			log.info("deleteProductDeliveryFee : ", e);
+			log.info("deleteGongguDeliveryFee : ", e);
 			throw e;
 		}
 	}
@@ -333,28 +333,28 @@ public class GongguManageServiceImpl implements GongguManageService {
 	}
 
 	@Override
-	public List<GongguManage> listProductPhoto(long gongguProductId) {
+	public List<GongguManage> listGongguProductPhoto(long gongguProductId) {
 		List<GongguManage> list = null;
 		
 		try {
-			list = gongguManageMapper.listProductPhoto(gongguProductId);
+			list = gongguManageMapper.listGongguProductPhoto(gongguProductId);
 		} catch (Exception e) {
-			log.info("listProductPhoto : ", e);
+			log.info("listGongguProductPhoto : ", e);
 		}
 		
 		return list;
 	}
 
 	@Override
-	public void deleteProductPhoto(long gongguProductId, String uploadPath) throws Exception {
+	public void deleteGongguProductPhoto(long gongguProductId, String uploadPath) throws Exception {
 		try {
 			if (uploadPath != null && ! uploadPath.isBlank()) {
 				storageService.deleteFile(uploadPath);
 			}
 
-			gongguManageMapper.deleteProductPhoto(gongguProductId);
+			gongguManageMapper.deleteGongguProductPhoto(gongguProductId);
 		} catch (Exception e) {
-			log.info("deleteProductFile : ", e);
+			log.info("deleteGongguProductPhoto : ", e);
 			
 			throw e;
 		}
@@ -416,16 +416,16 @@ public class GongguManageServiceImpl implements GongguManageService {
 	}
 
 	@Override
-	public void deleteSingleProductPhoto(long gongguProductDetailId, String uploadPath) throws Exception {
+	public void deleteSingleGongguProductPhoto(long gongguProductDetailId, String uploadPath) throws Exception {
 	    try {
 	        GongguManage dto = gongguManageMapper.findByProductDetailId(gongguProductDetailId);
 	        
 	        if (dto != null && !dto.getDetailPhoto().isBlank()) {
 	            storageService.deleteFile(uploadPath, dto.getDetailPhoto());
 	        }
-	        gongguManageMapper.deleteSingleProductPhoto(gongguProductDetailId);
+	        gongguManageMapper.deleteSingleGongguProductPhoto(gongguProductDetailId);
 	    } catch (Exception e) {
-	        log.error("deleteSingleProductPhoto : ", e);
+	        log.error("deleteSingleGongguProductPhoto : ", e);
 	        throw e;
 	    }
 	}

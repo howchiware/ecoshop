@@ -18,26 +18,29 @@ public class GongguProduct {
     private long gongguProductId;
     private String gongguProductName;
     private String gongguThumbnail;
+    private String photoName;
     private long sale;
     private long originalPrice;
     private long gongguPrice;
     private String regDate;
     private int limitCount;
-    private String deadline;
+    private String startDate;
+    private String endDate;
     private String updateDate;
     private String content;
     private String detailInfo; 
     private String limitInfo;
+    private int productShow;
+    private long productCode;
     
     // 공동구매 상품 추가 이미지
     private long gongguProductDetailId;
     private String detailPhoto;
-    private List<String> detailPhotos;
+    private List<GongguProduct> detailPhotos;
 
     // 공동구매 상품 카테고리
  	private long categoryId;
  	private String categoryName;
- 	private Long parentNum;
  	
  	// 공동구매 상품 재고
  	private long packageNum;
@@ -46,10 +49,14 @@ public class GongguProduct {
     
     // 공동구매 상품 리뷰 및 문의
     private double rate;
-	private int reviewCount;
-	private int questionCount;
-	
+    private int inquiryCount;
+    
 	// 유저의 상품 찜 여부
 	private int userWish;
+	
+	// 정렬
+	private int likeCount;   
+    private int reviewCount;
     
+    private int participantCount;
 }

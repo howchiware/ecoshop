@@ -63,7 +63,7 @@
 					</div>
 					<hr>
 					<div class="row packageList-container">
-						<div class="col-md-6">패키지 상품구성 | 공동구매가격 : <span id="gongguPriceDisplay">${dto.gongguPrice}</span></div>
+						<div class="col-md-6">[  패키지 상품구성  ]  할인율 : ${dto.sale}% -> 총 패키지가격 : <span id="gongguPriceDisplay">${dto.gongguPrice}</span></div>
 						<div class="col-md-6 text-end">
 							<button type="button" class="btn-default btn-append">상품등록</button>
 						</div>

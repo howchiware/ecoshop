@@ -1,7 +1,5 @@
 package com.sp.app.admin.model;
 
-import java.util.List;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class GongguDeliveryRefundInfo {
+public class GongguProductDeliveryRefundInfoManage {
 	int deliveryRefundInfoNum;
 	String deliveryInfo;
 	String refundInfo;
@@ -17,7 +15,4 @@ public class GongguDeliveryRefundInfo {
 	int deliveryFeeNum;
 	int fee;
 	String deliveryLocation;
-	
-	List<Integer> fees;
-	List<String> deliveryLocations;
 }

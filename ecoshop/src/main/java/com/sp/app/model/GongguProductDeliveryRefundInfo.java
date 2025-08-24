@@ -1,7 +1,5 @@
 package com.sp.app.model;
 
-import java.util.List;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,12 +10,10 @@ import lombok.Setter;
 public class GongguProductDeliveryRefundInfo {
 	int deliveryRefundInfoNum;
 	String deliveryInfo;
-	String RefundInfo;
+	String refundInfo;
 	
 	int deliveryFeeNum;
-	int fee;
+	int deliveryFee;
 	String deliveryLocation;
-	
-	List<Integer> fees;
-	List<String> deliveryLocations;
+
 }

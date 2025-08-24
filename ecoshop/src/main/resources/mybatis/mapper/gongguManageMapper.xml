@@ -2,7 +2,6 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.admin.mapper.GongguManageMapper">
-	<!-- 공동구매 상품등록 -->
 	<select id="gongguProductSeq" resultType="Long">
 		SELECT
 		gongguProduct_seq.NEXTVAL FROM dual
@@ -95,7 +94,6 @@
         WHERE gongguProductDetailId = #{gongguProductDetailId}
     </delete>
 
-	<!-- 공동구매 리스트 검색 -->
 	<sql id="where-list">
 		<if test="schType=='all'">
 	    	<![CDATA[
@@ -175,7 +173,6 @@
 		#{size} ROWS ONLY
 	</select>
 
-	<!-- 패키지 구성 넣기 -->
 	<insert id="insertGongguPackage"
 		parameterType="com.sp.app.admin.model.GongguPackageManage">
 		INSERT INTO gongguPackage(packageNum, stock, productCode, gongguProductId, price, productName)
@@ -238,42 +235,41 @@
 	    WHERE gongguProductId = #{gongguProductId}
 	</update>
 	
-	<!-- 배송정책 -->
-	<select id="listDeliveryRefundInfo"
-		resultType="com.sp.app.admin.model.GongguDeliveryRefundInfo">
-		SELECT deliveryInfo, refundInfo
-		FROM deliveryRefundInfo
-	</select>
+	<select id="listGongguDeliveryRefundInfo"
+        resultType="com.sp.app.admin.model.GongguProductDeliveryRefundInfoManage">
+        SELECT deliveryInfo, refundInfo
+        FROM gongguDeliveryRefundInfo
+    </select>
 
-	<select id="listDeliveryFee"
-		resultType="com.sp.app.admin.model.GongguDeliveryRefundInfo">
-		SELECT fee, deliveryLocation
-		FROM deliveryFee
-	</select>
+    <select id="listGongguDeliveryFee"
+        resultType="com.sp.app.admin.model.GongguProductDeliveryRefundInfoManage">
+        SELECT fee, deliveryLocation
+        FROM gongguDeliveryFee
+    </select>
 
-	<insert id="insertProductDeliveryRefundInfo"
-		parameterType="com.sp.app.admin.model.GongguDeliveryRefundInfo">
-		INSERT INTO deliveryRefundInfo(deliveryRefundInfoNum,
-		deliveryInfo, refundInfo)
-		VALUES (deliveryRefundInfo_seq.NEXTVAL,
-		#{deliveryInfo}, #{refundInfo})
-	</insert>
+    <insert id="insertGongguDeliveryRefundInfo"
+        parameterType="com.sp.app.admin.model.GongguProductDeliveryRefundInfoManage">
+        INSERT INTO gongguDeliveryRefundInfo(gongguDeliveryRefundInfoNum,
+        deliveryInfo, refundInfo)
+        VALUES (gongguDeliveryRefundInfo_seq.NEXTVAL,
+        #{deliveryInfo}, #{refundInfo})
+    </insert>
 
-	<insert id="insertProductDeliveryFee" parameterType="map">
-		INSERT INTO
-		deliveryFee(deliveryFeeNum, fee, deliveryLocation)
-		VALUES
-		(deliveryFee_seq.NEXTVAL, #{fee}, #{deliveryLocation})
-	</insert>
+    <insert id="insertGongguDeliveryFee" parameterType="map">
+        INSERT INTO
+        gongguDeliveryFee(gongguDeliveryFeeNum, fee, deliveryLocation)
+        VALUES
+        (gongguDeliveryFee_seq.NEXTVAL, #{fee}, #{deliveryLocation})
+    </insert>
 
-	<update id="updateProductDeliveryRefundInfo"
-		parameterType="com.sp.app.admin.model.GongguDeliveryRefundInfo">
-		UPDATE deliveryRefundInfo SET deliveryInfo =
-		#{deliveryInfo}, refundInfo = #{refundInfo}
-	</update>
+    <update id="updateGongguDeliveryRefundInfo"
+        parameterType="com.sp.app.admin.model.GongguProductDeliveryRefundInfoManage">
+        UPDATE gongguDeliveryRefundInfo SET deliveryInfo =
+        #{deliveryInfo}, refundInfo = #{refundInfo}
+    </update>
 
-	<delete id="deleteProductDeliveryFee">
-		DELETE FROM deliveryFee
-	</delete>
+    <delete id="deleteGongguDeliveryFee">
+        DELETE FROM gongguDeliveryFee
+    </delete>
 
 </mapper>

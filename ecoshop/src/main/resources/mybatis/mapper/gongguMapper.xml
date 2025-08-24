@@ -1,6 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.mapper.GongguMapper">
+
+	<select id="listGongguProducts" parameterType="map" resultType="com.sp.app.model.GongguProduct">
+	    SELECT
+	        g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
+	        g.startDate, g.endDate, g.limitCount, g.regDate,
+	        g.originalPrice, g.sale, g.productShow, g.content, 
+	        g.categoryId,
+	        cm.categoryName,
+	        NVL(COUNT(DISTINCT gpl.memberId), 0) AS likeCount,
+	        NVL(COUNT(DISTINCT gr.gongguReviewId), 0) AS reviewCount,
+	        NVL(AVG(gr.rate), 0) AS rate,
+            (g.originalPrice - (g.originalPrice * g.sale / 100)) AS gongguPrice,
+	        <if test="memberId != null">
+	        	(SELECT COUNT(gpl2.memberId) FROM gongguProductLike gpl2 WHERE gpl2.gongguProductId = g.gongguProductId AND gpl2.memberId = #{memberId}) AS userWish
+	        </if>
+	        <if test="memberId == null">
+	        	0 AS userWish
+	        </if>
+	    FROM gongguProduct g
+	    LEFT JOIN productCategory cm ON g.categoryId = cm.categoryId
+	    LEFT JOIN gongguProductLike gpl ON g.gongguProductId = gpl.gongguProductId
+	    LEFT JOIN gongguReview gr ON g.gongguProductId = gr.gongguProductId
+	    WHERE g.productShow = 1
+	    <if test="categoryId != null and categoryId != 0">
+	        AND g.categoryId = #{categoryId}
+	    </if>
+	    GROUP BY g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
+	        g.startDate, g.endDate, g.limitCount, g.regDate,
+	        g.originalPrice, g.sale, g.productShow, g.categoryId,
+	        g.content, 
+	        cm.categoryName
+	    ORDER BY
+	        <choose>
+	            <when test="sortBy == 1">likeCount DESC</when>
+	            <when test="sortBy == 2">reviewCount DESC</when>
+	            <when test="sortBy == 3">endDate ASC</when>
+	            <otherwise>g.regDate DESC</otherwise>
+	        </choose>
+	    <if test="offset != null and size != null">
+	        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	    </if>
+	</select>
+	
 	<select id="listPackageByCategoryId" parameterType="Long" resultType="com.sp.app.model.GongguProduct">
 	    SELECT
 	        g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
@@ -14,4 +57,120 @@
 	        g.startDate, g.endDate, g.limitCount, g.regDate,
 	        g.sale, g.productShow, g.categoryId
 	</select>
+	
+    <select id="dataCount" parameterType="map" resultType="int">
+        SELECT COUNT(gongguProductId)
+        FROM gongguProduct
+        WHERE productShow = 1
+        <if test="categoryId != null and categoryId != 0">
+            AND categoryId = #{categoryId}
+        </if>
+    </select>
+
+	<select id="findById" parameterType="map" resultType="com.sp.app.model.GongguProduct">
+    SELECT
+        g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
+        g.originalPrice, g.sale, g.content, g.limitCount, g.regDate, g.updateDate, g.productShow,
+        g.startDate, g.endDate,
+        (g.originalPrice - (g.originalPrice * g.sale / 100)) AS gongguPrice,
+        cm.categoryName,
+        NVL(COUNT(DISTINCT gpl.memberId), 0) AS likeCount,
+        NVL(AVG(gr.rate), 0) AS rate,
+        <if test="memberId != null">
+            (SELECT COUNT(gpl2.memberId) FROM gongguProductLike gpl2 WHERE gpl2.gongguProductId = g.gongguProductId AND gpl2.memberId = #{memberId}) AS userWish
+        </if>
+        <if test="memberId == null">
+            0 AS userWish
+        </if>
+	    FROM gongguProduct g
+	    LEFT JOIN productCategory cm ON g.categoryId = cm.categoryId
+	    LEFT JOIN gongguProductLike gpl ON g.gongguProductId = gpl.gongguProductId
+	    LEFT JOIN gongguReview gr ON g.gongguProductId = gr.gongguProductId
+	    WHERE g.gongguProductId = #{gongguProductId}
+	    GROUP BY g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
+	        g.startDate, g.endDate, g.limitCount, g.regDate,
+	        g.originalPrice, g.sale, g.productShow, g.categoryId,
+	        g.content,
+	        cm.categoryName, g.updateDate
+	</select>
+
+	<select id="findDetailInfoById" parameterType="long" resultType="string">
+    	SELECT detailInfo 
+    	FROM gongguProduct 
+    	WHERE gongguProductId = #{gongguProductId}
+	</select>
+
+    <select id="listGongguProductPhoto" parameterType="Long" resultType="com.sp.app.model.GongguProduct">
+        SELECT
+            gongguProductDetailId,
+            gongguProductId,
+            detailPhoto
+        FROM gongguProductDetail
+        WHERE gongguProductId = #{gongguProductId}
+    </select>
+    
+	<select id="listDeliveryRefundInfo" resultType="com.sp.app.model.GongguProductDeliveryRefundInfo">
+	    SELECT deliveryInfo, refundInfo
+	    FROM gongguDeliveryRefundInfo
+	</select>
+
+	<select id="listDeliveryFee" resultType="com.sp.app.model.GongguProductDeliveryRefundInfo">
+	    SELECT fee AS deliveryFee, deliveryLocation
+	    FROM gongguDeliveryFee
+	</select>
+    
+    <select id="getParticipantCount" parameterType="Long" resultType="int">
+        SELECT COUNT(DISTINCT god.orderId)
+        FROM gongguOrderDetail god
+        JOIN productOrder po ON god.orderId = po.orderId
+        WHERE god.gongguProductId = #{gongguProductId} AND po.orderState = '결제완료'
+    </select>
+    
+    <select id="didIBuyProduct" parameterType="map" resultType="com.sp.app.model.GongguOrder">
+        SELECT
+            god.gongguOrderDetailId,
+            god.gongguProductId,
+            god.orderId,
+            god.cnt,
+            god.userDelete,
+            god.price AS price, 
+            god.detailState,
+            po.memberId AS memberId,
+            po.orderDate AS orderDate,
+            po.totalAmount AS totalAmount,
+            (po.totalAmount + po.deliveryCharge) AS payment,
+            po.orderState AS orderState,
+            po.deliveryCharge AS deliveryCharge,
+            (god.price * god.cnt) AS productMoney, 
+            (gp.originalPrice - (gp.originalPrice * gp.sale / 100)) AS salePrice, 
+    
+            dd.recipientName,
+            dd.tel,
+            dd.zip,
+            dd.addr1,
+            dd.addr2,
+            dd.pickup,
+            dd.accessInfo,
+            dd.passcode,
+            dd.requestMemo,
+
+            p.payMethod AS payMethod,                               
+            p.imp_uid,
+            p.cardName,
+            p.cardNumber,
+            p.applyNum,
+            p.applyDate,
+
+            gp.gongguProductName,
+            gp.gongguThumbnail,
+            gp.originalPrice AS originalPrice, 
+            gp.sale AS sale 
+        FROM gongguOrderDetail god
+        JOIN productOrder po ON god.orderId = po.orderId
+        JOIN gongguProduct gp ON god.gongguProductId = gp.gongguProductId
+        LEFT JOIN deliveryDestination dd ON po.orderId = dd.orderId
+        LEFT JOIN payment p ON po.orderId = p.orderId
+        WHERE god.gongguProductId = #{gongguProductId} AND po.memberId = #{memberId}
+    </select>
+    
 </mapper>

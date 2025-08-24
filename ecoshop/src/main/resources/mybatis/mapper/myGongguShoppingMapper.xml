@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.MyGongguShoppingMapper">
+	
+	<insert id="insertGongguLike" parameterType="map">
+    	INSERT INTO gongguProductLike(gongguProductLikeNum, gongguProductId, memberId, likeDate)
+    	VALUES(gongguProductLike_seq.NEXTVAL, #{gongguProductId}, #{memberId}, SYSDATE)
+    </insert>
+    
+   	<delete id="deleteOldestGongguLikes" parameterType="Long">
+        DELETE FROM gongguProductLike
+        WHERE gongguProductLikeNum IN (
+            SELECT gongguProductLikeNum
+            FROM (
+                SELECT gongguProductLikeNum, ROW_NUMBER() OVER (ORDER BY gongguProductLikeNum DESC) as rn
+                FROM gongguProductLike
+                WHERE memberId = #{memberId}
+            )
+            WHERE rn &gt; 30
+        )
+    </delete>
+    
+	<select id="listGongguLike" resultType="com.sp.app.model.GongguLike" parameterType="Long">
+    	SELECT gpl.gongguProductLikeNum, gpl.memberId, gpl.gongguProductId, likeDate,
+    		gp.gongguProductName, gp.gongguPrice, gp.gongguThumbnail
+    	FROM gongguProductLike gpl
+    	JOIN gongguProduct gp ON gpl.gongguProductId = gp.gongguProductId
+		WHERE gpl.memberId = #{memberId}
+		ORDER BY gongguProductLikeNum DESC
+    </select>
+
+    <select id="findByGongguLikeId" resultType="com.sp.app.model.GongguLike" parameterType="map">
+        SELECT gongguProductLikeNum, memberId, gongguProductId, likeDate
+    	FROM gongguProductLike
+		WHERE memberId = #{memberId} AND  gongguProductId = #{gongguProductId}
+		ORDER BY gongguProductLikeNum DESC
+    </select>
+    
+	<delete id="deleteGongguLike" parameterType="map">
+    	DELETE FROM gongguProductLike
+		WHERE memberId = #{memberId} 
+		<if test="gongguProductId != null">
+			AND gongguProductId = #{gongguProductId}		
+		</if>
+    </delete>
+</mapper>
