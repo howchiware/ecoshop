@@ -43,4 +43,6 @@ public interface ProductManageService {
 	public void insertProductDeliveryRefundInfo(ProductDeliveryRefundInfoManage dto);
 	public void updateProductDeliveryRefundInfo(ProductDeliveryRefundInfoManage dto);
 	public void deleteProductDeliveryFee();
+	
+	public int isBoughtByProductCode(long productCode);
 }

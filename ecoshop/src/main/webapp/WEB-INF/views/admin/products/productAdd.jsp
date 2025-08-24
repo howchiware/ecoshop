@@ -344,7 +344,7 @@ body {
 								<td>
 									<div class="row">
 										<div class="col-md-6">
-											<select name="optionCount" class="form-select">
+											<select name="optionCount" class="form-select" ${dto.userBought == 1 ? "disabled":""} ${dto.totalStock > 0 ? "disabled":""}>
 												<option value="2" ${dto.optionCount==2?"selected":""}>옵션 둘</option>
 												<option value="1" ${dto.optionCount==1?"selected":""}>옵션 하나</option>
 												<option value="0" ${dto.optionCount==0?"selected":""}>옵션 없음</option>

@@ -36,8 +36,25 @@
         <li><a href="/admin/products/productReviewInquiry"> 리뷰 및 Q&A 관리</a></li>
       </ul>
     </li>
-    <li><a href="/admin/order/orderManage"> 주문 상태 관리</a></li>
-    <li><a href="/admin/order/detailManage"> 주문 취소 관리</a></li>
+     <li>
+    	<a href=""> 주문 상태 관리 > </a>
+    	<ul class="submenu">
+			<li><a class="sub-menu-link" href="<c:url value='/admin/order/orderManage/100'/>">주문완료</a></li>
+			<li><a class="sub-menu-link" href="<c:url value='/admin/order/orderManage/110'/>">배송</a></li>
+			<li><a class="sub-menu-link" href="<c:url value='/admin/order/detailManage/100'/>">배송후교환</a></li>
+			<li><a class="sub-menu-link" href="<c:url value='/admin/order/detailManage/110'/>">구매확정</a></li>
+			<li><a class="sub-menu-link" href="<c:url value='/admin/order/orderManage/120'/>">주문리스트</a></li>
+    	</ul>
+    </li>
+    <li>
+    	<a href=""> 주문 취소 관리 > </a>
+    	<ul class="submenu">
+			<li><a class="sub-menu-link" href="<c:url value='/admin/order/detailManage/200'/>">배송전환불</a></li>
+			<li><a class="sub-menu-link" href="<c:url value='/admin/order/detailManage/210'/>">배송후반품</a></li>
+			<li><a class="sub-menu-link" href="<c:url value='/admin/order/detailManage/220'/>">판매취소</a></li>
+			<li><a class="sub-menu-link" href="<c:url value='/admin/order/detailManage/230'/>">취소리스트</a></li>
+    	</ul>
+    </li>
     
     <li class="menu-title">공동구매</li>
     <li>

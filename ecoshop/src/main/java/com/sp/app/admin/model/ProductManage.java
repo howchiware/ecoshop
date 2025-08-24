@@ -61,4 +61,6 @@ public class ProductManage {
 	// 수정전 옵션
 	private long prevOptionNum;
 	private long prevOptionNum2;
+	
+	private int userBought;
 }

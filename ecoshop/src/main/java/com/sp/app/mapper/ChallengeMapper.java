@@ -17,22 +17,27 @@ public interface ChallengeMapper {
 	// 데일리 오늘 요일 챌린지 1개, (todayDow: 0=일 ~ 6=토)
 	public Challenge getTodayDaily(@Param("todayDow") int todayDow) throws SQLException;
     
-	// SPECIAL (더보기 전용: 키셋 페이지네이션) 
-
+	// SPECIAL (더보기 전용) 
     /**
      * 스페셜 카드 목록 - 더보기
      * @param lastId 직전 페이지 마지막 challengeId (첫 로드 null)
      * @param size   가져올 개수 (예: 6/9)
      * @param sort   'POPULAR' | 'CLOSE_DATE' | 'RECENT'
      */
-    public List<Challenge> listSpecialMore(
-            Map<String, Object> param );
+    public List<Challenge> listSpecialMore(Map<String, Object> param );
 
 
     // 상세 
     public Challenge findDailyDetail(@Param("challengeId") long challengeId) throws SQLException;
     public Challenge findSpecialDetail(@Param("challengeId") long challengeId) throws SQLException;
 
+    
+    // 참여 시퀀스 
+    public Long nextParticipationId() throws SQLException;
+    public Long nextPostId() throws SQLException; // 인증글 시퀀스
+    public Long nextPhotoId() throws SQLException; // 인증사진 시퀀스
+
+    
 
     // 참여(요일: 당일 1회 제한) 
     public int countTodayDailyJoin(
@@ -40,21 +45,18 @@ public interface ChallengeMapper {
             @Param("challengeId") long challengeId
     ) throws SQLException;
 
-    // 참여 시퀀스 
-    public Long nextParticipationId() throws SQLException;
-    public Long nextPostId() throws SQLException; // 인증글 시퀀스
-    public Long nextPhotoId() throws SQLException; // 인증사진 시퀀스
-
-    // 참여 등록 (parameterType = com.sp.app.model.Challenge) 
+    
+    // 참여/인증 INSERT/UPDATE ,참여 등록  
     public int insertParticipation(Challenge dto) throws SQLException;
     public int insertCertificationPost(Challenge dto) throws SQLException;
     public int insertCertificationPhoto(Challenge dto) throws SQLException;
 
-    //참여 상태/취소일 갱신 (넘겨준 필드만 갱신) 
+    //참여 상태/취소일 갱신 
     public int updateParticipation(Challenge dto) throws SQLException;
 
+    
+    
     //스페셜 진행률(1~3일) - 진행 현황 조회
-
     /**
      * dayNumber(1~3), done(0/1) 형태로 반환
      * resultType=map 이므로 List<Map<String, Object>>로 받기
@@ -63,10 +65,32 @@ public interface ChallengeMapper {
             @Param("participationId") long participationId
     ) throws SQLException;
 	
+    // 해당 요일 1건 조회
 	public Challenge selectDailyByWeekday(@Param("weekday") int weekday);
 	
 	
-	
-	
+	// 스페셜 제출용 추가 메서드
+    // 현재 진행/대기 중인 참여 1건
+    public Challenge selectActiveParticipation(@Param("memberId") long memberId,
+                                        @Param("challengeId") long challengeId) throws SQLException;
+
+    // 해당 참여에서 특정 일차 존재 여부(중복 방지)
+    public int existsPostByParticipationAndDay(@Param("participationId") long participationId,
+                                        @Param("dayNumber") int dayNumber) throws SQLException;
+
+    // 해당 참여의 최대 dayNumber (순서 검증용)
+    public Integer selectMaxDayNumber(@Param("participationId") long participationId) throws SQLException;
+    
+    
+    // 스페셜 챌리지 최종 제출 - 승인요청용
+    public Challenge findParticipationById(@Param("participationId") long participationId) throws SQLException;
+    
+    public int countSpecialPosts(@Param("participationId") long participationId) throws SQLException;
+    
+    
+    
+    
     
 }
+	
+

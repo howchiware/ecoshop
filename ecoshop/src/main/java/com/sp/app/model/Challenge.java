@@ -54,4 +54,8 @@ public class Challenge {
     
     // 관리자 챌린지 수정시 썸네일 삭제 
     private Boolean removeThumbnail;
+    
+    private String memberName;   // 사용자 이름
+    
+    
 }
