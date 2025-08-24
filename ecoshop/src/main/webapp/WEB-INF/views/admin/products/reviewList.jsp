@@ -10,7 +10,7 @@
 	        <tr class="border-bottom">
 	            <th width="140">상품</th>
 	            <th>내용</th>
-	            <th width="100">평점</th>
+	            <th width="150">평점</th>
 	            <th width="100">작성자</th>
 	            <th width="140">일시</th>
 	            <th width="140">상태</th>

@@ -63,10 +63,10 @@
 	<!-- 기본 검색 -->
 	<sql id="where-list-schType">
 		<if test="schType=='all'">
-			INSTR(p.productName, #{kwd}) > 0 || INSTR(p.productCode, LTRIM(#{kwd}, '0')) = 1
+			(INSTR(p.productName, #{kwd}) > 0 OR INSTR(p.productCode, LTRIM(#{kwd}, '0')) > 0)
 		</if>
 		<if test="schType=='productCode'">
-			INSTR(p.productCode, LTRIM(#{kwd}, '0')) = 1
+			INSTR(p.productCode, LTRIM(#{kwd}, '0')) > 0
 		</if>
 		<if test="schType=='productName'">
 			INSTR(p.productName, #{kwd}) > 0
@@ -80,25 +80,39 @@
 	
 	<!-- 날짜 검색 -->
 	<sql id="where-list-period">
-			#{period} 
-			BETWEEN TO_DATE(DBMS_LOB.INSTR(REGEXP_REPLACE(COLUMN, <![CDATA['[-|.|\s|/]']]>, ''), #{periodStart}), 'YYYY-MM-DD')
-					AND TO_DATE(DBMS_LOB.INSTR(REGEXP_REPLACE(COLUMN, <![CDATA['[-|.|\s|/]']]>, ''), #{periodEnd}), 'YYYY-MM-DD')
+			${period} 
+			BETWEEN TO_DATE(#{periodStart}, 'YYYY-MM-DD')
+					AND TO_DATE(#{periodEnd}, 'YYYY-MM-DD')
 	</sql>
 	
 	<!-- 판매가 검색 -->
 	<sql id="where-list-price">
-			price BETWEEN #{priceLowest} AND #{priceHighest} 
+			p.price BETWEEN #{priceLowest} AND #{priceHighest} 
 	</sql>
 
 	<!-- 재고 검색 -->
 	<sql id="where-list-stock">
-			totalStock BETWEEN #{stockLowest} AND #{stockHighest}
+			ps.totalStock BETWEEN #{stockLowest} AND #{stockHighest}
 	</sql>
 		
 	<select id="dataCount" parameterType="map" resultType="Integer">
-		SELECT NVL(COUNT(*), 0)
+		SELECT NVL(COUNT(DISTINCT p.productCode), 0)
 		FROM product p
-
+		LEFT OUTER JOIN (
+		    SELECT productCode, NVL(SUM(totalStock), 0) totalStock
+		    FROM productStock
+		    GROUP BY productCode
+		) ps ON p.productCode = ps.productCode
+		<if test="kwd != null and kwd != ''">
+			WHERE 
+			<include refid="where-list-schType"/>
+			<if test="categoryId != 0">
+				AND <include refid="where-list-categoryId"/>
+			</if>
+			AND <include refid="where-list-period"/>
+			AND <include refid="where-list-price"/>
+			AND <include refid="where-list-stock"/>
+		</if>
 	</select>
 		
 	<select id="listProduct" parameterType="map" resultType="com.sp.app.admin.model.ProductManage">
@@ -110,28 +124,21 @@
 			SELECT productCode, NVL(SUM(totalStock), 0) totalStock
 			FROM productStock
 			GROUP BY productCode
-		) t ON p.productCode = t.productCode
-		<where>
-			<if test="kwd != null and kwd != '' ">
-				AND <include refid="where-list-schType"/>
-			</if>
+		) ps ON p.productCode = ps.productCode
+		<if test="kwd != null and kwd != ''">
+			WHERE 
+			<include refid="where-list-schType"/>
 			<if test="categoryId != 0">
 				AND <include refid="where-list-categoryId"/>
 			</if>
-			<if test="periodStart!=null and periodStart!='' and periodEnd!=null and periodEnd!=''">
-				AND <include refid="where-list-period"/>
-			</if>
-			<if test="priceLowest!=null and priceHighest!=null and priceLowest!=null and priceHighest!=''">
-				AND <include refid="where-list-price"/>
-			</if>
-			<if test="stockLowest!=null and stockHighest!=null and stockLowest!=null and stockHighest!=''">
-				AND <include refid="where-list-stock"/>
-			</if>
-		</where>
+			AND <include refid="where-list-period"/>
+			AND <include refid="where-list-price"/>
+			AND <include refid="where-list-stock"/>
+		</if>
 		ORDER BY p.productCode DESC
 		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
-	
+
 	<!-- 상품 재고 -->
 	<!-- 상품 재고 등록 -->
 	<insert id="insertProductStock" parameterType="com.sp.app.admin.model.ProductStockManage">
