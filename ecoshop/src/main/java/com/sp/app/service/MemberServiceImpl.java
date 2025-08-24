@@ -16,9 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class MemberServiceImpl implements MemberService {
-	
+
 	private final MemberMapper mapper;
-	
+
 	@Override
 	public Member loginMember(Map<String, Object> map) {
 		Member dto = null;
@@ -83,9 +83,17 @@ public class MemberServiceImpl implements MemberService {
 		return dto;
 	}
 	
+	@Transactional(rollbackFor = {Exception.class})
 	@Override
 	public void updateMember(Member dto) throws Exception {
-		// TODO Auto-generated method stub
+		
+		try {
+			mapper.updateMember1(dto);
+			mapper.updateMember2(dto);
+		} catch (Exception e) {
+			log.info("updateMember : ", e);
+			throw e;
+		}
 		
 	}
 
@@ -99,6 +107,22 @@ public class MemberServiceImpl implements MemberService {
 	public void generatePwd(Member dto) throws Exception {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Member findByMemberId(long memberId) {
+		Member dto = null;
+		
+		try {
+			dto = Objects.requireNonNull(mapper.findByMemberId(memberId));
+			
+		} catch (NullPointerException e) {
+		} catch (ArrayIndexOutOfBoundsException e) {
+		} catch (Exception e) {
+			log.info("findByMemberId : ", e);
+		}
+		
+		return dto;
 	}
 	
 	

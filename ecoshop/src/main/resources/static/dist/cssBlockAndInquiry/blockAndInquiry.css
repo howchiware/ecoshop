@@ -1,0 +1,146 @@
+:root {
+    --admin-bg-color: #f8f9fa;       
+    --card-bg-color: #ffffff;         
+    --primary-text-color: #212529;   
+    --secondary-text-color: #6c757d; 
+    --accent-color: #0d6efd;          
+    --border-color: #dee2e6;         
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); 
+    --card-radius: 8px;              
+}
+* {
+	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
+	box-sizing: border-box;
+}
+@font-face {
+	font-family: 'Pretendard-Regular';
+	src:
+		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+		format('woff');
+	font-style: normal;
+}
+.main-container {
+    display: flex;
+}
+.right-panel {
+    flex-grow: 1;
+    padding: 40px 50px;
+}
+.title h3 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--primary-text-color);
+    margin-bottom: 0;
+}
+hr {
+    margin: 1.5rem 0;
+    border-color: var(--border-color);
+}
+.dashboard-card {
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.card-header {
+    padding: 1.25rem 1.75rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+}
+.card-title {
+    margin: 0;
+    padding: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-text-color);
+}
+.card-body {
+    padding: 2rem 1.75rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+.card-footer {
+    padding: 1.25rem 1.75rem;
+    background-color: #fcfcfc;
+    border-top: 1px solid #f0f0f0;
+    border-bottom-left-radius: var(--card-radius);
+    border-bottom-right-radius: var(--card-radius);
+    text-align: center;
+}
+.card-footer a {
+    color: var(--secondary-text-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+.card-footer a:hover {
+    color: var(--accent-color);
+}
+.stats-card .card-body {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+.stat-item h4 {
+    font-size: 1rem;
+    color: var(--secondary-text-color);
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+}
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: var(--primary-text-color);
+    line-height: 1;
+}
+.kpi-metric {
+    font-size: 3.5rem;
+    font-weight: 500;
+    color: var(--accent-color);
+    margin-bottom: 2rem;
+    line-height: 1;
+}
+.kpi-metric small {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--secondary-text-color);
+    margin-left: 0.5rem;
+}
+.item-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+.item-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.9rem 0.25rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+.item-list li:last-child {
+    border-bottom: none;
+}
+.item-list li:only-child {
+    justify-content: center;
+    text-align: center;
+    color: var(--secondary-text-color);
+}
+.item-title {
+    font-weight: 500;
+    color: var(--primary-text-color);
+    font-size: 0.95rem;
+}
+.item-date {
+    font-size: 0.85rem;
+    color: var(--secondary-text-color);
+    white-space: nowrap; 
+    margin-left: 1rem;
+}

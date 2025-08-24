@@ -232,3 +232,21 @@ $(function(){
         ajaxRequest(url, method, params, 'json', fn);
     });
 });
+
+// 게시글 신고
+$('.section').on('click', '.btnPostsReport', function(){
+		let freeId = $(this).attr('data-data-freeid');
+		reports('free', freeId, 'posts', '자유 게시판');
+	});
+	
+// 댓글 신고
+$('.reply-session').on('click', '.notifyReply', function(){
+	let replyId = $(this).attr('data-replyId');
+	reports('freeReply', replyId, 'reply', '자유 게시판 댓글');
+});
+
+// 답글 신고
+$('.reply-session').on('click', '.notifyReplyAnswer', function(){
+	let replyId = $(this).attr('data-replyId');
+	reports('freeReply', replyId, 'replyAnswer', '자유 게시판 댓글에 대한 답글');
+});

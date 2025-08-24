@@ -23,6 +23,7 @@ public interface MemberMapper {
 	public void updateMember2(Member dto) throws SQLException;
 	
 	public Member findById(String userId);
+	public Member findByMemberId(long memberId);
 	public Member findByNickname(String nickname);
 	
 	public void deleteMember(Map<String, Object> map) throws SQLException;

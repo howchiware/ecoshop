@@ -242,9 +242,9 @@ public class FreeServiceImpl implements FreeService {
 	*/
 
 	@Override
-	public void updateReplyShowHide(Map<String, Object> map) throws Exception {
+	public void updateReplyReport(Map<String, Object> map) throws Exception {
 		try {
-			mapper.updateReplyShowHide(map);
+			mapper.updateReplyReport(map);
 		} catch (Exception e) {
 			log.info("updateReplyShowHide : ", e);
 			throw e;

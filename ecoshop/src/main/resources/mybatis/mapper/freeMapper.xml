@@ -174,7 +174,7 @@
 		</if>
 	</select>
 	
-	<update id="updateReplyShowHide" parameterType="map">
+	<update id="updateReplyReport" parameterType="map">
 		UPDATE freeReply SET report = 1
 		WHERE replyId = #{replyId} AND memberId = #{memberId}
 	</update>
