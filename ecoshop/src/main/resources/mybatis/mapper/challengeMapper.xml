@@ -18,7 +18,7 @@
     ORDER BY d.weekday
   </select>
 
-  <!-- (추가) 오늘 요일 챌린지 1개 -->
+  <!-- 오늘 요일 챌린지 1개 -->
   <select id="getTodayDaily" parameterType="int" resultType="com.sp.app.model.Challenge">
     SELECT <include refid="baseColumns"/>, d.weekday
     FROM challenge c
@@ -46,7 +46,6 @@
       AND (SYSDATE BETWEEN s.startDate AND s.endDate OR SYSDATE &lt; s.startDate)
 
     <choose>
-      <!-- 종료일 빠른 순 (커서: endDate, challengeId) -->
       <when test="sort == 'CLOSE_DATE'">
         <if test="lastEndDate != null and lastEndDate != ''">
           AND (
@@ -57,7 +56,6 @@
         ORDER BY s.endDate ASC NULLS LAST, c.challengeId ASC
       </when>
 
-      <!-- 인기순 -->
       <when test="sort == 'POPULAR'">
         <if test="lastId != null">
           AND c.challengeId &lt; #{lastId}
@@ -65,7 +63,6 @@
         ORDER BY c.rewardPoints DESC, c.challengeId DESC
       </when>
 
-      <!-- 최신순 -->
       <otherwise>
         <if test="lastId != null">
           AND c.challengeId &lt; #{lastId}
@@ -135,20 +132,20 @@
       participationId, challengeId, memberId, participateDate, status, cancelAt
     ) VALUES (
       #{participationId}, #{challengeId}, #{memberId}, SYSDATE,
-     <choose>
-      <when test="participationStatus != null">#{participationStatus}</when>
-      <otherwise>0</otherwise>
-    </choose>,
-    <choose>
-      <when test="cancelAt != null and cancelAt != ''">
-        TO_DATE(#{cancelAt}, 'YYYY-MM-DD')
-      </when>
-      <otherwise>NULL</otherwise>
-    </choose>
-  )
-</insert>
+      <choose>
+        <when test="participationStatus != null">#{participationStatus}</when>
+        <otherwise>0</otherwise>
+      </choose>,
+      <choose>
+        <when test="cancelAt != null and cancelAt != ''">
+          TO_DATE(#{cancelAt}, 'YYYY-MM-DD')
+        </when>
+        <otherwise>NULL</otherwise>
+      </choose>
+    )
+  </insert>
 
-  <!-- (추가) 참여 상태/취소일 갱신 : 넘겨준 필드만 SET -->
+  <!-- 참여 상태/취소일 갱신 : 넘겨준 필드만 SET -->
   <update id="updateParticipation" parameterType="com.sp.app.model.Challenge">
     UPDATE challengeParticipation
     <set>
@@ -206,5 +203,58 @@
     GROUP BY c.dayNumber
     ORDER BY c.dayNumber
   </select>
+
+  <!-- 스페셜 제출용 추가 쿼리 -->
+
+  <!-- 진행/대기 중인 참여 1건 -->
+  <!-- 스페셜인증 중 최종제출 이후 추가 업로드 차단 -->
+  <select id="selectActiveParticipation" parameterType="map" resultType="com.sp.app.model.Challenge">
+	  SELECT participationId, challengeId, memberId,
+	         TO_CHAR(participateDate,'YYYY-MM-DD HH24:MI:SS') AS participateDate,
+	         status AS participationStatus
+	  FROM challengeParticipation
+	  WHERE memberId = #{memberId}
+	    AND challengeId = #{challengeId}
+	    AND status IN (0)   <!-- 여기 0만 허용 -->
+	  ORDER BY participateDate DESC
+	  FETCH FIRST 1 ROWS ONLY
+  </select>
+
+  <!-- 일차 중복 여부 -->
+  <select id="existsPostByParticipationAndDay" parameterType="map" resultType="int">
+    SELECT NVL(COUNT(*),0)
+    FROM certificationPost
+    WHERE participationId = #{participationId}
+      AND dayNumber = #{dayNumber}
+  </select>
+
+  <!-- 최대 dayNumber -->
+  <select id="selectMaxDayNumber" parameterType="long" resultType="int">
+	  SELECT NVL(MAX(dayNumber), 0)
+	  FROM certificationPost
+	  WHERE participationId = #{participationId}
+  </select>
+  
+  
+  <!-- 스페셜 챌린지 인증용 제출 -->
+  <select id="findParticipationById" parameterType="long" resultType="com.sp.app.model.Challenge">
+	  SELECT participationId,
+	         challengeId,
+	         memberId,
+	         TO_CHAR(participateDate,'YYYY-MM-DD HH24:MI:SS') AS participateDate,
+	         status AS participationStatus
+	  FROM challengeParticipation
+	  WHERE participationId = #{participationId}
+  </select>
+  
+  <!--  스페셜 챌린지 인증 조회용 -->
+  <select id="countSpecialPosts" parameterType="long" resultType="int">
+	  SELECT COUNT(*)
+	  FROM certificationPost
+	  WHERE participationId = #{participationId}
+	    AND dayNumber IN (1,2,3)
+  </select>
+  
+  
 
 </mapper>
