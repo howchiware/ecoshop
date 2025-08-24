@@ -255,11 +255,12 @@
 	<input type="hidden" id="product-thumbnail" value="${dto.thumbnail}">
 </div>
 
-<script src="${pageContext.request.contextPath}/dist/js2/productDetail.js"></script>
-<script src="${pageContext.request.contextPath}/dist/js2/productDetail2.js"></script>
+<script src="${pageContext.request.contextPath}/dist/jsProduct/productDetail.js"></script>
+<script src="${pageContext.request.contextPath}/dist/jsProduct/productDetail2.js"></script>
 <script src="${pageContext.request.contextPath}/dist/jsProduct/productLike.js"></script>
 
 <footer>
+	<jsp:include page="/WEB-INF/views/layout/footer.jsp"/>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>	
 	<script type="text/javascript" src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </footer>

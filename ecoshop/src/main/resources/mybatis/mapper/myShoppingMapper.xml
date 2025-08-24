@@ -2,7 +2,74 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.mapper.MyShoppingMapper">
+	<!-- 장바구니 등록 -->
+	<insert id="insertCart" parameterType="com.sp.app.model.ProductOrder">
+		INSERT INTO cart(cartId, memberId, productCode, stockNum, qty, reg_date)
+		VALUES (cart_seq.NEXTVAL, #{memberId}, #{productCode}, #{stockNum}, #{qty}, SYSDATE)
+	</insert>
+	
+	<!-- 장바구니 수정 -->
+	<update id="updateCart" parameterType="com.sp.app.model.ProductOrder">
+		UPDATE cart SET qty = #{qty}, reg_date = SYSDATE
+		WHERE stockNum = #{stockNum} AND memberId = #{memberId}
+	</update>
 
+	<!-- 장바구니 찾기 -->
+	<select id="findByCartId" parameterType="map" resultType="com.sp.app.model.ProductOrder">
+		SELECT cartId, memberId, productCode, stockNum, qty, reg_date
+		FROM cart
+		WHERE stockNum = #{stockNum} AND memberId = #{memberId}
+	</select>
+	
+	<!-- 유저의 장바구니 리스트 -->
+		<select id="listCart" resultType="com.sp.app.model.ProductOrder" parameterType="Long">
+    	SELECT ct.cartId, ct.memberId, ct.stockNum, ct.qty, ct.reg_date,
+    		ps.productCode, ps.optionDetailNum, ps.optionDetailNum2, ps.totalStock,
+    		p.productName, p.price, p.point, p.thumbnail, p.optionCount,
+    		po1.optionNum, po1.optionName,
+    		po2.optionNum optionNum2, po2.optionName optionName2,
+    		d1.optionDetailNum, d1.optionValue,
+    		d2.optionDetailNum optionDetailNum2, d2.optionValue optionValue2
+    	FROM cart ct
+    	JOIN productStock ps ON ct.stockNum = ps.stockNum 
+    	JOIN product p ON ps.productCode = p.productCode
+    	LEFT OUTER JOIN (
+            SELECT productCode, optionNum, optionName, parentOption 
+            FROM productOption 
+            WHERE parentOption IS NULL
+    	) po1 ON ps.productCode = po1.productCode
+		LEFT OUTER JOIN (
+            SELECT optionNum, optionName, parentOption
+            FROM productOption
+			WHERE parentOption IS NOT NULL
+        ) po2 ON po1.optionNum = po2.parentOption
+    	LEFT OUTER JOIN optionDetail d1 ON ps.optionDetailNum = d1.optionDetailNum
+    	LEFT OUTER JOIN optionDetail d2 ON ps.optionDetailNum2 = d2.optionDetailNum
+		WHERE ct.memberId = #{memberId}
+		ORDER BY cartId DESC
+	</select>
+	
+	<!-- 장바구니 삭제 -->
+	<delete id="deleteCart" parameterType="map">
+		DELETE FROM cart
+		WHERE memberId = #{memberId} 
+		<if test="gubun == 'item' ">
+			AND stockNum = #{stockNum}
+		</if>
+		<if test="gubun == 'list' ">
+			AND stockNum IN
+			<foreach collection="list" item="stockNum" index="index"
+				open="(" separator="," close=")">
+				#{stockNum}
+			</foreach>
+		</if>
+	</delete>
+		
+	<!-- 장바구니 등록 후 15일이 지난 내역 삭제 -->
+	<delete id="deleteCartExpiration">
+		DELETE FROM cart
+		WHERE reg_date + 15 &lt; SYSDATE
+	</delete>
 
 	<!-- 데스터네이션(배송지) 등록 -->
 	<insert id="insertDestination" parameterType="com.sp.app.model.Destination">

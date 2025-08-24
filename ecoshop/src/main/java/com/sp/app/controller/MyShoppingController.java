@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.app.model.Destination;
 import com.sp.app.model.ProductLike;
+import com.sp.app.model.ProductOrder;
 import com.sp.app.model.SessionInfo;
 import com.sp.app.service.MyShoppingService;
 
@@ -28,6 +30,97 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/myShopping/*")
 public class MyShoppingController {
 	private final MyShoppingService service;
+	
+	// 장바구니
+	@GetMapping("cart")
+	public String listCart(HttpSession session,
+			Model model) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		List<ProductOrder> list = service.listCart(info.getMemberId());
+		
+		model.addAttribute("list", list);
+		
+		return "myShopping/cart";
+	}
+	
+	// 장바구니 저장
+	@PostMapping("saveCart")
+	public String saveCart(ProductOrder dto, HttpSession session) throws Exception {
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			
+			dto.setMemberId(info.getMemberId());
+			
+			service.insertCart(dto);
+			
+		} catch (Exception e) {
+			log.info("saveCart : ", e);
+		}
+		
+		return "redirect:/myShopping/cart";
+	}
+	
+	// 장바구니에서 하나 상품 비우기
+	@GetMapping("deleteCart")
+	public String deleteCart(@RequestParam(name = "stockNum") long stockNum,
+			HttpSession session) throws Exception {
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("gubun", "item");
+			map.put("memberId", info.getMemberId());
+			map.put("stockNum", stockNum);
+			
+			service.deleteCart(map);
+			
+		} catch (Exception e) {
+			log.info("deleteCart : ", e);
+		}
+		
+		return "redirect:/myShopping/cart";
+	}
+	
+	// 장바구니에서 선택 상품 비우기
+	@GetMapping("deleteListCart")
+	public String deleteListCart(@RequestParam(name = "nums") List<Long> nums,
+			HttpSession session) throws Exception {
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("gubun", "list");
+			map.put("memberId", info.getMemberId());
+			map.put("list", nums);
+			
+			service.deleteCart(map);
+			
+		} catch (Exception e) {
+			log.info("deleteListCart : ", e);
+		}
+		
+		return "redirect:/myShopping/cart";
+	}
+	
+	// 장바구니 모두 비우기
+	@GetMapping("deleteCartAll")
+	public String deleteCartAll(HttpSession session) throws Exception {
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("gubun", "all");
+			map.put("memberId", info.getMemberId());
+			
+			service.deleteCart(map);
+			
+		} catch (Exception e) {
+			log.info("deleteCartAll : ", e);
+		}
+		
+		return "redirect:/myShopping/cart";
+	}
 	
 	// 배송지
 	@PostMapping("deliveryAddress/write")
@@ -68,6 +161,7 @@ public class MyShoppingController {
 		
 		return model;
 	}
+
 	
 	@PostMapping("productLike/{productCode}")
 	@ResponseBody

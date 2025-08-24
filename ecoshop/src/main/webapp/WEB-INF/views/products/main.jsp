@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,8 +33,8 @@
 				</div>
 				<div class="carousel-container">
 					<div class="owl-carousel owl-theme">
-						<c:forEach var="dto" items="${listProduct}">
-							<div class="item">
+						<c:forEach var="dto" items="${listFiveProduct}">
+							<div class="item bestItems" onClick="location.href='${pageContext.request.contextPath}/products/${dto.productCode}'">
 								<img src="${pageContext.request.contextPath}/uploads/products/${dto.thumbnail}" alt="Image${dto.productCode}">
 							</div>
 						</c:forEach>
@@ -61,6 +62,10 @@
 					<div class="col col-rows-1 col-rows-md-4 g-4 list-container"></div>
 				</div>
 			</div>
+			<div id="product-template">
+				<input type="hidden" id="web-contextPath" value="${pageContext.request.contextPath}">
+				<input type="hidden" id="web-memberId" value="${sessionScope.member.memberId}">
+			</div>
 	</main>
 	<footer>
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
@@ -70,6 +75,8 @@
 	<script src="${pageContext.request.contextPath}/dist/jsProduct/sendAjaxRequest.js"></script>
 	<script src="${pageContext.request.contextPath}/dist/jsProduct/showCategoryTab.js"></script>
 	<script src="${pageContext.request.contextPath}/dist/jsProduct/productLike.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>	
+	<script type="text/javascript" src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 	
 </body>
 </html>

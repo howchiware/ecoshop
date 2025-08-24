@@ -113,6 +113,23 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 				mapper.insertUserPoint(up);
 			}
 			
+			if(dto.getPoints().size() > 0) {
+				for(int p : dto.getPoints()) {
+					LocalDateTime now = LocalDateTime.now();
+					String dateTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+					
+					Point up = new Point();
+					up.setMemberId(dto.getMemberId());
+					up.setOrderId(dto.getOrderId());
+					up.setPoints(p);
+					up.setClassify(1); // 1:적립, 2:사용, 3:소멸, 4:주문취소/판매취소
+					up.setBaseDate(dateTime);
+					up.setReason("상품 구매");
+					mapper.insertUserPoint(up);
+					
+				}
+			}
+			
 			// 배송지 저장 
 			mapper.insertOrderDelivery(dto);
 			
@@ -161,9 +178,16 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 	}
 
 	@Override
-	public Point findByUserPoint(Long member_id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Point findByUserPoint(Long memberId) {
+		Point dto = null;
+		
+		try {
+			dto = mapper.findByUserPoint(memberId);
+		} catch (Exception e) {
+			log.info("findByUserPoint : ", e);
+		}
+		
+		return dto;
 	}
 
 	@Override
@@ -188,6 +212,15 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 		}
 		
 		return dto;
+	}
+
+	@Override
+	public void insertPoint(ProductOrder dto) throws Exception {
+		try {
+			mapper.insertPoint(dto);
+		} catch (Exception e) {
+			log.info("myReinsertPointviewOfThis : ", e);
+		}
 	}
 
 }

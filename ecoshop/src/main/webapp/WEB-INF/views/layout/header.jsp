@@ -79,7 +79,7 @@
 						</li>
 						<a class="nav-link" href="#"><i class="bi bi-bell" style="font-size: 1.2rem;"></i></a>
 					</c:if>
-					<li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bag" style="font-size: 1.2rem;"></i></a></li>
+					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/myShopping/cart"><i class="bi bi-bag" style="font-size: 1.2rem;"></i></a></li>
 				</ul>
 			</div>
 		</div>

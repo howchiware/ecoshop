@@ -44,6 +44,19 @@ public class ProductServiceImpl implements ProductService {
 		
 		return list;
 	}
+	
+	@Override
+	public List<Product> listFiveProducts() throws Exception {
+		List<Product> list = null;
+		try {
+			list = productMapper.listFiveProducts();
+			
+		} catch (Exception e) {
+			log.info("listFiveProducts :", e);
+		}
+		
+		return list;
+	}
 
 	@Override
 	public Product findById(long productId) throws Exception {

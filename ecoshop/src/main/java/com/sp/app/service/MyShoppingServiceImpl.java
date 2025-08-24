@@ -23,20 +23,59 @@ public class MyShoppingServiceImpl implements MyShoppingService {
 
 	@Override
 	public void insertCart(ProductOrder dto) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("memberId", dto.getMemberId());
+			
+			for(int i = 0; i < dto.getStockNums().size(); i++) {
+				dto.setProductCode(dto.getProductCodes().get(i));
+				dto.setStockNum(dto.getStockNums().get(i));
+				dto.setQty(dto.getBuyQtys().get(i));
+				
+				map.put("stockNum", dto.getStockNums().get(i));
+				
+				if(mapper.findByCartId(map) == null) {
+					mapper.insertCart(dto);
+				} else {
+					mapper.updateCart(dto);
+				}
+			}
+			
+		} catch (Exception e) {
+			log.info("insertCart : ", e);
+			
+			throw e;
+		}
 	}
 
 	@Override
-	public List<ProductOrder> listCart(Long member_id) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ProductOrder> listCart(Long memberId) {
+		List<ProductOrder> list = null;
+		
+		try {
+			list = mapper.listCart(memberId);
+			
+			for(ProductOrder dto : list) {
+				dto.setProductMoney(dto.getPrice() * dto.getQty());				
+			}
+		} catch (Exception e) {
+			log.info("listCart : ", e);
+			
+			throw e;
+		}
+		
+		return list;
 	}
 
 	@Override
 	public void deleteCart(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			mapper.deleteCart(map);
+		} catch (Exception e) {
+			log.info("deleteCart : ", e);
+			
+			throw e;
+		}
 	}
 
 	@Override

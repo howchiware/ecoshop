@@ -47,15 +47,15 @@
 	<!-- 포인트 등록 -->
 	<insert id="insertUserPoint" parameterType="com.sp.app.model.Point">
 		INSERT INTO point(pointId, memberId, orderId, baseDate, classify, 
-			point, reason, balance)
+			points, reason, balance)
 		VALUES(point_seq.NEXTVAL, #{memberId}, 
 			#{orderId, jdbcType=VARCHAR},
 			TO_DATE(#{baseDate},'YYYY-MM-DD HH24:MI:SS'),
-			#{classify}, #{point}, #{reason, jdbcType=VARCHAR}, 
+			#{classify}, #{points}, #{reason, jdbcType=VARCHAR}, 
 			NVL((SELECT balance FROM point 
 					WHERE memberId = #{memberId}
 					ORDER BY pointId DESC 
-					FETCH FIRST 1 ROWS ONLY ), 0) + #{point}
+					FETCH FIRST 1 ROWS ONLY ), 0) + #{points}
 			)
 	</insert>
 	
@@ -112,5 +112,15 @@
 		SELECT reviewId, memberId, productCode, content, rate, showReview, regDate, answer, answerId, answerDate, block
 		FROM productReview
 		WHERE reviewId = #{orderDetailId}
+	</select>
+	
+	<!-- 유저의 가장 최근 포인트 -->
+	<select id="findByUserPoint" parameterType="Long" resultType="com.sp.app.model.Point">
+		SELECT pointId, memberId, baseDate, reason, orderId, classify, points, 
+			balance
+		FROM point
+		WHERE memberId = #{memberId}
+		ORDER BY pointId DESC
+		FETCH FIRST 1 ROWS ONLY
 	</select>
 </mapper>
