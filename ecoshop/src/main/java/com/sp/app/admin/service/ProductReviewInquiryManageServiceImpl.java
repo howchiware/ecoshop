@@ -6,10 +6,8 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.sp.app.admin.mapper.ProductReviewInquiryManageMapper;
-import com.sp.app.admin.model.GongguReviewManage;
 import com.sp.app.admin.model.ProductInquiryManage;
 import com.sp.app.admin.model.ProductReviewManage;
-import com.sp.app.model.ProductReview;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

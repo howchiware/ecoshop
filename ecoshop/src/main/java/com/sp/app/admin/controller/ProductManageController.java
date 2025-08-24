@@ -124,6 +124,14 @@ public class ProductManageController {
 				query += "&stockLowest=" + stockLowest + "&stockHighest=" + stockHighest;
 			}
 			
+			for(ProductManage dto : listProduct) {
+				int b = service.isBoughtByProductCode(dto.getProductId());
+				
+				dto.setUserBought(b);
+				System.out.println(dto.getUserBought());
+			}
+			
+			
 			listUrl += "?" + query;
 			
 			String paging = paginateUtil.paging(current_page, total_page, listUrl);
@@ -217,6 +225,11 @@ public class ProductManageController {
 				dto.setOptionName2(listOption.get(1).getOptionName());
 				listOptionDetail2 = service.listOptionDetail(listOption.get(1).getOptionNum());
 			}
+			
+			
+			int b = service.isBoughtByProductCode(dto.getProductId());
+				
+			dto.setUserBought(b);
 			
 			model.addAttribute("mode", "update");
 			

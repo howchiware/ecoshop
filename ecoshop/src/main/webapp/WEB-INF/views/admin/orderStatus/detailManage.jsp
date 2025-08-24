@@ -8,12 +8,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>hShop</title>
-<jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp"/>
+<!-- Vendor CSS Files -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/board.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/paginate.css" type="text/css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/dist/vendor/jquery/js/jquery.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
 <style type="text/css">
-
 body {
 	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
 	background-color: #f7f6f3;
@@ -108,6 +113,7 @@ text-align: center;
 }
 
 </style>
+
 </head>
 <body>
 
@@ -119,92 +125,13 @@ text-align: center;
 	<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp"/>
 
 	<div class="right-PANEL">
-		<div class="title">
-			<h3>주문 취소 관리</h3>
+		<div class="page-title title" data-aos="fade-up" data-aos-delay="200">
+			<h2>${title}</h2>
 		</div>
 		
 		<hr>
-		
-		<div class="outside">
-			<div class="section ps-5 pe-5">
-				<div>
-					<div class="row gy-4 m-0">
-						<div class="col-lg-12 p-2 m-2">
-							<div class="search-area row mb-2">
-								<div class="col-md-6 align-self-center">
-									<p class="small-title">기본 검색</p>
-								</div>
-								
-								<form name="orderManageSearch">
-									<table class="table search-list">
-										<tr>
-											<td class="select-title-area" width="10%">검색어</td>
-											<td class="select-area">
-												<select name="schType1" id="schType1">
-											        <option value="orderNum">주문번호</option>
-											        <option value="orderName">주문자</option>
-											        <option value="orderDate">주문일시</option>
-	       											<c:if test="${itemId==110}">
-														<option value="invoiceNumber" ${schType=="invoiceNumber"?"selected":""}>송장번호</option>
-													</c:if>
-											    </select>
-											    <input type="text" name="kwd1" id="kwd1">
-											</td>
-										</tr>
-										<tr>
-											<td class="select-title-area" width="10%">기간 검색</td>
-											<td class="select-area">
-												<select name="schType2" id="schType2">
-											        <option value="orderDate">주문일</option>
-											        <option value="cancelDate">취소일</option>
-											    </select>
-											    <input type="date" name="startDate" id="startDate"> ~ 
-											    <input type="date" name="endDate" id="endDate">
-											    <button type="button" name="today" class="dateBtn today">오늘</button>
-											    <button type="button" name="yesterday" class="dateBtn yesterday">어제</button>
-											    <button type="button" name="week" class="dateBtn week">일주일</button>
-											    <button type="button" name="oneMonth" class="dateBtn oneMonth">1개월</button>
-											    <button type="button" name="threeMonths" class="dateBtn threeMonths">3개월</button>
-											    <button type="button" name="total" class="dateBtn total">전체</button>
-											</td>
-										</tr>
-										<tr>
-											<td class="select-title-area" width="10%">주문 상태</td>
-											<td class="select-area" width="160">
-											    <input type="radio" id="all" name="orderStatus" value="all" checked/>
-											    <label for="all">전체</label>
-											    <input type="radio" id="sellCancel" name="orderStatus" value="sellCancel" />
-											    <label for="payComplete">판매취소</label>
-											    <input type="radio" id="orderCancelRequest" name="orderStatus" value="orderCancelRequest" />
-											    <label for="send">주문취소요청</label>
-											    <input type="radio" id="orderCancelComplete" name="orderStatus" value="orderCancelComplete" />
-											    <label for="deliver">주문취소확정</label>
-											    <input type="radio" id="returnRequest" name="orderStatus" value="returnRequest" />
-											    <label for="complete">반품요청</label>
-											    <input type="radio" id="returnComplete" name="orderStatus" value="returnComplete" />
-											    <label for="complete">반품요청확정</label>
-											    <input type="radio" id="cannotCancel" name="orderStatus" value="cannotCancel" />
-											    <label for="complete">불가</label>
-											</td>
-										</tr>
-									</table>
-	
-									<div class="btn-area">
-										<button class="btn-accent" type="button">조회</button>
-										<button class="btn-accent" type="reset">초기화</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				
-			</div>
-		</div>
-		<hr>
 
 		<div class="outside">
-
 			<div class="section ps-5 pe-5" data-aos="fade-up" data-aos-delay="200" style="padding-top:0px">
 				<div>
 					<div class="row gy-4 m-0">
@@ -212,52 +139,72 @@ text-align: center;
 							
 							<div class="row mb-2">
 								<div class="col-md-6 align-self-center">
-									<span class="small-title">전체</span> <span class="dataCount">${dataCount}건 조회</span>
+									<span class="small-title">목록</span> <span class="dataCount">${dataCount}개(${page}/${total_page} 페이지)</span>
 								</div>	
 								<div class="col-md-6 align-self-center text-end">
 								</div>
 							</div>
 							
-							<table class="table board-list table-hover">
-								<thead>
+							<table class="table table-hover board-list">
+								<thead class="table-light">
 									<tr>
-										<th>주문번호</th>
-										<th width="100">주문상품</th>
-										<th width="80">옵션</th>
-										<th width="80">주문수량</th>
-										<th width="80">주문자</th>
-										<th width="100">총주문금액</th>
-										<th width="120">주문상태</th>
-										<th width="120">주문일자</th>
-										<th width="120">취소일자</th>
+										<th width="170">주문번호</th>
+										<th width="100">주문자</th>
+										<th>상품명</th>
+										<th width="130">옵션</th>
+										<th width="75">주문수량</th>
+										<th width="100">주문총금액</th>
+										<th width="110">주문상태</th>
+										<th width="100">주문일자</th>
 									</tr>
 								</thead>
 								
 								<tbody>
 									<c:forEach var="dto" items="${list}" varStatus="status">
 										<tr class="hover-cursor" 
-												onclick="location.href='${pageContext.request.contextPath}/admin/order/detailManage/${itemId}/${dto.orderDetailNum}?${query}';">
-											<td>${dto.orderNum}</td>
-											<td>나무수저세트</td>
+												onclick="location.href='${pageContext.request.contextPath}/admin/order/detailManage/${itemId}/${dto.orderDetailId}?${query}';">
+											<td>${dto.orderId}</td>
+											<td>${dto.name}</td>
+											<td class="left"><div class="text-wrap">${dto.productName}</div></td>
 											<td>
 												<c:choose>
 													<c:when test="${dto.optionCount==0}">&nbsp;</c:when>
 													<c:when test="${dto.optionCount==1}">${dto.optionValue}</c:when>
 													<c:when test="${dto.optionCount==2}">${dto.optionValue} / ${dto.optionValue2}</c:when>
 												</c:choose>
-											<td>4</td>
-											<td>${dto.name}</td>
-											<td><fmt:formatNumber value="${dto.payment}"/></td>
-											<td>${dto.orderStateInfo}</td>
-											<td>${dto.orderDate}</td>
-											<td>2025-03-05 14:23</td>
+											</td>
+											<td>${dto.qty}</td>
+											<td><fmt:formatNumber value="${dto.productMoney}"/></td>
+											<td>${dto.detailStateInfo}</td>
+											<td>${fn:substring(dto.orderDate, 0, 10)}</td>
 										</tr>
 									</c:forEach>
 								</tbody>
 							</table>
-							
+				
 							<div class="page-navigation">
-								${dataCount==0 ? "등록된 주문정보가 없습니다." : paging}
+								${dataCount == 0 ? "등록된 주문정보가 없습니다." : paging}
+							</div>
+	
+							<div class="row mt-3">
+								<div class="col-md-3">
+									<button type="button" class="btn-default" onclick="location.href='${pageContext.request.contextPath}/admin/order/detailManage/${itemId}';" title="새로고침"><i class="bi bi-arrow-clockwise"></i></button>
+								</div>
+								<div class="col-md-6 text-center">
+									<form name="searchForm" class="form-search">
+										<select name="schType">
+											<option value="orderId" ${schType=="orderId"?"selected":""}>주문번호</option>
+											<option value="name" ${schType=="name"?"selected":""}>주문자</option>
+											<option value="orderDate" ${schType=="orderDate"?"selected":""}>주문일자</option>
+											<option value="productName" ${schType=="productName"?"selected":""}>상품이름</option>
+										</select>
+										<input type="text" name="kwd" value="${kwd}">
+										<button type="button" class="btn-default" onclick="searchList();"><i class="bi bi-search"></i></button>
+									</form>
+								</div>
+								<div class="col-md-3 text-end">
+									&nbsp;
+								</div>
 							</div>
 	
 						</div>
@@ -269,8 +216,7 @@ text-align: center;
 </main>
 
 <script type="text/javascript">
-// 검색
-window.addEventListener('load', () => {
+window.addEventListener('DOMContentLoaded', () => {
 	const inputEL = document.querySelector('form input[name=kwd]'); 
 	inputEL.addEventListener('keydown', function (evt) {
 		if(evt.key === 'Enter') {
@@ -291,7 +237,7 @@ function searchList() {
 	const formData = new FormData(f);
 	let params = new URLSearchParams(formData).toString();
 	
-	let url = '${pageContext.request.contextPath}/admin/order/orderManage/${itemId}';
+	let url = '${pageContext.request.contextPath}/admin/order/detailManage/${itemId}';
 	location.href = url + '?' + params;
 }
 </script>
@@ -300,7 +246,12 @@ function searchList() {
 	<jsp:include page="/WEB-INF/views/admin/layout/footer.jsp"/>
 </footer>
 
-<jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp"/>
+<!-- Vendor JS Files -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>	
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
+<script type="text/javascript">
+AOS.init();
+</script>
 </body>
 </html>

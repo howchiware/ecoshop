@@ -590,6 +590,24 @@ public class ProductManageServiceImpl implements ProductManageService {
 			
 			throw e;
 		}
+	}
+
+	@Override
+	public int isBoughtByProductCode(long productCode) {
+		int b = 0;
+		try {
+			List<ProductManage> list = mapper.isBoughtByProductCode(productCode);
+			
+			if(list.size() != 0) {
+				b = 1;
+				
+			}
+		} catch (Exception e) {
+			log.info("isBoughtByProductCode : ", e);
+			
+			throw e;
+		}
+		return b;
 	};
 
 }

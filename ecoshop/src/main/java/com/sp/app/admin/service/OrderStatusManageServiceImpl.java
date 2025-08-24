@@ -11,7 +11,7 @@ import com.sp.app.admin.mapper.OrderManageMapper;
 import com.sp.app.admin.model.OrderDetailManage;
 import com.sp.app.admin.model.OrderManage;
 import com.sp.app.mapper.ProductOrderMapper;
-// import com.sp.app.model.UserPoint;
+import com.sp.app.model.Point;
 import com.sp.app.state.OrderState;
 
 import lombok.RequiredArgsConstructor;
@@ -57,13 +57,13 @@ public class OrderStatusManageServiceImpl implements OrderStatusManageService {
 	}
 	
 	@Override
-	public OrderManage findByOrderId(String orderNum) {
+	public OrderManage findByOrderId(String orderId) {
 		OrderManage dto = null;
 		
 		// OrderState.ORDERSTATEINFO : 주문상태 정보
 		
 		try {
-			dto = Objects.requireNonNull(mapper.findByOrderId(orderNum));
+			dto = Objects.requireNonNull(mapper.findByOrderId(orderId));
 			
 			dto.setOrderStateInfo(OrderState.ORDERSTATEINFO[dto.getOrderState()]);
 		} catch (NullPointerException e) {
@@ -75,13 +75,13 @@ public class OrderStatusManageServiceImpl implements OrderStatusManageService {
 	}
 
 	@Override
-	public List<OrderDetailManage> listOrderDetails(String orderNum) {
+	public List<OrderDetailManage> listOrderDetails(String orderId) {
 		List<OrderDetailManage> list = null;
 
 		// OrderState.DETAILSTATEMANAGER : 주문상세상태 정보(관리자)
 		
 		try {
-			list = mapper.listOrderDetails(orderNum);
+			list = mapper.listOrderDetails(orderId);
 			
 			for(OrderDetailManage dto : list) {
 				dto.setDetailStateInfo(OrderState.DETAILSTATEMANAGER[dto.getDetailState()]);
@@ -123,11 +123,11 @@ public class OrderStatusManageServiceImpl implements OrderStatusManageService {
 	}
 
 	@Override
-	public OrderDetailManage findByDetailId(Long orderDetailNum) {
+	public OrderDetailManage findByDetailId(Long orderDetailId) {
 		OrderDetailManage dto = null;
 		
 		try {
-			dto = Objects.requireNonNull(mapper.findByDetailId(orderDetailNum));
+			dto = Objects.requireNonNull(mapper.findByDetailId(orderDetailId));
 			
 			dto.setDetailStateInfo(OrderState.DETAILSTATEMANAGER[dto.getDetailState()]);
 		} catch (NullPointerException e) {
@@ -160,7 +160,7 @@ public class OrderStatusManageServiceImpl implements OrderStatusManageService {
 	@Override
 	public void updateOrderDetailState(Map<String, Object> map) throws Exception {
 		try {
-			String orderNum = (String)map.get("orderNum");
+			String orderNum = (String)map.get("orderId");
 			int detailState = Integer.parseInt((String)map.get("detailState"));
 			int productMoney = Integer.parseInt((String)map.get("productMoney"));
 			int payment = Integer.parseInt((String)map.get("payment"));
@@ -217,34 +217,34 @@ public class OrderStatusManageServiceImpl implements OrderStatusManageService {
 				
 				// 카드 취소내역 저장
 				
-				/*
+				
 				// 포인트
-				Long member_id = (Long)map.get("member_id");
-				int usedSaved = Integer.parseInt((String)map.get("usedSaved"));
+				Long memberId = (Long)map.get("memberId");
+				int usedPoint = Integer.parseInt((String)map.get("usedPoint"));
 				String orderDate = (String)map.get("orderDate");
 				// LocalDateTime now = LocalDateTime.now();
 				// String dateTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-				if(member_id != null) {
+				if(memberId != null) {
 					if(totalOrderCount == 0) {
-						UserPoint up = new UserPoint();
-						up.setMember_id(member_id);
-						up.setOrderNum(orderNum);
-						up.setPoint(usedSaved);
+						Point up = new Point();
+						up.setMemberId(memberId);
+						up.setOrderId(orderNum);
+						up.setPoints(usedPoint);
 						up.setClassify(4); // 1:적립, 2:사용, 3:소멸, 4:주문취소/판매취소
-						up.setBase_date(orderDate);
-						up.setMemo("구매취소");
+						up.setBaseDate(orderDate);
+						up.setReason("구매취소");
 						
 						orderMapper.insertUserPoint(up);					
 					} else {
 						int diff = cancelAmount - payment;
 						if( diff > 0 ) {
-							UserPoint up = new UserPoint();
-							up.setMember_id(member_id);
-							up.setOrderNum(orderNum);
-							up.setPoint(diff);
+							Point up = new Point();
+							up.setMemberId(memberId);
+							up.setOrderId(orderNum);
+							up.setPoints(diff);
 							up.setClassify(4); // 1:적립, 2:사용, 3:소멸, 4:주문취소/판매취소
-							up.setBase_date(orderDate);
-							up.setMemo("구매취소에 따른 남은 포인트");
+							up.setBaseDate(orderDate);
+							up.setReason("구매취소에 따른 남은 포인트");
 							
 							orderMapper.insertUserPoint(up);					
 						}
@@ -253,23 +253,23 @@ public class OrderStatusManageServiceImpl implements OrderStatusManageService {
 				
 			} else if(detailState == 2) { // 관리자에 의해 자동 구매확정
 				// 구매 상품에 대한 포인트 적립
-				Long member_id = (Long)map.get("member_id");
+				Long memberId = (Long)map.get("memberId");
 				String orderDate = (String)map.get("orderDate");
-				if(member_id != null) {
+				if(memberId != null) {
 					int savedMoney = Integer.parseInt((String)map.get("savedMoney"));
 					
-					UserPoint up = new UserPoint();
-					up.setMember_id(member_id);
-					up.setOrderNum(orderNum);
-					up.setPoint(savedMoney);
+					Point up = new Point();
+					up.setMemberId(memberId);
+					up.setOrderId(orderNum);
+					up.setPoints(savedMoney);
 					up.setClassify(1); // 1:적립, 2:사용, 3:소멸, 4:주문취소/판매취소
-					up.setBase_date(orderDate);
-					up.setMemo("자동 구매확정");
+					up.setBaseDate(orderDate);
+					up.setReason("자동 구매확정");
 					orderMapper.insertUserPoint(up);
 				}
 				
-				 */
 			}
+			
 		} catch (Exception e) {
 			log.info("updateOrderDetailState : ", e);
 			
@@ -291,18 +291,18 @@ public class OrderStatusManageServiceImpl implements OrderStatusManageService {
 	}
 	
 	@Override
-	public List<Map<String, Object>> listDetailStateInfo(long orderDetailNum) {
+	public List<Map<String, Object>> listDetailStateInfo(long orderDetailId) {
 		List<Map<String, Object>> list = null;
 		
 		// OrderState.DETAILSTATEMANAGER : 주문상세상태 정보(관리자)
 		try {
-			list = mapper.listDetailStateInfo(orderDetailNum);
+			list = mapper.listDetailStateInfo(orderDetailId);
 			
-			String detalStateInfo;
+			String detailStateInfo;
 			for(Map<String, Object> map : list) {
 				int detailState = ((BigDecimal) map.get("DETAILSTATE")).intValue(); 
-				detalStateInfo = OrderState.DETAILSTATEMANAGER[detailState];
-				map.put("DETALSTATEINFO", detalStateInfo);
+				detailStateInfo = OrderState.DETAILSTATEMANAGER[detailState];
+				map.put("DETALSTATEINFO", detailStateInfo);
 			}
 		} catch (Exception e) {
 			log.info("listDetailStateInfo : ", e);
@@ -312,11 +312,11 @@ public class OrderStatusManageServiceImpl implements OrderStatusManageService {
 	}
 	
 	@Override
-	public OrderManage findByDeliveryId(String orderNum) {
+	public OrderManage findByDeliveryId(String orderId) {
 		OrderManage dto = null;
 		
 		try {
-			dto = mapper.findByDeliveryId(orderNum);
+			dto = mapper.findByDeliveryId(orderId);
 		} catch (Exception e) {
 			log.info("findByDeliveryId : ", e);
 		}
@@ -325,11 +325,11 @@ public class OrderStatusManageServiceImpl implements OrderStatusManageService {
 	}
 	
 	@Override
-	public Map<String, Object> findByPayDetail(String orderNum) {
+	public Map<String, Object> findByPayDetail(String orderId) {
 		Map<String, Object> map = null;
 		
 		try {
-			map = mapper.findByPayDetail(orderNum);
+			map = mapper.findByPayDetail(orderId);
 		} catch (Exception e) {
 			log.info("findByPayDetail : ", e);
 		}

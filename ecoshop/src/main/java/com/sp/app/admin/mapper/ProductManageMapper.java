@@ -58,4 +58,6 @@ public interface ProductManageMapper {
 	public void deleteProductDeliveryFee();
 	
 	public List<Long> optionFindByCode(long id);
+
+	public List<ProductManage> isBoughtByProductCode(long productCode);
 }

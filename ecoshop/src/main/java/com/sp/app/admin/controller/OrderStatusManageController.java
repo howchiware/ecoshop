@@ -1,16 +1,29 @@
 package com.sp.app.admin.controller;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sp.app.admin.model.OrderDetailManage;
+import com.sp.app.admin.model.OrderManage;
 import com.sp.app.admin.service.OrderStatusManageService;
 import com.sp.app.common.PaginateUtil;
+import com.sp.app.model.SessionInfo;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,11 +34,12 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderStatusManageController {
 	private final OrderStatusManageService service;
 	private final PaginateUtil paginateUtil;
-	
-	@GetMapping("orderManage")
+
+	@GetMapping("orderManage/{itemId}")
 	public String handleOrderManage(
+			@PathVariable("itemId") int itemId,
 			@RequestParam(name = "page", defaultValue = "1") int current_page,
-			@RequestParam(name = "schType", defaultValue = "orderNum") String schType,
+			@RequestParam(name = "schType", defaultValue = "orderId") String schType,
 			@RequestParam(name = "kwd",defaultValue = "") String kwd,
 			Model model,
 			HttpServletRequest req) throws Exception {
@@ -34,7 +48,6 @@ public class OrderStatusManageController {
 		// orderManage : 주문관리
 		//    itemId : 100-주문완료(결제완료, 배송전부분취소), 110-배송관리, 120-주문전체리스트
 		try {
-			/*
 			int size = 10;
 			int total_page;
 			int dataCount;
@@ -93,7 +106,7 @@ public class OrderStatusManageController {
 			model.addAttribute("size", size);
 			model.addAttribute("total_page", total_page);
 			model.addAttribute("paging", paging);
-			*/
+			
 		} catch (Exception e) {
 			log.info("handleOrderManage : ", e);
 		}
@@ -101,19 +114,18 @@ public class OrderStatusManageController {
 		return "admin/orderStatus/orderManage";
 	}
 	
-	@GetMapping("orderManage/{orderNum}")
+	@GetMapping("orderManage/{itemId}/{orderId}")
 	public String handelOrderDetails(
 			@PathVariable("itemId") int itemId,
-			@PathVariable("orderNum") String orderNum,
+			@PathVariable("orderId") String orderId,
 			@RequestParam(name = "page") String page,
-			@RequestParam(name = "schType", defaultValue = "orderNum") String schType,
+			@RequestParam(name = "schType", defaultValue = "orderId") String schType,
 			@RequestParam(name = "kwd", defaultValue = "") String kwd,		
 			Model model) throws Exception {
 		
 		// 주문번호에 대한 주문상세 리스트
 		String query = "page=" + page;
 		try {
-			/*
 			kwd = URLDecoder.decode(kwd, "utf-8");
 
 			if (! kwd.isBlank()) {
@@ -121,16 +133,16 @@ public class OrderStatusManageController {
 			}
 			
 			// 주문 정보
-			OrderManage order = Objects.requireNonNull(service.findByOrderId(orderNum));
+			OrderManage order = Objects.requireNonNull(service.findByOrderId(orderId));
 			
 			// 주문 정보의 상세 리스트 
-			List<OrderDetailManage> listDetail = service.listOrderDetails(orderNum);
+			List<OrderDetailManage> listDetail = service.listOrderDetails(orderId);
 
 			// 배송 회사
 			List<Map<String, Object>> listDeliveryCompany = service.listDeliveryCompany();
 			
 			// 배송지
-			OrderManage delivery = service.findByDeliveryId(orderNum);
+			OrderManage delivery = service.findByDeliveryId(orderId);
 			
 			model.addAttribute("itemId", itemId);
 			model.addAttribute("order", order);
@@ -140,7 +152,7 @@ public class OrderStatusManageController {
 
 			model.addAttribute("query", query);
 			model.addAttribute("page", page);
-			*/
+			
 			return "admin/orderStatus/orderDetail";
 			
 		} catch (NullPointerException e) {
@@ -148,13 +160,91 @@ public class OrderStatusManageController {
 			log.info("handelOrderDetails : ", e);
 		}
 		
-		return "redirect:/admin/order/orderManage/" + query;
+		return "redirect:/admin/order/orderManage/" + itemId + "?" + query;
 	}
 	
-	@GetMapping("detailManage")
+	@PostMapping("invoiceNumber")
+	@ResponseBody
+	public Map<String, ?> invoiceNumber(@RequestParam Map<String, Object> paramMap) {
+		// 송장 번호 등록
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		String state = "true";
+		try {
+			service.updateOrder("invoiceNumber", paramMap);
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		model.put("state", state);
+		return model;
+	}
+	
+	@PostMapping("delivery")
+	@ResponseBody
+	public Map<String, ?> delivery(@RequestParam Map<String, Object> paramMap) {
+		// 배송 상태 변경
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		String state = "true";
+		try {
+			service.updateOrder("delivery", paramMap);
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		model.put("state", state);
+		return model;
+	}
+	
+	@PostMapping("updateDetailState")
+	@ResponseBody
+	public Map<String, ?> updateDetailState(@RequestParam Map<String, Object> paramMap,
+			HttpSession session) {
+		// 상세 주문별 상태 변경
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		String state = "true";
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			
+			int detailState = Integer.parseInt((String)paramMap.get("detailState"));
+			
+			paramMap.put("memberId", info.getMemberId());
+			service.updateOrderDetailState(paramMap);
+			model.put("detailState", detailState);
+			
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		model.put("state", state);
+		
+		return model;
+	}
+	
+	@GetMapping("listDetailState")
+	@ResponseBody
+	public Map<String, Object> listDetailState(@RequestParam(name = "orderDetailId") long orderDetailId) {
+		// 상세주문별 상태 리스트
+		Map<String, Object> model = new HashMap<String, Object>();
+		try {
+			List<Map<String, Object>> list = null;
+			list = service.listDetailStateInfo(orderDetailId);
+			
+			model.put("list", list);
+		} catch (Exception e) {
+			log.info("listDetailState : ", e);
+		}
+		
+		return model;
+	}
+	
+	@GetMapping("detailManage/{itemId}")
 	public String handleDetailManageList(
+			@PathVariable("itemId") int itemId,
 			@RequestParam(name = "page", defaultValue = "1") int current_page,
-			@RequestParam(name = "schType", defaultValue = "orderNum") String schType,
+			@RequestParam(name = "schType", defaultValue = "orderId") String schType,
 			@RequestParam(name = "kwd",defaultValue = "") String kwd,
 			Model model,
 			HttpServletRequest req) throws Exception {
@@ -164,7 +254,6 @@ public class OrderStatusManageController {
 		//    itemId : 100-배송후교환, 110-구매확정,
 		//            200-배송전환불, 210-배송후반품, 220-판매취소, 230-취소전체리스트
 		try {
-			/*
 			int size = 10;
 			int total_page;
 			int dataCount;
@@ -230,7 +319,7 @@ public class OrderStatusManageController {
 			model.addAttribute("total_page", total_page);
 			model.addAttribute("paging", paging);
 			model.addAttribute("query", query);
-			*/
+			
 		} catch (Exception e) {
 			log.info("handleDetailManageList : ", e);
 		}
@@ -238,11 +327,12 @@ public class OrderStatusManageController {
 		return "admin/orderStatus/detailManage";
 	}
 	
-	@GetMapping("detailManage/{orderDetailNum}")
+	@GetMapping("detailManage/{itemId}/{orderDetailId}")
 	public String handleDetailView(
-			@PathVariable("orderDetailNum") Long orderDetailNum,
+			@PathVariable("itemId") int itemId,
+			@PathVariable("orderDetailId") Long orderDetailId,
 			@RequestParam(name = "page") String page,
-			@RequestParam(name = "schType", defaultValue = "orderNum") String schType,
+			@RequestParam(name = "schType", defaultValue = "orderId") String schType,
 			@RequestParam(name = "kwd",defaultValue = "") String kwd,
 			Model model,
 			HttpServletRequest req) throws Exception {
@@ -254,7 +344,6 @@ public class OrderStatusManageController {
 
 		String query = "page=" + page;
 		try {
-			/*
 			kwd = URLDecoder.decode(kwd, "utf-8");
 
 			if (! kwd.isBlank()) {
@@ -262,13 +351,13 @@ public class OrderStatusManageController {
 			}
 			
 			// 주문 상세 정보
-			OrderDetailManage dto = Objects.requireNonNull(service.findByDetailId(orderDetailNum));
+			OrderDetailManage dto = Objects.requireNonNull(service.findByDetailId(orderDetailId));
 			
 			// 주문 정보의 구매 리스트 
-			List<OrderDetailManage> listBuy = service.listOrderDetails(dto.getOrderNum());
+			List<OrderDetailManage> listBuy = service.listOrderDetails(dto.getOrderId());
 			
 			// 결제 정보
-			Map<String, Object> payDetail = service.findByPayDetail(dto.getOrderNum());
+			Map<String, Object> payDetail = service.findByPayDetail(dto.getOrderId());
 
 			model.addAttribute("itemId", itemId);
 			model.addAttribute("dto", dto);
@@ -277,7 +366,7 @@ public class OrderStatusManageController {
 			
 			model.addAttribute("query", query);
 			model.addAttribute("page", page);
-			*/
+			
 			return "admin/orderStatus/detailView";
 			
 		} catch (NullPointerException e) {
@@ -285,6 +374,7 @@ public class OrderStatusManageController {
 			log.info("handleDetailView : ", e);
 		}
 		
-		return "redirect:/admin/order/detailManage/" + query;
+		return "redirect:/admin/order/detailManage/" + itemId + "?" + query;
 	}
+	
 }

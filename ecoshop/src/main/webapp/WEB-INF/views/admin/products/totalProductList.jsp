@@ -271,7 +271,7 @@ text-align: center;
 										<tr class="text-center" valign="middle">
 											<td rowspan="2">
 												<input type="checkbox" class="form-check-input" name="nums" data-productId="${dto.productId}" value="${dto.productId}" 
-														data-totalStock="${dto.totalStock}" ${dto.totalStock == 0 ? "disabled":""}>
+														data-totalStock="${dto.totalStock}" ${dto.totalStock == 0 ? "disabled":""} ${dto.userBought == 1 ? "disabled":""} data-userBought="${dto.userBought}">
 											</td>
 											<td rowspan="2">${dto.productCode}</td>
 											<td rowspan="2" width="55">
