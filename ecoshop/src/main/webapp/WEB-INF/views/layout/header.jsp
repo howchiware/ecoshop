@@ -1,16 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link href="//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css" rel="stylesheet">
-
-</head>
-<body>
 
 	<div class="bg-light py-1 border-bottom small" style="font-size: 0.8rem;">
 		<div class="container d-flex justify-content-between align-items-center">
@@ -32,7 +22,6 @@
 						</c:if>
 					</c:otherwise>
 				</c:choose>
-				
 			</div>
 		</div>
 	</div>
@@ -85,6 +74,3 @@
 		</div>
 	</nav>
 	
-
-</body>
-</html>
