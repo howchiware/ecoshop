@@ -339,36 +339,6 @@ $(function(){
 		}
 	});
 });
-/*
-function updateBtn(){
-	$('#deliveryInfoContent').removeAttr('readonly');
-	$('#refundInfoContent').removeAttr('readonly');
-	$('#deliveryLocation').removeAttr('readonly');
-	$('#deliveryLocationAdd').removeAttr('readonly');
-	$('#deliveryFee').removeAttr('readonly');
-	$('.minus-deliveryFee').addClass('minus-deliveryFee-enabled');
-	
-	$('.udBtn').html('수정취소');
-	$('.udBtn').addClass('updateCancelBtn');
-	$('.udBtn').removeClass('updateBtn');
-	
-	$('.updateCancelBtn').click(function(){
-		$('#deliveryInfoContent').prop('readonly', 'readonly');
-		$('#refundInfoContent').prop('readonly', 'readonly');
-		$('#deliveryLocation').prop('readonly', 'readonly');
-		$('#deliveryLocationAdd').prop('readonly', 'readonly');
-		$('#deliveryFee').prop('readonly', 'readonly');
-		$('.minus-deliveryFee').removeClass('minus-deliveryFee-enabled');
-		
-		$('.udBtn').html('수정');
-		$('.udBtn').addClass('updateBtn');
-		$('.udBtn').removeClass('updateCancelBtn');
-		
-		//$('.deliveryAreaResult').html(cloneNode);
-		
-	});
-}
-*/
 
 // 지역 옵션 추가
 function locationAdd(){
@@ -460,7 +430,7 @@ function sendOk(){
 	}
 
 	let mode = '${mode}';
-	let url = '${pageContext.request.contextPath}/admin/products/';
+	let url = '${pageContext.request.contextPath}/admin/gonggu/';
 	if(mode === 'write'){
 		url += 'deliveryWrite';
 	} else if(mode === 'update'){

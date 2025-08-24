@@ -368,6 +368,11 @@ public class ProductController {
 			ProductDeliveryRefundInfo deliveryRefundInfo = productService.listDeliveryRefundInfo();
 			List<ProductDeliveryRefundInfo> deliveryFee = productService.listDeliveryFee();
 			
+			for(ProductDeliveryRefundInfo dFee : deliveryFee) {
+				System.out.println(dFee.getDeliveryLocation());
+				System.out.println(dFee.getFee());
+			}
+			
 			// 상품을 구매하였는데 리뷰를 안 남긴 경우
 			Map<String, Object> orderMap = new HashMap<String, Object>();
 			List<ProductOrder> didIBuyThis = null;

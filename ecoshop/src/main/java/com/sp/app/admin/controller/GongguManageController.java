@@ -16,11 +16,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.sp.app.admin.model.GongguDeliveryRefundInfo;
 import com.sp.app.admin.model.GongguInquiryManage;
 import com.sp.app.admin.model.GongguManage;
 import com.sp.app.admin.model.GongguPackageManage;
+import com.sp.app.admin.model.GongguProductDeliveryRefundInfoManage;
 import com.sp.app.admin.model.GongguReviewManage;
 import com.sp.app.admin.model.ProductManage;
 import com.sp.app.admin.service.GongguManageService;
@@ -227,7 +226,7 @@ public class GongguManageController {
 			List<GongguManage> listCategory = gongguManageService.listCategory();
 			 
 			GongguManage dto = Objects.requireNonNull(gongguManageService.findById(gongguProductId));
-			List<GongguManage> listFile = gongguManageService.listProductPhoto(gongguProductId);
+			List<GongguManage> listFile = gongguManageService.listGongguProductPhoto(gongguProductId);
 			
 			model.addAttribute("dto", dto);
 			model.addAttribute("page", page);	
@@ -299,7 +298,7 @@ public class GongguManageController {
 	    String state = "true";
 
 	    try {
-	        gongguManageService.deleteSingleProductPhoto(fileNum, uploadPath);
+	        gongguManageService.deleteSingleGongguProductPhoto(fileNum, uploadPath);
 	    } catch (Exception e) {
 	        state = "false";
 	        log.error("deleteFile : ", e);
@@ -425,8 +424,8 @@ public class GongguManageController {
  			HttpServletRequest req) throws Exception {
  		
  		try {
- 			GongguDeliveryRefundInfo listDeliveryRefundInfo = gongguManageService.listDeliveryRefundInfo();
- 			List<GongguDeliveryRefundInfo> listDeliveryFee = gongguManageService.listDeliveryFee();
+ 			GongguProductDeliveryRefundInfoManage listDeliveryRefundInfo = gongguManageService.listGongguDeliveryRefundInfo();
+ 			List<GongguProductDeliveryRefundInfoManage> listDeliveryFee = gongguManageService.listGongguDeliveryFee();
  			
  			if(listDeliveryRefundInfo == null || listDeliveryFee.size() == 0) {
  				model.addAttribute("mode", "write");
@@ -447,53 +446,44 @@ public class GongguManageController {
  	}
  	
  	@PostMapping("deliveryWrite")
- 	public String deliveryWriteSubmit(GongguDeliveryRefundInfo dto, 
- 			@RequestParam(name = "deliveryLocation") List<String> deliveryLocation,
- 			@RequestParam(name = "fee") List<Integer> fee,
- 			Model model) {
- 		
- 		try {
- 			Map<String, Object> map = new HashMap<>();
-
- 			for(int i=0; i<deliveryLocation.size(); i++) {
- 				map.put("deliveryLocation", deliveryLocation.get(i));
- 				map.put("fee", fee.get(i));
-
- 				gongguManageService.insertProductDeliveryFee(map);
- 			}
- 			
- 			gongguManageService.insertProductDeliveryRefundInfo(dto);
- 		} catch (Exception e) {
- 			log.info("deliveryWriteSubmit : ", e);
- 		}
- 		
- 		return "redirect:/admin";
+ 	public String deliveryWriteSubmit(GongguProductDeliveryRefundInfoManage dto,
+ 	        @RequestParam(name = "deliveryLocation") List<String> deliveryLocation,
+ 	        @RequestParam(name = "fee") List<Integer> fee,
+ 	        Model model) {
+ 	    try {
+ 	        Map<String, Object> map = new HashMap<>();
+ 	        for(int i=0; i<deliveryLocation.size(); i++) {
+ 	            map.put("deliveryLocation", deliveryLocation.get(i));
+ 	            map.put("fee", fee.get(i));
+ 	            gongguManageService.insertGongguDeliveryFee(map); 
+ 	        }
+ 	        gongguManageService.insertGongguDeliveryRefundInfo(dto);
+ 	    } catch (Exception e) {
+ 	        log.info("deliveryWriteSubmit : ", e);
+ 	    }
+ 	    return "redirect:/admin";
  	}
 
+ 	// deliveryUpdateForm 메서드 (수정 후)
  	@PostMapping("deliveryUpdate")
- 	public String deliveryUpdateForm(GongguDeliveryRefundInfo dto, 
- 			@RequestParam(name = "deliveryLocation") List<String> deliveryLocation,
- 			@RequestParam(name = "fee") List<Integer> fee,
- 			Model model) {
- 		
- 		try {
- 			Map<String, Object> map = new HashMap<>();
- 			
- 			gongguManageService.deleteProductDeliveryFee();
- 			
- 			for(int i=0; i<deliveryLocation.size(); i++) {
- 				map.put("deliveryLocation", deliveryLocation.get(i));
- 				map.put("fee", fee.get(i));
- 				
- 				gongguManageService.insertProductDeliveryFee(map);
- 			}
- 			
- 			gongguManageService.updateProductDeliveryRefundInfo(dto);
- 		} catch (Exception e) {
- 			log.info("deliveryUpdateForm : ", e);
- 		}
-
- 		return "redirect:/admin";
+ 	public String deliveryUpdateForm(GongguProductDeliveryRefundInfoManage dto,
+ 	        @RequestParam(name = "deliveryLocation") List<String> deliveryLocation,
+ 	        @RequestParam(name = "fee") List<Integer> fee,
+ 	        Model model) {
+ 	    try {
+ 	        Map<String, Object> map = new HashMap<>();
+ 	        gongguManageService.deleteGongguDeliveryFee();
+ 	        
+ 	        for(int i=0; i<deliveryLocation.size(); i++) {
+ 	            map.put("deliveryLocation", deliveryLocation.get(i));
+ 	            map.put("fee", fee.get(i));
+ 	            gongguManageService.insertGongguDeliveryFee(map);
+ 	        }
+ 	        gongguManageService.updateGongguDeliveryRefundInfo(dto);
+ 	    } catch (Exception e) {
+ 	        log.info("deliveryUpdateForm : ", e);
+ 	    }
+ 	    return "redirect:/admin";
  	}
  	
  	@GetMapping("listProduct/{gongguProductId}")

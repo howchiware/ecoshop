@@ -6,8 +6,8 @@ import java.util.Map;
 
 import com.sp.app.admin.model.GongguManage;
 import com.sp.app.admin.model.GongguPackageManage;
+import com.sp.app.admin.model.GongguProductDeliveryRefundInfoManage;
 import com.sp.app.admin.model.ProductManage;
-import com.sp.app.admin.model.GongguDeliveryRefundInfo;
 
 public interface GongguManageService {
 	// 공동구매 상품등록
@@ -24,11 +24,11 @@ public interface GongguManageService {
 	public GongguManage findByCategory(long categoryId);
 	public List<GongguManage> listCategory();
 	
-	public List<GongguManage> listProductPhoto(long gongguProductId);
-	public void deleteProductPhoto(long gongguProductId, String uploadPath) throws Exception;
-	public void insertProductPhoto(GongguManage dto, String uploadPath) throws SQLException;
+	public List<GongguManage> listGongguProductPhoto(long gongguProductId);
+	public void deleteGongguProductPhoto(long gongguProductId, String uploadPath) throws Exception;
+	public void insertGongguProductPhoto(GongguManage dto, String uploadPath) throws SQLException;
 	public boolean deleteUploadPhoto(String uploadPath, String detailPhoto);
-	public void deleteSingleProductPhoto(long gongguProductDetailId, String uploadPath) throws Exception;
+	public void deleteSingleGongguProductPhoto(long gongguProductDetailId, String uploadPath) throws Exception;
 	
 	// 패키지 상품등록
 	public void insertGongguPackage(GongguPackageManage dto) throws Exception;
@@ -39,11 +39,11 @@ public interface GongguManageService {
 	public void updateOriginalPrice(long gongguProductId) throws Exception;
 	public GongguPackageManage findPacById(long packageNum);
 	
-	// 배송정책
-	public GongguDeliveryRefundInfo listDeliveryRefundInfo();
-	public List<GongguDeliveryRefundInfo> listDeliveryFee();
-	public void insertProductDeliveryFee(Map<String, Object> map);
-	public void insertProductDeliveryRefundInfo(GongguDeliveryRefundInfo dto);
-	public void updateProductDeliveryRefundInfo(GongguDeliveryRefundInfo dto);
-	public void deleteProductDeliveryFee();
+	// 공동구매 배송정책
+	public GongguProductDeliveryRefundInfoManage listGongguDeliveryRefundInfo();
+	public List<GongguProductDeliveryRefundInfoManage> listGongguDeliveryFee();
+	public void insertGongguDeliveryFee(Map<String, Object> map);
+	public void insertGongguDeliveryRefundInfo(GongguProductDeliveryRefundInfoManage dto);
+	public void updateGongguDeliveryRefundInfo(GongguProductDeliveryRefundInfoManage dto);
+	public void deleteGongguDeliveryFee();
 }
