@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.ReportsMapper">
+	<insert id="insertReports" parameterType="com.sp.app.model.Reports">
+		INSERT INTO reports(reportId, target, targetNum, reporterId, contentType, 
+			contenTitle, reasonCode, reasonDetail, reportDate, reportIp, reportStatus)
+		VALUES (reports_seq.NEXTVAL, #{target}, #{targetNum}, #{reporterId}, #{contentType}, #{contentTtle}, #{reasonCode}, #{reasonDetail, jdbcType=VARCHAR}, SYSDATE, #{reportIp}, 1)
+	</insert>
+	
+	<sql id="where-list">
+		<choose>
+			<when test="schType == 'all' ">
+				(
+					INSTR(reasonCode, #{kwd}) &gt; 0
+					OR INSTR(reasonDetail, #{kwd}) &gt; 0
+				)
+			</when>
+			<when test="schType == 'reportDate' ">
+				( INSTR(TO_CHAR(reportDate, 'YYYYMMDD'), #{kwd}) &gt; 0
+					OR TO_CHAR(reportDate, 'YYYY-MM-DD') = #{kwd} )
+			</when>			
+			<otherwise>
+			    INSTR(${schType}, #{kwd}) &gt; 0
+			</otherwise>
+		</choose>
+	</sql>
+
+	<!-- 전체 리스트 -->
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM reports r
+		JOIN member2 m ON r.reporterId = m.memberId
+		<where>
+			<if test="status != null and status != 0">
+				reportStatus = #{status}
+			</if>
+			<if test="kwd != null and kwd != '' ">
+				AND <include refid="where-list"/>
+			</if>
+		</where>   
+	</select>
+
+	<select id="listReports" parameterType="map" resultType="com.sp.app.model.Reports">
+		SELECT r.reportId, r.target, r.targetNum, r.reporterId, r.contentType, r.contentTitle, r.reasonCode, TO_CHAR(r.reportDate, 'YYYY-MM-DD') reportDate, reportStatus, m.name reporterName, processorId
+		FROM reports r
+		JOIN member2 m ON r.reporterId = m.memberId
+		<where>
+			<if test="status != null and status != 0">
+				reportStatus = #{status}
+			</if>
+			<if test="kwd != null and kwd != '' ">
+				AND <include refid="where-list"/>
+			</if>
+		</where>
+		ORDER BY reportId DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+
+	<!-- 게시글별 신고 개수 -->
+	<select id="dataGroupCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM (
+			SELECT target, targetNum, contentType, contentTitle
+			FROM reports
+			<where>
+				<if test="status != null and status != 0">
+					reportStatus = #{status}
+				</if>
+			</where>   
+			GROUP BY target, targetNum, contentType, contentTitle
+		)
+	</select>
+	
+	<select id="listGroupReports" parameterType="map" resultType="com.sp.app.model.Reports">
+		SELECT target, targetNum, contentType, contentTitle, NVL(COUNT(*), 0) reportsCount
+		FROM reports
+		<where>
+			<if test="status != null and status != 0">
+				reportStatus = #{status}
+			</if>
+		</where>   
+		GROUP BY target, targetNum, contentType, contentTitle
+		ORDER BY reportsCount DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+
+	<!-- 신고 상세보기 -->
+	<select id="findById" parameterType="Long" resultType="com.sp.app.model.Reports">
+		SELECT r.reportId, r.target, r.targetNum, r.reporterId, contentType, contentTitle,
+			   reasonCode, reasonDetail, reportDate, reportIp, reportStatus,
+			   actionTaken, processorId, processedDate,
+			   m.name reporterName, m2.name processorName
+		FROM reports r
+		JOIN member2 m ON r.reporterId = m.memberId
+		LEFT JOIN member2 m2 ON r.processorId = m2.memberId
+		WHERE r.reportId = #{reportId}
+	</select>
+	
+	<!-- 해당 게시글 신고 리스트 -->
+	<select id="dataRelatedCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM reports r
+		<where>
+			<if test="num != null">
+				reportId != #{reportId} AND
+			</if>
+			target = #{target} AND targetNum = #{targetNum}
+		</where>
+	</select>
+	
+	<select id="listRelatedReports" resultType="com.sp.app.model.Reports">
+		SELECT r.reportId, r.target, r.targetNum, r.reporterId, r.contentType, r.contentTitle, r.reasonCode, 
+			   TO_CHAR(r.reportDate, 'YYYY-MM-DD') reportDate, reportStatus,
+			   m.name reporterName, processorId
+		FROM reports r
+		JOIN member2 m ON r.reporterId = m.memberId
+		<where>
+			<if test="num != null">
+				reportId != #{reportId} AND
+			</if>
+			target = #{target} AND targetNum = #{targetNum}
+		</where>
+		ORDER BY reportId DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+
+	<!-- 신고사항 조치 -->
+	<update id="updateReports" parameterType="com.sp.app.model.Reports">
+		UPDATE reports SET reportStatus = #{reportStatus}, actionTaken = #{actionTaken},
+			processorId = #{processorId}, processedDate = SYSDATE
+		<where>
+			<choose>
+				<when test="mode == 'all'">
+					target = #{target} AND targetNum = #{targetNum}
+				</when>
+				<otherwise>
+					reportId = #{reportId}
+				</otherwise>
+			</choose>
+		</where>
+	</update>
+	
+	<!-- 게시글 block 처리 -->
+	<select id="updateBlockPosts" parameterType="map">
+		UPDATE ${target} SET block = #{block}
+		WHERE ${fieldName} = #{reportId}
+	</select>
+	
+	<!-- 게시글 삭제 -->
+	<delete id="deletePosts" parameterType="map">
+		DELETE FROM ${target}
+		WHERE ${fieldName} = #{reportId}
+		<if test="contentType != null and contentType == 'reply'">
+			OR parentNum = #{reportId}
+		</if>
+	</delete>
+	
+	<sql id="field-list">
+		<choose>
+			<when test="contentType == 'reply' or  contentType == 'replyAnswer' ">
+				'${target}' target, p.replyNum targetNum, p.content, p.memberId writerId, 
+				m.name writer, block
+			</when>
+			<when test="content_type == 'photo' ">
+				'${target}' target, p.reportId targetNum, p.subject, p.content, p.imageFilename, 
+				p.memberId writerId, m.name writer, block
+			</when>
+			<otherwise>
+				'${target}' target, p.reportId targetNum, p.subject, p.content, p.memberId writerId, 
+				m.name writer, block
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<select id="findByPostsId" parameterType="map" resultType="com.sp.app.model.Reports">
+		SELECT <include refid="field-list"/>
+		FROM ${target} p
+		JOIN member2 m ON p.memberId = m.memberId
+		WHERE ${fieldName} = #{reportId}
+	</select>
+	
+</mapper>

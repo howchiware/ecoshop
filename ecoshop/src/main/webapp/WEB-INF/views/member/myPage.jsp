@@ -27,7 +27,7 @@
     
     <div class="col-md-10">
 	  <div class="contentsArea">
-	  	<h3 class="pb-2 mb-4 border-bottom sub-title">회원정보 수정</h3>
+	  	<h3 class="pb-2 mb-4 border-bottom sub-title">마이페이지</h3>
 	  </div>
 	  
 	  
@@ -38,5 +38,6 @@
 </main>
 
   <footer><jsp:include page="/WEB-INF/views/layout/footer.jsp"/></footer>
+  <script src="${pageContext.request.contextPath}/dist/jsMember/menubar.js"></script>
 </body>
 </html>

@@ -35,12 +35,12 @@
 }
 
 .help-block {
-    font-size: 0.75rem; /* 기존 0.8rem에서 약간 더 작게 조정 */
+    font-size: 0.75rem;
     color: #777;
     margin-top: 5px;
-    white-space: nowrap; /* 한 줄에 표시 */
-    overflow: hidden; /* 넘치는 부분 숨기기 */
-    text-overflow: ellipsis; /* ...으로 표시 */
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
     display: block;
     max-width: 100%;
 }
@@ -48,7 +48,7 @@
 .btn-default,
 .btn-accent {
     border: 1px solid #ccc;
-    padding: 0.375rem 1rem; /* Bootstrap input 기본 padding과 유사하게 설정 */
+    padding: 0.375rem 1rem;
     font-size: 1rem;
     line-height: 1.5;
     border-radius: 0.25rem;
@@ -78,8 +78,8 @@
 
 
 .btn-lg {
-    padding: 0.5rem 1.5rem; /* 기존보다 작게 조정 */
-    font-size: 1rem; /* 약간 작게 */
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
 }
 
 .row {
@@ -249,7 +249,6 @@
             let mode = '${mode}';
             if( mode === 'account' && f.loginIdValid.value === 'false' ) {
                 str = '아이디 중복 검사가 실행되지 않았습니다.';
-                // 고유 ID로 참조하도록 수정
                 $('#userIdHelp').html(str);
                 f.userId.focus();
                 return;
@@ -287,7 +286,6 @@
             
             if( mode === 'account' && f.nicknameValid.value === 'false' ) {
                 str = '닉네임 중복 검사가 실행되지 않았습니다.';
-                // 고유 ID로 참조하도록 수정
                 $('#nicknameHelp').html(str);
                 f.nickname.focus();
                 return;
@@ -322,7 +320,7 @@
     
         function userIdCheck() {
             let userId = $('#userId').val();
-            let $helpBlock = $('#userIdHelp'); // ID로 직접 참조
+            let $helpBlock = $('#userIdHelp');
     
             if(!/^[a-z][a-z0-9_]{4,9}$/i.test(userId)) { 
                 let str = '아이디는 5~10자 이내이며, 첫글자는 영문자로 시작해야 합니다.';
@@ -358,7 +356,7 @@
     
         function nicknameCheck() {
             let nickname = $('#nickname').val();
-            let $helpBlock = $('#nicknameHelp'); // ID로 직접 참조
+            let $helpBlock = $('#nicknameHelp');
     
             if(!/^[가-힣]{2,10}$/i.test(nickname)) { 
                 let str = '닉네임은 2~10자 이내이며, 한글만 가능합니다.';

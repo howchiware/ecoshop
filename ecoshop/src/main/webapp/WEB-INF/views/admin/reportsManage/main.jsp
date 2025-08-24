@@ -20,7 +20,11 @@
   
   <div>
   	<div>
-  		<h2>신고 관리</h2>
+  		<div class="title">
+			<h3>신고 관리</h3>
+		</div>
+		
+		<hr>
   	</div>
   </div>
  

@@ -30,5 +30,7 @@ public class InquiryManage {
 	
 	private String answerName;
 	
-
+	private int waitInquiry;
+    private int allInquiry;
+    private int compInquiry;
 }

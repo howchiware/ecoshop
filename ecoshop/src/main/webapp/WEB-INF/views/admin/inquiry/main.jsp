@@ -9,7 +9,7 @@
 <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssInquiry/inquiry.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssBlockAndInquiry/inquiry.css">
 </head>
 <body>
 
@@ -18,7 +18,7 @@
   
   	<div class="right-panel">
 		<div class="title">
-			<h3>1:1 문의 답변</h3>
+			<h3>1:1 문의 관리</h3>
 		</div>
 		
 		<hr>

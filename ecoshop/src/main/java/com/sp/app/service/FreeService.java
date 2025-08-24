@@ -28,7 +28,7 @@ public interface FreeService {
 	
 	// public boolean deleteUploadFile(String uploadPath, String filename);
 	
-	public void updateReplyShowHide(Map<String, Object> map) throws Exception;
+	public void updateReplyReport(Map<String, Object> map) throws Exception;
 	
 	public void insertFreeLike(Map<String, Object> map) throws Exception;
 	public void deleteFreeLike(Map<String, Object> map) throws Exception;

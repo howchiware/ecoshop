@@ -4,94 +4,113 @@
 <mapper namespace="com.sp.app.admin.mapper.InquiryManageMapper">
 
 	<sql id="where-list">
-		( INSTR(subject, #{kwd}) &gt; 0 
-		OR INSTR(question, #{kwd}) &gt; 0 
+		( INSTR(subject, #{kwd}) &gt; 0
+		OR INSTR(question, #{kwd}) &gt; 0
 		OR INSTR(LOWER(categoryName), LOWER(#{kwd})) &gt; 0)
 	</sql>
 
-	<select id="listInquiry" parameterType="map" resultType="com.sp.app.admin.model.InquiryManage">
-	    SELECT ib.inquiryId, ib.subject, m2.name, ib.question, m1.memberId, ib.regDate, ib.answerId, ib.questionAnswer, ib.answerDate, ic.categoryId, ic.categoryName, ib.status, m3.name AS answerName
-	    FROM inquiryBoard ib 
-	    JOIN inquiryCategory ic ON ib.categoryId = ic.categoryId
-	    LEFT OUTER JOIN member1 m1 ON m1.memberId = ib.memberId
-	    LEFT OUTER JOIN member2 m2 ON ib.memberId = m2.memberId
-	    LEFT OUTER JOIN member2 m3 ON ib.answerId = m3.memberId
-	    <where>
-	        status IN (0, 1)
-	        <if test="status != -1">
-	        		AND ib.status = #{status}
-    			</if>
-	        <if test="categoryId != 0">
-	            AND ( ib.categoryId = #{categoryId} ) </if>
-	        <if test="kwd != null and kwd != '' ">
-	            AND <include refid="where-list"/>
-	        </if>
-	    </where>
-	    ORDER BY status, ib.regDate
-	    OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	<select id="listInquiry" parameterType="map"
+		resultType="com.sp.app.admin.model.InquiryManage">
+		SELECT ib.inquiryId, ib.subject, m2.name, ib.question, m1.memberId,
+		ib.regDate, ib.answerId, ib.questionAnswer, ib.answerDate,
+		ic.categoryId, ic.categoryName, ib.status, m3.name AS answerName
+		FROM inquiryBoard ib
+		JOIN inquiryCategory ic ON ib.categoryId = ic.categoryId
+		LEFT OUTER JOIN member1 m1 ON m1.memberId = ib.memberId
+		LEFT OUTER JOIN member2 m2 ON ib.memberId = m2.memberId
+		LEFT OUTER JOIN member2 m3 ON ib.answerId = m3.memberId
+		<where>
+			status IN (0, 1)
+			<if test="status != -1">
+				AND ib.status = #{status}
+			</if>
+			<if test="categoryId != 0">
+				AND ( ib.categoryId = #{categoryId} )
+			</if>
+			<if test="kwd != null and kwd != '' ">
+				AND
+				<include refid="where-list" />
+			</if>
+		</where>
+		ORDER BY status, ib.regDate DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 
 	<select id="dataCount" parameterType="map" resultType="Integer">
-	    SELECT NVL(COUNT(*), 0)
-	    FROM inquiryBoard ib
-	    JOIN member1 m1 ON m1.memberId = ib.memberId
-	    JOIN inquiryCategory ic ON ib.categoryId = ic.categoryId
-	    <where>
-	        status IN (0, 1) 
-	        <if test="status != -1">
-	        		AND ib.status = #{status}
-    			</if>	
-	        <if test="categoryId != 0">
-	            AND ( ic.categoryId = #{categoryId} ) </if>		
-	        <if test="kwd != null and kwd != '' ">
-	            AND <include refid="where-list"/>
-	        </if>
-	    </where>
+		SELECT NVL(COUNT(*), 0)
+		FROM inquiryBoard ib
+		JOIN member1 m1 ON m1.memberId = ib.memberId
+		JOIN inquiryCategory ic ON ib.categoryId = ic.categoryId
+		<where>
+			status IN (0, 1)
+			<if test="status != -1">
+				AND ib.status = #{status}
+			</if>
+			<if test="categoryId != 0">
+				AND ( ic.categoryId = #{categoryId} )
+			</if>
+			<if test="kwd != null and kwd != '' ">
+				AND
+				<include refid="where-list" />
+			</if>
+		</where>
 	</select>
-	
+
 	<update id="updateInquiry" parameterType="com.sp.app.admin.model.InquiryManage">
-		UPDATE inquiryBoard SET questionAnswer = #{questionAnswer}, answerDate = SYSDATE, status = 1
+		UPDATE inquiryBoard SET questionAnswer = #{questionAnswer}, answerDate = SYSDATE, status = 1, answerId = #{answerId}
 		WHERE inquiryId = #{inquiryId}
 	</update>
-	
-	<select id="findByInquiry" parameterType="Long" resultType="com.sp.app.admin.model.InquiryManage">
-	    SELECT 
-	        ib.inquiryId, ib.subject, m2.name, ib.question, ib.regDate,
-	        ib.answerId, ib.questionAnswer, ib.answerDate,
-	        ic.categoryId, ic.categoryName, ib.status,
-	        m1.memberId,
-	        m3.name AS answerName
-	    FROM inquiryBoard ib
-	    JOIN inquiryCategory ic ON ib.categoryId = ic.categoryId
-	    LEFT OUTER JOIN member1 m1 ON m1.memberId = ib.memberId
-	    LEFT OUTER JOIN member2 m2 ON m2.memberId = ib.memberId
-	    LEFT OUTER JOIN member2 m3 ON ib.answerId = m3.memberId
-	    WHERE ib.inquiryId = #{inquiryId}
-</select>
-	
-	
-	
+
+	<select id="findByInquiry" parameterType="Long"
+		resultType="com.sp.app.admin.model.InquiryManage">
+		SELECT
+		ib.inquiryId, ib.subject, m2.name, ib.question, ib.regDate,
+		ib.answerId, ib.questionAnswer, ib.answerDate,
+		ic.categoryId, ic.categoryName, ib.status,
+		m1.memberId,
+		m3.name AS answerName
+		FROM inquiryBoard ib
+		JOIN inquiryCategory ic ON ib.categoryId = ic.categoryId
+		LEFT OUTER JOIN member1 m1 ON m1.memberId = ib.memberId
+		LEFT OUTER JOIN member2 m2 ON m2.memberId = ib.memberId
+		LEFT OUTER JOIN member2 m3 ON ib.answerId = m3.memberId
+		WHERE ib.inquiryId = #{inquiryId}
+	</select>
+
 	<!-- 카테고리 구역 -->
-	<select id="listCategory" parameterType="map" resultType="com.sp.app.admin.model.InquiryManage">
+	<select id="listCategory" parameterType="map"
+		resultType="com.sp.app.admin.model.InquiryManage">
 		SELECT categoryId, categoryName
 		FROM inquiryCategory
-		ORDER BY categoryId
+		ORDER BY
+		categoryId
 	</select>
-	
 
-	<insert id="insertCategory" parameterType="com.sp.app.admin.model.InquiryManage">
+	<insert id="insertCategory"
+		parameterType="com.sp.app.admin.model.InquiryManage">
 		INSERT INTO inquiryCategory(categoryId, categoryName)
 		VALUES (faqCategory_seq.NEXTVAL, #{categoryName})
 	</insert>
-	
-	<update id="updateCategory" parameterType="com.sp.app.admin.model.InquiryManage">
-		UPDATE inquiryCategory SET categoryName = #{categoryName}
+
+	<update id="updateCategory"
+		parameterType="com.sp.app.admin.model.InquiryManage">
+		UPDATE inquiryCategory SET categoryName =
+		#{categoryName}
 		WHERE categoryId = #{categoryId}
 	</update>
-	
+
 	<delete id="deleteCategory" parameterType="Long">
-		DELETE FROM inquiryCategory
-		WHERE categoryId = #{categoryId} 
+		DELETE FROM
+		inquiryCategory
+		WHERE categoryId = #{categoryId}
 	</delete>
+	
+	<select id="getInquiryStats" resultType="com.sp.app.admin.model.InquiryManage">
+	    SELECT
+	        (SELECT COUNT(*) FROM inquiryBoard WHERE status = 0) AS waitInquiry,
+	        (SELECT COUNT(*) FROM inquiryBoard WHERE status = 1) AS compInquiry,
+	        (SELECT COUNT(*) FROM inquiryBoard WHERE status = 1 OR status = 0) AS allInquiry
+	    FROM DUAL
+	</select>
 
 </mapper>

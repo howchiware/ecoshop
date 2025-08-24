@@ -50,12 +50,29 @@
 		WHERE m2.nickname = #{nickname}
 	</select>
 	
-	<update id="updateMember1" parameterType="com.sp.app.model.Member">
+	<select id="findByMemberId" parameterType="Long" resultType="com.sp.app.model.Member">
+		SELECT m1.memberId, userId, password, userLevel, TO_CHAR(regDate, 'YYYY-MM-DD') regDate, TO_CHAR(regUpdate, 'YYYY-MM-DD') regUpdate,
+			name, nickname, TO_CHAR(birth, 'YYYY-MM-DD') birth, tel, zip, addr1, addr2, email
+		FROM member1 m1
+		LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
+		WHERE m1.memberId = #{memberId}
+	</select>
 	
+	<update id="updateMember1" parameterType="com.sp.app.model.Member">
+		UPDATE member1
+		<set>
+			<if test="password != null and password != ''">
+	            PASSWORD = #{password},
+	        </if>
+			regUpdate = SYSDATE
+		</set>
+		WHERE memberId = #{memberId}
 	</update>
 	
 	<update id="updateMember2" parameterType="com.sp.app.model.Member">
-	
+		UPDATE member2 SET nickname = #{nickname}, birth = TO_DATE(#{birth}, 'YYYY-MM-DD'), tel = #{tel, jdbcType=VARCHAR}, zip = #{zip, jdbcType=VARCHAR},
+			addr1 = #{addr1, jdbcType=VARCHAR}, addr2 = #{addr2, jdbcType=VARCHAR}, email = #{email}
+		WHERE memberId = #{memberId}
 	</update>
 
 	

@@ -1,12 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssBlockAndInquiry/inquiry.css">
 
-<style>
-textarea[name="questionAnswer"] {
-    resize: none;
-}
-</style>
 <div class="container-fluid">
     <h4 class="mb-3">문의 내용</h4>
     <table class="table table-bordered info-table">

@@ -191,3 +191,7 @@ body.modal-open {
 	border-color: #999;
 	color: #333;
 }
+
+textarea[name="questionAnswer"] {
+    resize: none;
+}
