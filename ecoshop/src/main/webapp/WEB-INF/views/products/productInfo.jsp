@@ -98,7 +98,7 @@
 										<tbody>
 											<tr>
 												<td>브랜드</td>
-												<td>ecobrand 샵</td>
+												<td>ecomore 샵</td>
 											</tr>
 											<tr>
 												<td>구매혜택</td>
@@ -110,7 +110,12 @@
 											</tr>
 											<tr>
 												<td>배송비</td>
-												<td>3,000원 (30,000원 이상 무료배송)<br>도서산간 배송비 추가</td>
+												<td>
+													<c:forEach var="vo" items="${deliveryFee}">
+														${vo.deliveryLocation} : ${vo.fee}원<br>
+													</c:forEach>
+													(30,000원 이상 무료배송)
+												</td>
 											</tr>
 										</tbody>
 									</table>

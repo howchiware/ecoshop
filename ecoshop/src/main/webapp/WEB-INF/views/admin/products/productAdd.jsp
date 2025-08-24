@@ -313,7 +313,7 @@ body {
 								<td>
 									<div class="input-flex">
 										<input type="text" name="price"
-											placeholder="판매가를 입력하세요" value="${dto.price}"> <span>원</span>
+											placeholder="판매가를 입력하세요" value="${dto.price}" pattern="[^\d]*"> <span>원</span>
 									</div>
 								</td>
 							</tr>
@@ -328,7 +328,7 @@ body {
 								<td>
 									<div class="row">
 										<div class="col-md-6">
-											<input type="text" name="point" class="form-control" value="${dto.point}">
+											<input type="text" name="point" class="form-control" value="${dto.point}"  pattern="[^\d]*">
 										</div>
 									</div>
 								</td>
@@ -508,6 +508,22 @@ function hasContent(htmlContent) {
 	
 	return htmlContent.length > 0;
 }
+
+$(function(){
+	$('input[name="price"]').keyup(function(){
+	 	var replace_text = $(this).val().replace(/[^-0-9]/g, '');
+        $(this).val(replace_text);
+        
+		let point = $(this).val() * 0.1;
+		console.log(point);
+		$('input[name="point"]').val(point);
+	});
+	
+	$('input[name="point"]').keyup(function(){
+	 	var replace_text = $(this).val().replace(/[^-0-9]/g, '');
+        $(this).val(replace_text);
+	});
+});
 
 function sendOk() {
 	const f = document.productForm;
