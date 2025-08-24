@@ -19,7 +19,7 @@
 			<ul class="list-unstyled">
 				<li><a href="${pageContext.request.contextPath}/" data-view="challenges">챌린지</a></li>
 				<li><a href="${pageContext.request.contextPath}/" data-view="workshops">워크숍</a></li>
-				<li><a href="${pageContext.request.contextPath}/" data-view="inquiries">1:1 문의내역</a></li>
+				<li><a href="${pageContext.request.contextPath}/member/inquiry" data-view="inquiries">1:1 문의내역</a></li>
 				<li><a href="${pageContext.request.contextPath}/" data-view="reviews">리뷰</a></li>
 				<li><a href="${pageContext.request.contextPath}/" data-view="qna">상품Q&amp;A 내역</a></li>
 				<li><a href="${pageContext.request.contextPath}/" data-view="events">이벤트 참여 현황</a></li>
