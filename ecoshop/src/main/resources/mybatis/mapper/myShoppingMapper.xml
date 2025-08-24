@@ -10,7 +10,7 @@
 	
 	<!-- 장바구니 수정 -->
 	<update id="updateCart" parameterType="com.sp.app.model.ProductOrder">
-		UPDATE cart SET qty = #{qty}, reg_date = SYSDATE
+		UPDATE cart SET qty = qty + #{qty}, reg_date = SYSDATE
 		WHERE stockNum = #{stockNum} AND memberId = #{memberId}
 	</update>
 
