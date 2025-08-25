@@ -1,16 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8" />
-<title>관리자 페이지 헤더</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-	rel="stylesheet">
-<link href="//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css" rel="stylesheet" type="text/css">
-	
+
 <style>
 /* --- ▼▼▼ 새롭게 개선된 헤더 CSS ▼▼▼ --- */
 @font-face {
@@ -126,8 +117,7 @@
 	z-index: 9999 !important;
 }
 </style>
-</head>
-<body>
+
 	<header class="admin-header">
 		<div class="header-left">
 			<a href="${pageContext.request.contextPath}/admin" class="logo-link">
@@ -148,5 +138,3 @@
 			</ul>
 		</div>
 	</header>
-</body>
-</html>

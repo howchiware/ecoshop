@@ -1,20 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
 
 <meta content="width=device-width, initial-scale=1" name="viewport" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/dist/css/sidebar.css" type="text/css">
-
-</head>
-<body>
 
 <div class="sidebar" id="sidebar">
   <ul class="sidebar-menu">	
@@ -33,7 +21,7 @@
         <li><a href="/admin/products/listProduct"> 전체 상품 관리</a></li>
         <li><a href="/admin/products/write"> 상품 등록</a></li>
         <li><a href="/admin/products/deliveryWrite"> 배송 정책 및 배송비</a></li>
-        <li><a href="/admin/products/productReviewInquiry"> 리뷰 및 Q&A 관리</a></li>
+        <li><a href="/admin/products/productReviewInquiry"> 리뷰 및 Q&amp;A 관리</a></li>
       </ul>
     </li>
      <li>
@@ -165,5 +153,5 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
-</body>
-</html>
+
+
