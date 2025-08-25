@@ -54,13 +54,11 @@
 			</foreach>
 	</select>
 
-	<select id="didIBuyGonggu" parameterType="map" resultType="com.sp.app.model.GongguOrder">
-		SELECT od.orderId, od.gongguOrderDetailId, od.gongguProductId, po.memberId, orderDate, gongguReviewId, content,
-		        rate, regDate, showReview, answer, answerId, answerDate, block
-		FROM gongguOrderDetail od
-		LEFT OUTER JOIN productOrder po ON od.orderId = po.orderId
-		LEFT OUTER JOIN gongguReview r ON od.gongguOrderDetailId = r.gongguReviewId
-		WHERE po.memberId = #{memberId} AND od.gongguProductId = #{gongguProductId} AND gongguReviewId IS NULL
+	<select id="countBuyGonggu" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	    FROM gongguOrderDetail od
+	    JOIN productOrder po ON od.orderId = po.orderId
+	    WHERE po.memberId = #{memberId} AND od.gongguProductId = #{gongguProductId}
 	</select>
 	
 	<select id="myReviewOfGonggu" parameterType="Long" resultType="com.sp.app.model.GongguReview">

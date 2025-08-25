@@ -120,15 +120,14 @@ public class GongguOrderServiceImpl implements GongguOrderService {
 	}
 
 	@Override
-	public List<GongguOrder> didIBuyGonggu(Map<String, Object> map) {
-		List<GongguOrder> list = null;
-		try {
-			list = mapper.didIBuyGonggu(map);
-		} catch (Exception e) {
-			log.info("didIBuyGonggu : ", e);
-		}
-		
-		return list;
+	public boolean didIBuyGonggu(Map<String, Object> map) {
+	    try {
+	        int count = mapper.countBuyGonggu(map); 
+	        return count > 0;
+	    } catch (Exception e) {
+	        log.info("didIBuyGonggu : ", e);
+	    }
+	    return false;
 	}
 
 
