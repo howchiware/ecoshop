@@ -5,13 +5,12 @@
 		SELECT reguide_seq.NEXTVAL
 		FROM dual
 	</select>
-	<insert id="insertReguide"
-		parameterType="com.sp.app.model.Reguide">
-		INSERT INTO reguide(guidId, memberId, categoryCode,
-		subject, content,
-		hitCount, regDate, imageFilename)
-		VALUES ( reguide_seq.NEXTVAL, #{memberId},
-		#{categoryCode}, #{subject}, #{content}, 0, SYSDATE, #{imageFilename})
+	<insert id="insertReguide" parameterType="com.sp.app.model.Reguide">
+	    INSERT INTO reguide(
+	        guidId, memberId, categoryCode, subject, content, hitCount, regDate, imageFilename
+	    ) VALUES (
+	        reguide_seq.NEXTVAL, #{memberId}, #{categoryCode}, #{subject}, #{content}, 0, SYSDATE, #{imageFilename,jdbcType=VARCHAR}
+	    )
 	</insert>
 	
 
@@ -44,7 +43,7 @@
 
 	<select id="listReguide" parameterType="map"
 		resultType="com.sp.app.model.Reguide">
-		SELECT guidId, name, r.memberId, subject, regDate, hitCount,
+		SELECT guidId, name, r.memberId, subject, TO_CHAR(regDate, 'YYYY-MM-DD')regDate , hitCount,
 		imageFilename
 		FROM reguide r
 		JOIN member2 m ON r.memberId = m.memberId
@@ -59,10 +58,11 @@
 
 	<select id="findById" parameterType="Long"
 		resultType="com.sp.app.model.Reguide">
-		SELECT r.guidId, r.memberId, name, subject, content, regDate, 'yyyy-mm-dd',
+		SELECT r.guidId, r.memberId, r.categoryCode, categoryName, name, subject, content, TO_CHAR(regDate, 'YYYY-MM-DD')regDate,
 		hitCount, imageFilename
 		FROM reguide r
 		JOIN member2 m ON r.memberId = m.memberId
+		JOIN reCategory re ON r.categoryCode = re.categoryCode
 		WHERE r.guidId = #{guidId}
 	</select>
 
@@ -101,8 +101,12 @@
 	</select>
 
 	<update id="updateReguide" parameterType="com.sp.app.model.Reguide">
-		UPDATE reguide SET subject = #{subject}, categoryCode = #{categoryCode}, content = #{content}, imageFilename = #{imageFilename}
-		WHERE guidId = #{guidId} AND memberId = #{memberId}
+	    UPDATE reguide
+	    SET categoryCode = #{categoryCode},
+	        subject = #{subject},
+	        content = #{content},
+	        imageFilename = #{imageFilename,jdbcType=VARCHAR} 
+	    WHERE guidId = #{guidId}
 	</update>
 
 	<delete id="deleteReguide" parameterType="Long">

@@ -22,19 +22,24 @@ public class ReguideServiceImpl implements ReguideService {
 
 	@Override
 	public void insertReguide(Reguide dto, String uploadPath, String mode) throws Exception {
-		try {
-			String saveFilename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
-			if (saveFilename != null) {
-				dto.setImageFilename(saveFilename);
+	    try {
+	        String saveFilename = null;
+	        if (dto.getSelectFile() != null && !dto.getSelectFile().isEmpty()) {
+	            saveFilename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
+	        }
 
-				mapper.insertReguide(dto);
-			}
-		} catch (Exception e) {
-			log.info("insertPromotionManage : ", e);
-			
-			throw e;
-		}
-		
+	        // null 또는 빈 문자열 처리
+	        if (saveFilename == null || saveFilename.isBlank()) {
+	            dto.setImageFilename(null);
+	        } else {
+	            dto.setImageFilename(saveFilename);
+	        }
+
+	        mapper.insertReguide(dto);
+	    } catch (Exception e) {
+	        log.info("insertReguide : ", e);
+	        throw e;
+	    }
 	}
 
 	@Override
@@ -113,13 +118,19 @@ public class ReguideServiceImpl implements ReguideService {
 	    try {
 	        if (dto.getSelectFile() != null && !dto.getSelectFile().isEmpty()) {
 
+	            // 기존 이미지 삭제
 	            if (dto.getImageFilename() != null && !dto.getImageFilename().isBlank()) {
 	                deleteUploadFile(uploadPath, dto.getImageFilename());
 	            }
 
 	            String saveFilename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
-	            dto.setImageFilename(saveFilename);
+	            if (saveFilename == null || saveFilename.isBlank()) {
+	                dto.setImageFilename(null);
+	            } else {
+	                dto.setImageFilename(saveFilename);
+	            }
 	        }
+
 	        mapper.updateReguide(dto);
 	    } catch (Exception e) {
 	        log.info("updateReguide : ", e);

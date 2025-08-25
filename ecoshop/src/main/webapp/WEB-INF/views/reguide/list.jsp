@@ -105,7 +105,9 @@
     </div>
 
     <div class="text-end mt-4">
-        <button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/reguide/write';">글 작성</button>
+    	<c:if test="${sessionScope.member.userLevel >= 51}">
+        	<button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/reguide/write';">글 작성</button>
+    	</c:if>
     </div>
 </main>
 
