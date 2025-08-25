@@ -158,15 +158,13 @@ body {
 															<c:otherwise>
 																<form method="post"
 																	action="${ctx}/admin/workshop/points/pay"
-																	class="d-inline">
-																	<input type="hidden" name="workshopReviewId"
-																		value="${r.workshopReviewId}" /> <input type="hidden"
-																		name="participantId" value="${r.participantId}" /> <input
-																		type="hidden" name="memberId" value="${r.memberId}" />
-																	<input type="hidden" name="workshopId"
-																		value="${r.workshopId}" /> <input type="hidden"
-																		name="points"
-																		value="${empty pointPolicy ? 1000 : pointPolicy}" />
+																	class="d-inline" onsubmit="return confirm('포인트를 지급하시겠습니까?');">
+																	<input type="hidden" name="workshopReviewId" value="${r.workshopReviewId}" /> 
+																	<input type="hidden" name="participantId" value="${r.participantId}" /> 
+																	<input type="hidden" name="memberId" value="${r.memberId}" />
+																	<input type="hidden" name="workshopId" value="${r.workshopId}" /> 
+																	<input type="hidden" name="points" value="${empty pointPolicy ? 1000 : pointPolicy}" />
+																	<input type="hidden" name="postId" value="${r.workshopReviewId}" />
 																	<c:if test="${not empty _csrf}">
 																		<input type="hidden" name="${_csrf.parameterName}"
 																			value="${_csrf.token}" />
@@ -197,5 +195,8 @@ body {
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		
+	<script>
+    
 </body>
 </html>

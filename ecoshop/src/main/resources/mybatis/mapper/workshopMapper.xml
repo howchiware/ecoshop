@@ -610,8 +610,8 @@
 		= #{memberId}
 	</select>
 
-	<!-- 관리자: 후기 작성자 + 지급여부 -->
-	<select id="listReviewRewardRows" parameterType="map" resultType="map">
+	<!-- 후기 작성자 + 지급여부 -->
+<select id="listReviewRewardRows" parameterType="map" resultType="map">
   SELECT
     m.name              AS "memberName",
     wks.workshopTitle   AS "workshopTitle",
@@ -624,7 +624,8 @@
            FROM point pnt
            WHERE pnt.memberId = p.memberId
              AND pnt.postId   = wr.workshopReviewId
-             AND pnt.reason   = 'REVIEW' 
+             AND pnt.classify = 1 
+             AND pnt.orderId IS NULL
          )
       THEN 1 ELSE 0 END AS "paid"
   FROM workshopReview wr
@@ -639,6 +640,8 @@
   ORDER BY wr.regDate DESC
   OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 </select>
+
+
 
 	<select id="countReviewRewardRows" parameterType="map"
 		resultType="int">
