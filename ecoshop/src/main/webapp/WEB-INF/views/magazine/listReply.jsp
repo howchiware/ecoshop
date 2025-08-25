@@ -27,10 +27,10 @@
 					<div class="reply-menu d-none" style="position: absolute; top: 100%; right: 0; background: #fff; border: 1px solid #ddd; border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 10; font-size: 0.875rem; width: 80px; text-align: center;">
 						<c:choose>
 							<c:when test="${sessionScope.member.memberId == vo.memberId}">
-								<div class="deleteReply reply-menu-item" data-replyId="${vo.replyId}" data-page-no="${pageNo}" style="padding: 0.5rem; cursor: pointer;">삭제</div>
+								<div class="deleteReply reply-menu-item" data-magazineReplyNum="${vo.magazineReplyNum}" data-page-no="${pageNo}" style="padding: 0.5rem; cursor: pointer;">삭제</div>
 							</c:when>
 							<c:otherwise>
-								<div class="notifyReply reply-menu-item" data-replyId="${vo.replyId}" style="padding: 0.5rem; cursor: pointer;">신고</div>
+								<div class="notifyReply reply-menu-item" data-magazineReplyNum="${vo.magazineReplyNum}" style="padding: 0.5rem; cursor: pointer;">신고</div>
 							</c:otherwise>
 						</c:choose>
 					</div>
@@ -40,16 +40,16 @@
 			<div class="reply-content">${vo.content}</div>
 			
 			<div class="reply-footer">
-			    <button type="button" class="btnReplyAnswerLayout" data-reply-id="${vo.replyId}">
-			        답글 <span class="answer-count" id="answerCount${vo.replyId}">${vo.answerCount}</span>
+			    <button type="button" class="btnReplyAnswerLayout" data-reply-id="${vo.magazineReplyNum}">
+			        답글 <span class="answer-count" id="answerCount${vo.magazineReplyNum}">${vo.answerCount}</span>
 			    </button>
 			</div>
 		
 			<div class="reply-answer ps-4 mt-3 d-none">
-				<div id="listReplyAnswer${vo.replyId}" class="answer-list"></div>
+				<div id="listReplyAnswer${vo.magazineReplyNum}" class="answer-list"></div>
 				<div class="answer-form d-flex gap-2 mt-2">
 					<textarea class="form-control form-control-sm" rows="1"></textarea>
-					<button type="button" class="btn btn-sm btn-primary btnSendReplyAnswer" data-reply-id="${vo.replyId}">등록</button>
+					<button type="button" class="btn btn-sm btn-primary btnSendReplyAnswer" data-reply-id="${vo.magazineReplyNum}">등록</button>
 				</div>
 			</div>
 		</div>
