@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.MagazineMapper">
+	<insert id="insertMagazine" parameterType="com.sp.app.model.Magazine">
+		INSERT INTO magazine(magazineId, subject, content, hitCount, regDate, saveFilename, originalFilename, memberId)
+		VALUES(magazineId_seq.NEXTVAL, #{subject}, #{content}, 0, SYSDATE, 0, 0, #{memberId})
+	</insert>
+	<sql id="where-list">
+	    <if test="kwd != null and kwd != ''">
+	        <choose>
+	            <when test="schType == 'name'">
+	                AND nickname LIKE '%' || #{kwd} || '%'
+	            </when>
+	            <otherwise>
+	                AND subject LIKE '%' || #{kwd} || '%'
+	            </otherwise>
+	        </choose>
+	    </if>
+	</sql>
+	
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM magazine ma
+		JOIN member2 m2 ON ma.memberId = m2.memberId
+		<where>
+			<if test="kwd != null and kwd != ''">
+				<include refid="where-list" />
+			</if>	
+		</where>
+	</select>
+	
+	<select id="magazineList" parameterType="map" resultType="com.sp.app.model.Magazine">
+		SELECT ma.magazineId, ma.subject, ma.content, ma.hitCount, TO_CHAR(fb.regDate, 'YYYY-MM-DD') regDate, m2.memberId, m2.name, NVL(replyCount, 0) replyCount
+		FROM magazine ma
+		JOIN member2 m2 ON ma.memberId = m2.memberId
+		LEFT OUTER JOIN (
+			SELECT magazineId, COUNT(*) replyCount
+			FROM magazineReply
+			WHERE parentNum = 0 AND block = 0 AND report = 0
+			GROUP BY magazineId
+		) mr ON ma.magazineId = mr.magazineId
+		<where>
+			<if test="kwd != null and kwd != ''">
+				<include refid="where-list" />
+			</if>
+			AND block = 0
+		</where>
+		ORDER BY magazineId DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<select id="findByMagazine" parameterType="Long" resultType="com.sp.app.model.Magazine">
+		SELECT ma.magazineId, ma.subject, ma.content, ma.hitCount, TO_CHAR(ma.regDate, 'YYYY-MM-DD') regDate, m2.memberId, m2.name, NVL(magazineLikeCount, 0) magazineLikeCount
+		FROM magazine ma
+		JOIN member2 m2 ON m2.memberId = ma.memberId
+		LEFT OUTER JOIN (
+			SELECT magazineId, COUNT(*) magazineLikeCount
+			FROM magazineLike
+			GROUP BY magazineId
+		) ml ON ml.magazineId = ma.magazineId
+		WHERE ma.magazineId = #{magazineId}
+	</select>
+	
+	<update id="updateHitCount" parameterType="Long">
+		UPDATE magazine SET hitCount = hitCount + 1 
+		WHERE magazineId = #{magazineId}
+	</update>
+	
+	<select id="findByPrev" parameterType="map" resultType="com.sp.app.model.Magazine">
+		SELECT magazineId, subject
+		FROM magazine ma
+		JOIN member2 m ON ma.memberId = m.memberId
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list"/>
+			</if>
+			AND (magazineId &gt; #{magazineId})
+			AND block = 0
+		</where>
+		ORDER BY magazineId ASC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<select id="findByNext" parameterType="map" resultType="com.sp.app.model.Magazine">
+		SELECT magazineId, subject
+		FROM magazine ma
+		JOIN member2 m ON ma.memberId = m.memberId
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list"/>
+			</if>
+			AND (magazineId &lt; #{magazineId})
+		</where>
+		ORDER BY magazineId DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<update id="updateDairy" parameterType="com.sp.app.model.Magazine">
+		UPDATE magazine SET subject = #{subject}, content = #{content}
+		WHERE magazineId = #{magazineId}
+	</update>
+	
+	<delete id="deleteMagazine" parameterType="Long">
+		DELETE FROM magazine
+		WHERE magazineId = #{magazineId}
+	</delete>
+	
+	<insert id="insertReply" parameterType="com.sp.app.model.Magazine">
+		INSERT INTO magazineReply(replyId, content, regDate, parentNum, block, report, magazineId, memberId)
+		VALUES(magazineReply_seq.NEXTVAL, #{content} , SYSDATE, #{parentNum}, 0, 0, #{magazineId}, #{memberId})
+	</insert>
+	
+	<select id="replyCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM magazineReply
+		WHERE magazineId = #{magazineId} AND parentNum = 0 AND block = 0
+		<if test="userLevel &lt; 51">
+			AND ( memberId = #{memberId} )
+		</if>
+	</select>
+	
+	<select id="listReply" parameterType="map" resultType="com.sp.app.model.Magazine">
+		SELECT mr.replyId, mr.memberId, magazineId, name, content, mr.regDate, m2.name, NVL(answerCount, 0) answerCount
+		FROM magazineReply mr
+		JOIN member2 m2 ON mr.memberId = m2.memberId
+		LEFT OUTER JOIN (
+			SELECT parentNum, COUNT(*) answerCount
+			FROM magazineReply
+			WHERE magazineId = #{magazineId} AND parentNum != 0 
+			<if test="userLevel lt 51">
+				AND ( report = 0 OR memberId = #{memberId} )
+			</if>
+			GROUP BY parentNum
+		) mr2 ON mr.replyId = mr2.parentNum
+		WHERE magazineId = #{magazineId} AND mr.parentNum = 0 AND mr.block = 0
+		<if test="userLevel lt 51">
+			AND ( report = 0 OR mr.memberId = #{memberId} )
+		</if>
+		ORDER BY mr.replyId DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<delete id="deleteReply" parameterType="map">
+		DELETE FROM magazineReply
+		WHERE replyId = #{replyId}
+		<if test="mode == 'reply'">
+			OR parentNum = #{replyId}
+		</if>
+	</delete>
+	
+	<select id="listReplyAnswer" parameterType="map" resultType="com.sp.app.model.Magazine">
+		SELECT mr.replyId, mr.magazineId, m2.memberId, m2.nickname, mr.content, mr.regDate, parentNum, mr.report
+		FROM magazineReply mr
+		JOIN member2 m2 ON mr.memberId = m2.memberId
+		WHERE parentNum = #{parentNum}
+		<if test="userLevel lt 51">
+			AND ( report = 0 OR mr.memberId = #{memberId} )
+		</if>
+		ORDER BY replyId ASC
+	</select>
+	
+	<select id="replyAnswerCount" parameterType="map" resultType="int">
+		SELECT NVL(COUNT(*), 0)
+		FROM magazineReply
+		WHERE parentNum = #{parentNum} 
+		AND block = 0
+		<if test="userLevel &lt; 51">
+			AND ( report = 0 OR memberId = #{memberId} )
+		</if>
+	</select>
+	
+	<update id="updateReplyReport" parameterType="map">
+		UPDATE magazineReply SET report = 1
+		WHERE replyId = #{replyId} AND memberId = #{memberId}
+	</update>
+	
+	<insert id="insertmagazineLike" parameterType="map">
+		INSERT INTO magazineLike(magazineId, memberId) VALUES (#{magazineId}, #{memberId})
+	</insert>
+	
+	<delete id="deletemagazineLike" parameterType="map">
+		DELETE FROM magazineLike
+		WHERE magazineId = #{magazineId} AND memberId = #{memberId}
+	</delete>
+      
+	<select id="magazineLikeCount" parameterType="Long" resultType="Integer">
+		SELECT COUNT(*)
+		FROM magazineLike
+		WHERE magazineId = #{magazineId}
+	</select>
+
+	<select id="hasUsermagazineLiked" parameterType="map" resultType="com.sp.app.model.Magazine">
+		SELECT magazineId, memberId
+		FROM magazineLike
+		WHERE magazineId = #{magazineId} AND memberId = #{memberId}
+	</select>
+	
+</mapper>
