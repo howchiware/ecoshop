@@ -35,33 +35,17 @@
 		<div class="container">
 			<h2 class="section-title text-start mb-4">많이 찾는 제품</h2>
 			<div class="row g-4">
-				<div class="col-md-4">
-					<div class="card card-hover border-0 shadow-sm">
-						<img alt="Best 1" class="card-img-top" src="https://source.unsplash.com/600x400/?eco,product1"/>
-						<div class="card-body">
-							<h5 class="card-title">유기농 핸드타월</h5>
-							<p class="card-text">자극 없이 피부를 감싸는 친환경 핸드타월</p>
+				<c:forEach var="dto" items="${bestProductList}">
+					<div class="col-md-4">
+						<div class="card card-hover border-0 shadow-sm" onClick="location.href='${pageContext.request.contextPath}/products/${dto.productCode}'">
+							<img alt="Image${dto.productCode}" class="card-img-top" src="${pageContext.request.contextPath}/uploads/products/${dto.thumbnail}"/>
+							<div class="card-body">
+								<h5 class="card-title">${dto.productName}</h5>
+								<p class="card-text">${dto.content}</p>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="card card-hover border-0 shadow-sm">
-						<img alt="Best 2" class="card-img-top" src="https://source.unsplash.com/600x400/?eco,product2"/>
-						<div class="card-body">
-							<h5 class="card-title">천연 수세미</h5>
-							<p class="card-text">플라스틱 없이 설거지 가능한 식물성 수세미 3종</p>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="card card-hover border-0 shadow-sm">
-						<img alt="Best 3" class="card-img-top" src="https://source.unsplash.com/600x400/?eco,product3"/>
-						<div class="card-body">
-							<h5 class="card-title">생분해 비누망</h5>
-							<p class="card-text">비누 거품을 풍성하게 만드는 생분해 소재망</p>
-						</div>
-					</div>
-				</div>
+				</c:forEach>
 			</div>
 		</div>
 	</section>

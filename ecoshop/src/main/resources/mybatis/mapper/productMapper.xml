@@ -35,6 +35,18 @@
         OFFSET 0 ROWS FETCH FIRST 5 ROWS ONLY
     </select>
     
+    <select id="listThreeProducts" resultType="com.sp.app.model.Product">
+        SELECT productId, p.productCode, categoryId, productName, price, thumbnail, sale, reg_date, optionCount,
+        		productShow, update_date, point, content, detailInfo, NVL(orderCount, 0) orderCount
+        FROM product p
+		LEFT OUTER JOIN (
+            SELECT productCode, NVL(COUNT(*), 0) orderCount
+			FROM orderDetail
+			GROUP BY productCode) od ON p.productCode = od.productCode
+        ORDER BY orderCount DESC
+        OFFSET 0 ROWS FETCH FIRST 3 ROWS ONLY
+    </select>
+    
     <select id="listProductByCategoryId" parameterType="long" resultType="com.sp.app.model.Product">
 		SELECT productId, p.productCode, categoryId, productName, price, thumbnail, sale, reg_date, optionCount,
         		productShow, update_date, point, content, detailInfo, NVL(reviewCount, 0) reviewCount, NVL(orderCount, 0) orderCount

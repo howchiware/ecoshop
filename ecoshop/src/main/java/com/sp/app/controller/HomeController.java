@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.sp.app.admin.model.PromotionManage;
 import com.sp.app.admin.service.PromotionManageService;
+import com.sp.app.model.Product;
+import com.sp.app.service.ProductService;
+
 import org.springframework.ui.Model;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HomeController {
 	private final PromotionManageService PromotionManageService;
+	private final ProductService productService;
 	
 	@GetMapping("/")
 	public String MainPage(Model model) {
@@ -29,7 +33,10 @@ public class HomeController {
 			
 			List<PromotionManage> listPromotionManage = PromotionManageService.listPromotionManage(map);
 			
+			List<Product> bestProductList = productService.listThreeProducts();
+			
 			model.addAttribute("listPromotionManage", listPromotionManage);	
+			model.addAttribute("bestProductList", bestProductList);	
 		
 		} catch (Exception e) {
 			
