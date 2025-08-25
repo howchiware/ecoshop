@@ -12,7 +12,7 @@
 				<li><a href="${pageContext.request.contextPath}/" data-view="returns">취소/반품 내역</a></li>
 				<li><a href="${pageContext.request.contextPath}/" data-view="cart">장바구니</a></li>
 				<li><a href="${pageContext.request.contextPath}/" data-view="likes">좋아요</a></li>
-				<li><a href="${pageContext.request.contextPath}/" data-view="points">포인트</a></li>
+				<li><a href="${pageContext.request.contextPath}/myShopping/myPoint" data-view="points">포인트</a></li>
 			</ul>
 
 			<h5 class="nav-section-title">마이활동</h5>

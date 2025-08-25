@@ -196,5 +196,41 @@
 			AND productCode = #{productCode}		
 		</if>
     </delete>
+    
+    <sql id="where-list-point">
+		<choose>
+			<when test="schType == 'classify' ">
+				classify = #{kwd}
+			</when>
+			<when test="schType == 'reason' ">
+				( INSTR(reason, #{kwd}) &gt; 0 )
+			</when>
+			<when test="schType == 'baseDate'">
+				( INSTR(TO_CHAR(baseDate, 'YYYYMMDD'), #{kwd}) &gt; 0
+					OR TO_CHAR(baseDate, 'YYYY-MM-DD') = #{kwd} )
+			</when>
+		</choose>
+	</sql>
+
+	<!-- 글개수 -->
+	<select id="pointDataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM point
+    	WHERE memberId = #{memberId}
+    	<if test="kwd != null and kwd != ''">
+			AND <include refid="where-list-point"/>
+		</if>
+	</select>
+    
+    <select id="listPointHistory" parameterType="map" resultType="com.sp.app.model.Point">
+    	SELECT pointId, TO_CHAR(baseDate, 'YYYY-MM-DD') baseDate, reason, classify, points, balance
+    	FROM point
+    	WHERE memberId = #{memberId}
+    	<if test="kwd != null and kwd != ''">
+			AND <include refid="where-list-point"/>
+		</if>
+    	ORDER BY pointId DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+    </select>
 </mapper>
 	

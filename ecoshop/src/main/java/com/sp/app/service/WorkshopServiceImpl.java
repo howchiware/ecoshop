@@ -31,9 +31,9 @@ public class WorkshopServiceImpl implements WorkshopService {
 	public void insertCategory(Workshop dto) {
 		try {
 			if (dto.getCategoryName() != null) {
-	            dto.setCategoryName(dto.getCategoryName().trim());
-	        }
-			
+				dto.setCategoryName(dto.getCategoryName().trim());
+			}
+
 			mapper.insertCategory(dto);
 		} catch (Exception e) {
 			log.info("insertCategory : ", e);
@@ -56,7 +56,7 @@ public class WorkshopServiceImpl implements WorkshopService {
 
 		return list;
 	}
-	
+
 	@Override
 	public void updateCategory(Workshop dto) {
 		try {
@@ -66,7 +66,7 @@ public class WorkshopServiceImpl implements WorkshopService {
 
 			throw e;
 		}
-		
+
 	}
 
 	@Override
@@ -534,7 +534,7 @@ public class WorkshopServiceImpl implements WorkshopService {
 
 	@Override
 	public boolean isParticipantOfMember(long participantId, long memberId) {
-	    return mapper.isParticipantOfMember(participantId, memberId) > 0;
+		return mapper.isParticipantOfMember(participantId, memberId) > 0;
 	}
 
 	@Override
@@ -625,7 +625,7 @@ public class WorkshopServiceImpl implements WorkshopService {
 	@Override
 	public void updateWorkshopStatus(Workshop dto) {
 		mapper.updateWorkshopStatus(dto);
-		
+
 	}
 
 	@Override

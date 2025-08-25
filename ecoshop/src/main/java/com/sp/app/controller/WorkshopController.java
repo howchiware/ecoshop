@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/workshop")
 public class WorkshopController {
 
-	private final WorkshopService service;
+	private final WorkshopService service;     
 
 	// 워크샵 목록
 	@GetMapping("/list")

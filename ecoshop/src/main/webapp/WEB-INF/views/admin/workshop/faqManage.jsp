@@ -89,6 +89,18 @@ select.form-select {
 	transition: background 0.2s, color 0.2s;
 	cursor: pointer;
 }
+
+.btn-submit {
+	background: #000;
+	color: #fff;
+	border: 1px solid #000;
+	border-radius: 4px;
+	padding: 3px 10px;
+	font-size: 0.9rem;
+	transition: background 0.2s, color 0.2s;
+	cursor: pointer;
+}
+
 </style>
 </head>
 <body>
@@ -192,14 +204,14 @@ select.form-select {
 					<div class="modal-body">
 						<input type="hidden" name="faqId" id="faqId">
 						<div class="mb-3">
-							<label class="form-label">프로그램</label> <select
+							<label class="form-label">워크샵 선택</label> <select
 								class="form-select" name="programId" id="programId" required>
 								<c:forEach var="p" items="${programList}">
 									<option value="${p.programId}"><c:out
 											value="${p.programTitle}" /></option>
 								</c:forEach>
 							</select>
-							<div class="form-text text-muted">FAQ는 선택한 프로그램의 상세 페이지에 공통
+							<div class="form-text text-muted">&nbsp;FAQ는 선택한 워크샵의 상세 페이지에 공통
 								노출됩니다.</div>
 						</div>
 						<div class="mb-3">
@@ -214,9 +226,7 @@ select.form-select {
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="submit" class="btn btn-dark">저장</button>
-						<button type="button" class="btn btn-outline-secondary"
-							data-bs-dismiss="modal">취소</button>
+						<button type="submit" class="btn-submit">저장</button>
 					</div>
 				</form>
 			</div>
@@ -247,14 +257,14 @@ select.form-select {
 							const form = faqModal.querySelector('form');
 
 							if (faqId) {
-								modalTitle.innerHTML = '<i class="bi bi-pencil-square"></i> FAQ 수정';
+								modalTitle.innerHTML = 'FAQ 수정';
 								form.action = '${ctx}/admin/workshop/faq/update';
 								faqModal.querySelector('#faqId').value = faqId;
 								faqModal.querySelector('#question').value = question;
 								faqModal.querySelector('#answer').value = answer;
 								faqModal.querySelector('#programId').value = programId;
 							} else {
-								modalTitle.innerHTML = '<i class="bi bi-question-circle"></i> FAQ 등록';
+								modalTitle.innerHTML = 'FAQ 등록';
 								form.action = '${ctx}/admin/workshop/faq/write';
 								form.reset();
 								faqModal.querySelector('#faqId').value = '';

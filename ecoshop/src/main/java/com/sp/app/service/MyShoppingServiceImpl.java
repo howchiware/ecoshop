@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.sp.app.mapper.MyShoppingMapper;
 import com.sp.app.model.Destination;
+import com.sp.app.model.Point;
 import com.sp.app.model.ProductLike;
 import com.sp.app.model.ProductOrder;
 
@@ -213,6 +214,46 @@ public class MyShoppingServiceImpl implements MyShoppingService {
 		}
 		
 		return dto;
+	}
+
+	@Override
+	public List<Point> listPointHistory(Map<String, Object> map) {
+		List<Point> list = null;
+		
+		try {
+			list = mapper.listPointHistory(map);
+			
+			// - 1:적립, 2:사용, 3:소멸, 4:주문취소
+			for(Point dto : list) {
+				if(dto.getClassify() == 1) {
+					dto.setClassifyStr("적립");
+				} else if(dto.getClassify() == 2) {
+					dto.setClassifyStr("사용");
+				} else if(dto.getClassify() == 3) {
+					dto.setClassifyStr("소멸");
+				} else if(dto.getClassify() == 4) {
+					dto.setClassifyStr("주문취소");
+				}
+			}
+			
+		} catch (Exception e) {
+			log.info("listDestination : ", e);
+		}
+		
+		return list;
+	}
+
+	@Override
+	public int pointDataCount(Map<String, Object> map) {
+		int result = 0;
+		
+		try {
+			result = mapper.pointDataCount(map);
+		} catch (Exception e) {
+			log.info("pointDataCount : ", e);
+		}
+		
+		return result;
 	}
 
 }

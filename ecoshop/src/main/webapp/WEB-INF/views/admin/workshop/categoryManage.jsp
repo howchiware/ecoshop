@@ -48,17 +48,14 @@ body {
 .table {
   background-color: #fff;
   border-collapse: collapse;
-  border: 1px solid #dee2e6;
 }
 .table thead th {
   background-color: #f8f9fa;
   font-weight: 600;
   text-align: center;
-  border: 1px solid #dee2e6;
 }
 .table td {
   vertical-align: middle;
-  border: 1px solid #dee2e6;
   background-color: #ffffff;
 }
 .table tbody tr:hover {
@@ -123,7 +120,7 @@ body {
               <c:forEach var="c" items="${categoryList}" varStatus="st">
                 <tr>
                   <td class="text-center">${st.count}</td>
-                  <td><c:out value="${c.categoryName}" /></td>
+                  <td class="text-center"><c:out value="${c.categoryName}" /></td>
                   <td class="text-center">
        
                     <button type="button" class="btn-manage"
@@ -172,8 +169,8 @@ body {
             </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn-manage">저장</button>
             <button type="button" class="btn-manage" data-bs-dismiss="modal">취소</button>
+            <button type="submit" class="btn-manage">저장</button>
           </div>
         </form>
       </div>
@@ -193,7 +190,7 @@ body {
     const form = categoryModal.querySelector('form');
 
     if (categoryId) {
-      modalTitle.innerHTML = '<i class="bi bi-pencil-square"></i> 카테고리 수정';
+      modalTitle.innerHTML = '카테고리 수정';
       form.action = '${ctx}/admin/workshop/category/update';
       categoryModal.querySelector('#categoryId').value = categoryId;
       categoryModal.querySelector('#categoryName').value = categoryName;

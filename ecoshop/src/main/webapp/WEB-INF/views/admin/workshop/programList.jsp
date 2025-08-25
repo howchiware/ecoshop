@@ -111,6 +111,8 @@ select.form-select {
 .program-title {
 	padding-left: 5px;
 }
+
+
 </style>
 </head>
 <body>
@@ -266,16 +268,25 @@ select.form-select {
 				dataType: "json",
 				data: { programId: programId },
 				success: function(data) {
-					console.log('resp:', data);
-				    const content = data?.programContent || "<em class='text-muted'>내용 없음</em>";
-				    const detailRow = 
-				        '<tr class="program-detail">' +
-				          '<td colspan="4" class="bg-light p-3">' +
-				            '<div class="program-content">' + content + '</div>' +
-				          '</td>' +
-				        '</tr>';
-				      $row.after(detailRow);
-				},
+					  console.log('resp:', data);
+					  const content = data?.programContent || "<em class='text-muted'>내용 없음</em>";
+
+					  const detailRow =
+					      '<tr class="program-detail">' +
+					        '<td colspan="4">' +
+					          '<div class="detail-box">' +
+					            '<div class="detail-head">' +
+					              '<div class="detail-title">프로그램 상세</div>' +
+					              '<div class="detail-meta"></div>' +
+					            '</div>' +
+					            '<div class="program-content">' + content + '</div>' +
+					          '</div>' +
+					        '</td>' +
+					      '</tr>';
+
+					  $row.after(detailRow);
+					},
+
 				error: function() {
 					alert("프로그램 정보를 불러오지 못했습니다.");
 				}
