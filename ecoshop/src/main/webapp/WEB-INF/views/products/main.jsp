@@ -65,6 +65,7 @@
 			<div id="product-template">
 				<input type="hidden" id="web-contextPath" value="${pageContext.request.contextPath}">
 				<input type="hidden" id="web-memberId" value="${sessionScope.member.memberId}">
+				<input type="hidden" id="memberLogin" value="${sessionScope.member}">
 			</div>
 	</main>
 	<footer>
