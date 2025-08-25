@@ -2,38 +2,54 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.mapper.PointMapper">
-	
+
 	<!-- 포인트 등록 -->
-    <insert id="insertPoint" parameterType="com.sp.app.model.Point">
-        INSERT INTO point(pointId, memberId, baseDate, reason, classify, points, postId, balance, orderId)
-        VALUES (point_seq.NEXTVAL, #{memberId}, SYSDATE, #{reason, jdbcType=VARCHAR}, #{classify}, #{points}, 
-            #{postId},
-            NVL((SELECT balance FROM point 
-                 WHERE memberId = #{memberId}
-                 ORDER BY pointId DESC 
-                 FETCH FIRST 1 ROWS ONLY), 0) + #{points},
-                  #{orderId, jdbcType=VARCHAR}
-                )
-    </insert>
-	
+	<insert id="insertPoint" parameterType="com.sp.app.model.Point">
+		INSERT INTO point (
+		pointId, memberId, baseDate, reason, classify, points, postId,
+		balance,
+		orderId
+		)
+		VALUES (
+		point_seq.NEXTVAL,
+		#{memberId},
+		SYSDATE,
+		#{reason, jdbcType=VARCHAR},
+		#{classify},
+		#{points},
+		#{postId, jdbcType=NUMERIC},
+		NVL((SELECT balance FROM point
+		WHERE memberId = #{memberId}
+		ORDER BY pointId DESC
+		FETCH FIRST 1 ROWS ONLY), 0) + #{points},
+		NULLIF(TRIM(#{orderId, jdbcType=VARCHAR}), '')
+		)
+	</insert>
+
 	<!-- 가장 최근 포인트 1건 (잔액 확인용) -->
-    <select id="findRecentPoint" parameterType="Long" resultType="com.sp.app.model.Point">
-        SELECT pointId, memberId, baseDate, reason, classify, points, postId, balance, orderId
-        FROM point
-        WHERE memberId = #{memberId}
-        ORDER BY pointId DESC
-        FETCH FIRST 1 ROWS ONLY
-    </select>
-	
-	
+	<select id="findRecentPoint" parameterType="Long"
+		resultType="com.sp.app.model.Point">
+		SELECT pointId, memberId, baseDate, reason, classify,
+		points, postId,
+		balance, orderId
+		FROM point
+		WHERE memberId = #{memberId}
+		ORDER BY pointId DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+
+
 	<!-- 사용자 전체 포인트 이력(마이페이지,관리자페이지용) -->
-    <select id="listMemberPoints" parameterType="Long" resultType="com.sp.app.model.Point">
-        SELECT pointId, memberId, baseDate, reason, classify, points, postId, balance, orderId
-        FROM point
-        WHERE memberId = #{memberId}
-        ORDER BY pointId DESC
-    </select>
-	
-	
-	
+	<select id="listMemberPoints" parameterType="Long"
+		resultType="com.sp.app.model.Point">
+		SELECT pointId, memberId, baseDate, reason, classify,
+		points, postId,
+		balance, orderId
+		FROM point
+		WHERE memberId = #{memberId}
+		ORDER BY pointId DESC
+	</select>
+
+
+
 </mapper>

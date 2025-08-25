@@ -45,16 +45,14 @@
 		<div class="mb-3 d-flex align-items-center">
 		    <div class="flex-grow-1 me-2">
 		        <label for="categoryCodeSelect" class="form-label">카테고리</label>
-		        <select id="categoryCodeSelect" class="form-select">
-		            <c:forEach var="cat" items="${categories}">
-		                <option value="${cat.categoryCode}" 
-		                        <c:if test="${cat.categoryCode == dto.categoryCode}">selected</c:if>>
-		                    ${cat.categoryName}
-		                </option>
-		            </c:forEach>
-		        </select>
-		        <!-- hidden input으로 실제 form submit에 사용 -->
-		        <input type="hidden" name="categoryCode" id="categoryCodeHidden" value="${dto.categoryCode}">
+		        <select id="categoryCodeSelect" class="form-select" name="categoryCode">
+				    <c:forEach var="cat" items="${categories}">
+				        <option value="${cat.categoryCode}"
+				            <c:if test="${cat.categoryCode == dto.categoryCode}">selected</c:if>>
+				            ${cat.categoryName}
+				        </option>
+				    </c:forEach>
+				</select>
 		    </div>
 		    <div>
 		        <button type="button" class="btn-accent" onclick="writeForm()">카테고리추가</button>
@@ -129,7 +127,7 @@ window.addEventListener('DOMContentLoaded', evt => {
 		let file = ev.target.files[0];
 		if(! file) {
 			let img;
-			if( uploadImage ) { // 수정인 경우
+			if( uploadImage ) { 
 				img = '${pageContext.request.contextPath}/uploads/reguide/' + uploadImage;
 			} else {
 				img = '${pageContext.request.contextPath}/dist/images/add_photo.png';
@@ -173,12 +171,7 @@ function sendOk() {
 	const f = document.tipForm;
 	
 	let mode = '${mode}';
-	if ((mode === 'write') && (!f.selectFile.value)) {
-		alert('이미지 파일을 추가 하세요.');
-		f.selectFile.focus();
-		return;
-	}
-	
+
 	let htmlContent = document.querySelector('#editor .ql-editor').innerHTML;
 	if (!htmlContent || htmlContent.trim() === "<p><br></p>") {
 		alert('내용을 입력하세요.');
@@ -206,7 +199,6 @@ function CsendOk() {
             const $select = $('#categoryCodeSelect');
 
             if (data.newCategoryCode && data.newCategoryName) {
-                // 이미 존재하면 추가하지 않음
                 if ($select.find(`option[value="${data.newCategoryCode}"]`).length === 0) {
                     const $newOption = $('<option>', {
                         value: data.newCategoryCode,
@@ -215,7 +207,6 @@ function CsendOk() {
                     $select.append($newOption);
                 }
 
-                // 새 카테고리 선택 + hidden 갱신
                 $select.val(data.newCategoryCode);
                 $('#categoryCodeHidden').val(data.newCategoryCode);
             } else {

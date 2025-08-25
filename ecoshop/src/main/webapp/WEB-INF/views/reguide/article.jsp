@@ -14,8 +14,19 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/dairyArticle.css" type="text/css">
 <style>
     .card-header h3 { font-weight: 700; }
-    .card-body img { max-width: 100%; border-radius: 8px; margin-bottom: 1rem; }
+    .card-body img { max-width: 50%; border-radius: 8px; margin-bottom: 1rem; }
     .card-body p { white-space: pre-wrap; line-height: 1.8; }
+	.post-image {
+    width: 50%;      
+    height: auto;   
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: block;
+}
+}
+}
+	
+
 </style>
 </head>
 <body>
@@ -28,11 +39,15 @@
         <div class="card-header">
             <h3>${dto.subject}</h3>
             <div class="d-flex justify-content-between text-muted small">
-                <span><strong>작성자:</strong> ${dto.name}</span>
+                <span><strong>작성자:</strong> ${dto.name} | <strong>분류:</strong> ${dto.categoryName}</span>
                 <span><strong>작성일:</strong> ${dto.regDate} | <strong>조회수:</strong> ${dto.hitCount}</span>
             </div>
         </div>
-        <div class="card-body">
+     	 <div class="card-body">
+		    <c:if test="${not empty dto.imageFilename}">
+		        <img src="${pageContext.request.contextPath}/uploads/reguide/${dto.imageFilename}" 
+		             alt="첨부 이미지" class="post-image">
+		    </c:if>
 		    <c:out value="${dto.content}" escapeXml="false"/>
 		</div>
     </div>

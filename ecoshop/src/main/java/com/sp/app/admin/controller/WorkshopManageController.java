@@ -833,9 +833,14 @@ public class WorkshopManageController {
 				return "redirect:/admin/workshop/points";
 			}
 
-			String orderId = "REVIEW:" + workshopReviewId; 
 			boolean already = pointMapper.listMemberPoints(memberId).stream()
-					.anyMatch(p -> orderId.equals(p.getOrderId()));
+					.anyMatch(p -> 
+					p.getMemberId().equals(memberId)
+	                && p.getPostId() != null
+	                && p.getPostId().longValue() == workshopReviewId.longValue()
+	                && p.getClassify() == 1
+	                && p.getOrderId() == null
+				);
 			if (already) {
 				session.setAttribute("msg", "이미 지급된 내역입니다.");
 				return "redirect:/admin/workshop/points";
@@ -846,13 +851,15 @@ public class WorkshopManageController {
 			p.setReason("워크샵 후기 작성 보상");
 			p.setClassify(1); 
 			p.setPoints(1000); 
-			p.setOrderId(orderId);
+			p.setPostId(workshopReviewId);
+			p.setOrderId(null); 
 
 			pointMapper.insertPoint(p); 
+			
 			session.setAttribute("msg", "지급 완료되었습니다.");
 
 		} catch (Exception e) {
-			log.error("pay : ", e);
+			log.info("pay : ", e);
 			session.setAttribute("msg", "지급 처리 중 오류가 발생했습니다.");
 		}
 		return "redirect:/admin/workshop/points";

@@ -1,6 +1,13 @@
 $(function(){
 	// 상품 리스트에서 찜을 클릭한 경우
 	$('.list-container').on('click', '.product-item-heart', function(){
+		if(! loginCheck()){
+			alert('로그인 후 이용 가능한 기능입니다.');
+			location.href = '/member/login';
+			return;
+		}
+
+		
 		const $item = $(this).closest('.product-item');
 		const productCode = $item.attr('data-productCode');
 		/*
@@ -16,6 +23,13 @@ $(function(){
 	
 	// 상품 상세 보기에서 찜을 선택한 경우
 	$('.btn-productLike').on('click', function(){
+		if(! loginCheck()){
+			alert('로그인 후 이용 가능한 기능입니다.');
+			location.href = '/member/login';
+			return;
+		}
+
+		
 		const productCode = $(this).attr('data-productCode');
 		
 		/*
@@ -32,6 +46,12 @@ $(function(){
 
 // 찜 등록 및 해제
 function sendProductLike(productCode, $el){
+	if(! loginCheck()){
+		alert('로그인 후 이용 가능한 기능입니다.');
+		location.href = '/member/login';
+		return;
+	}
+
 	const bFlag = $el.find('i').hasClass('bi-heart-fill');
 	
 	let method, msg;
@@ -74,6 +94,12 @@ function sendProductLike(productCode, $el){
 // 리뷰 클릭시 모달 띄우기
 $(function(){
 	$('div.list-container').on('click', 'button.product-item-cart', function(){
+		if(! loginCheck()){
+			alert('로그인 후 이용 가능한 기능입니다.');
+			location.href = '/member/login';
+			return;
+		}
+
 		// ajax
 		/*
 		let productCode = $(this).attr('data-productCode');
@@ -538,6 +564,12 @@ $(function(){
 
 
 function sendOk(mode) {
+	if(! loginCheck()){
+		alert('로그인 후 이용 가능한 기능입니다.');
+		location.href = '/member/login';
+		return;
+	}
+
 	const contextPath = document.getElementById('web-contextPath').value;
 	
 	let totalQty = 0;
@@ -568,4 +600,14 @@ function sendOk(mode) {
 	}
 	
 	f.submit();
+}
+
+function loginCheck(){
+	const memberLogin = document.getElementById('memberLogin').value;
+		
+	if(	memberLogin == "" || memberLogin == null || memberLogin == undefined || ( memberLogin != null && typeof memberLogin == "object" && !Object.keys(memberLogin).length )){
+		return false;
+	}
+	
+	return true;
 }

@@ -18,6 +18,7 @@ public class Reguide {
 	private String content;
 	private int hitCount;
 	private String regDate;	
+	private String categoryName;
 
 	private MultipartFile selectFile;
 	private String imageFilename;

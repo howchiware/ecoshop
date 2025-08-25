@@ -1,5 +1,7 @@
 package com.sp.app.model;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,7 +31,7 @@ public class GongguOrder {
     private int deliveryCharge; // 배송비
     private int productMoney; // 상품별 결제금액
     private int salePrice; // 할인가
-
+    
     // gongguProduct 테이블 정보
     private String gongguProductName;
     private String gongguThumbnail;

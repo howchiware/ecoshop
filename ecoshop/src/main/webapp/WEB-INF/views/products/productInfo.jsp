@@ -220,15 +220,15 @@
 			
 								<div class="mt-2">
 									<input type="hidden" name="mode" value="buy">
-									<button type="button" class="btn-accent btn-lg w-100 btn-buySend" onclick="sendOk('buy');" ${dto.totalStock < 1 ? 'disabled':''} ${empty sessionScope.member ? 'disabled' : ''}>구매하기</button>
+									<button type="button" class="btn-accent btn-lg w-100 btn-buySend" onclick="sendOk('buy');" ${dto.totalStock < 1 ? 'disabled':''}>구매하기</button>
 								</div>
 								
 								<div class="row mt-2 mb-2">
 									<div class="col pe-1">
-										<button type="button" class="btn-default btn-lg w-100 btn-productLike" data-productCode="${dto.productCode}" ${empty sessionScope.member.memberId ? "disabled" : ""}>찜하기&nbsp;&nbsp;<i class="bi ${dto.userProductLike==1 ? 'bi-heart-fill text-danger':'bi-heart'}"></i></button>
+										<button type="button" class="btn-default btn-lg w-100 btn-productLike" data-productCode="${dto.productCode}">찜하기&nbsp;&nbsp;<i class="bi ${dto.userProductLike==1 ? 'bi-heart-fill text-danger':'bi-heart'}"></i></button>
 									</div>
 									<div class="col ps-1">
-										<button type="button" class="btn-default btn-lg w-100 btn-productCart" onclick="sendOk('cart');" ${empty sessionScope.member.memberId || dto.totalStock < 1 ? "disabled" : ""}>장바구니&nbsp;&nbsp;<i class="bi bi-cart-plus"></i></button>
+										<button type="button" class="btn-default btn-lg w-100 btn-productCart" onclick="sendOk('cart');" ${dto.totalStock < 1 ? "disabled" : ""}>장바구니&nbsp;&nbsp;<i class="bi bi-cart-plus"></i></button>
 									</div>
 								</div>
 							</form>
@@ -258,6 +258,7 @@
 	<input type="hidden" id="product-stockNum" value="${dto.stockNum}">
 	<input type="hidden" id="product-totalStock" value="${dto.totalStock}">
 	<input type="hidden" id="product-thumbnail" value="${dto.thumbnail}">
+	<input type="hidden" id="memberLogin" value="${sessionScope.member}">
 </div>
 
 <script src="${pageContext.request.contextPath}/dist/jsProduct/productDetail.js"></script>

@@ -80,19 +80,16 @@ body {
 .table {
 	background-color: #fff;
 	border-collapse: collapse;
-	border: 1px solid #dee2e6;
 }
 
 .table thead th {
 	background-color: #f8f9fa;
 	font-weight: 500;
 	text-align: center;
-	border: 1px solid #dee2e6;
 }
 
 .table td {
 	vertical-align: middle;
-	border: 1px solid #dee2e6;
 	background-color: #fff;
 }
 
@@ -110,6 +107,10 @@ select.form-select {
 
 .program-title {
 	padding-left: 5px;
+}
+
+.table-responsive {
+margin-top: 20px;
 }
 
 
@@ -141,7 +142,7 @@ select.form-select {
 		</div>
 
 		<div class="outside">
-			<form class="row g-2 align-items-end mb-3" method="get"
+			<form class="row g-2 align-items-end mb-1" method="get"
 				action="${ctx}/admin/workshop/program/list">
 				<div class="col-md-2">
 					<label class="form-label"></label> <select class="form-select"
@@ -167,7 +168,8 @@ select.form-select {
 
 				<div class="col-md-4">
 					<label class="form-label"></label> <input type="text"
-						class="form-control" name="kwd" value="${kwd}" style="height: 36.5px;">
+						class="form-control" name="kwd" value="${kwd}"
+						style="height: 36.5px;">
 				</div>
 
 				<div class="col-md-1">
@@ -201,9 +203,10 @@ select.form-select {
 									<tr>
 										<td class="text-center"><c:out
 												value="${(page-1)*size + st.index + 1}" /></td>
-										<td class="text-center"><c:out value="${row.categoryName}" /></td>
-										<td><a href="javascript:void(0);" class="program-title"
-											data-id="${row.programId}"> <c:out
+										<td class="text-center"><c:out
+												value="${row.categoryName}" /></td>
+										<td class="text-center"><a href="javascript:void(0);"
+											class="program-title" data-id="${row.programId}"> <c:out
 													value="${row.programTitle}" />
 										</a></td>
 										<td class="text-center"><fmt:formatDate
@@ -216,8 +219,8 @@ select.form-select {
 												<button type="submit" class="btn-manage"
 													style="width: 51px; height: 30px; text-decoration: none;">
 													수정</button>
-											</form> 
-											
+											</form>
+
 											<form action="${ctx}/admin/workshop/program/delete"
 												method="post" style="display: inline;">
 												<input type="hidden" name="num" value="${row.programId}">

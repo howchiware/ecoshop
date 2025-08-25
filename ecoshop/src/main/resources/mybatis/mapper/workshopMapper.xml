@@ -610,32 +610,36 @@
 		= #{memberId}
 	</select>
 
-	<!-- 관리자: 후기 작성자 + 지급여부 -->
-	<select id="listReviewRewardRows" parameterType="map"
-		resultType="map">
-		SELECT
-		m.name AS "memberName",
-		wks.workshopTitle AS "workshopTitle",
-		wr.workshopReviewId AS "workshopReviewId",
-		wr.participantId AS "participantId",
-		wr.workshopId AS "workshopId",
-		p.memberId AS "memberId",
-		CASE WHEN pnt.pointId IS NULL THEN 0 ELSE 1 END AS "paid"
-		FROM workshopReview wr
-		JOIN participant p ON wr.participantId = p.participantId
-		JOIN member2 m ON p.memberId = m.memberId
-		JOIN workshop wks ON wr.workshopId = wks.workshopId
-		LEFT JOIN point pnt
-		ON pnt.memberId = p.memberId
-		AND pnt.orderId = ('REVIEW:' || wr.workshopReviewId)
-		<where>
-			<if test="workshopId != null">
-				AND wr.workshopId = #{workshopId}
-			</if>
-		</where>
-		ORDER BY wr.regDate DESC
-		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
-	</select>
+	<!-- 후기 작성자 + 지급여부 -->
+<select id="listReviewRewardRows" parameterType="map" resultType="map">
+  SELECT
+    m.name              AS "memberName",
+    wks.workshopTitle   AS "workshopTitle",
+    wr.workshopReviewId AS "workshopReviewId",
+    wr.participantId    AS "participantId",
+    wr.workshopId       AS "workshopId",
+    p.memberId          AS "memberId",
+    CASE WHEN EXISTS (
+           SELECT 1
+           FROM point pnt
+           WHERE pnt.memberId = p.memberId
+             AND pnt.postId   = wr.workshopReviewId
+             AND pnt.classify = 1 
+             AND pnt.orderId IS NULL
+         )
+      THEN 1 ELSE 0 END AS "paid"
+  FROM workshopReview wr
+  JOIN participant p ON wr.participantId = p.participantId
+  JOIN member2 m     ON p.memberId       = m.memberId
+  JOIN workshop wks  ON wr.workshopId    = wks.workshopId
+  <where>
+    <if test="workshopId != null">
+      AND wr.workshopId = #{workshopId}
+    </if>
+  </where>
+  ORDER BY wr.regDate DESC
+  OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+</select>
 
 
 

@@ -256,7 +256,7 @@ textarea[name=deliveryInfo], textarea[name=refundInfo] {
 						</div>
 					</div>
 					
-					<div style="text-align: center">
+					<div style="text-align: center" id="deliveryAllInfo-form">
 						<c:if test="${mode == 'update' }">
 							<button type="button" class="udBtn updateBtn">수정</button>
 						</c:if>
@@ -309,36 +309,41 @@ $(function(){
 });
 
 $(function(){
-	$('.udBtn').click(function(){
-		if($(this).hasClass('updateBtn')){
-			$('#deliveryInfoContent').removeAttr('readonly');
-			$('#refundInfoContent').removeAttr('readonly');
-			$('#deliveryLocation').removeAttr('readonly');
-			$('#deliveryLocationAdd').removeAttr('readonly');
-			$('#deliveryFee').removeAttr('readonly');
-			$('.minus-deliveryFee').addClass('minus-deliveryFee-enabled');
-			
-			$('.udBtn').html('수정취소');
-			$('.udBtn').addClass('updateCancelBtn');
-			$('.udBtn').removeClass('updateBtn');
-			
-		} else if($(this).hasClass('updateCancelBtn')){
-			$('#deliveryInfoContent').prop('readonly', 'readonly');
-			$('#refundInfoContent').prop('readonly', 'readonly');
-			$('#deliveryLocation').prop('readonly', 'readonly');
-			$('#deliveryLocationAdd').prop('readonly', 'readonly');
-			$('#deliveryFee').prop('readonly', 'readonly');
-			
-			$('.minus-deliveryFee').removeClass('minus-deliveryFee-enabled');
-			
-			$('.udBtn').html('수정');
-			$('.udBtn').addClass('updateBtn');
-			$('.udBtn').removeClass('updateCancelBtn');
-			
-			$('.deliveryAreaResult').html(cloneNode);
-		}
+	   $('#deliveryAllInfo-form').on('click', '.udBtn', function(){
+	      if($(this).hasClass('updateBtn')){
+	         $('#deliveryInfoContent').removeAttr('readonly');
+	         $('#refundInfoContent').removeAttr('readonly');
+	         $('#deliveryLocation').removeAttr('readonly');
+	         $('#deliveryLocationAdd').removeAttr('readonly');
+	         $('#deliveryFee').removeAttr('readonly');
+	         $('.minus-deliveryFee').addClass('minus-deliveryFee-enabled');
+	         
+	         $('.udBtn').html('수정취소');
+	         $('.udBtn').addClass('updateCancelBtn');
+	         $('.udBtn').removeClass('updateBtn');
+	         
+	      } else if($(this).hasClass('updateCancelBtn')){
+	         /*
+	         $('#deliveryInfoContent').prop('readonly', 'readonly');
+	         $('#refundInfoContent').prop('readonly', 'readonly');
+	         $('#deliveryLocation').prop('readonly', 'readonly');
+	         $('#deliveryLocationAdd').prop('readonly', 'readonly');
+	         $('#deliveryFee').prop('readonly', 'readonly');
+	         
+	         $('.minus-deliveryFee').removeClass('minus-deliveryFee-enabled');
+	         
+	         $('.udBtn').html('수정');
+	         $('.udBtn').addClass('updateBtn');
+	         $('.udBtn').removeClass('updateCancelBtn');
+	         
+	         $('textarea[name="deliveryInfoContent"]').val(deliveryInfoValue);
+	         $('textarea[name="refundInfoContent"]').val(refundInfoValue);
+	         $('#outerDeliveryFee').html(cloneEl);
+	         */
+	         location.href= '${pageContext.request.contextPath}/admin/products/deliveryWrite';
+	      }
+	   });
 	});
-});
 
 // 지역 옵션 추가
 function locationAdd(){

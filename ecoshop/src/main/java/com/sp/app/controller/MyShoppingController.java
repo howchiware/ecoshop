@@ -14,12 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sp.app.common.MyUtil;
+import com.sp.app.common.PaginateUtil;
 import com.sp.app.model.Destination;
+import com.sp.app.model.Point;
 import com.sp.app.model.ProductLike;
 import com.sp.app.model.ProductOrder;
 import com.sp.app.model.SessionInfo;
 import com.sp.app.service.MyShoppingService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +34,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/myShopping/*")
 public class MyShoppingController {
 	private final MyShoppingService service;
+	private final PaginateUtil paginateUtil;
+	private final MyUtil myUtil;
 	
 	// 장바구니
 	@GetMapping("cart")
@@ -257,6 +263,108 @@ public class MyShoppingController {
 		}
 		
 		return "myShopping/wishList";
+	}	
+	
+	@GetMapping("myPoint")
+	public String myPoint(@RequestParam(name = "page", defaultValue = "1") int current_page,
+			@RequestParam(name = "schType", defaultValue = "classifyStr") String schType,
+			@RequestParam(name = "kwd", defaultValue = "") String kwd,
+			Model model,
+			HttpServletRequest req,
+			HttpSession session) {
+		
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");			
+			
+			int size = 10;
+			int total_page = 0;
+			int dataCount = 0;
+
+			/*
+			if (req.getMethod().equalsIgnoreCase("GET")) { // GET 방식인 경우
+				kwd = myUtil.decodeUrl(kwd);
+			}
+			*/
+			kwd = myUtil.decodeUrl(kwd);
+
+			// 전체 페이지 수
+			// - 1:적립, 2:사용, 3:소멸, 4:주문취소
+			Map<String, Object> map = new HashMap<String, Object>();
+			if(schType.equals("classifyStr") && ! kwd.isEmpty()) {
+				schType = "classify";
+				if("적립".contains(kwd)) {
+					kwd = "1";
+				} else if("사용".contains(kwd)) {
+					kwd = "2";
+				} else if("소멸".contains(kwd)) {
+					kwd = "3";
+				} else if("주문취소".contains(kwd)) {
+					kwd = "4";
+				}
+			}
+
+			map.put("memberId", info.getMemberId());
+			map.put("schType", schType);
+			map.put("kwd", kwd);
+			
+			dataCount = service.pointDataCount(map);
+			if (dataCount != 0) {
+				total_page = dataCount / size + (dataCount % size > 0 ? 1 : 0);
+			}
+			
+			// 다른 사람이 자료를 삭제하여 전체 페이지수가 변화 된 경우
+			current_page = Math.min(current_page, total_page);
+
+			// 리스트에 출력할 데이터를 가져오기
+			int offset = (current_page - 1) * size;
+			if(offset < 0) offset = 0;
+
+			map.put("offset", offset);
+			map.put("size", size);
+
+			// 글 리스트
+			List<Point> pointList = service.listPointHistory(map);
+			
+			int balance = pointList.get(0).getBalance();
+
+			String cp = req.getContextPath();
+			String query = "";
+			String listUrl = cp + "myShopping/myPoint";
+			if (! kwd.isBlank()) {
+				query = "schType=" + schType + "&kwd=" + myUtil.encodeUrl(kwd);
+				
+				listUrl += "?" + query;
+			}
+			String paging = paginateUtil.paging(current_page, total_page, listUrl);	
+			
+			// - 1:적립, 2:사용, 3:소멸, 4:주문취소
+			if(kwd == "1") {
+				kwd = "적립";
+			} else if(kwd == "2") {
+				kwd = "사용";
+			} else if(kwd == "3") {
+				kwd = "소멸";
+			} else if(kwd == "4") {
+				kwd = "주문취소";
+			} 
+			
+			model.addAttribute("pointList", pointList);			
+			model.addAttribute("balance", balance);
+			model.addAttribute("dataCount", dataCount);
+			model.addAttribute("size", size);
+			model.addAttribute("total_page", total_page);
+			model.addAttribute("page", current_page);
+			
+			model.addAttribute("paging", paging);
+			
+			model.addAttribute("schType", schType);
+			model.addAttribute("kwd", kwd);
+		} catch (Exception e) {
+			log.info("myPageHome : ", e);
+		}
+		
+		return "myShopping/myPoint";
 	}
+	
 	
 }

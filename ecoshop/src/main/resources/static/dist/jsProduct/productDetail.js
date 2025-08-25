@@ -268,6 +268,12 @@ $(function(){
 
 
 function sendOk(mode) {
+	if(! loginCheck()){
+		alert('로그인 후 이용 가능한 기능입니다.');
+		location.href = '/member/login';
+		return;
+	}
+	
 	const contextPath = document.getElementById('web-contextPath').value;
 	
 	let totalQty = 0;
@@ -340,3 +346,14 @@ $(function(){
 	let p = JSON.stringify(product);
 	localStorage.setItem('recentProduct', p);
 });
+
+
+function loginCheck(){
+	const memberLogin = document.getElementById('memberLogin').value;
+		
+	if(	memberLogin == "" || memberLogin == null || memberLogin == undefined || ( memberLogin != null && typeof memberLogin == "object" && !Object.keys(memberLogin).length )){
+		return false;
+	}
+	
+	return true;
+}

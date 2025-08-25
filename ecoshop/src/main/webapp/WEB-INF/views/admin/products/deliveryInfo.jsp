@@ -143,137 +143,147 @@ textarea[name=deliveryInfo], textarea[name=refundInfo] {
 		<hr>
 		
 		<div class="outside">
-			<form name="deliveryAllInfo" method="post">
-				<div class="section ps-5 pe-5">
-					<div>
-						<div class="row gy-4 m-0">
-							<div class="col-lg-12 p-2 m-2">
-								<div class="small-title">
-									<h5>| 배송 정보</h5>
-								</div>
-								
-								<div class="input-area">
-									<table class="input-table">
-										<tr>
-											<td>배송 정보</td>
-											<td>
-												<textarea name="deliveryInfo" id="deliveryInfoContent">
-													${listDeliveryRefundInfo.deliveryInfo}
-												</textarea>
-											</td>
-										</tr>
-									</table>
-								</div>
-							</div>
-						</div>
-					</div>
-					
-				</div>
-				<div class="section ps-5 pe-5">
-					<div>
-						<div class="row gy-4 m-0">
-							<div class="col-lg-12 p-2 m-2">
-								<div class="small-title">
-									<h5>| 환불 정보</h5>
-								</div>
-								
-								<div class="input-area">
-									<table class="input-table">
-										<tr>
-											<td>환불 안내</td>
-											<td>
-												<textarea name="refundInfo" id="refundInfoContent">
-													${listDeliveryRefundInfo.refundInfo}
-												</textarea>
-											</td>
-										</tr>
-									</table>
-								</div>
-							</div>
-						</div>
-					</div>
-					
-				</div>
-				
-				<div class="section ps-5 pe-5">
-					<div>
-						<div class="row gy-4 m-0">
-							<div class="col-lg-12 p-2 m-2">
-								<div class="small-title">
-									<h5>| 배송비</h5>
-								</div>
-								
-								<div class="input-area">
-									<table class="input-table">
-										<tr>
-											<td>배송비</td>
-											<td colspan="2">
-												<input type="text" id="deliveryFee"> 원
-											</td>
-										</tr>
-										<tr>
-											<td>배송 가능 지역</td>
-											<td colspan="2">
-												<select id="deliveryLocation" onclick="changeDeliveryArea();">
-											        <option value="">:: 선택 ::</option>
-													<c:forEach var="dto" items="${listDeliveryFee}">
-												        <option value="${dto.deliveryLocation}">${dto.deliveryLocation}</option>
-													</c:forEach>
-										    	</select>
-										    	<input id="deliveryAreaRs" readonly>
-											</td>
-										</tr>
-										<tr>
-											<td>배송 지역</td>
-											<td>
-												<input type="text" id="deliveryLocationAdd">
-											</td>
-											<td>
-												<button type="button" class="locationAddBtn" onclick="locationAdd();">추가</button>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<button type="button" class="feeAddBtn" onclick="feeAdd();">추가</button>
-											</td>
-										</tr>
-									</table>
-								</div>
-								<hr>
-								<div class="deliveryAreaResult" id="deliveryAreaResult">
-									<div id="deliveryFee-div">
-										<c:forEach var="dto" items="${listDeliveryFee}">	
-											<p>
-												<input class="border-none" name="deliveryLocation" value="${dto.deliveryLocation}">
-												<span> | </span> 
-												<input class="border-none" name="fee" value="${dto.fee}">
-												<span class="minus-deliveryFee">X</span>
-											</p>
-										</c:forEach>
+			<form name="deliveryAllInfo" method="post" id="deliveryAllInfo-form">
+				<div class="section ps-5 pe-5" id="container-div">
+					<div id="deliveryAllInfo-div">
+						<div>
+							<div class="row gy-4 m-0">
+								<div class="col-lg-12 p-2 m-2">
+									<div class="small-title">
+										<h5>| 배송 정보</h5>
+									</div>
+									
+									<div class="input-area">
+										<table class="input-table">
+											<tr>
+												<td>배송 정보</td>
+												<td>
+													<textarea name="deliveryInfo" id="deliveryInfoContent">
+														${listDeliveryRefundInfo.deliveryInfo}
+													</textarea>
+												</td>
+											</tr>
+										</table>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+						
+						<div>
+							<div>
+								<div class="row gy-4 m-0">
+									<div class="col-lg-12 p-2 m-2">
+										<div class="small-title">
+											<h5>| 환불 정보</h5>
+										</div>
+										
+										<div class="input-area">
+											<table class="input-table">
+												<tr>
+													<td>환불 안내</td>
+													<td>
+														<textarea name="refundInfo" id="refundInfoContent">
+															${listDeliveryRefundInfo.refundInfo}
+														</textarea>
+													</td>
+												</tr>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+						</div>
 					
-					<div style="text-align: center">
-						<c:if test="${mode == 'update' }">
-							<button type="button" class="udBtn updateBtn">수정</button>
-						</c:if>
-						<button type="button" class="saveInfo" onclick="sendOk();">저장</button>
+						<div>
+							<div>
+								<div class="row gy-4 m-0" id="outerDeliveryFee">
+									<div class="col-lg-12 p-2 m-2" id="innerDeliveryFee">
+										<div class="small-title">
+											<h5>| 배송비</h5>
+										</div>
+										
+										<div class="input-area">
+											<table class="input-table">
+												<tr>
+													<td>배송비</td>
+													<td colspan="2">
+														<input type="text" id="deliveryFee"> 원
+													</td>
+												</tr>
+												<tr>
+													<td>배송 가능 지역</td>
+													<td colspan="2">
+														<select id="deliveryLocation" onclick="changeDeliveryArea();">
+													        <option value="">:: 선택 ::</option>
+															<c:forEach var="dto" items="${listDeliveryFee}">
+														        <option value="${dto.deliveryLocation}">${dto.deliveryLocation}</option>
+															</c:forEach>
+												    	</select>
+												    	<input id="deliveryAreaRs" readonly>
+													</td>
+												</tr>
+												<tr>
+													<td>배송 지역</td>
+													<td>
+														<input type="text" id="deliveryLocationAdd">
+													</td>
+													<td>
+														<button type="button" class="locationAddBtn" onclick="locationAdd();">추가</button>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<button type="button" class="feeAddBtn" onclick="feeAdd();">추가</button>
+													</td>
+												</tr>
+											</table>
+										</div>
+										<hr>
+										<div class="deliveryAreaResult" id="deliveryAreaResult">
+											<div id="deliveryFee-div">
+												<c:forEach var="dto" items="${listDeliveryFee}">	
+													<p>
+														<input class="border-none" name="deliveryLocation" value="${dto.deliveryLocation}">
+														<span> | </span> 
+														<input class="border-none" name="fee" value="${dto.fee}">
+														<span class="minus-deliveryFee">X</span>
+													</p>
+												</c:forEach>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						
+						</div>						
 					</div>
-					
 				</div>
-				
+				<div style="text-align: center">
+					<c:if test="${mode == 'update' }">
+						<button type="button" class="udBtn updateBtn">수정</button>
+					</c:if>
+					<button type="button" class="saveInfo" onclick="sendOk();">저장</button>
+				</div>
 			</form>
 		</div>
 	</div>
 </main>
 
 <script type="text/javascript">
-const divEl = document.getElementById('deliveryFee-div');
-let cloneNode = divEl.cloneNode(true);
 
+const divEl = document.getElementById('deliveryFee-div');
+const allInfoDivEl = document.getElementById('deliveryAllInfo-div');
+let deliveryInfoValue = '';
+let refundInfoValue = '';
+const innerDeliveryFeeEl = document.getElementById('innerDeliveryFee');
+let cloneEl = '';
+
+$(function(){
+	deliveryInfoValue = document.querySelector('textarea[name="deliveryInfo"]').value;
+	refundInfoValue = document.querySelector('textarea[name="refundInfo"]').value;
+	cloneEl = innerDeliveryFeeEl.cloneNode(true);
+})
 function changeDeliveryArea(){
 	
 	const deliveryLocationEl = document.getElementById('deliveryLocation');
@@ -309,7 +319,7 @@ $(function(){
 });
 
 $(function(){
-	$('.udBtn').click(function(){
+	$('#deliveryAllInfo-form').on('click', '.udBtn', function(){
 		if($(this).hasClass('updateBtn')){
 			$('#deliveryInfoContent').removeAttr('readonly');
 			$('#refundInfoContent').removeAttr('readonly');
@@ -323,6 +333,7 @@ $(function(){
 			$('.udBtn').removeClass('updateBtn');
 			
 		} else if($(this).hasClass('updateCancelBtn')){
+			/*
 			$('#deliveryInfoContent').prop('readonly', 'readonly');
 			$('#refundInfoContent').prop('readonly', 'readonly');
 			$('#deliveryLocation').prop('readonly', 'readonly');
@@ -335,7 +346,11 @@ $(function(){
 			$('.udBtn').addClass('updateBtn');
 			$('.udBtn').removeClass('updateCancelBtn');
 			
-			$('.deliveryAreaResult').html(cloneNode);
+			$('textarea[name="deliveryInfoContent"]').val(deliveryInfoValue);
+			$('textarea[name="refundInfoContent"]').val(refundInfoValue);
+			$('#outerDeliveryFee').html(cloneEl);
+			*/
+			location.href= '${pageContext.request.contextPath}/admin/products/deliveryWrite';
 		}
 	});
 });
@@ -474,7 +489,7 @@ function sendOk(){
 
 
 $(function(){	
-	$('.deliveryAreaResult').on('click', '.minus-deliveryFee-enabled', function(){
+	$('#deliveryAllInfo-form').on('click', '.minus-deliveryFee-enabled', function(){
 		let $el = $(this).closest('p');
 		
 		$el.remove();
