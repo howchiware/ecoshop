@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sp.app.model.GongguOrderMapper">
+<mapper namespace="com.sp.app.mapper.GongguOrderMapper">
+	<select id="findByMaxOrderNumber" resultType="String">
+		SELECT orderId
+		FROM productOrder
+		ORDER BY orderDate DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
 	<!-- 주문 등록 -->
 	<insert id="insertGongguOrder" parameterType="com.sp.app.model.GongguOrder">
 		INSERT INTO productOrder(orderId, memberId, orderDate, totalAmount, 
-			 deliveryCharge, payment, cancelAmount, orderState) 
+			 deliveryCharge, payment, cancelAmount, orderState, usedPoint, classify, orderStateDate, itemCount) 
 		VALUES (#{orderId}, #{memberId}, SYSDATE, #{totalAmount}, 
-			 #{deliveryCharge}, #{payment}, 0, 1)
+			 #{deliveryCharge}, #{payment}, 0, 1, 0, 2, SYSDATE, 1)
 	</insert>
 
 	<!-- 결제 내역 등록 -->
@@ -21,9 +27,9 @@
 	<!-- 주문 상세 정보 등록 -->
 	<insert id="insertGongguOrderDetail" parameterType="com.sp.app.model.GongguOrder">
 		INSERT INTO gongguOrderDetail(gongguOrderDetailId, orderId, cnt, price, 
-			gongguProductId,productMoney, userDelete, detailState) 
+			gongguProductId, userDelete, detailState) 
 		VALUES (gongguOrderDetail_seq.NEXTVAL, #{orderId}, #{cnt}, #{price},  
-			#{gongguProductId}, #{productMoney}, 0, 0)
+			#{gongguProductId}, 0, 1)
 	</insert>
 	
 	<!-- 배송지 등록 -->
@@ -37,14 +43,19 @@
 	
 	<!-- 주문 내역 상세 리스트 -->
 	<select id="listGongguOrderProduct" parameterType="java.util.List" resultType="com.sp.app.model.GongguOrder">
-    	SELECT d.gongguProductId, d.cnt,
-    		g.gongguProductName, d.price, g.gongguThumbnail
-    	FROM gongguOrderDetail d
-    	JOIN gongguProduct g ON d.gongguProductId = d.gongguProductId
+		SELECT d.gongguProductId, d.cnt,
+			g.gongguProductName, d.price, g.gongguThumbnail
+		FROM gongguOrderDetail d
+		JOIN gongguProduct g ON d.gongguProductId = g.gongguProductId
+		WHERE (d.gongguProductId, d.orderId) IN
+			<foreach collection="list" item="item" index="index"
+				open="(" separator="," close=")">
+				(#{item.gongguProductId}, #{item.orderId})
+			</foreach>
 	</select>
 
 	<select id="didIBuyGonggu" parameterType="map" resultType="com.sp.app.model.GongguOrder">
-		SELECT od.orderId, od.gongguOrderDetailId, od.gongguProductId, po.memberId, orderDate, productMoney, gongguReviewId, content,
+		SELECT od.orderId, od.gongguOrderDetailId, od.gongguProductId, po.memberId, orderDate, gongguReviewId, content,
 		        rate, regDate, showReview, answer, answerId, answerDate, block
 		FROM gongguOrderDetail od
 		LEFT OUTER JOIN productOrder po ON od.orderId = po.orderId
@@ -57,5 +68,19 @@
 		FROM gongguReview
 		WHERE gongguReviewId = #{gongguReviewId}
 	</select>
+	
+	<select id="findByGongguProduct" parameterType="long" resultType="com.sp.app.model.GongguOrder">
+	SELECT
+		gongguProductId,
+		gongguProductName,
+		originalPrice,
+		sale,
+		TRUNC(originalPrice * (1 - sale/100)) AS salePrice,
+		gongguThumbnail,
+		content,
+		detailInfo
+	FROM gongguProduct
+	WHERE gongguProductId = #{gongguProductId}
+</select>
 	
 </mapper>

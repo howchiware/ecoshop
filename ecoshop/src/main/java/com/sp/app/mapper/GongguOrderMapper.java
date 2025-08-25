@@ -18,8 +18,8 @@ public interface GongguOrderMapper {
 	public void insertGongguOrderDetail(GongguOrder dto) throws SQLException; 
 	public void insertGongguOrderDelivery(GongguOrder dto) throws SQLException;
 
-	public List<GongguOrder> listGongguOrderProduct(List<Map<String, Long>> list);
+	public List<GongguOrder> listGongguOrderProduct(List<GongguOrder> list);
 	public List<GongguOrder> didIBuyGonggu(Map<String, Object> map);
 	public GongguReview myReviewOfGonggu(long gongguOrderDetailId);
-	
+	public GongguOrder findByGongguProduct(long gongguProductId);
 }

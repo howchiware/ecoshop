@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/tabs.css" type="text/css">
 <style type="text/css">
   .md-img { width: 80px; height: 80px; }
+  .original-price { text-decoration: line-through; color: #999; font-size: 0.9em; }
 </style>
 </head>
 <body>
@@ -46,30 +47,38 @@
 								<th width="125">총금액</th>
 							</tr>
 							
-							<c:forEach var="dto" items="${listProduct}" varStatus="status">
+							<c:forEach var="dto" items="${listGongguProduct}" varStatus="status">
 								<tr class="text-center" valign="middle">
 									<td>
-										<img class="border rounded md-img" src="${pageContext.request.contextPath}/uploads/products/${dto.thumbnail}">
+										<img class="border rounded md-img" src="${pageContext.request.contextPath}/uploads/gonggu/${dto.gongguThumbnail}">
 									</td>
 									<td>
-										<div class="fw-semibold">${dto.productName}</div>
+										<div class="fw-semibold">${dto.gongguProductName}</div>
 							
 										<input type="hidden" name="gongguProductId" value="${dto.gongguProductId}">
-										<input type="hidden" name="prices" value="${dto.price}">
+										<input type="hidden" name="prices" value="${dto.salePrice}">
+										<input type="hidden" name="cnt" value="${dto.cnt}">
+										<input type="hidden" name="usedPoint" value="0">										
+										<input type="hidden" name="classify" value="2">
 									</td>
 									<td>
 										${dto.cnt}
 									</td>
 									<td >
 										<div>
-											<label class="fw-light">
-												<fmt:formatNumber value="${dto.price}"/>원
+											<label class="original-price">
+												<fmt:formatNumber value="${dto.originalPrice}"/>원
+											</label>
+										</div>
+										<div>
+											<label class="fw-semibold">
+												<fmt:formatNumber value="${dto.salePrice}"/>원
 											</label>
 										</div>
 									</td>
 									<td>
 										<label class="fw-semibold">
-											<fmt:formatNumber value="${dto.productMoney}"/>원
+												<fmt:formatNumber value="${dto.salePrice}"/>원
 										</label>
 									</td>
 								</tr>
@@ -143,17 +152,11 @@
 									<fmt:formatNumber value="${deliveryCharge}"/>원
 								</label>
 							</div>
-							<div class="ps-2 pt-1 text-end">
-								<label>포인트사용액 : </label>
-								<label class="point-usedPoint">
-									0원
-								</label>
-							</div>
 						</div>	
 						
 						<div class="pt-3 pb-3 text-center">
 							<button type="button" class="btn-accent btn-lg" style="width: 250px;" onclick="sendOk()">결제하기</button>
-							<button type="button" class="btn-default btn-lg" style="width: 250px;" onclick="location.href='${pageContext.request.contextPath}/';">결제취소</button>
+							<button type="button" class="btn-default btn-lg" style="width: 250px;" onclick="goBack()">결제취소</button>
 						</div>
 					</form>
 
@@ -165,20 +168,6 @@
 </main>
 
 <script type="text/javascript">
-$(function(){
-	$('.btn-usedPoint').click(function(){
-		const f = document.paymentForm;
-		
-		let balance = Number($(this).attr('data-balance')) || 0;
-		f.usedPoint.value = balance;
-		
-		let payment = Number(f.payment.value) - balance;
-		
-		$('.product-totalAmount').text(payment.toLocaleString() + '원');
-		$('.point-usedPoint').text(balance.toLocaleString() + '원');
-	});
-	
-
 function sendOk() {
 	const f = document.paymentForm;
 	
@@ -187,47 +176,16 @@ function sendOk() {
 		return;
 	}
 	
-	if(! /^\d+$/.test(f.usedPoint.value)) {
-		alert('숫자만 입력 가능합니다.');
-		return;
-	}
-
-	let balance = Number($('.btn-usedPoint').attr('data-balance')) || 0;
-	let usedPoint = Number(f.usedPoint.value);
-
-	if(usedPoint > balance) {
-		alert('사용 가능 포인터는 보유 포인터를 초과 할수 없습니다.');
-		return;
-	}
-	
-	// 결제 금액 = 총금액 - 포인트사용금액
-	let p = Number(f.payment.value) - usedPoint;
-	f.payment.value = p;
-	
 	// 결제 API에서 응답 받을 파라미터
 	let imp_uid = 'ID-1234';
-	let pay_method = '카드결제'; // 결제유형
-	let card_name = 'BC 카드';  // 카드 이름
-	let card_number = '1234567890'; // 카드번호
-	let apply_num = '1234567890'; // 승인번호
-	let apply_date = ''; // 승인 날짜
-	// toISOString() : 'YYYY-MM-DDTHH:mm:ss.sssZ' 형식
-	apply_date = new Date().toISOString().replace('T', ' ').slice(0, -5); // YYYY-MM-DD HH:mm:ss
+	let pay_method = '카드결제';
+	let card_name = 'BC 카드';
+	let card_number = '1234567890';
+	let apply_num = '1234567890';
+	let apply_date = '';
+	apply_date = new Date().toISOString().replace('T', ' ').slice(0, -5);
 
-	// 결제 API에 요청할 파라미터
-	let payment = f.payment.value; // 결제할 금액
-	let merchant_uid = '${productOrderNumber}';  // 고유 주문번호
-	let productName = '${productOrderName}';  // 주문상품명
-	let buyer_email = '${orderUser.email}';  // 구매자 이메일
-	let buyer_name = '${orderUser.name}';  // 구매자 이름
-	let buyer_tel = '${orderUser.tel}';   // 구매자 전화번호(필수)
-	let buyer_addr = '${orderUser.addr1}' + ' ' + '${orderUser.addr2}';  // 구매자 주소
-	buyer_addr = buyer_addr.trim();
-	let buyer_postcode = '${orderUser.zip}'; // 구매자 우편번호
-	
-	// 결제가 성공한 경우 ------------------------
-	
-	// 결제 방식, 카드번호, 승인번호, 결제 날짜
+	// 결제 성공 시 폼 데이터 설정
     f.imp_uid.value = imp_uid;
     f.payMethod.value = pay_method;
     f.cardName.value = card_name || '';
@@ -235,20 +193,21 @@ function sendOk() {
     f.applyNum.value = apply_num;
     f.applyDate.value = apply_date;
 	
-	f.action = '${pageContext.request.contextPath}/productsOrder/paymentOk';
+	f.action = '${pageContext.request.contextPath}/gongguOrder/paymentOk';
 	f.submit();
+}
+function goBack() {
+    history.back();
 }
 </script>
 
-<c:import url="/WEB-INF/views/productsOrder/deliveryInfo.jsp"/>
+<c:import url="/WEB-INF/views/gongguOrder/deliveryInfo.jsp"/>
 
 <footer>
 	<jsp:include page="/WEB-INF/views/layout/footer.jsp"/>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>	
 	<script type="text/javascript" src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </footer>
-
-
 
 </body>
 </html>
