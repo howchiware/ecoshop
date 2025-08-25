@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sp.app.model.Destination;
+import com.sp.app.model.Point;
 import com.sp.app.model.ProductLike;
 import com.sp.app.model.ProductOrder;
 
@@ -25,4 +26,7 @@ public interface MyShoppingService {
 	public void updateDefaultDestination(Map<String, Object> map) throws Exception;
 	public void deleteDestination(Map<String, Object> map) throws Exception;
 	public Destination defaultDelivery(Long member_id);
+
+	public int pointDataCount(Map<String, Object> map);
+	public List<Point> listPointHistory(Map<String, Object> map);
 }
