@@ -90,17 +90,14 @@ select.form-select {
 .table {
   background-color: #fff;
   border-collapse: collapse;
-  border: 1px solid #dee2e6;
 }
 .table thead th {
   background-color: #f8f9fa;
   font-weight: 600;
   text-align: center;
-  border: 1px solid #dee2e6;
 }
 .table td {
   vertical-align: middle;
-  border: 1px solid #dee2e6;
   background-color: #ffffff;
 }
 .table tbody tr:hover {
@@ -263,8 +260,6 @@ select.form-select {
 				</div>
 
 				<div class="modal-footer">
-					<button type="button" class="btn-manage"
-						data-bs-dismiss="modal">취소</button>
 					<button type="submit" form="managerForm"
 						class="btn-manage">등록</button>
 				</div>

@@ -98,10 +98,7 @@
       </ul>
     </li>
     <li>
-      <a href="#">포인트 관리 ></a>
-      <ul class="submenu">
-        <li><a href="#"> 포인트 지급</a></li>
-      </ul>
+      <a href="/admin/workshop/points">포인트 관리</a>
     </li>
 
     <li class="menu-title">광고</li>

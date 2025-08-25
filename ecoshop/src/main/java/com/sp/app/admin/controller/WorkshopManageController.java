@@ -17,7 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sp.app.common.MyUtil;
 import com.sp.app.common.StorageService;
+import com.sp.app.mapper.PointMapper;
+import com.sp.app.mapper.WorkshopMapper;
 import com.sp.app.model.Participant;
+import com.sp.app.model.Point;
 import com.sp.app.model.Workshop;
 import com.sp.app.model.WorkshopFaq;
 import com.sp.app.service.WorkshopService;
@@ -36,6 +39,8 @@ public class WorkshopManageController {
 	private final WorkshopService service;
 	private final MyUtil myUtil;
 	private final StorageService storageService;
+	private final WorkshopMapper workshopMapper;
+	private final PointMapper pointMapper;
 
 	private String uploadPath;
 
@@ -43,72 +48,73 @@ public class WorkshopManageController {
 	public void init() {
 		uploadPath = this.storageService.getRealPath("/uploads/workshop");
 	}
-	
-		// 카테고리 목록
-		@GetMapping("/category/manage")
-		public String categoryManage(@RequestParam(name = "page", defaultValue = "1") int current_page, Model model) {
-			try {
-				int size = 10;
-				
-				Map<String, Object> pmap = new HashMap<>();
-				pmap.put("offset", 0);
-				pmap.put("size", size);
-				
-				List<Workshop> categoryList = service.listCategory(pmap);
 
-				model.addAttribute("page", current_page);
-				model.addAttribute("categoryList", categoryList);
-			} catch (Exception e) {
-				log.info("categoryManage : ", e);
-				model.addAttribute("categoryList", List.of());
-			}
+	// 카테고리 목록
+	@GetMapping("/category/manage")
+	public String categoryManage(@RequestParam(name = "page", defaultValue = "1") int current_page, Model model) {
+		try {
+			int size = 10;
 
-			return "admin/workshop/categoryManage";
+			Map<String, Object> pmap = new HashMap<>();
+			pmap.put("offset", 0);
+			pmap.put("size", size);
+
+			List<Workshop> categoryList = service.listCategory(pmap);
+
+			model.addAttribute("page", current_page);
+			model.addAttribute("categoryList", categoryList);
+		} catch (Exception e) {
+			log.info("categoryManage : ", e);
+			model.addAttribute("categoryList", List.of());
 		}
 
-		// 카테고리 등록
-		@PostMapping("/category/write")
-		public String addCategory(Workshop dto, @RequestParam("categoryName") String categoryName,
-				HttpSession session) throws Exception {
-			try {
-				dto.setCategoryName(categoryName.trim());
-				service.insertCategory(dto);
-				
-				session.setAttribute("msg", "카테고리가 등록되었습니다.");
-			} catch (Exception e) {
-				log.info("addCategory : ", e);
-				session.setAttribute("msg", "카테고리 등록에 실패했습니다.");
-			}
-			return "redirect:/admin/workshop/category/manage";
+		return "admin/workshop/categoryManage";
+	}
+
+	// 카테고리 등록
+	@PostMapping("/category/write")
+	public String addCategory(Workshop dto, @RequestParam("categoryName") String categoryName, HttpSession session)
+			throws Exception {
+		try {
+			dto.setCategoryName(categoryName.trim());
+			service.insertCategory(dto);
+
+			session.setAttribute("msg", "카테고리가 등록되었습니다.");
+		} catch (Exception e) {
+			log.info("addCategory : ", e);
+			session.setAttribute("msg", "카테고리 등록에 실패했습니다.");
+		}
+		return "redirect:/admin/workshop/category/manage";
+	}
+
+	// 카테고리 수정
+	@PostMapping("/category/update")
+	public String updateCategory(Workshop dto, HttpSession session) throws Exception {
+		try {
+			service.updateCategory(dto);
+			session.setAttribute("msg", "카테고리가 수정되었습니다.");
+		} catch (Exception e) {
+			log.info("writeSubmitProgram : ", e);
+			session.setAttribute("msg", "카테고리 등록에 실패했습니다.");
 		}
 
-		// 카테고리 수정
-		@PostMapping("/category/update")
-		public String updateCategory(Workshop dto, HttpSession session) throws Exception {
-			try {
-				service.updateCategory(dto);
-				session.setAttribute("msg", "카테고리가 수정되었습니다.");
-			} catch (Exception e) {
-				log.info("writeSubmitProgram : ", e);
-				session.setAttribute("msg", "카테고리 등록에 실패했습니다.");
-			}
-			
-			return "redirect:/admin/workshop/category/manage";
+		return "redirect:/admin/workshop/category/manage";
+	}
+
+	// 카테고리 삭제
+	@PostMapping("/category/delete")
+	public String deleteCategory(@RequestParam(name = "categoryId") Long categoryId, HttpSession session)
+			throws Exception {
+		try {
+			service.deleteCategory(categoryId);
+			session.setAttribute("msg", "카테고리가 삭제되었습니다.");
+		} catch (Exception e) {
+			log.info("deleteCategory : ", e);
+			session.setAttribute("msg", "카테고리 삭제에 실패했습니다.");
 		}
 
-		// 카테고리 삭제
-		@PostMapping("/category/delete")
-		public String deleteCategory(@RequestParam(name = "categoryId") Long categoryId, HttpSession session) throws Exception {
-			try {
-				service.deleteCategory(categoryId);
-				session.setAttribute("msg", "카테고리가 삭제되었습니다.");
-			} catch (Exception e) {
-				log.info("deleteCategory : ", e);
-				session.setAttribute("msg", "카테고리 삭제에 실패했습니다.");
-			}
-
-			return "redirect:/admin/workshop/category/manage";
-		}
+		return "redirect:/admin/workshop/category/manage";
+	}
 
 	// 프로그램 등록 폼
 	@GetMapping("/program/write")
@@ -144,8 +150,7 @@ public class WorkshopManageController {
 	@GetMapping("/program/list")
 	public String programList(@RequestParam(name = "page", defaultValue = "1") int current_page,
 			@RequestParam(name = "kwd", defaultValue = "") String kwd,
-			@RequestParam(name = "categoryId", required = false) Long categoryId, 
-			Model model) {
+			@RequestParam(name = "categoryId", required = false) Long categoryId, Model model) {
 
 		try {
 			kwd = myUtil.decodeUrl(kwd);
@@ -331,9 +336,9 @@ public class WorkshopManageController {
 			@RequestParam(name = "page", defaultValue = "1") String page,
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
 			@RequestParam(name = "kwd", defaultValue = "") String kwd) throws Exception {
-		
+
 		String query = "page=" + page;
-		
+
 		try {
 			kwd = myUtil.decodeUrl(kwd);
 			if (!kwd.isBlank()) {
@@ -366,10 +371,10 @@ public class WorkshopManageController {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("schType", schType);
 			map.put("kwd", kwd);
-			
+
 			if (workshopStatus != null && !workshopStatus.isBlank()) {
-		        map.put("workshopStatus", workshopStatus);
-		    }
+				map.put("workshopStatus", workshopStatus);
+			}
 
 			dataCount = service.workshopDataCount(map);
 			if (dataCount > 0) {
@@ -426,7 +431,7 @@ public class WorkshopManageController {
 
 		return "admin/workshop/workshopList";
 	}
-	
+
 	@PostMapping("/updateStatus")
 	@ResponseBody
 	public Map<String, Object> updateStatus(@RequestBody Workshop dto) {
@@ -556,18 +561,17 @@ public class WorkshopManageController {
 
 	@PostMapping("/update")
 	public String updateSubmitWorkshop(Workshop dto, @RequestParam(name = "page", defaultValue = "1") String page,
-			@RequestParam(name = "thumbnail", required = false) MultipartFile newThumbnail)
-			throws Exception {
+			@RequestParam(name = "thumbnail", required = false) MultipartFile newThumbnail) throws Exception {
 		try {
 			Workshop workshop = service.findWorkshopById(dto.getWorkshopId());
-			
-			if(newThumbnail != null && !newThumbnail.isEmpty()) {
+
+			if (newThumbnail != null && !newThumbnail.isEmpty()) {
 				String path = storageService.uploadFileToServer(newThumbnail, uploadPath);
 				dto.setThumbnailPath(path);
 			} else {
 				dto.setThumbnailPath(workshop.getThumbnailPath());
 			}
-			
+
 			service.updateWorkshop(dto);
 		} catch (Exception e) {
 			log.info("update Workshop : ", e);
@@ -607,10 +611,10 @@ public class WorkshopManageController {
 			for (MultipartFile file : files) {
 				if (file != null && !file.isEmpty()) {
 					String path = storageService.uploadFileToServer(file, uploadPath);
-					
+
 					dto.setWorkshopId(workshopId);
 					dto.setWorkshopImagePath(path);
-					
+
 					service.insertWorkshopPhoto(dto);
 				}
 			}
@@ -634,33 +638,34 @@ public class WorkshopManageController {
 
 	// FAQ 관리
 	@GetMapping("/faq/manage")
-	public String faqManage(@RequestParam(name = "page", defaultValue = "1") int current_page, @RequestParam(name = "programId", required = false) Long programId, Model model) {
+	public String faqManage(@RequestParam(name = "page", defaultValue = "1") int current_page,
+			@RequestParam(name = "programId", required = false) Long programId, Model model) {
 		try {
 			int size = 10;
-			
+
 			Map<String, Object> pmap = new HashMap<>();
 			pmap.put("offset", 0);
 			pmap.put("size", size);
-			
+
 			model.addAttribute("page", current_page);
 
 			List<Workshop> programList = service.listProgram(pmap);
 
 			model.addAttribute("programList", programList);
-			
-			if(programId == null && programList != null && !programList.isEmpty()) {
+
+			if (programId == null && programList != null && !programList.isEmpty()) {
 				programId = programList.get(0).getProgramId();
 			}
 			model.addAttribute("programId", programId);
-			
+
 			List<WorkshopFaq> faqList = List.of();
-			if(programId != null) {
+			if (programId != null) {
 				Map<String, Object> map = new HashMap<>();
 				map.put("programId", programId);
 				faqList = service.listFaq(map);
 			}
 			model.addAttribute("faqList", faqList);
-			
+
 		} catch (Exception e) {
 			log.info("faqManage : ", e);
 		}
@@ -712,15 +717,16 @@ public class WorkshopManageController {
 
 	// 참여자 목록
 	@GetMapping("/participant/list")
-	public String participantList(@RequestParam(name = "page", defaultValue = "1") int current_page, @RequestParam(name = "workshopId", required = false) Long workshopId, Model model) {
+	public String participantList(@RequestParam(name = "page", defaultValue = "1") int current_page,
+			@RequestParam(name = "workshopId", required = false) Long workshopId, Model model) {
 
 		try {
 			int size = 20;
-			
+
 			Map<String, Object> wmap = new HashMap<String, Object>();
 			wmap.put("offset", 0);
 			wmap.put("size", size);
-			
+
 			model.addAttribute("page", current_page);
 
 			List<Workshop> workshopList = service.listWorkshop(wmap);
@@ -779,6 +785,77 @@ public class WorkshopManageController {
 		} catch (Exception e) {
 			return Map.of("success", false, "message", e.getMessage());
 		}
+	}
+
+	// 포인트 목록
+	@GetMapping("/points")
+	public String reviewPointList(@RequestParam(name = "page", defaultValue = "1") int page,
+			@RequestParam(name = "size", defaultValue = "20") int size,
+			@RequestParam(name = "workshopId", required = false) Long workshopId, Model model) {
+		try {
+			int offset = (page - 1) * size;
+			Map<String, Object> q = new HashMap<>();
+			q.put("offset", offset);
+			q.put("size", size);
+			if (workshopId != null)
+				q.put("workshopId", workshopId);
+
+			List<Map<String, Object>> rows = workshopMapper.listReviewRewardRows(q);
+			int total = workshopMapper.countReviewRewardRows(q);
+
+			model.addAttribute("rows", rows);
+			model.addAttribute("pointPolicy", 1000);
+			model.addAttribute("page", page);
+			model.addAttribute("size", size);
+			model.addAttribute("total", total);
+
+			return "admin/workshop/pointManage";
+		} catch (Exception e) {
+			log.error("reviewPointList : ", e);
+			return "redirect:admin/workshop/list";
+		}
+	}
+
+	// 포인트 지급
+	@PostMapping("/points/pay")
+	public String pay(@RequestParam(name = "workshopReviewId", required = false) Long workshopReviewId,
+			@RequestParam(name = "participantId") long participantId,
+			@RequestParam(name = "workshopId") long workshopId, HttpSession session) {
+		if (workshopReviewId == null) {
+		    session.setAttribute("msg", "리뷰 ID가 비어있습니다.");
+		    return "redirect:/admin/workshop/points";
+		}
+
+		try {
+			Long memberId = workshopMapper.findMemberIdByParticipantId(participantId);
+			if (memberId == null) {
+				session.setAttribute("msg", "회원 정보를 찾을 수 없습니다.");
+				return "redirect:/admin/workshop/points";
+			}
+
+			String orderId = "REVIEW:" + workshopReviewId; 
+			boolean already = pointMapper.listMemberPoints(memberId).stream()
+					.anyMatch(p -> orderId.equals(p.getOrderId()));
+			if (already) {
+				session.setAttribute("msg", "이미 지급된 내역입니다.");
+				return "redirect:/admin/workshop/points";
+			}
+
+			Point p = new Point();
+			p.setMemberId(memberId);
+			p.setReason("워크샵 후기 작성 보상");
+			p.setClassify(1); 
+			p.setPoints(1000); 
+			p.setOrderId(orderId);
+
+			pointMapper.insertPoint(p); 
+			session.setAttribute("msg", "지급 완료되었습니다.");
+
+		} catch (Exception e) {
+			log.error("pay : ", e);
+			session.setAttribute("msg", "지급 처리 중 오류가 발생했습니다.");
+		}
+		return "redirect:/admin/workshop/points";
 	}
 
 }

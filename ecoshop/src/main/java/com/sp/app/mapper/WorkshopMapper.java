@@ -92,7 +92,11 @@ public interface WorkshopMapper {
 	
 	// 워크샵 상태 검증
 	public Workshop findWorkshopStatusAndCapacity(long workshopId);
+	public void updateWorkshopStatus(Workshop dto);	
 	
-	public void updateWorkshopStatus(Workshop dto);
+	List<Map<String,Object>> listReviewRewardRows(Map<String,Object> map);
+	int countReviewRewardRows(Map<String,Object> map);
+	Long findMemberIdByParticipantId(long participantId);
+
 	
 }

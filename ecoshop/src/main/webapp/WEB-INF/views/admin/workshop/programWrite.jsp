@@ -60,15 +60,20 @@
 	<c:set var="ctx" value="${pageContext.request.contextPath}" />
 
 	<main class="main-container">
-
 		<div class="container py-3"></div>
-		
-		<div class="outside">
-		<div class="d-flex align-items-center justify-content-between mb-3">
-			<h5 class="main-title">프로그램 등록</h5>
-		</div>
 
-		<hr>
+		<div class="outside">
+			<div class="d-flex align-items-center justify-content-between mb-3">
+				<h5 class="main-title">
+					<c:choose>
+						<c:when test="${mode == 'update'}">프로그램 수정</c:when>
+						<c:otherwise>프로그램 등록</c:otherwise>
+					</c:choose>
+				</h5>
+			</div>
+
+			<hr>
+
 
 			<section class="mb-4">
 				<div class="row g-2 align-items-center mb-2">
@@ -108,21 +113,20 @@
 						<textarea name="programContent" rows="8" class="form-control">${dto.programContent}</textarea>
 					</div>
 				</div>
+
+				<div class="center-btn-container">
+					<c:choose>
+						<c:when test="${mode == 'update'}">
+							<button type="submit" class="btn-manage">등록</button>
+						</c:when>
+						<c:otherwise>
+							<button type="submit" class="btn-manage">등록</button>
+						</c:otherwise>
+					</c:choose>
+				</div>
+
 			</form>
 		</div>
-
-		<div class="center-btn-container">
-			<c:choose>
-				<c:when test="${mode == 'update'}">
-					<button type="submit" class="btn-manage">수정</button>
-				</c:when>
-				<c:otherwise>
-					<button type="submit" class="btn-manage">등록</button>
-				</c:otherwise>
-			</c:choose>
-		</div>
-		</form>
-		</section>
 
 	</main>
 
