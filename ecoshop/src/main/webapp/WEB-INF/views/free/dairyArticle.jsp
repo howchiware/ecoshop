@@ -67,24 +67,21 @@
 		    <div class="actions-left">
 		        <c:choose>
 		            <c:when test="${sessionScope.member.memberId==dto.memberId}">
-		                <button type="button" class="btn btn-default" onclick="location.href='${pageContext.request.contextPath}/free/update?freeId=${dto.freeId}&${query}';">수정</button>
+		                <button type="button" class="btn-action btn-update" onclick="location.href='${pageContext.request.contextPath}/free/update?freeId=${dto.freeId}&${query}';">수정</button>
 		            </c:when>
 		            <c:otherwise>
-		                <button type="button" class="btn-default btnPostsReport" data-freeid="${dto.freeId}">신고</button>
+		                <button type="button" class="btn-action btn-report btnPostsReport" data-freeid="${dto.freeId}">신고</button>
 		            </c:otherwise>
 		        </c:choose>
 		        <c:choose>
 		            <c:when test="${sessionScope.member.memberId==dto.memberId || sessionScope.member.userLevel>50}">
-		                <button type="button" class="btn-default" onclick="deleteOk();">삭제</button>
+		                <button type="button" class="btn-action btn-delete" onclick="deleteOk();">삭제</button>
 		            </c:when>
-		            <c:otherwise>
-		                <button type="button" class="btn-default" disabled>차단</button>
-		            </c:otherwise>
 		        </c:choose>
 		    </div>
 		
 		    <div class="actions-right">
-		        <button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/free/dairyList?${query}';">목록</button>
+		        <button type="button" class="btn btn-primary justify-content" onclick="location.href='${pageContext.request.contextPath}/free/dairyList?${query}';">목록</button>
 		    </div>
 		</div>
 

@@ -7,7 +7,7 @@ function attendanceOk(event) {
         window.location.href = CONTEXT_PATH + '/member/login';
         return;
       }
-      alert(data.success ? '출석 체크 완료! 오늘도 화이팅하세요! 💪' : '😁 ' + data.message);
+      alert(data.success ? data.message: data.message);
       if (data.success) window.location.reload();
     })
     .catch(() => alert('오류가 발생했습니다.'));

@@ -67,13 +67,19 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-const quizData = {
-    correctAnswer: '${todayQuiz.answer == "1" ? "O" : "X"}',
-    explanation: `${fn:escapeXml(todayQuiz.commentary)}`,
-    isSolved: ${isSolved}
-};
-</script>
+<c:choose>
+    <c:when test="${not empty todayQuiz}">
+        <script>
+        const CONTEXT_PATH = '${pageContext.request.contextPath}';
+        const quizData = {
+            quizId: ${todayQuiz.quizId},
+            isSolved: ${isSolved}
+        };
+        </script>
+    </c:when>
+    <c:otherwise>
+        </c:otherwise>
+</c:choose>
 <script src="${pageContext.request.contextPath}/dist/jsEvent/quiz.js"></script>
 </body>
 </html>

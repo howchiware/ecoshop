@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.sp.app.mapper.EventMapper;
 import com.sp.app.model.Attendance;
+import com.sp.app.model.Point;
 import com.sp.app.model.Quiz;
 
 import lombok.RequiredArgsConstructor;
@@ -92,28 +93,13 @@ public class EventServiceImpl implements EventService {
 		return result;
 		
 	}
-
-	@Override
-	public void addPoints(long memberId, int i) {
-		
-		try {
-		
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-	}
-
 	
 	/* 퀴즈 영역 */
 	@Override
-	public void playQuiz(long memberId) throws SQLException {
+	public void playQuiz(Quiz dto) throws SQLException {
 		
 		try {
-			Quiz dto = new Quiz();
-			dto.setMemberId(memberId);
-			mapper.playQuiz(memberId);
-			
+			mapper.playQuiz(dto);
 		} catch (Exception e) {
 			log.info("playQuiz : ", e);
 			throw e;
@@ -137,12 +123,6 @@ public class EventServiceImpl implements EventService {
 			log.info("isAlreadyCheckedQuiz : ", e);
 			return false;
 		}
-		
-	}
-
-	@Override
-	public void addPointByQuiz(long memberId, int i) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -176,6 +156,16 @@ public class EventServiceImpl implements EventService {
 		} catch (Exception e) {
 			log.info("isQuizSolved : ", e);
 			return false;
+		}
+	}
+
+	@Override
+	public void insertPoint(Point dto) throws SQLException {
+		try {
+			mapper.insertPoint(dto);
+		} catch (Exception e) {
+			log.info("insertPoint : ", e);
+			throw e;
 		}
 	}
 

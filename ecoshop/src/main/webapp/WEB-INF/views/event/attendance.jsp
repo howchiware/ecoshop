@@ -73,7 +73,6 @@
 				</c:choose>
 			</div>
 		</div>
-
 	</main>
 
 	<footer>

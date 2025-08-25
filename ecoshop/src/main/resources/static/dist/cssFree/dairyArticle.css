@@ -98,19 +98,39 @@ main.container {
 	margin-top: 2.5rem;
 }
 
-.btn-default {
-	background-color: #f8f9fa;
-	border-color: #dee2e6;
-	color: #333;
-	padding: 6px 14px;
-	font-size: 16px;
+.btn-action {
+	padding: 0.5rem 1.25rem;
 	border-radius: 6px;
+	border: none;
 	transition: all 0.2s ease-in-out;
+	margin-right: 5px;
 }
 
-.btn-default:hover {
-	background-color: #e2e6ea;
-	border-color: #dae0e5;
+.btn-action.btn-update {
+	background-color: #315e4e;
+	color: #fff;
+}
+
+.btn-action.btn-update:hover {
+	background-color: #234d3c;
+}
+
+.btn-action.btn-delete {
+	background-color: #dc3545;
+	color: #fff;
+}
+
+.btn-action.btn-delete:hover {
+	background-color: #c82333;
+}
+
+.btn-action.btn-report {
+	background-color: #6c757d;
+	color: #fff;
+}
+
+.btn-action.btn-report:hover {
+	background-color: #5a6268;
 }
 
 .btn-outline-danger {
@@ -137,6 +157,15 @@ main.container {
 	border-color: #234d3c;
 	transform: translateY(-2px);
 	box-shadow: 0 4px 10px rgba(49, 94, 78, 0.25);
+}
+
+.article-actions {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 2rem;
+	padding-top: 1.5rem;
+	border-top: 1px solid #e9ecef;
 }
 
 /* 댓글 */
