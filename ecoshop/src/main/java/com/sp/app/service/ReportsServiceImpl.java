@@ -158,4 +158,9 @@ public class ReportsServiceImpl implements ReportsService {
 		
 		return dto;
 	}
+	
+	@Override
+	public Reports getReportStats() {
+		 return mapper.getReportStats();
+	}
 }

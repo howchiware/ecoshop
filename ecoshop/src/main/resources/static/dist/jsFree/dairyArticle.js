@@ -234,9 +234,9 @@ $(function(){
 });
 
 // 게시글 신고
-$('.section').on('click', '.btnPostsReport', function(){
-		let freeId = $(this).attr('data-data-freeid');
-		reports('free', freeId, 'posts', '자유 게시판');
+$('.container').on('click', '.btnPostsReport', function(){
+		let freeId = $(this).attr('data-freeid');
+		reports('freeBoard', freeId, 'posts', '자유 게시판');
 	});
 	
 // 댓글 신고
@@ -250,3 +250,51 @@ $('.reply-session').on('click', '.notifyReplyAnswer', function(){
 	let replyId = $(this).attr('data-replyId');
 	reports('freeReply', replyId, 'replyAnswer', '자유 게시판 댓글에 대한 답글');
 });
+
+function reports(target, targetNum, contentType, contentTitle) {
+	if(! target || ! targetNum || ! contentType || ! contentTitle) {
+		alert('신고 게시글이 선택되지 않은 상태입니다.');
+		return;
+	}
+	
+	const f = document.reportsForm;
+	f.reasonCode.value = '';
+	f.reasonDetail.value = '';
+	
+	f.target.value = target;
+	f.targetNum.value = targetNum;
+	f.contentType.value = contentType;
+	f.contentTitle.value = contentTitle;
+	
+	$('#reportDialogModal').modal('show');
+}
+
+function sendReports() {
+	const f = document.reportsForm;
+	
+	if(! f.reasonCode.value.trim()) {
+		alert('신고 사유를 선택하세요.');
+		f.reasonCode.focus();
+		return;
+	}
+
+	const contextPath = f.contextPath.value.trim();
+	const url = contextPath + '/roports/saved';
+	const formData = new FormData(f);
+	const params = new URLSearchParams(formData).toString();
+
+	const fn = function(data) {
+		const state = data.state;
+		if(state === 'true') {
+			alert('신고사항이 접수되었습니다.');
+		} else if(state === 'liked') {
+			alert('신고는 한번만 가능합니다.');
+		} else {
+			alert('신고사항 처리가 실패했습니다.');
+		}
+		
+		$('#reportDialogModal').modal('hide');
+	};
+	
+	ajaxRequest(url, 'post', params, 'json', fn);
+}

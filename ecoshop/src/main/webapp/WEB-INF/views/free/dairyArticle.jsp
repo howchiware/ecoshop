@@ -63,28 +63,29 @@
 			</div>
 		</div>
 
-		<div class="row button-group">
-			<c:choose>
-				<c:when test="${sessionScope.member.memberId==dto.memberId}">
-					<button type="button" class="btn btn-default" onclick="location.href='${pageContext.request.contextPath}/free/update?freeId=${dto.freeId}&${query}';">수정</button>
-				</c:when>
-				<c:otherwise>
-					<button type="button" class="btn-default btnPostsReport" data-freeid="${dto.freeId}">신고</button>
-				</c:otherwise>
-			</c:choose>
-			<c:choose>
-				<c:when test="${sessionScope.member.memberId==dto.memberId || sessionScope.member.userLevel>50}">
-					<button type="button" class="btn-default" onclick="deleteOk();">삭제</button>
-				</c:when>
-				<c:otherwise>
-					<button type="button" class="btn-default" disabled>차단</button>
-				</c:otherwise>
-			</c:choose>
-
-
-		</div>
-		<div class="col-md-6 text-end">
-			<button data-freeid="${dto.freeId}" type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/free/dairyList?${query}';">목록</button>
+		<div class="article-actions">
+		    <div class="actions-left">
+		        <c:choose>
+		            <c:when test="${sessionScope.member.memberId==dto.memberId}">
+		                <button type="button" class="btn btn-default" onclick="location.href='${pageContext.request.contextPath}/free/update?freeId=${dto.freeId}&${query}';">수정</button>
+		            </c:when>
+		            <c:otherwise>
+		                <button type="button" class="btn-default btnPostsReport" data-freeid="${dto.freeId}">신고</button>
+		            </c:otherwise>
+		        </c:choose>
+		        <c:choose>
+		            <c:when test="${sessionScope.member.memberId==dto.memberId || sessionScope.member.userLevel>50}">
+		                <button type="button" class="btn-default" onclick="deleteOk();">삭제</button>
+		            </c:when>
+		            <c:otherwise>
+		                <button type="button" class="btn-default" disabled>차단</button>
+		            </c:otherwise>
+		        </c:choose>
+		    </div>
+		
+		    <div class="actions-right">
+		        <button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/free/dairyList?${query}';">목록</button>
+		    </div>
 		</div>
 
 
@@ -111,7 +112,7 @@
 	<footer>
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 	</footer>
-
+	<jsp:include page="/WEB-INF/views/posts/report.jsp"/>
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<script src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

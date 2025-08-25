@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.sp.app.admin.model.InquiryManage;
-import com.sp.app.service.InquiryService;
+import com.sp.app.admin.service.InquiryManageService;
+import com.sp.app.model.Reports;
+import com.sp.app.service.ReportsService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,22 +20,29 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(value = "/admin/blockAndInquiry/*")
 public class BlockAndInquiryManageController {
 	
-	private final InquiryService service;
+	private final InquiryManageService service;
+	private final ReportsService reService;
 	
 	@GetMapping("main")
 	public String blockList(Model model) {
 		
 		try {
+			/* 문의 */
 			InquiryManage stats = service.getInquiryStats();
-			
 			model.addAttribute("waitInquiry", stats.getWaitInquiry());
 			model.addAttribute("allInquiry", stats.getAllInquiry());
-			
-			int rate = 0;
+
+			int rateInquiry = 0;
 			if(stats.getAllInquiry() > 0) {
-				rate = (int)(((double)stats.getCompInquiry() / stats.getAllInquiry()) * 100);
+				rateInquiry = (int)(((double)stats.getCompInquiry() / stats.getAllInquiry()) * 100);
 			}
-			model.addAttribute("rate", rate);
+			
+			model.addAttribute("rateInquiry", rateInquiry);
+			
+			/* 신고 */
+			Reports reStats = reService.getReportStats();
+			model.addAttribute("waitReport", reStats.getWaitReport());
+			model.addAttribute("allReport", reStats.getAllReport());
 			
 		} catch (Exception e) {
 			log.info("blockList: ", e);

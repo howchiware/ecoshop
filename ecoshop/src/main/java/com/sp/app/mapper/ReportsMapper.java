@@ -28,5 +28,6 @@ public interface ReportsMapper {
 	public void deletePosts(Map<String, Object> map) throws SQLException;
 	
 	public Reports findByPostsId(Map<String, Object> map);
+	public Reports getReportStats();
 }
 

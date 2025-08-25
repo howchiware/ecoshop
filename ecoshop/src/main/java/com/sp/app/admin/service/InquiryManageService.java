@@ -18,6 +18,5 @@ public interface InquiryManageService {
 	public void updateCategory(InquiryManage dto) throws Exception;
 	public void deleteCategory(long categoryId) throws Exception;
 	
-	
-	
+	public InquiryManage getInquiryStats();
 }

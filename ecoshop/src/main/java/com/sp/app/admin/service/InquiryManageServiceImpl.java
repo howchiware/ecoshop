@@ -129,8 +129,10 @@ public class InquiryManageServiceImpl implements InquiryManageService {
 		
 	}
 
-	
-	
-	
+
+	@Override
+	public InquiryManage getInquiryStats() {
+		 return mapper.getInquiryStats();
+	}
 
 }

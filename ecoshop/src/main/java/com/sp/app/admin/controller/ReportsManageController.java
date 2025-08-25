@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/admin/reportsManage/*")
+@RequestMapping("/admin/reportsManage")
 public class ReportsManageController {
 	
 	private final ReportsService service;
@@ -116,8 +116,8 @@ public class ReportsManageController {
 	// AJAX - Text
 	@GetMapping("listRelated")
 	public String listRelated(
-			@RequestParam(name = "num") long num,
-			@RequestParam(name = "target_num") long target_num,
+			@RequestParam(name = "reportId") long reportId,
+			@RequestParam(name = "targetNum") long targetNum,
 			@RequestParam(name = "target") String target,
 			@RequestParam(name = "pageNo", defaultValue = "1") int current_page,
 			Model model) {
@@ -128,8 +128,8 @@ public class ReportsManageController {
 			int dataCount = 0;
 
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("num", num);
-			map.put("target_num", target_num);
+			map.put("reportId", reportId);
+			map.put("targetNum", targetNum);
 			map.put("target", target);
 
 			dataCount = service.dataRelatedCount(map);
@@ -164,8 +164,8 @@ public class ReportsManageController {
 		return "admin/reportsManage/listAll";
 	}
 	
-	@GetMapping("article/{num}")
-	public String article(@PathVariable(name = "num") long num,
+	@GetMapping("article/{reportId}")
+	public String article(@PathVariable(name = "reportId") long reportId,
 			@RequestParam(name = "status", defaultValue = "0") int status,			
 			@RequestParam(name = "page") String page,
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
@@ -183,7 +183,7 @@ public class ReportsManageController {
 				query += "&schType=" + schType + "&kwd=" + myUtil.encodeUrl(kwd);
 			}
 
-			Reports report = Objects.requireNonNull(service.findById(num));
+			Reports report = Objects.requireNonNull(service.findById(reportId));
 			if(report.getReasonDetail() != null) {
 				report.setReasonDetail(report.getReasonDetail().replaceAll("\n", "<br>"));
 			}
@@ -191,19 +191,24 @@ public class ReportsManageController {
 			// 대상 게시글 신고건수
 			Map<String, Object> countMap = new HashMap<>();
 			countMap.put("target", report.getTarget());
-			countMap.put("target_num", report.getTargetNum());
+			countMap.put("targetNum", report.getTargetNum());
 			int reportsCount = service.dataRelatedCount(countMap);
 			
 			// 대상 게시글 내용
 			Map<String, Object> map = new HashMap<>();
+			String target = report.getTarget(); // 타겟 테이블
 			map.put("target", report.getTarget());
 			if(report.getContentType().contains("reply")) {
-				map.put("field_name", "replyNum");
-			} else {
-				map.put("field_name", "num");
+				map.put("fieldName", "replyNum");
+			} else { // 실제 테이블의 PK
+				if("freeBoard".equals(target)) {
+					map.put("fieldName", "freeId"); 
+					map.put("pkColumnName", "freeId"); 
+				}
+				
 			}
-			map.put("content_type", report.getContentType());
-			map.put("num", report.getTargetNum());
+			map.put("contentType", report.getContentType());
+			map.put("reportId", report.getTargetNum());
 			
 			Reports posts = service.findByPostsId(map);
 			if(posts != null) {
@@ -239,7 +244,7 @@ public class ReportsManageController {
 	@PostMapping("update")
 	public String updateReports(
 			Reports dto,
-			@RequestParam(name = "report_action") String report_action,
+			@RequestParam(name = "reportAction") String reportAction,
 			@RequestParam(name = "status", defaultValue = "0") int status,			
 			@RequestParam(name = "page") String page,
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
@@ -266,18 +271,30 @@ public class ReportsManageController {
 			
 			// 게시글 블록 또는 삭제
 			Map<String, Object> map = new HashMap<>();
+			String target = dto.getTarget();
 			map.put("target", dto.getTarget());
-			map.put("field_name", dto.getContentType().contains("reply") ? "replyNum" : "num");
-			map.put("num", dto.getTargetNum());
+			
+			if(dto.getContentType().contains("reply")) {
+				// map.put("fieldName", dto.getContentType().contains("reply") ? "replyNum" : "reportId");				
+				map.put("fieldName", "replyNum");
+			} else {
+				if("freeBoard".equals(target)) {
+					map.put("fieldName", "freeId");
+				} else if("exBoard".equals(target)) {
+					map.put("fieldName", "primaryKey");
+				}
+			}
+			
+			map.put("reportId", dto.getTargetNum());
 			map.put("content_type", dto.getContentType());
 			
-			if(report_action.equals("blind")) {
+			if(reportAction.equals("blind")) {
 				map.put("block", 1);
 				service.updateBlockPosts(map);
-			} else if(report_action.equals("unlock")) {
+			} else if(reportAction.equals("unlock")) {
 				map.put("block", 0);
 				service.updateBlockPosts(map);
-			} else if(report_action.equals("delete")) {
+			} else if(reportAction.equals("delete")) {
 				service.deletePosts(map);
 			}
 
