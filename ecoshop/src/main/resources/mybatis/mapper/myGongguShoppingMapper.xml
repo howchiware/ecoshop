@@ -44,4 +44,85 @@
 			AND gongguProductId = #{gongguProductId}		
 		</if>
     </delete>
+    
+    <!-- 데스터네이션(배송지) 등록 -->
+	<insert id="insertDestination" parameterType="com.sp.app.model.Destination">
+		INSERT INTO myDestination(myDestinationId, memberId, addressName, recipientName, defaultDest, 
+			tel, zip, addr1, addr2, pickup, accessInfo, passcode, accessSave)
+		VALUES (myDestinationId_seq.NEXTVAL, #{memberId}, #{addressName, jdbcType=VARCHAR}, 
+			#{recipientName}, #{defaultDest},
+			#{tel}, #{zip}, #{addr1}, #{addr2}, 
+			#{pickup, jdbcType=VARCHAR}, #{accessInfo, jdbcType=VARCHAR}, 
+			#{passcode, jdbcType=VARCHAR}, #{accessSave})
+	</insert>
+	
+	<select id="destinationCount" parameterType="Long" resultType="Integer">
+		SELECT COUNT(*) FROM myDestination
+		WHERE member_id = #{member_id}
+	</select>
+	
+	<select id="listDestination" resultType="com.sp.app.model.Destination" parameterType="Long">
+    	SELECT myDestinationId, memberId, addressName, recipientName, defaultDest, tel, zip, addr1, addr2, 
+			pickup, accessInfo, passcode, accessSave
+    	FROM myDestination
+		WHERE memberId = #{memberId}
+		ORDER BY defaultDest DESC, myDestinationId DESC
+	</select>
+
+	<!-- 기본 배송지 -->
+	<select id="defaultDelivery" resultType="com.sp.app.model.Destination" parameterType="Long">
+		SELECT myDestinationId, memberId, addressName, recipientName, defaultDest, tel, zip, addr1, addr2, pickup, 
+			accessInfo, passcode, accessSave
+		FROM (
+			SELECT myDestinationId, memberId, addressName, recipientName, defaultDest, tel, zip, addr1, addr2, pickup, 
+				accessInfo, passcode, accessSave
+			FROM myDestination
+			WHERE memberId = #{memberId} AND defaultDest = 1
+				UNION ALL
+			SELECT myDestinationId, memberId, addressName, recipientName, defaultDest, tel, zip, addr1, addr2, pickup, 
+				accessInfo, passcode, accessSave
+			FROM myDestination
+			WHERE memberId = #{memberId} AND 
+				NOT EXISTS (SELECT 1 FROM myDestination WHERE memberId = #{memberId} AND defaultDest = 1)
+			ORDER BY defaultDest DESC, myDestinationId DESC
+		)
+		WHERE ROWNUM = 1
+	</select>
+
+	<update id="updateDestination" parameterType="com.sp.app.model.Destination">
+		UPDATE myDestination SET addressName = #{addressName, jdbcType=VARCHAR},  
+			recipientName = #{recipientName}, defaultDest = #{defaultDest},
+			tel = #{tel}, zip = #{zip}, addr1 = #{addr1}, addr2 = #{addr2},
+			pickup = #{pickup, jdbcType=VARCHAR}, accessInfo = #{accessInfo, jdbcType=VARCHAR}, 
+			passcode = #{passcode, jdbcType=VARCHAR} 
+		WHERE myDestinationId = #{myDestinationId} AND memberId = #{memberId}
+	</update>
+	
+	<update id="updateDefaultDestination" parameterType="map">
+		UPDATE myDestination SET defaultDest = #{defaultDest}
+		WHERE memberId = #{memberId}
+		<if test="myDestinationId != null">
+			AND myDestinationId = #{myDestinationId}
+		</if>
+	</update>
+
+	<delete id="deleteDestination" parameterType="map">
+		DELETE FROM myDestination
+		WHERE memberId = #{memberId} AND myDestinationId = #{myDestinationId}
+	</delete>
+	
+	<!-- 10개를 초과하는 경우 오래된 배송지 삭제 -->	
+    <delete id="deleteOldestDestination" parameterType="Long">
+        DELETE FROM myDestination
+        WHERE myDestinationId IN (
+            SELECT myDestinationId
+            FROM (
+                SELECT myDestinationId, ROW_NUMBER() OVER (ORDER BY defaultDest DESC, myDestinationId DESC) as rn
+                FROM myDestination
+                WHERE memberId = #{memberId}
+            )
+            WHERE rn &gt; 10
+        )
+    </delete>
+    
 </mapper>

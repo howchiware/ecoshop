@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.model.GongguOrderMapper">
+	<!-- 주문 등록 -->
+	<insert id="insertGongguOrder" parameterType="com.sp.app.model.GongguOrder">
+		INSERT INTO productOrder(orderId, memberId, orderDate, totalAmount, 
+			 deliveryCharge, payment, cancelAmount, orderState) 
+		VALUES (#{orderId}, #{memberId}, SYSDATE, #{totalAmount}, 
+			 #{deliveryCharge}, #{payment}, 0, 1)
+	</insert>
+
+	<!-- 결제 내역 등록 -->
+	<insert id="insertGongguPayDetail" parameterType="com.sp.app.model.GongguOrder">
+		INSERT INTO payment(orderId, imp_uid, payMethod, cardName, cardNumber, applyNum, applyDate) 
+		VALUES (#{orderId}, #{imp_uid, jdbcType=VARCHAR}, #{payMethod, jdbcType=VARCHAR}, #{cardName, jdbcType=VARCHAR}, 
+			#{cardNumber, jdbcType=VARCHAR}, #{applyNum, jdbcType=VARCHAR},
+			TO_DATE(#{applyDate}, 'YYYY-MM-DD HH24:MI:SS') )
+	</insert>
+
+	<!-- 주문 상세 정보 등록 -->
+	<insert id="insertGongguOrderDetail" parameterType="com.sp.app.model.GongguOrder">
+		INSERT INTO gongguOrderDetail(gongguOrderDetailId, orderId, cnt, price, 
+			gongguProductId,productMoney, userDelete, detailState) 
+		VALUES (gongguOrderDetail_seq.NEXTVAL, #{orderId}, #{cnt}, #{price},  
+			#{gongguProductId}, #{productMoney}, 0, 0)
+	</insert>
+	
+	<!-- 배송지 등록 -->
+	<insert id="insertGongguOrderDelivery" parameterType="com.sp.app.model.GongguOrder">
+		INSERT INTO deliveryDestination(orderId, recipientName, tel, zip, addr1, addr2, pickup, 
+			accessInfo, passcode, requestMemo) 
+		VALUES (#{orderId}, #{recipientName}, #{tel}, #{zip}, #{addr1}, #{addr2}, 
+			#{pickup, jdbcType=VARCHAR}, #{accessInfo, jdbcType=VARCHAR}, 
+			#{passcode, jdbcType=VARCHAR}, #{requestMemo, jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 주문 내역 상세 리스트 -->
+	<select id="listGongguOrderProduct" parameterType="java.util.List" resultType="com.sp.app.model.GongguOrder">
+    	SELECT d.gongguProductId, d.cnt,
+    		g.gongguProductName, d.price, g.gongguThumbnail
+    	FROM gongguOrderDetail d
+    	JOIN gongguProduct g ON d.gongguProductId = d.gongguProductId
+	</select>
+
+	<select id="didIBuyGonggu" parameterType="map" resultType="com.sp.app.model.GongguOrder">
+		SELECT od.orderId, od.gongguOrderDetailId, od.gongguProductId, po.memberId, orderDate, productMoney, gongguReviewId, content,
+		        rate, regDate, showReview, answer, answerId, answerDate, block
+		FROM gongguOrderDetail od
+		LEFT OUTER JOIN productOrder po ON od.orderId = po.orderId
+		LEFT OUTER JOIN gongguReview r ON od.gongguOrderDetailId = r.gongguReviewId
+		WHERE po.memberId = #{memberId} AND od.gongguProductId = #{gongguProductId} AND gongguReviewId IS NULL
+	</select>
+	
+	<select id="myReviewOfGonggu" parameterType="Long" resultType="com.sp.app.model.GongguReview">
+		SELECT gongguReviewId, memberId, gongguProductId, content, rate, showReview, regDate, answer, answerId, answerDate, block
+		FROM gongguReview
+		WHERE gongguReviewId = #{gongguReviewId}
+	</select>
+	
+</mapper>
