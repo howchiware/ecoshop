@@ -81,6 +81,9 @@ public class NoticeManageController {
 			if (current_page == 1) {
 				noticeList = service.listNoticeTop();
 			}
+			
+			current_page = Math.min(current_page, total_page);
+	         if(current_page < 1) current_page = 1;
 
 			// 리스트에 출력할 데이터를 가져오기
 			int offset = (current_page - 1) * size;
@@ -95,6 +98,9 @@ public class NoticeManageController {
 			String cp = req.getContextPath();
 			String query = "";
 			String listUrl = cp + "/admin/notice/list";
+			StringBuilder queryBuilder = new StringBuilder();
+	        queryBuilder.append("page=").append(current_page);
+	        queryBuilder.append("&size=").append(size);
 			if (! kwd.isBlank()) { // if(kwd.length() != 0) {
 				query = "schType=" + schType + "&kwd=" + myUtil.encodeUrl(kwd);
 				
@@ -110,7 +116,6 @@ public class NoticeManageController {
 			model.addAttribute("size", size);
 			model.addAttribute("total_page", total_page);
 			model.addAttribute("paging", paging);
-
 			model.addAttribute("schType", schType);
 			model.addAttribute("kwd", kwd);
 			
