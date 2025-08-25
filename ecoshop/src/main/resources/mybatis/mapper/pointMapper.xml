@@ -7,13 +7,17 @@
     <insert id="insertPoint" parameterType="com.sp.app.model.Point">
         INSERT INTO point(pointId, memberId, baseDate, reason, classify, points, postId, balance, orderId)
         VALUES (point_seq.NEXTVAL, #{memberId}, SYSDATE, #{reason, jdbcType=VARCHAR}, #{classify}, #{points}, 
-            #{postId},
+            #{postId, jdbcType=NUMERIC},
             NVL((SELECT balance FROM point 
-                 WHERE memberId = #{memberId}
-                 ORDER BY pointId DESC 
-                 FETCH FIRST 1 ROWS ONLY), 0) + #{points},
-                  #{orderId, jdbcType=VARCHAR}
-                )
+                WHERE memberId = #{memberId}
+                ORDER BY pointId DESC 
+                FETCH FIRST 1 ROWS ONLY), 0) + #{points},
+                  CASE
+  				WHEN <![CDATA[ #{orderId} IS NOT NULL AND TRIM(#{orderId}) <> '' ]]>
+  				THEN #{orderId}
+  				ELSE NULL
+				END
+               )
     </insert>
 	
 	<!-- 가장 최근 포인트 1건 (잔액 확인용) -->
