@@ -206,7 +206,10 @@ public class ChallengeServiceImpl implements ChallengeService {
             // 3. 참여 기록(challengeParticipation) 및 인증 게시글(certificationPost) 저장
             Long participationId = mapper.nextParticipationId();
             dto.setParticipationId(participationId);
-            this.insertParticipation(dto);
+            
+            // 직접 매퍼 호출
+            if(dto.getParticipationStatus() == null) dto.setParticipationStatus(0);
+            mapper.insertParticipation(dto);
 
             Long postId = mapper.nextPostId();
             dto.setPostId(postId);
@@ -228,21 +231,31 @@ public class ChallengeServiceImpl implements ChallengeService {
             // 5. 포인트 지급
             Challenge challengeInfo = mapper.findDailyDetail(dto.getChallengeId());
             if (challengeInfo != null && challengeInfo.getRewardPoints() > 0) {
-                Point pointDto = new Point();
-                pointDto.setMemberId(dto.getMemberId());
-                pointDto.setReason(challengeInfo.getTitle() + " 챌린지 참여 보상");
-                pointDto.setClassify(1); // 1: 적립
-                pointDto.setPoints(challengeInfo.getRewardPoints());
-                pointDto.setPostId(postId);
-                // (선택) challengeId 컬럼을 point에 두었다면 여기에 세팅
-                // pointDto.setChallengeId(dto.getChallengeId());
+            	Point p = new Point();
+                p.setMemberId(dto.getMemberId());
+                p.setReason(challengeInfo.getTitle() + " 챌린지 참여 보상");
+                p.setClassify(1);
+                p.setPoints(challengeInfo.getRewardPoints());
+                p.setPostId(postId);
+                
+                log.info("reward points={}, memberId={}, postId={}",
+                        challengeInfo.getRewardPoints(), dto.getMemberId(), postId);
+                
+                
 
-                pointMapper.insertPoint(pointDto);
+                int rows = pointMapper.insertPoint(p);
+                log.info("point insert rows={}", rows);
+                if (rows != 1) {
+                    throw new IllegalStateException("포인트 적립 실패");
+                }
             }
 
             // 6. 참여 상태 업데이트
             dto.setParticipationStatus(4); // 4: 자동승인
-            mapper.updateParticipation(dto);
+           int upd = mapper.updateParticipation(dto);
+           if(upd != 1) {
+        	   throw new IllegalStateException("참여 상태 업데이트 실패");
+           }
 
         } catch (Exception e) {
             log.error("Failed to submit daily challenge: ", e);
@@ -386,7 +399,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 			 // 에러 시 보수적으로 1일차 반환
 			return 1; // 1리틴 
 		
-	}
+			}
 		
 	}
 }
