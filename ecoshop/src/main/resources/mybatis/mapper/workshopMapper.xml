@@ -322,6 +322,10 @@
 		DELETE FROM workshopPhoto
 		WHERE workshopId = #{value}
 	</delete>
+	
+	<!-- (메인) 모집 중인 워크샵 -->
+	<select id="listWorkshopMain" resultType="com.sp.app.model.Workshop">
+	</select>
 
 	<!-- 출석체크 -->
 	<update id="markAttendance"

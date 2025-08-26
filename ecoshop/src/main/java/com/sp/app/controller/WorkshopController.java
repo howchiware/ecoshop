@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/workshop")
 public class WorkshopController {
 
-	private final WorkshopService service;     
+	private final WorkshopService service;
 
 	// 워크샵 목록
 	@GetMapping("/list")
@@ -95,93 +95,91 @@ public class WorkshopController {
 
 		return "workshop/list";
 	}
-	
 
 	// 상세
 	@GetMapping("/detail")
 	public String userWorkshopDetail(@RequestParam(name = "workshopId", required = false) Long workshopId,
-	        @RequestParam(name = "page", defaultValue = "1") String page, Model model,
-	        HttpSession session) {
+			@RequestParam(name = "page", defaultValue = "1") String page, Model model, HttpSession session) {
 
-	    if (workshopId == null) return "redirect:/workshop/list?page=" + page;
+		if (workshopId == null)
+			return "redirect:/workshop/list?page=" + page;
 
-	    try {
-	        Workshop dto = service.findWorkshopDetail(workshopId);
-	        if (dto == null) return "redirect:/workshop/list?page=" + page;
+		try {
+			Workshop dto = service.findWorkshopDetail(workshopId);
+			if (dto == null)
+				return "redirect:/workshop/list?page=" + page;
 
-	        String thumbPath;
-	        if (dto.getThumbnailPath() == null || dto.getThumbnailPath().isEmpty()) {
-	            thumbPath = "/dist/images/noimage.png";
-	        } else if (dto.getThumbnailPath().startsWith("http") || dto.getThumbnailPath().startsWith("/")) {
-	            thumbPath = dto.getThumbnailPath();
-	        } else {
-	            thumbPath = "/uploads/workshop/" + dto.getThumbnailPath();
-	        }
+			String thumbPath;
+			if (dto.getThumbnailPath() == null || dto.getThumbnailPath().isEmpty()) {
+				thumbPath = "/dist/images/noimage.png";
+			} else if (dto.getThumbnailPath().startsWith("http") || dto.getThumbnailPath().startsWith("/")) {
+				thumbPath = dto.getThumbnailPath();
+			} else {
+				thumbPath = "/uploads/workshop/" + dto.getThumbnailPath();
+			}
 
-	        Map<String, Object> map = new HashMap<>();
-	        map.put("workshopId", workshopId);
-	        List<Workshop> photoList = service.listWorkshopPhoto(map);
+			Map<String, Object> map = new HashMap<>();
+			map.put("workshopId", workshopId);
+			List<Workshop> photoList = service.listWorkshopPhoto(map);
 
-	        SessionInfo info = (SessionInfo) session.getAttribute("member");
-	        Long participantId = null;      
-	        boolean alreadyApplied = false; 
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			Long participantId = null;
+			boolean alreadyApplied = false;
 
-	        if (info != null) {
-	            participantId = service.findParticipantById(info.getMemberId(), workshopId);
-	            if (participantId != null) {
-	                model.addAttribute("participantId", participantId);
-	            }
-	            Map<String, Object> chk = new HashMap<>();
-	            chk.put("workshopId", workshopId);
-	            chk.put("memberId", info.getMemberId());
-	            alreadyApplied = service.hasApplied(chk) > 0;
-	        }
+			if (info != null) {
+				participantId = service.findParticipantById(info.getMemberId(), workshopId);
+				if (participantId != null) {
+					model.addAttribute("participantId", participantId);
+				}
+				Map<String, Object> chk = new HashMap<>();
+				chk.put("workshopId", workshopId);
+				chk.put("memberId", info.getMemberId());
+				alreadyApplied = service.hasApplied(chk) > 0;
+			}
 
-	        model.addAttribute("dto", dto);
-	        model.addAttribute("thumbPath", thumbPath);
-	        model.addAttribute("photoList", photoList);
-	        model.addAttribute("alreadyApplied", alreadyApplied);
-	        model.addAttribute("page", page);
-	        model.addAttribute("query", "page=" + page);
-	        return "workshop/detail";
+			model.addAttribute("dto", dto);
+			model.addAttribute("thumbPath", thumbPath);
+			model.addAttribute("photoList", photoList);
+			model.addAttribute("alreadyApplied", alreadyApplied);
+			model.addAttribute("page", page);
+			model.addAttribute("query", "page=" + page);
+			return "workshop/detail";
 
-	    } catch (Exception e) {
-	        log.info("userWorkshopDetail : ", e);
-	        return "redirect:/workshop/list?page=" + page;
-	    }
+		} catch (Exception e) {
+			log.info("userWorkshopDetail : ", e);
+			return "redirect:/workshop/list?page=" + page;
+		}
 	}
-
 
 	// 신청 페이지
 	@GetMapping("/apply")
-	public String applyWorkshop(
-	        @RequestParam(name = "workshopId", required = false) Long workshopId,
-	        HttpSession session, Model model) {
+	public String applyWorkshop(@RequestParam(name = "workshopId", required = false) Long workshopId,
+			HttpSession session, Model model) {
 
-	    if (workshopId == null) return "redirect:/workshop/list";
+		if (workshopId == null)
+			return "redirect:/workshop/list";
 
-	    try {
-	        SessionInfo info = (SessionInfo) session.getAttribute("member");
-	        if (info == null) {
-	            session.setAttribute("msg", "로그인 후 이용해주세요.");
-	            return "redirect:/member/login";
-	        }
+		try {
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			if (info == null) {
+				session.setAttribute("msg", "로그인 후 이용해주세요.");
+				return "redirect:/member/login";
+			}
 
-	        Workshop detail = service.findWorkshopDetail(workshopId);
-	        
-	        MemberManage member = service.findMemberById(info.getMemberId());
-	        
-	        model.addAttribute("member", member);
-	        model.addAttribute("detail", detail);
-	        model.addAttribute("workshopId", workshopId);
-	        
-	        return "workshop/apply";
-	    } catch (Exception e) {
-	        log.info("applyWorkshop : ", e);
-	        return "redirect:/workshop/detail?workshopId=" + workshopId;
-	    }
+			Workshop detail = service.findWorkshopDetail(workshopId);
+
+			MemberManage member = service.findMemberById(info.getMemberId());
+
+			model.addAttribute("member", member);
+			model.addAttribute("detail", detail);
+			model.addAttribute("workshopId", workshopId);
+
+			return "workshop/apply";
+		} catch (Exception e) {
+			log.info("applyWorkshop : ", e);
+			return "redirect:/workshop/detail?workshopId=" + workshopId;
+		}
 	}
-
 
 	// 신청 제출
 	@PostMapping("/submit")
@@ -190,7 +188,7 @@ public class WorkshopController {
 			@RequestParam(name = "email") String email, @RequestParam(name = "agreeTerms") boolean agreeTerms,
 			@RequestParam(name = "agreeMarketing", defaultValue = "false") boolean agreeMarketing, HttpSession session)
 			throws Exception {
-		
+
 		try {
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
 			if (info == null) { // 로그인 체크
@@ -274,12 +272,11 @@ public class WorkshopController {
 	// FAQ 목록
 	@GetMapping("/faq/list")
 	@ResponseBody
-	public Map<String, Object> workshopFaqList(
-			@RequestParam(name = "page", defaultValue = "1") int currentPage,
+	public Map<String, Object> workshopFaqList(@RequestParam(name = "page", defaultValue = "1") int currentPage,
 			@RequestParam(name = "workshopId", required = false) Long workshopId) throws Exception {
 
 		Long programId = service.findProgramIdByWorkshopId(workshopId);
-		
+
 		// 목록 조회
 		Map<String, Object> map = new HashMap<>();
 		map.put("programId", programId);
@@ -336,9 +333,8 @@ public class WorkshopController {
 	@PostMapping("/review/submit")
 	@ResponseBody
 	public Map<String, Object> submitReview(@RequestParam(name = "workshopId") long workshopId,
-			@RequestParam(name = "participantId") long participantId, 
-			@RequestParam (name = "reviewContent") String reviewContent,
-			HttpSession session) throws Exception {
+			@RequestParam(name = "participantId") long participantId,
+			@RequestParam(name = "reviewContent") String reviewContent, HttpSession session) throws Exception {
 
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		if (info == null) {

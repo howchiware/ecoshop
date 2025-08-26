@@ -639,4 +639,18 @@ public class WorkshopServiceImpl implements WorkshopService {
 		}
 	}
 
+	@Override
+	public List<Workshop> listWorkshopMain(Map<String, Object> map) {
+		List<Workshop> list = null;
+
+		try {
+			list = mapper.listWorkshop(map);
+		} catch (Exception e) {
+			log.info("listWorkshopMain : ", e);
+
+			throw e;
+		}
+		return list;
+	}
+
 }

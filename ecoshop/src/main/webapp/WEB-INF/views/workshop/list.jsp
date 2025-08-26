@@ -69,10 +69,8 @@
 }
 
 .form-select {
-width: 11rem;
+	width: 11rem;
 }
-
-
 </style>
 </head>
 <body>
@@ -93,8 +91,9 @@ width: 11rem;
 		<c:url var="listAction" value="/workshop/list" />
 		<form id="filterForm" class="row g-2 align-items-end mb-4"
 			method="get" action="${listAction}">
+
 			<div class="col-sm-2 col-md-2 pe-0">
-				<!-- <label class="form-label">카테고리</label> --> 
+				<!-- <label class="form-label">카테고리</label> -->
 				<select class="form-select" name="categoryId">
 					<option value="">전체</option>
 					<c:forEach var="cvo" items="${category}">
@@ -107,7 +106,7 @@ width: 11rem;
 			</div>
 
 			<div class="col-sm-2 col-md-2 pe-0">
-				<!-- <label class="form-label">정렬</label> -->  
+				<!-- <label class="form-label">정렬</label> -->
 				<select class="form-select" name="sort">
 					<option value="latest"
 						<c:if test="${sort=='latest'}">selected</c:if>>최신순</option>
@@ -299,15 +298,19 @@ width: 11rem;
 	<script>
 		(function() {
 			var form = document.getElementById('filterForm');
+			
+			const autoSubmit = () => form.requestSubmit();
+		      document.querySelector('select[name="categoryId"]')?.addEventListener('change', autoSubmit);
+		      document.querySelector('select[name="sort"]')?.addEventListener('change', autoSubmit);
+		      document.getElementById('onlyRecruiting')?.addEventListener('change', autoSubmit);
 
-			if (!form)
-				return;
-			form.addEventListener('submit', function() {
-				var cb = document.getElementById('onlyRecruiting');
-				var hidden = document.getElementById('onlyRecruitingHidden');
 
-				if (cb && hidden)
-					hidden.disabled = cb.checked;
+			if (!form) return;
+			
+			form.addEventListener('submit', function () {
+		        var cb = document.getElementById('onlyRecruiting');
+		        var hidden = document.getElementById('onlyRecruitingHidden');
+		        if (cb && hidden) hidden.disabled = cb.checked;
 			});
 		})();
 	</script>

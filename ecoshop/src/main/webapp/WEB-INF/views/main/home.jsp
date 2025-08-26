@@ -81,16 +81,40 @@
 			<h2 class="section-title">일상에서 시작하는 습관</h2>
 			<div class="row g-4">
 				<div class="col-md-4">
-					<div class="ratio ratio-4x3">
-					  <img alt="워크샵" class="card-img" src="https://source.unsplash.com/600x400/?eco,bag"/>
-					  <div class="card-img-overlay d-flex align-items-end">
-					    <div>
-					      <h5 class="card-title">워크샵</h5>
-					      <p class="card-text">배우고, 만드는 지속 가능성</p>
-					    </div>
-					  </div>
-					</div>
+					<c:url var="defaultImg" value="/dist/images/noimage.png" />
+					<c:choose>
+						<c:when test="${not empty mainWorkshop}">
+							<a
+								href="${pageContext.request.contextPath}/workshop/detail?workshopId=${mainWorkshop.workshopId}"
+								class="text-decoration-none">
+								<div class="ratio ratio-4x3">
+									<img alt="워크샵" class="card-img"
+										src="${pageContext.request.contextPath}/uploads/workshop/${mainWorkshop.thumbnailPath}"
+										onerror="this.src='${defaultImg}'" />
+									<div class="card-img-overlay d-flex align-items-end">
+										<div>
+											<h5 class="card-title">워크샵</h5>
+											<p class="card-text">배우고, 만드는 지속 가능성</p>
+										</div>
+									</div>
+								</div>
+							</a>
+						</c:when>
+						<c:otherwise>
+							<div class="ratio ratio-4x3">
+								<img alt="워크샵" class="card-img"
+									src="https://source.unsplash.com/600x400/?eco,bag" />
+								<div class="card-img-overlay d-flex align-items-end">
+									<div>
+										<h5 class="card-title">워크샵</h5>
+										<p class="card-text">배우고, 만드는 지속 가능성</p>
+									</div>
+								</div>
+							</div>
+						</c:otherwise>
+					</c:choose>
 				</div>
+
 				<div class="col-md-4">
 					<div class="ratio ratio-4x3">
 					  <img alt="챌린지" class="card-img" src="https://source.unsplash.com/600x400/?volunteer,environment"/>

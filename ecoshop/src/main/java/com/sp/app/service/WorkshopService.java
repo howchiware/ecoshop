@@ -37,6 +37,7 @@ public interface WorkshopService {
 	public void updateWorkshop(Workshop dto) throws Exception;
 	public void deleteWorkshop(long num) throws Exception;
 	public int workshopDataCount(Map<String, Object> map);
+	public List<Workshop> listWorkshopMain(Map<String, Object> map);
 	
 	// 워크샵 사진
 	public void insertWorkshopPhoto(Workshop dto) throws Exception; // workshopImagePath로 수정
