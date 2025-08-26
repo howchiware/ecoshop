@@ -50,5 +50,10 @@ public interface ChallengeService {
     
     public List<Challenge> listMyChallengesPaged(long memberId, int offset, int size);
     
+    public int updatePostVisibility(long postId, long memberId, String isPublic) throws Exception;
+    
+    public int countPublicSpecialPosts(String kwd);
+    public List<Challenge> listPublicSpecialPostsPaged(int offset, int size, String sort, String kwd);
+    
     
 }

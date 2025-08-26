@@ -266,5 +266,21 @@ public class ChallengeController {
 
 	    return "myPage/challengeList";
 	}
+	
+	// 마이페이지 공개전환
+	@PostMapping("post/visibility")
+	@ResponseBody
+	public Map<String,Object> toggleVisibility(@RequestParam("postId") long postId,
+	                                           @RequestParam("isPublic") String isPublic,
+	                                           HttpSession session) {
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    if (info == null) return Map.of("ok", false, "msg", "로그인이 필요합니다.");
+	    try {
+	        int n = service.updatePostVisibility(postId, info.getMemberId(), isPublic);
+	        return Map.of("ok", n==1);
+	    } catch (Exception e) {
+	        return Map.of("ok", false, "msg", e.getMessage());
+	    }
+	}
 
 }

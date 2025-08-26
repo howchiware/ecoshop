@@ -438,4 +438,43 @@ public class ChallengeServiceImpl implements ChallengeService {
 	        return List.of();
 	    }
 	}
+
+
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updatePostVisibility(long postId, long memberId, String isPublic) throws Exception {
+		if(!"Y".equals(isPublic) && !"N".equals(isPublic)) {
+			throw new IllegalArgumentException("isPublic must be 'Y' or 'N'");
+		}
+		return mapper.updatePostVisibility(postId, memberId, isPublic);
+	}
+
+
+
+	@Override
+	public int countPublicSpecialPosts(String kwd) {
+		try {
+	        return mapper.countPublicSpecialPosts(kwd);
+	    } catch (Exception e) {
+	        log.error("countPublicSpecialPosts error:", e);
+	        return 0;
+	    }
+	}
+
+
+
+	@Override
+	public List<Challenge> listPublicSpecialPostsPaged(int offset, int size, String sort, String kwd) {
+		try {
+	        // 방어 로직
+	        int pageSize = (size <= 0 || size > 60) ? 12 : size;
+	        String s = (sort == null || sort.isBlank()) ? "RECENT" : sort;
+
+	        return mapper.listPublicSpecialPostsPaged(offset, pageSize, s, kwd);
+	    } catch (Exception e) {
+	        log.error("listPublicSpecialPostsPaged error:", e);
+	        return List.of();
+	    }
+	}
 }
