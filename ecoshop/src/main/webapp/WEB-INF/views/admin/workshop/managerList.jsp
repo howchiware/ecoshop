@@ -10,11 +10,9 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
 	rel="stylesheet">
 <style>
-body {
+* {
 	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
-	background-color: #f7f6f3;
-	color: #333;
-	margin: 0;
+	box-sizing: border-box;
 }
 
 @font-face {
@@ -25,9 +23,15 @@ body {
 	font-style: normal;
 }
 
+body {
+	background-color: #f7f6f3;
+	color: #333;
+	margin: 0;
+}
+
 .main-container {
 	position: relative;
-	margin-left: 250px; /* 사이드바 너비만큼 띄우기 */
+	margin-left: 250px;
 	padding: 20px;
 	box-sizing: border-box;
 	min-height: calc(100vh - 60px);
@@ -83,15 +87,14 @@ select.form-select {
 	margin-bottom: 20px;
 }
 
-/* 표 기본 스타일 */
 .table {
 	background-color: #fff;
 	border-collapse: collapse;
+	font-weight: 500;
 }
 
 .table thead th {
 	background-color: #f8f9fa;
-	font-weight: 600;
 	text-align: center;
 }
 
@@ -120,10 +123,10 @@ select.form-select {
 <body>
 
 	<jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
-	<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
 	<c:set var="ctx" value="${pageContext.request.contextPath}" />
 
 	<main class="main-container">
+		<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
 		<div class="container py-4">
 
 			<div class="d-flex align-items-center justify-content-between mb-3">

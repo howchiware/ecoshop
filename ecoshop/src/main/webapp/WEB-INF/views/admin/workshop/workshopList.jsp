@@ -6,26 +6,28 @@
 <head>
 <meta charset="UTF-8">
 <title>워크샵 목록</title>
+<jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/admin.css">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style type="text/css">
-body {
+* {
 	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
-	background-color: #f7f6f3;
-	color: #333;
-	margin: 0;
+	box-sizing: border-box;
 }
 
 @font-face {
-	font-family: 'Pretendard-Regular';
+	font-family: 'Pretendard';
 	src:
 		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
 		format('woff');
 	font-style: normal;
+}
+
+body {
+	background-color: #f7f6f3;
+	color: #333;
+	margin: 0;
 }
 
 .btn-manage {
@@ -62,6 +64,7 @@ body {
 
 .outside {
 	background: #fff;
+	border: 1px solid #dee2e6;
 	border-radius: 8px;
 	padding: 20px;
 	margin-bottom: 20px;
@@ -100,17 +103,21 @@ select.form-select {
 .table .btn {
   margin: 0 2px;
 }
+
+.text-padding-start {
+padding-left: 20px;
+}
 </style>
 </head>
 <body>
 
-	<jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
-	<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
+	
 	<c:set var="ctx" value="${pageContext.request.contextPath}" />
 
 	<main class="main-container">
+		<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
+		
 		<div class="container py-4">
-
 			<div class="d-flex justify-content-between align-items-center mb-3">
 				<h3 class="m-0">워크샵 관리</h3>
 			</div>
@@ -139,17 +146,6 @@ select.form-select {
 						</select>
 					</div>
 
-					<!-- <div class="col-md-3">
-						<label class="form-label"></label> <select class="form-select"
-							name="programId">
-							 <option value="">프로그램 선택</option>
-							<c:forEach var="p" items="${programList}">
-								<option value="${p.programId}"
-									<c:if test="${workshop.programId == p.programId}">selected</c:if>>${p.programTitle}</option>
-							</c:forEach>  
-						</select>
-					</div> -->
-
 					<div class="col-md-2">
 						<label class="form-label"></label> <select class="form-select"
 							name="workshopStatus">
@@ -175,13 +171,12 @@ select.form-select {
 					</div>
 				</form>
 
-				<!-- 목록 테이블 -->
 				<div class="table-responsive">
 					<table class="table table-sm align-middle">
 						<thead class="table-light">
 							<tr>
 								<th style="width: 40px;" class="text-center">번호</th>
-								<!-- <th style="width: 180px;">프로그램</th> -->
+								<th style="width: 180px;">프로그램</th>
 								<th style="width: 220px;">워크샵명</th>
 								<th style="width: 70px;" class="text-center">일정</th>
 								<th style="width: 50px;" class="text-center">정원</th>
@@ -201,8 +196,8 @@ select.form-select {
 										<tr>
 											<td class="text-center"><c:out
 													value="${(page-1)*size + st.index + 1}" /></td>
-											<!-- <td><c:out value="${row.programTitle}" /></td>  -->
-											<td><a
+											<td class="text-center"><c:out value="${row.programTitle}" /></td>
+											<td class="text-padding-start"><a
 												href="${ctx}/admin/workshop/detail?num=${row.workshopId}">
 													${row.workshopTitle} </a></td>
 

@@ -14,19 +14,23 @@
 	rel="stylesheet">
 
 <style>
-body {
+* {
 	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
-	background-color: #f7f6f3;
-	color: #333;
-	margin: 0;
+	box-sizing: border-box;
 }
 
 @font-face {
-	font-family: 'Pretendard-Regular';
+	font-family: 'Pretendard';
 	src:
 		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
 		format('woff');
 	font-style: normal;
+}
+
+body {
+	background-color: #f7f6f3;
+	color: #333;
+	margin: 0;
 }
 
 .main-container {
@@ -58,19 +62,16 @@ select.form-select {
 /* 표 */
 .table {
 	background-color: #fff;
-	border: 1px solid #dee2e6;
 }
 
 .table thead th {
 	background-color: #f8f9fa;
 	font-weight: 500;
 	text-align: center;
-	border: 1px solid #dee2e6;
 }
 
 .table td {
 	vertical-align: middle;
-	border: 1px solid #dee2e6;
 	background-color: #fff;
 }
 
@@ -110,10 +111,10 @@ select.form-select {
 <body>
 
 	<jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
-	<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
 	<c:set var="ctx" value="${pageContext.request.contextPath}" />
 
 	<main class="main-container">
+	<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
 		<div class="container py-4">
 
 			<div class="d-flex align-items-center justify-content-between mb-3">

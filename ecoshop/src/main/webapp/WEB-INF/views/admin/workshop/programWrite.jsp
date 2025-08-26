@@ -11,7 +11,35 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
-/* 버튼 – 기존 유지 */
+* {
+	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
+	box-sizing: border-box;
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	src:
+		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+		format('woff');
+	font-style: normal;
+}
+
+body {
+	background-color: #f7f6f3;
+	color: #333;
+	margin: 0;
+}
+
+.main-container {
+	position: relative;
+	margin-left: 250px;
+	padding: 20px;
+	box-sizing: border-box;
+	min-height: calc(100vh - 60px);
+	background-color: #f9f9f9;
+	font-size: 15px;
+}
+
 .btn-manage {
   background: #fff;
   border: 1px solid #000;
@@ -25,17 +53,14 @@
   width: 51px;
 }
 
-/* 카드와 표 스타일 – 상세 화면과 톤 맞춤 */
 .outside { background:#fff; border:1px solid #dee2e6; border-radius:8px; padding:20px; }
 .main-title { font-weight:600; }
 
-/* 폼을 표 형태로 */
 .form-table { width:100%; border-collapse:collapse; table-layout:fixed; }
 .form-table th, .form-table td { border-bottom:1px solid #eee; padding:12px 10px; vertical-align:middle; }
 .form-table th { width:140px; background:#fafafa; font-weight:500; color:#555; text-align:left; }
 .form-table td { color:#222; }
 
-/* 입력 컴포넌트 폭/높이 통일 */
 .form-table .form-control,
 .form-table .form-select,
 .form-table textarea {
@@ -44,17 +69,16 @@
 }
 .form-table textarea { height:auto; min-height:220px; resize:vertical; }
 
-/* 하단 버튼 영역 */
 .center-btn-container { display:flex; justify-content:center; gap:8px; margin-top:20px; }
 </style>
 </head>
 <body>
 
   <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
-  <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
   <c:set var="ctx" value="${pageContext.request.contextPath}" />
 
   <main class="main-container">
+  <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
     <div class="container py-3">
 
       <div class="outside">

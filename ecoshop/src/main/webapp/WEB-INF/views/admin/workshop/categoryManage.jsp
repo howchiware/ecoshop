@@ -11,11 +11,9 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
 <style>
-body {
+* {
 	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
-	background-color: #f7f6f3;
-	color: #333;
-	margin: 0;
+	box-sizing: border-box;
 }
 
 @font-face {
@@ -24,6 +22,12 @@ body {
 		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
 		format('woff');
 	font-style: normal;
+}
+
+body {
+	background-color: #f7f6f3;
+	color: #333;
+	margin: 0;
 }
 
 .main-container {
@@ -87,13 +91,12 @@ body {
 </head>
 <body>
 
-  <!-- 공통 헤더/사이드바 -->
   <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
-  <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
   <c:set var="ctx" value="${pageContext.request.contextPath}" />
 
   <main class="main-container">
-    <div class="container py-4">
+		<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
+		<div class="container py-4">
 
       		<div class="d-flex align-items-center justify-content-between mb-3">
 				<h3 class="m-0">카테고리 관리</h3>

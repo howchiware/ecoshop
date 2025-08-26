@@ -10,7 +10,25 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
-/* 기존 유지 */
+* {
+	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
+	box-sizing: border-box;
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	src:
+		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+		format('woff');
+	font-style: normal;
+}
+
+body {
+	background-color: #f7f6f3;
+	color: #333;
+	margin: 0;
+}
+
 .workshop-img {
   max-width: 400px;
   height: auto;
@@ -33,7 +51,6 @@
   width: 51px;
 }
 
-/* --- 추가: 상세 표만 위한 로컬 스타일 (다른 화면 영향 없음) --- */
 .view-table { width: 100%; border-collapse: collapse; }
 .view-table th, .view-table td { border-bottom: 1px solid #eee; padding: 12px 10px; }
 .view-table th { width: 140px; background: #fafafa; font-weight: 500; color: #555; text-align: left; }
@@ -51,19 +68,15 @@
 
     <div class="container py-3">
 
-      <!-- 상단 바 (버튼 그대로 유지) -->
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h4 class="m-0">워크샵 상세</h4>
         <div>
-          <!-- 목록 -->
           <button type="button" class="btn-manage"
                   onclick="location.href='${ctx}/admin/workshop/list?${query}'">목록</button>
 
-          <!-- 수정 -->
           <button type="button" class="btn-manage"
                   onclick="location.href='${ctx}/admin/workshop/update?num=${dto.workshopId}&page=${page}'">수정</button>
 
-          <!-- 삭제 -->
           <form action="${ctx}/admin/workshop/delete" method="post" style="display:inline;">
             <input type="hidden" name="num" value="${dto.workshopId}">
             <input type="hidden" name="page" value="${page}">
@@ -73,7 +86,6 @@
         </div>
       </div>
 
-      <!-- 내용: 관리자 상세(키-값 표) 형태 -->
       <div class="card">
         <div class="card-body">
           <table class="view-table">

@@ -14,19 +14,23 @@
 	rel="stylesheet">
 
 <style>
-body {
+* {
 	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
-	background-color: #f7f6f3;
-	color: #333;
-	margin: 0;
+	box-sizing: border-box;
 }
 
 @font-face {
-	font-family: 'Pretendard-Regular';
+	font-family: 'Pretendard';
 	src:
 		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
 		format('woff');
 	font-style: normal;
+}
+
+body {
+	background-color: #f7f6f3;
+	color: #333;
+	margin: 0;
 }
 
 .main-container {
@@ -106,7 +110,7 @@ select.form-select {
 }
 
 .program-title {
-	padding-left: 5px;
+	text-align: left;
 }
 
 .table-responsive {
