@@ -8,12 +8,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ECOMORE</title>
-<jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>
+<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/mypage.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/paginate.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/tabs.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/board.css" type="text/css">
+<!-- Vendor JS Files -->
+<script type="text/javascript" src="${pageContext.request.contextPath}/dist/vendor/jquery/js/jquery.min.js"></script>
+
+<script type="text/javascript" src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
 
 <style type="text/css">
   .tab-pane { min-height: 300px; }
@@ -192,6 +198,9 @@ function printReview(data) {
 $(function(){
 	// 리뷰 삭제
 	$('.list-review').on('click', '.deleteReview', function(){
+		if(! confirm('해당 리뷰를 삭제하시겠습니까 ? ')){
+			return;
+		}
 		let reviewId = $(this).attr('data-reviewId');
 		let url = '${pageContext.request.contextPath}/review/delete';
 		let requestParams = 'reviewId=' + reviewId;		
@@ -296,6 +305,10 @@ $(function(){
 
 $(function(){
 	$('.list-question').on('click', '.deleteQuestion', function(){
+		if(! confirm('해당 문의를 삭제하시겠습니까 ? ')){
+			return;
+		}
+		
 		let inquiryId = $(this).attr('data-inquiryId');
 		
 		let url = '${pageContext.request.contextPath}/inquiry/delete';
