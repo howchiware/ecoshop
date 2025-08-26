@@ -13,8 +13,8 @@ public interface MagazineService {
 	public Magazine findByPrev(Map<String, Object> map);
 	public Magazine findByNext(Map<String, Object> map);
 		
-	public void insertMagazine(Magazine dto) throws Exception;
-	public void updateMagazine(Magazine dto) throws Exception;
+	public void insertMagazine(Magazine dto, String uploadPath) throws Exception;
+	public void updateMagazine(Magazine dto, String uploadPath) throws Exception;
 	public void deleteMagazine(long magazineId, Long memberId, int userLevel) throws Exception;
 	
 	public void insertReply(Magazine dto) throws Exception;

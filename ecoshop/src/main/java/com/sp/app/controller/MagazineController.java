@@ -123,7 +123,7 @@ public class MagazineController {
 			dto.setMemberId(info.getMemberId());
 			dto.setName(info.getName());
 			
-			service.insertMagazine(dto);
+			service.insertMagazine(dto, null);
 		} catch (Exception e) {
 			log.info("magazineWrite: ", e);
 		}
@@ -215,9 +215,9 @@ public class MagazineController {
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
 			
 			dto.setMemberId(info.getMemberId());
-			service.updateMagazine(dto);
+			service.updateMagazine(dto, page);
 		} catch (Exception e) {
-			log.info("dairyUpdate: ", e);
+			log.info("updateMagazine: ", e);
 		}
 		
 		return "redirect:/magazine/list?page=" + page;
