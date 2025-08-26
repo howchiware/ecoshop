@@ -10,15 +10,16 @@ $(function(){
 	});
 
 	// 오늘 본 상품 목록 저장 
-	const gongguProductId = document.getElementById('gonggu-gongguProductId').value;
-	const gongguProductName = document.getElementById('gonggu-gongguProductName').value;
-	const gongguThumbnail = document.getElementById('gonggu-gongguThumbnail').value;
-	const gongguPrice = Number(document.getElementById('gonggu-gongguPrice').value) || 0;
+	const pclassify = '2';
+	const pnum = document.getElementById('gonggu-gongguProductId').value;
+	const pname = document.getElementById('gonggu-gongguProductName').value;
+	const pimg = document.getElementById('gonggu-gongguThumbnail').value;
+	const price = Number(document.getElementById('gonggu-gongguPrice').value) || 0;
 	
-	let recentGongguProducts = JSON.parse(localStorage.getItem('recentGongguProduct')) || [];
+	let recentGongguProducts = JSON.parse(localStorage.getItem('recentProduct')) || [];
 	
 	recentGongguProducts = recentGongguProducts.filter(function(data){
-		return data.gongguProductId !== gongguProductId;
+		return data.pnum !== pnum;
 	});
 
 	if(recentGongguProducts.length >= 20) {
@@ -26,14 +27,15 @@ $(function(){
 	}
 	
 	let obj = {
-		gongguProductId: gongguProductId,
-		gongguProductName: gongguProductName,
-		gongguThumbnail: gongguThumbnail,
-		gongguPrice: gongguPrice
+		pclassify: pclassify,
+		pnum: pnum,
+		pname: pname,
+		pimg: pimg,
+		price: price
 	};
 	recentGongguProducts.unshift(obj); 
 	
-	localStorage.setItem('recentGongguProduct', JSON.stringify(recentGongguProducts));
+	localStorage.setItem('recentProduct', JSON.stringify(recentGongguProducts));
 });
 
 

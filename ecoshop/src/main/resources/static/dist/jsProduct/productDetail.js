@@ -308,6 +308,7 @@ function sendOk(mode) {
 
 // 오늘본 상품 목록
 $(function(){
+	const pclassify = '1';
 	const pnum = document.getElementById('product-productCode').value;
 	const pname = document.getElementById('product-productName').value;
 	const pimg = document.getElementById('product-thumbnail').value;
@@ -339,7 +340,7 @@ $(function(){
 	}
 	
 	// 저장할 데이터
-	let obj = {pnum:pnum, pname:pname, pimg:pimg, price:price};
+	let obj = {pclassify:pclassify, pnum:pnum, pname:pname, pimg:pimg, price:price};
 	product.unshift(obj); // 배열 가장 앞에 추가
 	
 	// 웹스트로지에 저장
