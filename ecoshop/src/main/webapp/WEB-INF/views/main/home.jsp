@@ -1,6 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 <!DOCTYPE html>
 
 <html lang="ko">
@@ -8,19 +8,24 @@
 <meta charset="UTF-8" />
 <title>ECOBRAND</title>
 <meta content="width=device-width, initial-scale=1" name="viewport" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet" />
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+	rel="stylesheet">
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/dist/css/home.css"
+	type="text/css">
 <style>
-
 </style>
 </head>
 <body>
 	<header>
-		<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+		<jsp:include page="/WEB-INF/views/layout/header.jsp" />
 	</header>
-	
+
 	<!-- Hero Section -->
 	<section class="hero">
 		<div class="hero-overlay"></div>
@@ -29,7 +34,7 @@
 			<p>지속 가능한 삶, 지금 이곳에서 시작하세요.</p>
 		</div>
 	</section>
-	
+
 	<!-- 베스트 상품 Section -->
 	<section class="section">
 		<div class="container">
@@ -37,8 +42,10 @@
 			<div class="row g-4">
 				<c:forEach var="dto" items="${bestProductList}">
 					<div class="col-md-4">
-						<div class="card card-hover border-0 shadow-sm" onClick="location.href='${pageContext.request.contextPath}/products/${dto.productCode}'">
-							<img alt="Image${dto.productCode}" class="card-img-top" src="${pageContext.request.contextPath}/uploads/products/${dto.thumbnail}"/>
+						<div class="card card-hover border-0 shadow-sm"
+							onClick="location.href='${pageContext.request.contextPath}/products/${dto.productCode}'">
+							<img alt="Image${dto.productCode}" class="card-img-top"
+								src="${pageContext.request.contextPath}/uploads/products/${dto.thumbnail}" />
 							<div class="card-body">
 								<h5 class="card-title">${dto.productName}</h5>
 								<p class="card-text">${dto.content}</p>
@@ -52,27 +59,26 @@
 
 	<!-- 공동구매 Section -->
 	<section class="section py-5">
-	  <div class="container">
-	    <h2 class="section-title text-start mb-4">함께 사서 더 저렴하게</h2>
-	    <div class="card border-0 shadow-sm groupbuy-card">
-	      <div class="row g-0 align-items-center" style="height: 220px;">
-	        <!-- 이미지 -->
-	        <div class="col-md-5 h-100">
-	          <img src="https://source.unsplash.com/1000x600/?eco,groupbuy"
-	               class="img-fluid w-100 h-100"
-	               style="object-fit: cover;"
-	               alt="공동구매">
-	        </div>
-	        <!-- 텍스트 -->
-	        <div class="col-md-7 p-4 d-flex flex-column justify-content-center h-100">
-	          <h5 class="card-title fs-4 fw-bold">제로 웨이스트 패키지</h5>
-	          <p class="card-text text-muted mb-0">
-	            대나무 칫솔, 천연 밀랍 랩, 리필형 주방세제, 휴대용 빨대까지 제로웨이스트 필수 구성
-	          </p>
-	        </div>
-	      </div>
-	    </div>
-	  </div>
+		<div class="container">
+			<h2 class="section-title text-start mb-4">함께 사서 더 저렴하게</h2>
+			<div class="card border-0 shadow-sm groupbuy-card">
+				<div class="row g-0 align-items-center" style="height: 220px;">
+					<!-- 이미지 -->
+					<div class="col-md-5 h-100">
+						<img src="https://source.unsplash.com/1000x600/?eco,groupbuy"
+							class="img-fluid w-100 h-100" style="object-fit: cover;"
+							alt="공동구매">
+					</div>
+					<!-- 텍스트 -->
+					<div
+						class="col-md-7 p-4 d-flex flex-column justify-content-center h-100">
+						<h5 class="card-title fs-4 fw-bold">제로 웨이스트 패키지</h5>
+						<p class="card-text text-muted mb-0">대나무 칫솔, 천연 밀랍 랩, 리필형
+							주방세제, 휴대용 빨대까지 제로웨이스트 필수 구성</p>
+					</div>
+				</div>
+			</div>
+		</div>
 	</section>
 
 	<!-- 감성 콘텐츠 카드 Section -->
@@ -82,28 +88,22 @@
 			<div class="row g-4">
 				<div class="col-md-4">
 					<c:url var="defaultImg" value="/dist/images/noimage.png" />
-					<c:choose>
-						<c:when test="${not empty mainWorkshop}">
-							<a
-								href="${pageContext.request.contextPath}/workshop/detail?workshopId=${mainWorkshop.workshopId}"
-								class="text-decoration-none">
-								<div class="ratio ratio-4x3">
-									<img alt="워크샵" class="card-img"
-										src="${pageContext.request.contextPath}/uploads/workshop/${mainWorkshop.thumbnailPath}"
-										onerror="this.src='${defaultImg}'" />
-									<div class="card-img-overlay d-flex align-items-end">
-										<div>
-											<h5 class="card-title">워크샵</h5>
-											<p class="card-text">배우고, 만드는 지속 가능성</p>
-										</div>
-									</div>
-								</div>
-							</a>
-						</c:when>
-						<c:otherwise>
+					<c:if test="${not empty mainWorkshop}">
+						<a
+							href="${pageContext.request.contextPath}/workshop/detail?workshopId=${mainWorkshop.workshopId}"
+							class="text-decoration-none">
 							<div class="ratio ratio-4x3">
-								<img alt="워크샵" class="card-img"
-									src="https://source.unsplash.com/600x400/?eco,bag" />
+								<c:choose>
+									<c:when test="${not empty mainWorkshop.thumbnailPath}">
+										<img alt="워크샵" class="card-img"
+											src="${pageContext.request.contextPath}/uploads/workshop/${mainWorkshop.thumbnailPath}"
+											loading="lazy" decoding="async" />
+									</c:when>
+									<c:otherwise>
+										<img alt="워크샵" class="card-img" src="${defaultImg}"
+											loading="lazy" decoding="async" />
+									</c:otherwise>
+								</c:choose>
 								<div class="card-img-overlay d-flex align-items-end">
 									<div>
 										<h5 class="card-title">워크샵</h5>
@@ -111,30 +111,31 @@
 									</div>
 								</div>
 							</div>
-						</c:otherwise>
-					</c:choose>
+						</a>
+					</c:if>
 				</div>
-
 				<div class="col-md-4">
 					<div class="ratio ratio-4x3">
-					  <img alt="챌린지" class="card-img" src="https://source.unsplash.com/600x400/?volunteer,environment"/>
-					  <div class="card-img-overlay d-flex align-items-end">
-					    <div>
-					      <h5 class="card-title">챌린지</h5>
-					      <p class="card-text">오늘 할 수 있는 한 가지</p>
-					    </div>
-					  </div>
+						<img alt="챌린지" class="card-img"
+							src="https://source.unsplash.com/600x400/?volunteer,environment" />
+						<div class="card-img-overlay d-flex align-items-end">
+							<div>
+								<h5 class="card-title">챌린지</h5>
+								<p class="card-text">오늘 할 수 있는 한 가지</p>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="ratio ratio-4x3">
-					  <img alt="매거진" class="card-img" src="https://source.unsplash.com/600x400/?newsletter,reading"/>
-					  <div class="card-img-overlay d-flex align-items-end">
-					    <div>
-					      <h5 class="card-title">매거진</h5>
-					      <p class="card-text">조용히 읽고, 가볍게 실천하기</p>
-					    </div>
-					  </div>
+						<img alt="매거진" class="card-img"
+							src="https://source.unsplash.com/600x400/?newsletter,reading" />
+						<div class="card-img-overlay d-flex align-items-end">
+							<div>
+								<h5 class="card-title">매거진</h5>
+								<p class="card-text">조용히 읽고, 가볍게 실천하기</p>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -192,9 +193,10 @@
 	</section>
 		 -->
 	<footer>
-		<jsp:include page="/WEB-INF/views/layout/footer.jsp"/>
+		<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 	</footer>
-	
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
