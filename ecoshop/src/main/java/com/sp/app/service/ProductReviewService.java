@@ -18,4 +18,7 @@ public interface ProductReviewService {
 	public void insertReviewHelpful(ReviewHelpful dto);
 	public int countReviewHelpful(long reviewId);
 	public Integer userReviewHelpful(Map<String, Object> map);
+	
+	public int myDataCount(Map<String, Object> map);
+	public List<ProductReview> listMyReview(Map<String, Object> map);
 }

@@ -9,7 +9,7 @@
 			<h5 class="nav-section-title">마이쇼핑</h5>
 			<ul class="list-unstyled">
 				<li><a href="${pageContext.request.contextPath}/" data-view="orders">주문/배송 내역</a></li>
-				<li><a href="${pageContext.request.contextPath}/" data-view="returns">상품 리뷰/문의</a></li>
+				<li><a href="${pageContext.request.contextPath}/review/review" data-view="reviewNInquiry">상품 리뷰/문의</a></li>
 				<li><a href="${pageContext.request.contextPath}/" data-view="likes">찜한 상품</a></li>
 				<li><a href="${pageContext.request.contextPath}/" data-view="recentView">최근 본 상품</a></li>
 				<li><a href="${pageContext.request.contextPath}/myShopping/myPoint" data-view="points">포인트</a></li>

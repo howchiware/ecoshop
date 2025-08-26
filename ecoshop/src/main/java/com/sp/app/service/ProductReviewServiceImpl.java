@@ -176,6 +176,42 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 			throw e;
 		}
 		return result;
+	}
+
+	@Override
+	public int myDataCount(Map<String, Object> map) {
+		int result = 0;
+		try {
+			result = mapper.myDataCount(map);
+		} catch (Exception e) {
+			log.info("myDataCount : ", e);
+		}
+		return result;
+	}
+
+	@Override
+	public List<ProductReview> listMyReview(Map<String, Object> map) {
+		List<ProductReview> list = null;
+		
+		try {
+			list = mapper.listMyReview(map);
+			
+			for (ProductReview dto : list) {
+				if(dto.getReviewImg() != null) {
+					dto.setListReviewImg(dto.getReviewImg().split(",")); 
+				}
+				
+				dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+				
+				if(dto.getAnswer() != null) {
+					dto.setAnswer(dto.getAnswer().replaceAll("\n", "<br>"));
+				}
+			}	
+		} catch (Exception e) {
+			log.info("listMyReview : ", e);
+		}
+		
+		return list;
 	}	
 
 }

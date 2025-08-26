@@ -33,4 +33,47 @@
 		WHERE inquiryId = #{inquiryId}
 	</delete>
 	
+	<select id="myDataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM productInquiry
+		<where>
+			<if test="memberId != null">
+				memberId = #{memberId}
+			</if>
+			<if test="mode != null">
+				<if test="mode == 2">
+					AND ( answer IS NOT NULL )
+				</if>
+				<if test="mode == 3">
+					AND ( answer IS NULL )
+				</if>
+			</if>
+		</where>
+	</select>
+		
+	<select id="listMyInquiry" parameterType="map" resultType="com.sp.app.model.ProductInquiry">
+		SELECT i.inquiryId, i.memberId, m2.name, i.secret, i.title, i.content, i.regDate, 
+			i.answerId, mm2.name answerName, i.answer, i.answerDate,
+			i.showQuestion, 
+			i.productCode, p.productName
+		FROM productInquiry i
+		JOIN product p ON i.productCode = p.productCode 
+		JOIN member2 m2 ON i.memberId = m2.memberId
+		LEFT OUTER JOIN member2 mm2 ON answerId = mm2.memberId	
+		<where>
+			<if test="member_id != null">
+				i.memberId = #{memberId}
+			</if>
+			<if test="mode != null">
+				<if test="mode == 2">
+					AND ( answer IS NOT NULL )
+				</if>
+				<if test="mode == 3">
+					AND ( answer IS NULL )
+				</if>
+			</if>
+		</where>
+		ORDER BY i.inquiryId DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
 </mapper>
