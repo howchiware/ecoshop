@@ -89,7 +89,7 @@ public class FaqManageController {
 			
 			List<FaqManage> list = service.listFaq(map);
 			
-			String paging = paginateUtil.pagingMethod(current_page, total_page, "listPage");
+			String paging = paginateUtil.pagingFunc(current_page, total_page, "listPage");
 			
 			model.addAttribute("list", list);
 			model.addAttribute("pageNo", current_page);

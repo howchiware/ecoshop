@@ -189,4 +189,10 @@
 	    FROM DUAL
 	</select>
 	
+	<select id="todayReportCount" parameterType="map" resultType="Integer">
+		SELECT COUNT(*)
+		FROM reports
+		WHERE TRUNC(reportDate) = TRUNC(SYSDATE)
+	</select>
+	
 </mapper>

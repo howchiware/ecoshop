@@ -130,11 +130,11 @@ public class EventController {
 	            map.put("success", true);
 		        map.put("message", "이번 주 출석체크 완료! 500 포인트가 지급되었습니다. 😆");
 	        } else if (totalCount < 5){
-	        	map.put("point", true);
-	        	map.put("message", "이번 주 출석체크를 이미 완료하셨습니다.");
-	        } else {
 	        	map.put("success", true);
 	        	map.put("message", "출석체크 완료! (이번 주 누적: " + totalCount + "일)");
+	        } else {
+	        	map.put("point", true);
+	        	map.put("message", "이번 주 출석체크를 이미 완료하셨습니다.");
 	        }
 	        
 	    } catch (Exception e) {

@@ -40,7 +40,7 @@
 	        </if>
 	    </where>
 	    GROUP BY m1.memberId, m2.name
-	    ORDER BY m1.memberId ASC
+	    ORDER BY lastAttendanceDate ASC
 	    OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 	

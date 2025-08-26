@@ -279,7 +279,7 @@ function sendReports() {
 	}
 
 	const contextPath = f.contextPath.value.trim();
-	const url = contextPath + '/roports/saved';
+	const url = contextPath + '/reports/saved';
 	const formData = new FormData(f);
 	const params = new URLSearchParams(formData).toString();
 

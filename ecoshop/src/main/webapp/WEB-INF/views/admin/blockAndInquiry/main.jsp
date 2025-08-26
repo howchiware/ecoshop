@@ -35,9 +35,8 @@
 								<p class="stat-value">${rateInquiry}%</p>
 							</div>
 							<div class="stat-item">
-								<h4>신규 신고 접수</h4>
-								<p class="stat-value">${empty waitReport ? 0 : waitReport}
-									건</p>
+								<h4>오늘 신고 접수</h4>
+								<p class="stat-value">${empty todayReportCount ? 0 : todayReportCount} 건</p>
 							</div>
 						</div>
 					</div>

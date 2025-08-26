@@ -77,6 +77,9 @@
 		            <c:when test="${sessionScope.member.memberId==dto.memberId || sessionScope.member.userLevel>50}">
 		                <button type="button" class="btn-action btn-delete" onclick="deleteOk();">삭제</button>
 		            </c:when>
+		            <c:otherwise>
+						<button type="button" class="btn-default" disabled>차단</button>
+					</c:otherwise>
 		        </c:choose>
 		    </div>
 		

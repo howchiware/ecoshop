@@ -11,12 +11,11 @@
 * {
 	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
 	box-sizing: border-box;
+	color: #363636 !important;
 }
 @font-face {
 	font-family: 'Pretendard-Regular';
-	src:
-		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-		format('woff');
+	src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')-format('woff');
 	font-style: normal;
 }
 .main-container {

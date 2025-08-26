@@ -29,5 +29,6 @@ public interface ReportsMapper {
 	
 	public Reports findByPostsId(Map<String, Object> map);
 	public Reports getReportStats();
+	public int todayReportCount();
 }
 

@@ -163,4 +163,17 @@ public class ReportsServiceImpl implements ReportsService {
 	public Reports getReportStats() {
 		 return mapper.getReportStats();
 	}
+
+	@Override
+	public int todayReportCount() {
+		int result = 0;
+
+		try {
+			result = mapper.todayReportCount();
+		} catch (Exception e) {
+			log.info("todayReportCount : ", e);
+		}
+
+		return result;
+	}
 }

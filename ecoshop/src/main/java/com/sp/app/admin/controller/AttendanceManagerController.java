@@ -66,12 +66,7 @@ public class AttendanceManagerController {
 			map.put("kwd", kwd);
 			map.put("start", startDate);
 			map.put("end", endDate);
-			/*
-			dataCount = service.dataCount(map);
-			if (dataCount != 0) {
-				total_page = dataCount / size + (dataCount % size > 0 ? 1 : 0);
-			}
-			*/
+			
 			dataCount = service.memberCount(map);
 			if(dataCount != 0) {
 			    total_page = (dataCount + size - 1) / size;
@@ -95,7 +90,7 @@ public class AttendanceManagerController {
 			    listUrl += "?schType=" + schType + "&kwd=" + myUtil.encodeUrl(kwd);
 			}
 
-			String paging = paginateUtil.paging(current_page, total_page, listUrl);
+			String paging = paginateUtil.pagingUrl(current_page, total_page, listUrl);
 
 			model.addAttribute("list", list);
 			model.addAttribute("dataCount", dataCount);

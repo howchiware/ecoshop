@@ -6,8 +6,8 @@
     <thead>
         <tr>
             <th style="width: 12%;">문의 상태</th>
-            <th style="width: 40%;">질문 제목</th>
-            <th style="width: 15%;">작성자</th>
+            <th style="width: 36%;">질문 제목</th>
+            <th style="width: 19%;">작성자</th>
             <th style="width: 15%;">작성일</th>
             <th style="width: 18%;">작업</th>
         </tr>

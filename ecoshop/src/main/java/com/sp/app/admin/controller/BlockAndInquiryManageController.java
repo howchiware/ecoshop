@@ -42,7 +42,9 @@ public class BlockAndInquiryManageController {
 			/* 신고 */
 			Reports reStats = reService.getReportStats();
 			model.addAttribute("waitReport", reStats.getWaitReport());
-			model.addAttribute("allReport", reStats.getAllReport());
+			
+			int todayReportCount = reService.todayReportCount(); 
+			model.addAttribute("todayReportCount", todayReportCount);
 			
 		} catch (Exception e) {
 			log.info("blockList: ", e);

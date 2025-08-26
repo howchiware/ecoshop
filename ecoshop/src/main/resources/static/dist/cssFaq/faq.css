@@ -25,6 +25,7 @@ body {
 * {
 	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
 	box-sizing: border-box;
+	color: #363636 !important;
 }
 
 @font-face {
@@ -68,12 +69,12 @@ body {
 }
 
 .nav-pills .nav-link:hover {
-	background-color: #d6d6d6;
+	background-color: #F6F6F6;
 	color: #222;
 }
 
 .nav-pills .nav-link.active {
-	background-color: #bdbdbd !important;
+	background-color: #D5D5D5 !important;
 	color: #000 !important;
 	box-shadow: none;
 }

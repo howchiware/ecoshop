@@ -96,7 +96,7 @@ public class ReportsManageController {
 				list = service.listGroupReports(map);
 			}
 
-			String paging = paginateUtil.pagingMethod(current_page, total_page, "listPage");
+			String paging = paginateUtil.pagingFunc(current_page, total_page, "listPage");
 			
 			model.addAttribute("list", list);
 			model.addAttribute("reportsStatus", status);

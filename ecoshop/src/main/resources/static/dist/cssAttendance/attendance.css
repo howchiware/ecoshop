@@ -11,8 +11,9 @@
 }
 
 * {
-	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
+	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif !important;
 	box-sizing: border-box;
+	color: #363636 !important;
 }
 
 @font-face {
@@ -42,10 +43,11 @@ body {
 
 .box {
 	background-color: #fff;
-	padding: 15px 15px;
-	margin-bottom: 25px;
-	border-radius: 4px;
-	
+	border-radius: 12px;
+	padding: 2rem;
+	border: 1px solid var(--color-border);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+	margin-bottom: 10px;
 }
 
 .right-panel {
@@ -199,4 +201,11 @@ body.modal-open {
 	background: #ccc;
 	border-color: #999;
 	color: #333;
+}
+
+.card {
+	background: #f8f9fa !important;
+	color: #363636;
+	border-radius: 12px;
+	border: 1px solid var(--color-border);
 }

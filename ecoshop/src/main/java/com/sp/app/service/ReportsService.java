@@ -3,7 +3,6 @@ package com.sp.app.service;
 import java.util.List;
 import java.util.Map;
 
-import com.sp.app.admin.model.InquiryManage;
 import com.sp.app.model.Reports;
 
 public interface ReportsService {
@@ -27,5 +26,6 @@ public interface ReportsService {
 	public Reports findByPostsId(Map<String, Object> map);
 	
 	public Reports getReportStats();
+	public int todayReportCount();
 }
 

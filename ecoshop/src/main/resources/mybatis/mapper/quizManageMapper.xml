@@ -26,7 +26,7 @@
 	</select>
 
 	<select id="listQuiz" parameterType="map" resultType="com.sp.app.admin.model.QuizManage">
-	    SELECT quizId, subject, content, answer, commentary, regDate, TO_CHAR(openDate, 'YYYY-MM-DD') openDate, insertId, name
+	    SELECT quizId, subject, content, answer, commentary, TO_CHAR(regDate, 'YYYY-MM-DD') regDate, TO_CHAR(openDate, 'YYYY-MM-DD') openDate, insertId, name
 	    FROM quizBoard qb
 	    LEFT OUTER JOIN member2 m2 ON m2.memberId = qb.insertId
 	    <where>

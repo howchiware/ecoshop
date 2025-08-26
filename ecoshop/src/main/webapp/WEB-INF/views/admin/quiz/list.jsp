@@ -68,7 +68,7 @@
                 <table class="table table-hover">
                     <thead>
                         <tr class="text-center">
-                            <th width="8%">No</th>
+                            <th width="8%">번호</th>
                             <th width="12%">퀴즈 번호</th>
                             <th>퀴즈 제목</th>
                             <th width="15%">개시일</th>
@@ -99,11 +99,11 @@
                 </table>
                 
                 <div class="table-bottom-controls">
+                	<div class="page-navigation">
+                        ${dataCount == 0 ? "" : paging}
+                    </div>
                     <div class="align-self-center">
                         <button type="button" class="btn my-btn" onclick="location.href='${pageContext.request.contextPath}/admin/quiz/write';">퀴즈 등록</button>
-                    </div>
-                    <div class="page-navigation">
-                        ${dataCount == 0 ? "" : paging}
                     </div>
                 </div>
             </div>

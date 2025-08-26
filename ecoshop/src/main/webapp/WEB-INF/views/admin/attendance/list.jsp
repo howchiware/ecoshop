@@ -6,15 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <title>관리자 페이지</title>
-<jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp" />
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/admin.css">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/cssAttendance/attendance.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssAttendance/attendance.css">
 </head>
 <body>
 
@@ -51,18 +46,14 @@
 
 					</div>
 					<div class="col-auto">
-						<label for="keyword" class="form-label">검색어</label> <input
-							type="text" id="kwd" name="kwd" value="${kwd}"
-							class="form-control">
+						<label for="keyword" class="form-label">검색어</label> 
+						<input type="text" id="kwd" name="kwd" value="${kwd}" class="form-control">
 					</div>
 
 					<div class="col-auto align-self-end">
 						<button type="submit" class="btn my-btn" onclick="searchList();">조회</button>
-						<button type="button" class="btn my-btn"
-							onclick="location.href='${pageContext.request.contextPath}/admin/attendance/list'">초기화</button>
+						<button type="button" class="btn my-btn" onclick="location.href='${pageContext.request.contextPath}/admin/attendance/list'">초기화</button>
 					</div>
-
-
 				</form>
 
 				<div class="row mb-4">
@@ -122,10 +113,10 @@
 										pattern="yyyy-MM-dd" /></td>
 								<td><c:choose>
 										<c:when test="${item.attendanceCount >= 5}">
-											<span class="badge bg-success">지급완료</span>
+											<span>지급완료</span>
 										</c:when>
 										<c:otherwise>
-											<span class="badge bg-secondary">미지급</span>
+											<span class="text-secondary">미지급</span>
 										</c:otherwise>
 									</c:choose></td>
 							</tr>
