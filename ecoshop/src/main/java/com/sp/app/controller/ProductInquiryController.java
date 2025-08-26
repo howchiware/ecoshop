@@ -175,7 +175,7 @@ public class ProductInquiryController {
 
 			List<ProductInquiry> list = service.listMyInquiry(map);
 			
-			String paging = paginateUtil.pagingMethod(current_page, total_page, "listInquiry");
+			String paging = paginateUtil.pagingMethod(current_page, total_page, "listQuestion");
 			
 			model.put("list", list);
 			model.put("dataCount", dataCount);
@@ -188,6 +188,26 @@ public class ProductInquiryController {
 			log.info("list : ", e);
 		}
 		
+		return model;
+	}
+	
+	@GetMapping("delete")
+	public Map<String, ?> deleteInquiry(
+			@RequestParam(name = "inquiryId", defaultValue = "1") int inquiryId,
+			HttpSession session) throws Exception {
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		String state = "false";
+		try {
+			
+			service.deleteInquiry(inquiryId);
+			
+			state = "true";
+		} catch (Exception e) {
+		}
+		
+		model.put("state", state);
 		return model;
 	}
 }

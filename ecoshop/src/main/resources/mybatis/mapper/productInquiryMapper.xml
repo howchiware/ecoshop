@@ -61,7 +61,7 @@
 		JOIN member2 m2 ON i.memberId = m2.memberId
 		LEFT OUTER JOIN member2 mm2 ON answerId = mm2.memberId	
 		<where>
-			<if test="member_id != null">
+			<if test="memberId != null">
 				i.memberId = #{memberId}
 			</if>
 			<if test="mode != null">

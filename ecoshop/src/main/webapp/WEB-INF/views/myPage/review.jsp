@@ -196,7 +196,7 @@ $(function(){
 		let url = '${pageContext.request.contextPath}/review/delete';
 		let requestParams = 'reviewId=' + reviewId;		
 		
-		const fn = function(date){
+		const fn = function(data){
 			listReview(1);
 		}
 		
@@ -240,7 +240,7 @@ function printQuestion(data) {
 			<div class="row p-2">
 				<div class="col-auto pt-2 pe-0">\${answerState}</div>
 				<div class="col-auto pt-2 px-0">&nbsp;|&nbsp;<span>\${regDate}</span>
-					|<span class="deleteQuestion" data-num="\${inquiryId}">삭제</span>
+					|<span class="deleteQuestion" data-inquiryId="\${inquiryId}">삭제</span>
 				</div>
 			`;
 
@@ -296,8 +296,16 @@ $(function(){
 
 $(function(){
 	$('.list-question').on('click', '.deleteQuestion', function(){
-		let num = $(this).attr('data-num');
-		alert(num);
+		let inquiryId = $(this).attr('data-inquiryId');
+		
+		let url = '${pageContext.request.contextPath}/inquiry/delete';
+		let requestParams = 'inquiryId=' + inquiryId;		
+		
+		const fn = function(data){
+			listQuestion(1);
+		}
+		
+		ajaxRequest(url, 'get', requestParams, 'json', fn);
 	});
 });
 </script>

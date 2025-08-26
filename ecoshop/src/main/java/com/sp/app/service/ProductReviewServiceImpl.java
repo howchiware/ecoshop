@@ -212,6 +212,25 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 		}
 		
 		return list;
+	}
+
+	@Override
+	public void deleteReview(long reviewId, String uploadPath) throws Exception {
+		try {
+			List<ProductReview> listPhoto = mapper.listReviewFile(reviewId);
+			if (listPhoto != null) {
+				for (ProductReview dto : listPhoto) {
+					storageService.deleteFile(uploadPath, dto.getReviewImg());
+				}
+			}
+			
+			mapper.deleteReview(reviewId);
+			
+		} catch (Exception e) {
+			log.info("deleteReview : ", e);
+			
+			throw e;
+		}
 	}	
 
 }

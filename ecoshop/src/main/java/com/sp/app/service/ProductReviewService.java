@@ -12,6 +12,7 @@ public interface ProductReviewService {
 	public List<ProductReview> listReview(Map<String, Object> map);
 	public Summary findByReviewSummary(Map<String, Object> map);
 	public void insertReview(ProductReview dto, String uploadPath) throws Exception;
+	public void deleteReview(long reviewId, String uploadPath) throws Exception;
 	public ProductReview viewReviewDetail(long reviewId);
 	
 	public void deleteReviewHelpful(ReviewHelpful dto);

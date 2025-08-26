@@ -1,5 +1,6 @@
 package com.sp.app.mapper;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -26,4 +27,7 @@ public interface ProductReviewMapper {
 	
 	public int myDataCount(Map<String, Object> map);
 	public List<ProductReview> listMyReview(Map<String, Object> map);
+	
+	public List<ProductReview>listReviewFile(long num);
+	public void deleteReview(long num) throws SQLException;
 }

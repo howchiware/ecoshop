@@ -162,4 +162,16 @@
 		ORDER BY pr.regDate DESC
 		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
+	
+		
+	<select id="listReviewFile" parameterType="long" resultType="com.sp.app.model.ProductReview">
+		SELECT reviewPhotoId, reviewId, reviewImg
+		FROM productReviewDetail
+		WHERE reviewId = #{reviewId}
+	</select>
+		
+	<delete id="deleteReview" parameterType="long">
+		DELETE FROM productReview
+		WHERE reviewId = #{reviewId}
+	</delete>
 </mapper>

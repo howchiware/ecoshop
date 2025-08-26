@@ -317,46 +317,21 @@ public class ProductReviewController {
 	
 	@GetMapping("delete")
 	public Map<String, ?> deleteReview(
-			@RequestParam(name = "", defaultValue = "1") int current_page,
+			@RequestParam(name = "reviewId", defaultValue = "1") int reviewId,
 			HttpSession session) throws Exception {
+		
 		Map<String, Object> model = new HashMap<String, Object>();
 		
+		String state = "false";
 		try {
-			SessionInfo info = (SessionInfo)session.getAttribute("member");		
 			
-			int size = 5;
-			int dataCount = 0;
+			service.deleteReview(reviewId, uploadPath);
 			
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("memberId", info.getMemberId());
-			
-			dataCount = service.myDataCount(map);
-			
-			int total_page = paginateUtil.pageCount(dataCount, size);
-
-			current_page = Math.min(current_page, total_page);
-
-			int offset = (current_page - 1) * size;
-			if(offset < 0) offset = 0;
-
-			map.put("offset", offset);
-			map.put("size", size);
-
-			List<ProductReview> list = service.listMyReview(map);
-			
-			String paging = paginateUtil.pagingMethod(current_page, total_page, "listReview");
-			
-			model.put("list", list);
-			model.put("dataCount", dataCount);
-			model.put("size", size);
-			model.put("pageNo", current_page);
-			model.put("paging", paging);
-			model.put("total_page", total_page);
-			
+			state = "true";
 		} catch (Exception e) {
-			log.info("list2 : ", e);
 		}
 		
+		model.put("state", state);
 		return model;
 	}
 	
