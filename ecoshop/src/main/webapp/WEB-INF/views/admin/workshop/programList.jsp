@@ -50,13 +50,6 @@ body {
 	font-size: 0.9rem;
 	transition: background 0.2s, color 0.2s;
 	cursor: pointer;
-	height: 30px;
-	width: 51px;
-}
-
-.btn-register {
-	height: 30px;
-	width: 51px;
 }
 
 .btn-search {
@@ -114,10 +107,8 @@ select.form-select {
 }
 
 .table-responsive {
-margin-top: 20px;
+	margin-top: 20px;
 }
-
-
 </style>
 </head>
 <body>
@@ -127,7 +118,7 @@ margin-top: 20px;
 	<c:set var="ctx" value="${pageContext.request.contextPath}" />
 
 	<main class="main-container">
-		<div class="container py-4">
+		<div class="container py-2">
 
 			<div class="d-flex align-items-center justify-content-between mb-3">
 				<h3 class="m-0">프로그램 관리</h3>
@@ -135,22 +126,13 @@ margin-top: 20px;
 
 			<hr>
 
-			<div class="d-flex justify-content-end mb-2">
-				<form action="${ctx}/admin/workshop/program/write" method="get"
-					style="display: inline;">
-					<button type="submit" class="btn-manage btn-register"
-						style="width: 51px; height: 30px;">등록</button>
-				</form>
-			</div>
-
 		</div>
 
 		<div class="outside">
 			<form class="row g-2 align-items-end mb-1" method="get"
 				action="${ctx}/admin/workshop/program/list">
 				<div class="col-md-2">
-					<label class="form-label"></label> <select class="form-select"
-						name="schType">
+					<select class="form-select" name="schType">
 						<option value="all" <c:if test="${schType=='all'}">selected</c:if>>전체</option>
 						<option value="title"
 							<c:if test="${schType=='title'}">selected</c:if>>제목</option>
@@ -187,46 +169,45 @@ margin-top: 20px;
 				<table class="table table-sm align-middle">
 					<thead class="table-light">
 						<tr>
-							<th style="width: 50px;" class="text-center">번호</th>
-							<th style="width: 130px;">카테고리</th>
-							<th>프로그램명</th>
-							<th style="width: 120px;" class="text-center">등록일</th>
-							<th style="width: 15%" class="text-center">관리</th>
+							<th style="width: 5%;" class="text-center">번호</th>
+							<th style="width: 20%;">카테고리</th>
+							<th style="width: 40%;">프로그램명</th>
+							<th style="width: 15%;" class="text-center">등록일</th>
+							<th style="width: 20%;" class="text-center">관리</th>
 						</tr>
 					</thead>
 					<tbody>
 						<c:choose>
 							<c:when test="${empty list}">
 								<tr>
-									<td colspan="5" class="text-center text-muted py-4">데이터가 없습니다.</td>
+									<td colspan="5" class="text-center text-muted py-4">데이터가
+										없습니다.</td>
 								</tr>
 							</c:when>
 							<c:otherwise>
 								<c:forEach var="row" items="${list}" varStatus="st">
 									<tr>
-										<td class="text-center">
-											<c:out value="${(page-1)*size + st.index + 1}" />
-										</td>
-										<td class="text-center">
-											<c:out value="${row.categoryName}" />
-										</td>
-										<td class="text-start">
-											<a class="program-title"
-											   href="${ctx}/admin/workshop/program/detail?num=${row.programId}&page=${page}&schType=${schType}&categoryId=${categoryId}&kwd=${kwd}">
+										<td class="text-center"><c:out
+												value="${(page-1)*size + st.index + 1}" /></td>
+										<td class="text-center"><c:out
+												value="${row.categoryName}" /></td>
+										<td class="text-start"><a class="program-title"
+											style="padding-left: 15px;"
+											href="${ctx}/admin/workshop/program/detail?num=${row.programId}&page=${page}&schType=${schType}&categoryId=${categoryId}&kwd=${kwd}">
 												<c:out value="${row.programTitle}" />
-											</a>
-										</td>
+										</a></td>
+										<td class="text-center"><fmt:formatDate
+												value="${row.regDate}" pattern="yyyy-MM-dd" /></td>
 										<td class="text-center">
-											<fmt:formatDate value="${row.regDate}" pattern="yyyy-MM-dd" />
-										</td>
-										<td class="text-center">
-											<form action="${ctx}/admin/workshop/program/update" method="get" style="display:inline;">
+											<form action="${ctx}/admin/workshop/program/update"
+												method="get" style="display: inline;">
 												<input type="hidden" name="num" value="${row.programId}">
 												<input type="hidden" name="page" value="${page}">
 												<button type="submit" class="btn-manage"
-													style="width:51px;height:30px;">수정</button>
+													style="width: 51px; height: 30px;">수정</button>
 											</form>
-											<form action="${ctx}/admin/workshop/program/delete" method="post" style="display:inline;">
+											<form action="${ctx}/admin/workshop/program/delete"
+												method="post" style="display: inline;">
 												<input type="hidden" name="num" value="${row.programId}">
 												<input type="hidden" name="page" value="${page}">
 												<button type="submit" class="btn-manage"
@@ -242,6 +223,14 @@ margin-top: 20px;
 			</div>
 		</div>
 
+		<div class="mt-2 text-start">
+			<form action="${ctx}/admin/workshop/program/write" method="get"
+				style="display: inline;">
+				<button type="submit" class="btn-manage btn-register">프로그램
+					등록</button>
+			</form>
+		</div>
+
 		<nav aria-label="페이지네이션">
 			<ul class="pagination justify-content-center">
 				<li class="page-item active"><span class="page-link">${page}</span></li>
@@ -252,6 +241,6 @@ margin-top: 20px;
 	</main>
 
 	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-	  
+
 </body>
 </html>

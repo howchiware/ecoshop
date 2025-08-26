@@ -72,8 +72,17 @@ body {
 	font-size: 0.9rem;
 	transition: background .2s, color .2s;
 	cursor: pointer;
-	height: 30px;
-	min-width: 51px;
+}
+
+.btn-submit {
+	background: #000;
+	color: #fff;
+	border: 1px solid #000;
+	border-radius: 4px;
+	padding: 3px 10px;
+	font-size: 0.9rem;
+	transition: background .2s, color .2s;
+	cursor: pointer;
 }
 
 .badge-done {
@@ -114,7 +123,7 @@ body {
 					</strong> <span class="point-text">P 지급</span>
 				</div>
 			</div>
-			
+
 			<hr>
 
 			<c:if test="${not empty sessionScope.msg}">
@@ -127,12 +136,13 @@ body {
 					<table class="table table-sm align-middle">
 						<thead>
 							<tr>
-								<th style="width: 140px;" class="text-center">참여자명</th>
-								<th>워크샵명</th>
-								<th style="width: 90px;" class="text-center">포인트</th>
-								<th style="width: 100px;" class="text-center">상태</th>
-								<th style="width: 120px;" class="text-center">지급</th>
+								<th style="width: 15%;" class="text-center">참여자명</th>
+								<th style="width: 40%;">워크샵명</th>
+								<th style="width: 10%;" class="text-center">포인트</th>
+								<th style="width: 10%;" class="text-center">상태</th>
+								<th style="width: 10%;" class="text-center">지급</th>
 							</tr>
+
 						</thead>
 						<tbody>
 							<c:choose>
@@ -146,7 +156,8 @@ body {
 									<c:forEach var="r" items="${rows}">
 										<tr>
 											<td class="text-center"><c:out value="${r.memberName}" /></td>
-											<td class="text-start"><c:out value="${r.workshopTitle}" /></td>
+											<td class="text-center"><c:out
+													value="${r.workshopTitle}" /></td>
 											<td class="text-center"><fmt:formatNumber
 													value="${empty pointPolicy ? 1000 : pointPolicy}"
 													pattern="#,##0" />P</td>
@@ -155,7 +166,7 @@ body {
 													${r.paid == 1 ? '지급 완료' : '미지급'} </span></td>
 											<td class="text-center"><c:choose>
 													<c:when test="${r.paid == 1}">
-														<button class="btn-manage" disabled>완료</button>
+														<button class="btn-submit" disabled>완료</button>
 													</c:when>
 													<c:otherwise>
 														<c:choose>

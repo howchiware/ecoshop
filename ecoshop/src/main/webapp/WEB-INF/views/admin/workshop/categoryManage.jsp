@@ -103,12 +103,6 @@ body {
 			</div>
 			
 			<hr>
-			
-			<div class="d-flex justify-content-end mb-2">
-				<button class="btn-manage btn-register" data-bs-toggle="modal"
-					data-bs-target="#categoryModal">등록</button>
-			</div>
-
  
       <!-- 카테고리 목록 -->
       <div class="outside">
@@ -154,6 +148,11 @@ body {
         </tbody>
       </table>
       </div>
+      
+      <div class="mt-2 text-start">
+				<button class="btn-manage btn-register" data-bs-toggle="modal"
+					data-bs-target="#categoryModal">카테고리 등록</button>
+	  </div>
     
       <nav aria-label="페이지네이션">
         <ul class="pagination justify-content-center">

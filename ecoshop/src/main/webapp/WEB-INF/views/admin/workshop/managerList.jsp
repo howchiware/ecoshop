@@ -48,13 +48,6 @@ body {
 	font-size: 0.9rem;
 	transition: background 0.2s, color 0.2s;
 	cursor: pointer;
-	height: 30px;
-	width: 51px;
-}
-
-.btn-register {
-	height: 30px;
-	width: 51px;
 }
 
 .btn-search {
@@ -135,11 +128,6 @@ select.form-select {
 
 			<hr>
 
-			<div class="d-flex justify-content-end mb-2">
-				<button class="btn-manage btn-register" data-bs-toggle="modal"
-					data-bs-target="#managerModal" onclick="openManagerModal('write')">등록</button>
-			</div>
-
 			<div class="outside">
 				<form class="row g-2 align-items-end mb-3" method="get"
 					action="${ctx}/admin/workshop/manager/list">
@@ -217,6 +205,11 @@ select.form-select {
 						</tbody>
 					</table>
 				</div>
+			</div>
+			
+			<div class="mt-2 text-start">
+				<button class="btn-manage btn-register" data-bs-toggle="modal"
+					data-bs-target="#managerModal" onclick="openManagerModal('write')">담당자 등록</button>
 			</div>
 
 			<!-- 페이징 -->
