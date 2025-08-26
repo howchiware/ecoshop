@@ -66,14 +66,35 @@ public class ProductInquiryServiceImpl implements ProductInquiryService {
 		return list;
 	}
 	@Override
-	public int dataCountManage(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int myDataCount(Map<String, Object> map) {
+		int result = 0;
+		
+		try {
+			result = mapper.myDataCount(map); 
+		} catch (Exception e) {
+			log.info("myDataCount : ", e);
+		}
+		
+		return result;
 	}
 	@Override
-	public List<ProductInquiry> listInquiryManage(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ProductInquiry> listMyInquiry(Map<String, Object> map) {
+		List<ProductInquiry> list = null;
+		
+		try {
+			list = mapper.listMyInquiry(map);
+			for (ProductInquiry dto : list) {
+				dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+				
+				if(dto.getAnswer() != null) {
+					dto.setAnswer(dto.getAnswer().replaceAll("\n", "<br>"));
+				}
+			}			
+		} catch (Exception e) {
+			log.info("listMyInquiry : ", e);
+		}
+		
+		return list;
 	}
 	@Override
 	public void updateInquiry(ProductInquiry dto) throws Exception {

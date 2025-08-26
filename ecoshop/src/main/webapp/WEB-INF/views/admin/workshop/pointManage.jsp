@@ -13,19 +13,23 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
 <style>
-body {
+* {
 	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
-	background: #f7f6f3;
-	color: #333;
-	margin: 0;
+	box-sizing: border-box;
 }
 
 @font-face {
-	font-family: 'Pretendard-Regular';
+	font-family: 'Pretendard';
 	src:
 		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
 		format('woff');
 	font-style: normal;
+}
+
+body {
+	background-color: #f7f6f3;
+	color: #333;
+	margin: 0;
 }
 
 .main-container {
@@ -42,19 +46,16 @@ body {
 
 .table {
 	background: #fff;
-	border: 1px solid #dee2e6;
 }
 
 .table thead th {
 	background: #f8f9fa;
 	font-weight: 500;
 	text-align: center;
-	border: 1px solid #dee2e6;
 }
 
 .table td {
 	vertical-align: middle;
-	border: 1px solid #dee2e6;
 	background: #fff;
 }
 
@@ -90,6 +91,10 @@ body {
 	border-radius: 999px;
 	font-size: 12px;
 }
+
+.text-muted {
+	font-size: 13px;
+}
 </style>
 </head>
 <body>
@@ -102,13 +107,15 @@ body {
 		<div class="container py-4">
 
 			<div class="d-flex justify-content-between align-items-center mb-3">
-				<h3 class="m-0">포인트 지급 내역</h3>
+				<h3 class="m-0">포인트 지급</h3>
 				<div class="text-muted">
-					* 후기 작성 시 <strong><fmt:formatNumber
-							value="${empty pointPolicy ? 1000 : pointPolicy}" pattern="#,##0" /></strong>P
-					지급
+					* 후기 작성 시 <strong> <fmt:formatNumber
+							value="${empty pointPolicy ? 1000 : pointPolicy}" pattern="#,##0" />
+					</strong> <span class="point-text">P 지급</span>
 				</div>
 			</div>
+			
+			<hr>
 
 			<c:if test="${not empty sessionScope.msg}">
 				<div class="alert alert-dark py-2">${sessionScope.msg}</div>
@@ -158,13 +165,18 @@ body {
 															<c:otherwise>
 																<form method="post"
 																	action="${ctx}/admin/workshop/points/pay"
-																	class="d-inline" onsubmit="return confirm('포인트를 지급하시겠습니까?');">
-																	<input type="hidden" name="workshopReviewId" value="${r.workshopReviewId}" /> 
-																	<input type="hidden" name="participantId" value="${r.participantId}" /> 
-																	<input type="hidden" name="memberId" value="${r.memberId}" />
-																	<input type="hidden" name="workshopId" value="${r.workshopId}" /> 
-																	<input type="hidden" name="points" value="${empty pointPolicy ? 1000 : pointPolicy}" />
-																	<input type="hidden" name="postId" value="${r.workshopReviewId}" />
+																	class="d-inline"
+																	onsubmit="return confirm('포인트를 지급하시겠습니까?');">
+																	<input type="hidden" name="workshopReviewId"
+																		value="${r.workshopReviewId}" /> <input type="hidden"
+																		name="participantId" value="${r.participantId}" /> <input
+																		type="hidden" name="memberId" value="${r.memberId}" />
+																	<input type="hidden" name="workshopId"
+																		value="${r.workshopId}" /> <input type="hidden"
+																		name="points"
+																		value="${empty pointPolicy ? 1000 : pointPolicy}" />
+																	<input type="hidden" name="postId"
+																		value="${r.workshopReviewId}" />
 																	<c:if test="${not empty _csrf}">
 																		<input type="hidden" name="${_csrf.parameterName}"
 																			value="${_csrf.token}" />
@@ -193,7 +205,8 @@ body {
 		</div>
 	</main>
 
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

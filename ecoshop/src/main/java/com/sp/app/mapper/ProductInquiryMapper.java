@@ -15,8 +15,8 @@ public interface ProductInquiryMapper {
 	public int dataCount(Map<String, Object> map);
 	public List<ProductInquiry> listInquiry(Map<String, Object> map);
 	
-	public int dataCountManage(Map<String, Object> map);
-	public List<ProductInquiry> listInquiryManage(Map<String, Object> map);
+	public int myDataCount(Map<String, Object> map);
+	public List<ProductInquiry> listMyInquiry(Map<String, Object> map);
 	
 	public void updateInquiry(ProductInquiry dto) throws SQLException;
 

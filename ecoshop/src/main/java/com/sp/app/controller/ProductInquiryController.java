@@ -153,7 +153,61 @@ public class ProductInquiryController {
 			HttpSession session) throws Exception {
 		
 		Map<String, Object> model = new HashMap<String, Object>();
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			
+			int size = 5;
+			int dataCount = 0;
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("memberId", info.getMemberId());
+			
+			dataCount = service.myDataCount(map);
+			int total_page = paginateUtil.pageCount(dataCount, size);
+
+			current_page = Math.min(current_page, total_page);
+
+			int offset = (current_page - 1) * size;
+			if(offset < 0) offset = 0;
+
+			map.put("offset", offset);
+			map.put("size", size);
+
+			List<ProductInquiry> list = service.listMyInquiry(map);
+			
+			String paging = paginateUtil.pagingMethod(current_page, total_page, "listQuestion");
+			
+			model.put("list", list);
+			model.put("dataCount", dataCount);
+			model.put("size", size);
+			model.put("pageNo", current_page);
+			model.put("paging", paging);
+			model.put("total_page", total_page);
+			
+		} catch (Exception e) {
+			log.info("list : ", e);
+		}
 		
+		return model;
+	}
+	
+	@GetMapping("delete")
+	public Map<String, ?> deleteInquiry(
+			@RequestParam(name = "inquiryId", defaultValue = "1") int inquiryId,
+			HttpSession session) throws Exception {
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		String state = "false";
+		try {
+			
+			service.deleteInquiry(inquiryId);
+			
+			state = "true";
+		} catch (Exception e) {
+		}
+		
+		model.put("state", state);
 		return model;
 	}
 }

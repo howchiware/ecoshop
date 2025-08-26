@@ -11,7 +11,25 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
-/* 버튼 디자인: 기존 유지 */
+* {
+	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
+	box-sizing: border-box;
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	src:
+		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+		format('woff');
+	font-style: normal;
+}
+
+body {
+	background-color: #f7f6f3;
+	color: #333;
+	margin: 0;
+}
+
 .btn-manage {
   background: #fff;
   border: 1px solid #000;
@@ -25,7 +43,6 @@
   width: 51px;
 }
 
-/* 워크샵 상세와 동일한 표 스타일 */
 .view-table { width: 100%; border-collapse: collapse; }
 .view-table th, .view-table td { border-bottom: 1px solid #eee; padding: 12px 10px; }
 .view-table th { width: 140px; background: #fafafa; font-weight: 500; color: #555; text-align: left; }
@@ -35,10 +52,10 @@
 <body>
 
   <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
-  <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
   <c:set var="ctx" value="${pageContext.request.contextPath}" />
 
   <main class="main-container">
+  <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
     <div class="container py-3">
 
       <!-- 상단 바: 버튼은 그대로 -->

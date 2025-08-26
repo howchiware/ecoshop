@@ -366,5 +366,10 @@ public class MyShoppingController {
 		return "myShopping/myPoint";
 	}
 	
+	// 최근상품목혹
+	@GetMapping("recentProduct")
+	public String handleㄲecentProduct() {
+		return "myShopping/recentProduct";
+	}
 	
 }

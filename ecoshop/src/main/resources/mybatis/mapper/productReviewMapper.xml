@@ -109,4 +109,69 @@
 		FROM reviewHelpful
 		WHERE orderDetailId = #{orderDetailId} AND memberId = #{memberId}
 	</select>
+	
+	<select id="myDataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM productReview
+		<where>
+			<if test="memberId != null">
+				memberId = #{memberId}
+			</if>
+			<if test="mode != null">
+				<if test="mode == 2">
+					AND ( answer IS NOT NULL )
+				</if>
+				<if test="mode == 3">
+					AND ( answer IS NULL )
+				</if>
+			</if>
+		</where>
+	</select>
+	
+	<select id="listMyReview" parameterType="map" resultType="com.sp.app.model.ProductReview">
+		SELECT pr.reviewId, pr.memberId, m2.name, rate, pr.content, pr.regDate, 
+			pr.answerId, mm2.name answerName, pr.answer, pr.answerDate, 
+			pr.showReview, pr.block,  
+			pr.productCode, f.reviewImg, 
+			p.productName, op.optionValue, op2.optionValue optionValue2
+		FROM productReview pr
+		JOIN member2 m2 ON pr.memberId = m2.memberId 
+		LEFT OUTER JOIN member2 mm2 ON pr.answerId = mm2.memberId 
+		JOIN orderDetail od ON pr.reviewId = od.orderDetailId
+		JOIN product p ON p.productCode = od.productCode
+		LEFT OUTER JOIN optionDetail op ON od.optionDetailNum = op.optionDetailNum
+		LEFT OUTER JOIN optionDetail op2 ON od.optionDetailNum2 = op2.optionDetailNum		
+		LEFT OUTER JOIN (
+			SELECT reviewId, LISTAGG(reviewImg, ',') WITHIN GROUP(ORDER BY reviewPhotoId) reviewImg
+            FROM productReviewDetail
+            GROUP BY reviewId	
+		) f ON pr.reviewId=f.reviewId
+		<where>
+			<if test="memberId != null">
+				pr.memberId = #{memberId}
+			</if>
+			<if test="mode != null">
+				<if test="mode == 2">
+					AND ( answer IS NOT NULL )
+				</if>
+				<if test="mode == 3">
+					AND ( answer IS NULL )
+				</if>
+			</if>
+		</where>
+		ORDER BY pr.regDate DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+		
+	<select id="listReviewFile" parameterType="long" resultType="com.sp.app.model.ProductReview">
+		SELECT reviewPhotoId, reviewId, reviewImg
+		FROM productReviewDetail
+		WHERE reviewId = #{reviewId}
+	</select>
+		
+	<delete id="deleteReview" parameterType="long">
+		DELETE FROM productReview
+		WHERE reviewId = #{reviewId}
+	</delete>
 </mapper>

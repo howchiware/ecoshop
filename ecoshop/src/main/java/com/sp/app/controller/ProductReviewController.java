@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.sp.app.common.PaginateUtil;
 import com.sp.app.common.StorageService;
@@ -256,7 +258,6 @@ public class ProductReviewController {
 		return model;
 	}
 	
-	/*
 	// AJAX - JSON : 마이페이지 - 내가 쓴 리뷰
 	@GetMapping("list2")
 	public Map<String, ?> list2(
@@ -271,9 +272,9 @@ public class ProductReviewController {
 			int dataCount = 0;
 			
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("member_id", info.getMember_id());
+			map.put("memberId", info.getMemberId());
 			
-			dataCount = service.dataCountManage(map);
+			dataCount = service.myDataCount(map);
 			
 			int total_page = paginateUtil.pageCount(dataCount, size);
 
@@ -285,7 +286,7 @@ public class ProductReviewController {
 			map.put("offset", offset);
 			map.put("size", size);
 
-			List<Review> list = service.listReviewManage(map);
+			List<ProductReview> list = service.listMyReview(map);
 			
 			String paging = paginateUtil.pagingMethod(current_page, total_page, "listReview");
 			
@@ -302,6 +303,36 @@ public class ProductReviewController {
 		
 		return model;
 	}
-	*/
+	
+	// 마이페이지-리뷰/Q&A
+	@GetMapping("review")
+	public ModelAndView review(
+			@RequestParam(name = "mode", defaultValue = "review") String mode,
+			Model model) throws Exception {
+		
+		model.addAttribute("mode", mode);
+		
+		return new ModelAndView("myPage/review");
+	}
+	
+	@GetMapping("delete")
+	public Map<String, ?> deleteReview(
+			@RequestParam(name = "reviewId", defaultValue = "1") int reviewId,
+			HttpSession session) throws Exception {
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		String state = "false";
+		try {
+			
+			service.deleteReview(reviewId, uploadPath);
+			
+			state = "true";
+		} catch (Exception e) {
+		}
+		
+		model.put("state", state);
+		return model;
+	}
 	
 }

@@ -13,19 +13,23 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
 <style>
-body {
+* {
 	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
-	background-color: #f7f6f3;
-	color: #333;
-	margin: 0;
+	box-sizing: border-box;
 }
 
 @font-face {
-	font-family: 'Pretendard-Regular';
+	font-family: 'Pretendard';
 	src:
 		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
 		format('woff');
 	font-style: normal;
+}
+
+body {
+	background-color: #f7f6f3;
+	color: #333;
+	margin: 0;
 }
 
 .main-container {
@@ -49,19 +53,16 @@ body {
 /* 표 */
 .table {
 	background-color: #fff;
-	border: 1px solid #dee2e6;
 }
 
 .table thead th {
 	background-color: #f8f9fa;
 	font-weight: 500;
 	text-align: center;
-	border: 1px solid #dee2e6;
 }
 
 .table td {
 	vertical-align: middle;
-	border: 1px solid #dee2e6;
 	background-color: #fff;
 }
 
@@ -97,10 +98,10 @@ select.form-select {
 </head>
 <body>
 	<jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
-	<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
 	<c:set var="ctx" value="${pageContext.request.contextPath}" />
 
 	<main class="main-container">
+	<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
 
 		<div class="container py-4">
 
@@ -127,15 +128,13 @@ select.form-select {
 					</div>
 				</form>
 
-				<!-- 안내 -->
 				<c:if test="${empty workshopId}">
 					<div class="alert alert-secondary">워크샵을 선택하면 해당 워크샵의 참여자 목록이
 						표시됩니다.</div>
 				</c:if>
 
-				<!-- 참여자 목록 -->
 				<c:if test="${not empty workshopId}">
-					<div class="section-title">참여자 명단</div>
+					<!-- <div class="section-title">참여자 명단</div>  -->
 
 					<div class="table-outline mb-3">
 						<table class="table table-sm align-middle">
