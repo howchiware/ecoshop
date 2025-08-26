@@ -1,6 +1,5 @@
-body {
+* {
 	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
-	background-color: #f7f6f3;
 	color: #333;
 	margin: 0;
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sp.app.model.GongguOrder;
+import com.sp.app.model.GongguPayment;
 import com.sp.app.model.GongguReview;
 
 public interface GongguOrderService {
@@ -13,5 +14,15 @@ public interface GongguOrderService {
 	public boolean didIBuyGonggu(Map<String, Object> map);
 	public GongguReview myReviewOfGonggu(long gongguOrderDetailId);
 	List<GongguOrder> listGongguOrderProduct(List<GongguOrder> list);
+	
+	// 마이페이지 주문내역
+	public int countGongguPayment(Map<String, Object> map);
+    public List<GongguPayment> listGongguPayment(Map<String, Object> map);
+    public List<GongguPayment> listGongguPurchase(Map<String, Object> map);
+    
+    public GongguPayment findByGongguOrderDetail(Map<String, Object> map);
+    public GongguOrder findByGongguOrderDelivery(Map<String, Object> map);
+    public void updateGongguOrderDetailState(Map<String, Object> map) throws Exception;
+    public void updateGongguOrderHistory(long gongguOrderDetailId) throws Exception;
 }
 

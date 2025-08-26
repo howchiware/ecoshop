@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.sp.app.common.PaginateUtil;
 import com.sp.app.model.Destination;
 import com.sp.app.model.GongguOrder;
+import com.sp.app.model.GongguPayment;
 import com.sp.app.model.GongguProductDeliveryRefundInfo;
 import com.sp.app.model.Member;
 import com.sp.app.model.SessionInfo;
@@ -26,6 +27,7 @@ import com.sp.app.service.GongguService;
 import com.sp.app.service.MemberService;
 import com.sp.app.service.MyGongguShoppingService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +41,7 @@ public class GongguOrderController {
 	private final GongguService gongguService;
 	private final MemberService memberService;
 	private final MyGongguShoppingService myGongguShoppingService;
+	private final PaginateUtil paginateUtil;
 	
 	@RequestMapping(name = "payment", method = {RequestMethod.GET, RequestMethod.POST})
 	public String paymentForm(
@@ -167,6 +170,58 @@ public class GongguOrderController {
 			return "redirect:/";
 		}
 		
-		return "gongguOrder/complete";
+		return "complete";
 	}
+
+	
+	// 마이페이지  
+	@GetMapping("gongguPayment")
+	public String gongguPaymentList(
+			@RequestParam(name = "page", defaultValue = "1") int current_page,
+			Model model,
+			HttpServletRequest req,
+			HttpSession session) throws Exception {
+		
+		try {
+			int size = 10;
+			int total_page;
+			int dataCount;
+			
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("memberId", info.getMemberId());
+			
+			dataCount = gongguOrderService.countGongguPayment(map);
+			total_page = paginateUtil.pageCount(dataCount, size);
+			current_page = Math.min(current_page, total_page);
+			
+			int offset = (current_page - 1) * size;
+			if(offset < 0) offset = 0;
+			
+			map.put("offset", offset);
+			map.put("size", size);
+			
+			List<GongguPayment> list = gongguOrderService.listGongguPayment(map);
+			
+			String cp = req.getContextPath();
+			String listUrl = cp + "/myPage/gongguPaymentList";
+			
+			String paging = paginateUtil.paging(current_page, total_page, listUrl);
+			
+			model.addAttribute("list", list);
+			model.addAttribute("page", current_page);
+			model.addAttribute("dataCount", dataCount);
+			model.addAttribute("size", size);
+			model.addAttribute("total_page", total_page);
+			model.addAttribute("paging", paging);		
+			
+		} catch (Exception e) {
+			log.info("gongguPaymentList : ", e);
+		}
+		
+		return "myPage/gongguPaymentList";
+	}
+	
+
 }
