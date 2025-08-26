@@ -10,7 +10,7 @@
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
 <style>
 body {
@@ -82,7 +82,6 @@ select.form-select {
 	font-weight: 700;
 }
 
-/* 버튼 */
 .btn-manage {
 	background: #fff;
 	border: 1px solid #000;

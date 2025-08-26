@@ -7,9 +7,6 @@
 <title>담당자 관리</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
 	rel="stylesheet">
 <style>
@@ -88,25 +85,36 @@ select.form-select {
 
 /* 표 기본 스타일 */
 .table {
-  background-color: #fff;
-  border-collapse: collapse;
-}
-.table thead th {
-  background-color: #f8f9fa;
-  font-weight: 600;
-  text-align: center;
-}
-.table td {
-  vertical-align: middle;
-  background-color: #ffffff;
-}
-.table tbody tr:hover {
-  background-color: #fdfdfd;
-}
-.table .btn {
-  margin: 0 2px;
+	background-color: #fff;
+	border-collapse: collapse;
 }
 
+.table thead th {
+	background-color: #f8f9fa;
+	font-weight: 600;
+	text-align: center;
+}
+
+.table td {
+	vertical-align: middle;
+	background-color: #ffffff;
+}
+
+.table tbody tr:hover {
+	background-color: #fdfdfd;
+}
+
+.table .btn {
+	margin: 0 2px;
+}
+
+.modal-backdrop {
+	z-index: 9998 !important;
+}
+
+.modal {
+	z-index: 9999 !important;
+}
 </style>
 </head>
 <body>
@@ -183,14 +191,14 @@ select.form-select {
 											<td class="text-center">${row.email}</td>
 											<td class="text-center">${row.department}</td>
 											<td class="text-center">
-											
+
 												<button type="button" class="btn-manage"
 													data-bs-toggle="modal" data-bs-target="#managerModal"
 													onclick="openManagerModal('update',
 													'${row.managerId}','${row.name}',
 													'${row.tel}','${row.email}','${row.department}')">
 													수정</button>
-													
+
 												<form action="${ctx}/admin/workshop/manager/delete"
 													method="post" style="display: inline;">
 													<input type="hidden" name="num" value="${row.managerId}">
@@ -260,8 +268,7 @@ select.form-select {
 				</div>
 
 				<div class="modal-footer">
-					<button type="submit" form="managerForm"
-						class="btn-manage">등록</button>
+					<button type="submit" form="managerForm" class="btn-manage">등록</button>
 				</div>
 
 			</div>

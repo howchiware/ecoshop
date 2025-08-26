@@ -194,35 +194,35 @@ margin-top: 20px;
 						<c:choose>
 							<c:when test="${empty list}">
 								<tr>
-									<td colspan="5" class="text-center text-muted py-4">데이터가
-										없습니다.</td>
+									<td colspan="5" class="text-center text-muted py-4">데이터가 없습니다.</td>
 								</tr>
 							</c:when>
 							<c:otherwise>
 								<c:forEach var="row" items="${list}" varStatus="st">
 									<tr>
-										<td class="text-center"><c:out
-												value="${(page-1)*size + st.index + 1}" /></td>
-										<td class="text-center"><c:out
-												value="${row.categoryName}" /></td>
-										<td class="text-center"><a href="javascript:void(0);"
-											class="program-title" data-id="${row.programId}"> <c:out
-													value="${row.programTitle}" />
-										</a></td>
-										<td class="text-center"><fmt:formatDate
-												value="${row.regDate}" pattern="yyyy-MM-dd" /></td>
 										<td class="text-center">
-											<form action="${ctx}/admin/workshop/program/update"
-												method="get" style="display: inline;">
+											<c:out value="${(page-1)*size + st.index + 1}" />
+										</td>
+										<td class="text-center">
+											<c:out value="${row.categoryName}" />
+										</td>
+										<td class="text-start">
+											<a class="program-title"
+											   href="${ctx}/admin/workshop/program/detail?num=${row.programId}&page=${page}&schType=${schType}&categoryId=${categoryId}&kwd=${kwd}">
+												<c:out value="${row.programTitle}" />
+											</a>
+										</td>
+										<td class="text-center">
+											<fmt:formatDate value="${row.regDate}" pattern="yyyy-MM-dd" />
+										</td>
+										<td class="text-center">
+											<form action="${ctx}/admin/workshop/program/update" method="get" style="display:inline;">
 												<input type="hidden" name="num" value="${row.programId}">
 												<input type="hidden" name="page" value="${page}">
 												<button type="submit" class="btn-manage"
-													style="width: 51px; height: 30px; text-decoration: none;">
-													수정</button>
+													style="width:51px;height:30px;">수정</button>
 											</form>
-
-											<form action="${ctx}/admin/workshop/program/delete"
-												method="post" style="display: inline;">
+											<form action="${ctx}/admin/workshop/program/delete" method="post" style="display:inline;">
 												<input type="hidden" name="num" value="${row.programId}">
 												<input type="hidden" name="page" value="${page}">
 												<button type="submit" class="btn-manage"
@@ -236,8 +236,6 @@ margin-top: 20px;
 					</tbody>
 				</table>
 			</div>
-
-
 		</div>
 
 		<nav aria-label="페이지네이션">
@@ -250,54 +248,6 @@ margin-top: 20px;
 	</main>
 
 	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-	<script type="text/javascript">
-	$(function() {
-		$(".program-title").click(function(){
-			let programId = $(this).data("id");
-			let $row = $(this).closest("tr");
-			
-			// 열려 있으면 닫기
-			if($row.next().hasClass("program-detail")) {
-				$row.next().remove();
-				return;
-			}
-			
-			// 기존 열린 상세 닫기
-			$(".program-detail").remove();
-			
-			$.ajax({
-				url: "${ctx}/admin/workshop/program/detail",
-				type: "GET",
-				dataType: "json",
-				data: { programId: programId },
-				success: function(data) {
-					  console.log('resp:', data);
-					  const content = data?.programContent || "<em class='text-muted'>내용 없음</em>";
-
-					  const detailRow =
-					      '<tr class="program-detail">' +
-					        '<td colspan="4">' +
-					          '<div class="detail-box">' +
-					            '<div class="detail-head">' +
-					              '<div class="detail-title">프로그램 상세</div>' +
-					              '<div class="detail-meta"></div>' +
-					            '</div>' +
-					            '<div class="program-content">' + content + '</div>' +
-					          '</div>' +
-					        '</td>' +
-					      '</tr>';
-
-					  $row.after(detailRow);
-					},
-
-				error: function() {
-					alert("프로그램 정보를 불러오지 못했습니다.");
-				}
-			});
-		});
-	});
-	
-	</script>
-
+	  
 </body>
 </html>

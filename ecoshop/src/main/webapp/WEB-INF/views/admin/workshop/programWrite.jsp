@@ -7,128 +7,124 @@
 <meta charset="UTF-8" />
 <title>프로그램 등록</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/admin.css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/admin.css">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
+/* 버튼 – 기존 유지 */
 .btn-manage {
-	background: #fff;
-	border: 1px solid #000;
-	border-radius: 4px;
-	padding: 3px 10px;
-	color: #000;
-	font-size: 0.9rem;
-	transition: background 0.2s, color 0.2s;
-	cursor: pointer;
-	height: 30px;
-	width: 51px;
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 4px;
+  padding: 3px 10px;
+  color: #000;
+  font-size: 0.9rem;
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+  height: 30px;
+  width: 51px;
 }
 
-.center-btn-container {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	margin-top: 20px;
-}
+/* 카드와 표 스타일 – 상세 화면과 톤 맞춤 */
+.outside { background:#fff; border:1px solid #dee2e6; border-radius:8px; padding:20px; }
+.main-title { font-weight:600; }
 
-.main-title {
-	font-weight: 600;
-}
+/* 폼을 표 형태로 */
+.form-table { width:100%; border-collapse:collapse; table-layout:fixed; }
+.form-table th, .form-table td { border-bottom:1px solid #eee; padding:12px 10px; vertical-align:middle; }
+.form-table th { width:140px; background:#fafafa; font-weight:500; color:#555; text-align:left; }
+.form-table td { color:#222; }
 
-.form-control {
-	margin-bottom: 20px;
+/* 입력 컴포넌트 폭/높이 통일 */
+.form-table .form-control,
+.form-table .form-select,
+.form-table textarea {
+  width:100%;
+  height:36.5px;
 }
+.form-table textarea { height:auto; min-height:220px; resize:vertical; }
 
-.outside {
-	background: #fff;
-	border: 1px solid #dee2e6;
-	border-radius: 8px;
-	padding: 20px;
-	margin-bottom: 20px;
-}
+/* 하단 버튼 영역 */
+.center-btn-container { display:flex; justify-content:center; gap:8px; margin-top:20px; }
 </style>
-
 </head>
 <body>
-	<jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
-	<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
-	<c:set var="ctx" value="${pageContext.request.contextPath}" />
 
-	<main class="main-container">
-		<div class="container py-3"></div>
+  <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
+  <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
+  <c:set var="ctx" value="${pageContext.request.contextPath}" />
 
-		<div class="outside">
-			<div class="d-flex align-items-center justify-content-between mb-3">
-				<h5 class="main-title">
-					<c:choose>
-						<c:when test="${mode == 'update'}">프로그램 수정</c:when>
-						<c:otherwise>프로그램 등록</c:otherwise>
-					</c:choose>
-				</h5>
-			</div>
+  <main class="main-container">
+    <div class="container py-3">
 
-			<hr>
+      <div class="outside">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <h5 class="main-title">
+            <c:choose>
+              <c:when test="${mode == 'update'}">프로그램 수정</c:when>
+              <c:otherwise>프로그램 등록</c:otherwise>
+            </c:choose>
+          </h5>
 
+          <!-- 목록 버튼(선택) 필요하면 주석 해제
+          <form action="${ctx}/admin/workshop/program/list" method="get" class="d-inline">
+            <input type="hidden" name="page" value="${page}">
+            <button type="submit" class="btn-manage">목록</button>
+          </form>
+          -->
+        </div>
 
-			<section class="mb-4">
-				<div class="row g-2 align-items-center mb-2">
-					<label class="col-sm-2 col-form-label">카테고리</label>
-					<div class="col-sm-3">
-						<select name="categoryId" id="categoryId" class="form-select"
-							form="programForm" required>
-							<option value="" disabled>카테고리 선택</option>
-							<c:forEach var="c" items="${category}">
-								<option value="${c.categoryId}"
-									<c:if test="${mode == 'update' && c.categoryId == dto.categoryId}">selected</c:if>>
-									${c.categoryName}</option>
-							</c:forEach>
-						</select>
-					</div>
-				</div>
-			</section>
+        <hr class="mt-0">
 
-			<form id="programForm" method="post"
-				action="${ctx}/admin/workshop/program/${mode}">
-				<c:if test="${mode == 'update'}">
-					<input type="hidden" name="programId" value="${dto.programId}">
-					<input type="hidden" name="page" value="${page}">
-				</c:if>
+        <form id="programForm" method="post" action="${ctx}/admin/workshop/program/${mode}">
+          <c:if test="${mode == 'update'}">
+            <input type="hidden" name="programId" value="${dto.programId}">
+            <input type="hidden" name="page" value="${page}">
+          </c:if>
 
-				<div class="row g-2 align-items-center mb-2">
-					<label class="col-sm-2 col-form-label">프로그램명</label>
-					<div class="col-sm-8">
-						<input type="text" name="programTitle" class="form-control"
-							value="${dto.programTitle}" required />
-					</div>
-				</div>
+          <table class="form-table">
+            <tbody>
+              <tr>
+                <th>카테고리</th>
+                <td>
+                  <select name="categoryId" id="categoryId" class="form-select" required>
+                    <option value="" disabled <c:if test="${empty dto.categoryId}">selected</c:if>>카테고리 선택</option>
+                    <c:forEach var="c" items="${category}">
+                      <option value="${c.categoryId}"
+                        <c:if test="${mode == 'update' && c.categoryId == dto.categoryId}">selected</c:if>>
+                        ${c.categoryName}
+                      </option>
+                    </c:forEach>
+                  </select>
+                </td>
+              </tr>
 
-				<div class="row g-2 mb-3">
-					<label class="col-sm-2 col-form-label">프로그램 내용</label>
-					<div class="col-sm-8">
-						<textarea name="programContent" rows="8" class="form-control">${dto.programContent}</textarea>
-					</div>
-				</div>
+              <tr>
+                <th>프로그램명</th>
+                <td>
+                  <input type="text" name="programTitle" class="form-control"
+                         value="${dto.programTitle}" maxlength="200" required>
+                </td>
+              </tr>
 
-				<div class="center-btn-container">
-					<c:choose>
-						<c:when test="${mode == 'update'}">
-							<button type="submit" class="btn-manage">등록</button>
-						</c:when>
-						<c:otherwise>
-							<button type="submit" class="btn-manage">등록</button>
-						</c:otherwise>
-					</c:choose>
-				</div>
+              <tr>
+                <th>프로그램 내용</th>
+                <td>
+                  <textarea name="programContent" class="form-control" rows="10"
+                            placeholder="프로그램 소개/구성/유의사항 등을 입력하세요.">${dto.programContent}</textarea>
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
-			</form>
-		</div>
+          <div class="center-btn-container">
+            <button type="submit" class="btn-manage">등록</button>
+          </div>
+        </form>
+      </div>
 
-	</main>
+    </div>
+  </main>
 
 </body>
 </html>

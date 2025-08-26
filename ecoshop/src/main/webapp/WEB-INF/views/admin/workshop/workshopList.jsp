@@ -62,7 +62,6 @@ body {
 
 .outside {
 	background: #fff;
-	border: 1px solid #dee2e6;
 	border-radius: 8px;
 	padding: 20px;
 	margin-bottom: 20px;
@@ -82,19 +81,16 @@ select.form-select {
 
 .table {
 	background-color: #fff;
-	border: 1px solid #dee2e6;
 }
 
 .table thead th {
 	background-color: #f8f9fa;
 	font-weight: 500;
 	text-align: center;
-	border: 1px solid #dee2e6;
 }
 
 .table td {
 	vertical-align: middle;
-	border: 1px solid #dee2e6;
 	background-color: #fff;
 }
 
@@ -190,7 +186,6 @@ select.form-select {
 								<th style="width: 70px;" class="text-center">일정</th>
 								<th style="width: 50px;" class="text-center">정원</th>
 								<th style="width: 80px;" class="text-center">상태</th>
-								<th style="width: 100px;" class="text-center">관리</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -225,25 +220,6 @@ select.form-select {
 													<option value="2"
 														<c:if test="${row.workshopStatus == 2}">selected</c:if>>취소</option>
 											</select></td>
-
-
-											<td class="text-center">
-
-												<form action="${ctx}/admin/workshop/update" method="get"
-													style="display: inline;">
-													<input type="hidden" name="num" value="${row.workshopId}">
-													<input type="hidden" name="page" value="${page}">
-													<button type="submit" class="btn-manage">수정</button>
-												</form>
-
-												<form action="${ctx}/admin/workshop/delete" method="post"
-													style="display: inline;">
-													<input type="hidden" name="num" value="${row.workshopId}">
-													<input type="hidden" name="page" value="${page}">
-													<button type="submit" class="btn-manage"
-														onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
-												</form>
-											</td>
 										</tr>
 									</c:forEach>
 								</c:otherwise>

@@ -8,76 +8,135 @@
 <title>워크샵 상세</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
+/* 기존 유지 */
 .workshop-img {
-	max-width: 400px;
-	height: auto;
-	display: block;
-	margin-bottom: 20px;
-	border-radius: 8px;
-	border: 1px solid #ddd;
+  max-width: 400px;
+  height: auto;
+  display: block;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
 }
+
+.btn-manage {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 4px;
+  padding: 3px 10px;
+  color: #000;
+  font-size: 0.9rem;
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+  height: 30px;
+  width: 51px;
+}
+
+/* --- 추가: 상세 표만 위한 로컬 스타일 (다른 화면 영향 없음) --- */
+.view-table { width: 100%; border-collapse: collapse; }
+.view-table th, .view-table td { border-bottom: 1px solid #eee; padding: 12px 10px; }
+.view-table th { width: 140px; background: #fafafa; font-weight: 500; color: #555; text-align: left; }
+.view-table td { color: #222; }
+.view-photos img { max-width: 200px; height: auto; margin: 4px; border: 1px solid #eee; border-radius: 4px; }
 </style>
 </head>
 <body>
 
-	<jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
-	<c:set var="ctx" value="${pageContext.request.contextPath}" />
+  <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
+  <c:set var="ctx" value="${pageContext.request.contextPath}" />
 
-	<main class="main-container">
-		<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
+  <main class="main-container">
+    <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
 
-		<div class="container py-3">
+    <div class="container py-3">
 
-			<!-- 상단 바 -->
-			<div class="d-flex justify-content-between align-items-center mb-3">
-				<h4 class="m-0">워크샵 상세</h4>
-				<div>
-					<a href="${ctx}/admin/workshop/list?${query}"
-						class="btn btn-secondary btn-sm">목록</a> <a
-						href="${ctx}/admin/workshop/update?workshopId=${dto.workshopId}&page=${page}"
-						class="btn btn-primary btn-sm">수정</a>
-				</div>
-			</div>
+      <!-- 상단 바 (버튼 그대로 유지) -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="m-0">워크샵 상세</h4>
+        <div>
+          <!-- 목록 -->
+          <button type="button" class="btn-manage"
+                  onclick="location.href='${ctx}/admin/workshop/list?${query}'">목록</button>
 
-			<!-- 내용 -->
-			<div class="card">
-				<div class="card-body">
+          <!-- 수정 -->
+          <button type="button" class="btn-manage"
+                  onclick="location.href='${ctx}/admin/workshop/update?num=${dto.workshopId}&page=${page}'">수정</button>
 
-					<!-- 썸네일 -->
-					<c:if test="${not empty dto.thumbnailPath}">
-						<img src="${ctx}/uploads/workshop/${dto.thumbnailPath}"
-							alt="워크샵 이미지" class="workshop-img">
-					</c:if>
+          <!-- 삭제 -->
+          <form action="${ctx}/admin/workshop/delete" method="post" style="display:inline;">
+            <input type="hidden" name="num" value="${dto.workshopId}">
+            <input type="hidden" name="page" value="${page}">
+            <button type="submit" class="btn-manage"
+                    onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
+          </form>
+        </div>
+      </div>
 
-					<h5 class="card-title">${dto.workshopTitle}</h5>
-					<p class="text-muted mb-2">
-						<fmt:formatDate value="${dto.scheduleDate}" pattern="yyyy.MM.dd" />
-						| 정원: ${dto.capacity}명 | 상태:
-						<c:choose>
-							<c:when test="${dto.workshopStatus == 1}">모집</c:when>
-							<c:when test="${dto.workshopStatus == 0}">마감</c:when>
-							<c:when test="${dto.workshopStatus == 2}">취소</c:when>
-							<c:otherwise>-</c:otherwise>
-						</c:choose>
-					</p>
+      <!-- 내용: 관리자 상세(키-값 표) 형태 -->
+      <div class="card">
+        <div class="card-body">
+          <table class="view-table">
+            <tbody>
+              <c:if test="${not empty dto.thumbnailPath}">
+                <tr>
+                  <th>썸네일</th>
+                  <td>
+                    <img src="${ctx}/uploads/workshop/${dto.thumbnailPath}" alt="워크샵 이미지"
+                         style="max-width:400px; height:auto; border:1px solid #ddd; border-radius:8px;">
+                  </td>
+                </tr>
+              </c:if>
 
-					<!-- 설명 -->
-					<div class="mt-3">${dto.workshopContent}</div>
-					
-					<!-- 상세 이미지 -->
-					<c:forEach var="p" items="${photoList}">
-						<img src="${ctx}/uploads/workshop/${p.workshopImagePath}"
-							alt="워크샵 상세 이미지">
-					</c:forEach>
+              <tr>
+                <th>제목</th>
+                <td>${dto.workshopTitle}</td>
+              </tr>
 
-				</div>
-			</div>
-		</div>
-	</main>
+              <tr>
+                <th>일정</th>
+                <td><fmt:formatDate value="${dto.scheduleDate}" pattern="yyyy.MM.dd" /></td>
+              </tr>
+
+              <tr>
+                <th>정원</th>
+                <td>${dto.capacity}명</td>
+              </tr>
+
+              <tr>
+                <th>상태</th>
+                <td>
+                  <c:choose>
+                    <c:when test="${dto.workshopStatus == 1}">모집</c:when>
+                    <c:when test="${dto.workshopStatus == 0}">마감</c:when>
+                    <c:when test="${dto.workshopStatus == 2}">취소</c:when>
+                    <c:otherwise>-</c:otherwise>
+                  </c:choose>
+                </td>
+              </tr>
+
+              <tr>
+                <th>내용</th>
+                <td><c:out value="${dto.workshopContent}" escapeXml="false" /></td>
+              </tr>
+
+              <c:if test="${not empty photoList}">
+                <tr>
+                  <th>상세 이미지</th>
+                  <td class="view-photos">
+                    <c:forEach var="p" items="${photoList}">
+                      <img src="${ctx}/uploads/workshop/${p.workshopImagePath}" alt="워크샵 상세 이미지">
+                    </c:forEach>
+                  </td>
+                </tr>
+              </c:if>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
 
 </body>
 </html>

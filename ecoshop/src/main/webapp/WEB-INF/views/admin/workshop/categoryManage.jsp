@@ -75,6 +75,14 @@ body {
   transition: background 0.2s, color 0.2s;
   cursor: pointer;
 }
+
+.modal-backdrop {
+	z-index: 9998 !important;
+}
+
+.modal {
+	z-index: 9999 !important;
+}
 </style>
 </head>
 <body>

@@ -190,16 +190,25 @@ public class WorkshopManageController {
 
 		return "admin/workshop/programList";
 	}
-
-	// 프로그램 내용 상세보기
+	
 	@GetMapping("/program/detail")
-	@ResponseBody
-	public Map<String, Object> programDetail(@RequestParam("programId") Long programId) {
-		Workshop dto = service.findProgramById(programId);
-		Map<String, Object> map = new HashMap<>();
-		String content = (dto == null || dto.getProgramContent() == null) ? "" : dto.getProgramContent();
-		map.put("programContent", content);
-		return map;
+	public String programDetail(
+			@RequestParam(name = "num") long num,
+	        @RequestParam(name = "page", defaultValue = "1") String current_page,
+	        @RequestParam(name = "schType", defaultValue = "all") String schType,
+	        @RequestParam(name = "kwd", defaultValue = "") String kwd,
+	        @RequestParam(name = "categoryId", required = false) Long categoryId,
+	        Model model) {
+		
+		Workshop dto = service.findProgramById(num);
+		
+		model.addAttribute("dto", dto);
+		model.addAttribute("page", current_page);
+		model.addAttribute("schType", schType);
+		model.addAttribute("kwd", kwd);
+		model.addAttribute("categoryId", categoryId);
+		
+		return "admin/workshop/programDetail";
 	}
 
 	// 프로그램 수정

@@ -101,6 +101,10 @@ select.form-select {
 	cursor: pointer;
 }
 
+.modal-backdrop { z-index: 9998 !important; }
+.modal { z-index: 9999 !important; }
+
+
 </style>
 </head>
 <body>
