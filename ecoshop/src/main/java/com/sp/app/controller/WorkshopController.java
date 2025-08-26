@@ -47,6 +47,7 @@ public class WorkshopController {
 			if (categoryId != null)
 				pmap.put("categoryId", categoryId);
 			pmap.put("onlyRecruiting", onlyRecruiting);
+			pmap.put("activeCategory", 1);
 
 			int dataCount = service.userWorkshopDataCount(pmap);
 
@@ -67,14 +68,12 @@ public class WorkshopController {
 			map.put("sort", sort);
 			map.put("offset", offset);
 			map.put("size", size);
+			map.put("activeCategory", 1);
 
 			List<Workshop> list = service.listUserWorkshop(map);
 
 			// 카테고리 드롭다운
-			Map<String, Object> cmap = new HashMap<String, Object>();
-			cmap.put("offset", 0);
-			cmap.put("size", 200);
-			List<Workshop> category = service.listCategory(cmap);
+			List<Workshop> category = service.listActiveCategory();
 
 			model.addAttribute("list", list);
 			model.addAttribute("page", currentPage);

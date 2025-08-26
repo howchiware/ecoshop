@@ -54,9 +54,10 @@ public class WorkshopManageController {
 	public String categoryManage(@RequestParam(name = "page", defaultValue = "1") int current_page, Model model) {
 		try {
 			int size = 10;
+			int offset = (Math.max(current_page, 1) - 1) * size;
 
 			Map<String, Object> pmap = new HashMap<>();
-			pmap.put("offset", 0);
+			pmap.put("offset", offset);
 			pmap.put("size", size);
 
 			List<Workshop> categoryList = service.listCategory(pmap);
@@ -73,12 +74,18 @@ public class WorkshopManageController {
 
 	// 카테고리 등록
 	@PostMapping("/category/write")
-	public String addCategory(Workshop dto, @RequestParam("categoryName") String categoryName, HttpSession session)
-			throws Exception {
+	public String addCategory(Workshop dto, 
+			@RequestParam("categoryName") String categoryName, 
+			@RequestParam(value = "active", required = false) Integer active,
+			HttpSession session) {
 		try {
-			dto.setCategoryName(categoryName.trim());
+			String name = categoryName == null ? "" : categoryName.trim();
+			if(name.isEmpty()) throw new IllegalAccessException();
+			
+			dto.setCategoryName(name);
+			dto.setActive(active == null ? 1 : (active == 1 ? 1 : 0));
+			
 			service.insertCategory(dto);
-
 			session.setAttribute("msg", "카테고리가 등록되었습니다.");
 		} catch (Exception e) {
 			log.info("addCategory : ", e);
@@ -86,11 +93,38 @@ public class WorkshopManageController {
 		}
 		return "redirect:/admin/workshop/category/manage";
 	}
+	
+	// 카테고리 토글
+	@PostMapping("/category/toggle")
+	@ResponseBody
+	public Map<String, Object> toggleCategory(@RequestParam (name = "categoryId") Long categoryId,
+	                                          @RequestParam (name = "active") Integer active) {
+	    try {
+	        int status = (active != null && active == 1) ? 1 : 0;
+	        service.categoryActive(categoryId, status);
+	        return Map.of("success", true, "message", "상태가 변경되었습니다.");
+	    } catch (Exception e) {
+	        log.error("toggleCategory :", e);
+	        return Map.of("success", false, "message", "상태 변경에 실패했습니다.");
+	    }
+	}
+
 
 	// 카테고리 수정
 	@PostMapping("/category/update")
-	public String updateCategory(Workshop dto, HttpSession session) throws Exception {
+	public String updateCategory(Workshop dto, 
+			@RequestParam(name = "categoryId") Long categoryId,
+			@RequestParam(name = "categoryName") String categoryName,
+			@RequestParam(value = "active", required = false) Integer active,
+			HttpSession session) {
 		try {
+			String name = categoryName == null ? "" : categoryName.trim();
+			if(name.isEmpty()) throw new IllegalAccessException();
+			
+			dto.setCategoryId(categoryId);
+	        dto.setCategoryName(name);
+	        dto.setActive(active == null ? 1 : (active == 1 ? 1 : 0));
+			
 			service.updateCategory(dto);
 			session.setAttribute("msg", "카테고리가 수정되었습니다.");
 		} catch (Exception e) {
@@ -190,24 +224,22 @@ public class WorkshopManageController {
 
 		return "admin/workshop/programList";
 	}
-	
+
 	@GetMapping("/program/detail")
-	public String programDetail(
-			@RequestParam(name = "num") long num,
-	        @RequestParam(name = "page", defaultValue = "1") String current_page,
-	        @RequestParam(name = "schType", defaultValue = "all") String schType,
-	        @RequestParam(name = "kwd", defaultValue = "") String kwd,
-	        @RequestParam(name = "categoryId", required = false) Long categoryId,
-	        Model model) {
-		
+	public String programDetail(@RequestParam(name = "num") long num,
+			@RequestParam(name = "page", defaultValue = "1") String current_page,
+			@RequestParam(name = "schType", defaultValue = "all") String schType,
+			@RequestParam(name = "kwd", defaultValue = "") String kwd,
+			@RequestParam(name = "categoryId", required = false) Long categoryId, Model model) {
+
 		Workshop dto = service.findProgramById(num);
-		
+
 		model.addAttribute("dto", dto);
 		model.addAttribute("page", current_page);
 		model.addAttribute("schType", schType);
 		model.addAttribute("kwd", kwd);
 		model.addAttribute("categoryId", categoryId);
-		
+
 		return "admin/workshop/programDetail";
 	}
 
@@ -831,8 +863,8 @@ public class WorkshopManageController {
 			@RequestParam(name = "participantId") long participantId,
 			@RequestParam(name = "workshopId") long workshopId, HttpSession session) {
 		if (workshopReviewId == null) {
-		    session.setAttribute("msg", "리뷰 ID가 비어있습니다.");
-		    return "redirect:/admin/workshop/points";
+			session.setAttribute("msg", "리뷰 ID가 비어있습니다.");
+			return "redirect:/admin/workshop/points";
 		}
 
 		try {
@@ -843,13 +875,9 @@ public class WorkshopManageController {
 			}
 
 			boolean already = pointMapper.listMemberPoints(memberId).stream()
-					.anyMatch(p -> 
-					p.getMemberId().equals(memberId)
-	                && p.getPostId() != null
-	                && p.getPostId().longValue() == workshopReviewId.longValue()
-	                && p.getClassify() == 1
-	                && p.getOrderId() == null
-				);
+					.anyMatch(p -> p.getMemberId().equals(memberId) && p.getPostId() != null
+							&& p.getPostId().longValue() == workshopReviewId.longValue() && p.getClassify() == 1
+							&& p.getOrderId() == null);
 			if (already) {
 				session.setAttribute("msg", "이미 지급된 내역입니다.");
 				return "redirect:/admin/workshop/points";
@@ -858,13 +886,13 @@ public class WorkshopManageController {
 			Point p = new Point();
 			p.setMemberId(memberId);
 			p.setReason("워크샵 후기 작성 보상");
-			p.setClassify(1); 
-			p.setPoints(1000); 
+			p.setClassify(1);
+			p.setPoints(1000);
 			p.setPostId(workshopReviewId);
-			p.setOrderId(null); 
+			p.setOrderId(null);
 
-			pointMapper.insertPoint(p); 
-			
+			pointMapper.insertPoint(p);
+
 			session.setAttribute("msg", "지급 완료되었습니다.");
 
 		} catch (Exception e) {
