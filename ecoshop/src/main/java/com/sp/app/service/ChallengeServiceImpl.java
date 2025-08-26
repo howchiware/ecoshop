@@ -298,7 +298,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
 	        // 2) 참여 레코드(없으면 생성)
 	        Challenge activePart = mapper.selectActiveParticipation(dto.getMemberId(), dto.getChallengeId());
-	        //  활성 참여건
+	        // 참여건
 	        log.info("[SPECIAL] active participation = {}", (activePart == null ? "NONE" : activePart.getParticipationId()));
 
 	        if (activePart == null) {
@@ -396,10 +396,46 @@ public class ChallengeServiceImpl implements ChallengeService {
 			return doneMax + 1;
 		} catch (Exception e) {
 			log.warn("getNextSpecialDay error", e);
-			 // 에러 시 보수적으로 1일차 반환
+			
 			return 1; // 1리틴 
 		
 			}
 		
+	}
+
+
+
+	@Override
+	public List<Challenge> listMyChallenges(long memberId){
+		try {
+			return mapper.listMyChallenges(memberId);
+		} catch (Exception e) {
+			log.error("listMyChallenges error: ", e);
+		}
+		return List.of();
+	}
+
+
+
+	@Override
+	public int countMyChallenges(long memberId) {
+		try {
+	        return mapper.countMyChallenges(memberId);
+	    } catch (Exception e) {
+	        log.error("countMyChallenges error:", e);
+	        return 0;
+	    }
+	}
+
+
+
+	@Override
+	public List<Challenge> listMyChallengesPaged(long memberId, int offset, int size) {
+		try {
+	        return mapper.listMyChallengesPaged(memberId, offset, size);
+	    } catch (Exception e) {
+	        log.error("listMyChallengesPaged error:", e);
+	        return List.of();
+	    }
 	}
 }

@@ -44,6 +44,11 @@ public interface ChallengeService {
     
     public Integer getNextSpecialDay(long challengeId, long memberId);
     
+    public List<Challenge> listMyChallenges (long memberId);
+    
+    public int countMyChallenges(long memberId);
+    
+    public List<Challenge> listMyChallengesPaged(long memberId, int offset, int size);
     
     
 }

@@ -57,5 +57,7 @@ public class Challenge {
     
     private String memberName;   // 사용자 이름
     
+    private Integer certCount;    // 인증글 수
+    private Integer approvedDays; // 승인된 일차 수
     
 }
