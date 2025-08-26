@@ -13,10 +13,6 @@ body {
 	font-style: normal;
 }
 
-.main-container {
-	display: flex;
-}
-
 .right-PANEL {
 	flex-grow: 1;
 	padding: 2rem;
@@ -60,10 +56,19 @@ body {
 }
 
 .main-container {
+  display: flex;
   position: relative;
   margin-left: 250px;
   padding: 20px;
   box-sizing: border-box;
   min-height: calc(100vh - 60px);
   background-color: #f9f9f9;
+}
+
+.modal-backdrop {
+	z-index: 9998 !important;
+}
+
+.modal {
+	z-index: 9999 !important;
 }

@@ -25,11 +25,6 @@
 	    WHERE memberId = #{memberId} AND regDate &gt;= TRUNC(SYSDATE, 'IW') AND regDate &lt; TRUNC(SYSDATE, 'IW') + 7
 	</select>
 	
-	<insert id="addPoints" parameterType="com.sp.app.model.Attendance">
-		 
-	</insert>
-
-	
 	
 	<!-- 퀴즈 -->
 	<insert id="playQuiz" parameterType="com.sp.app.model.Quiz">
@@ -50,5 +45,14 @@
    		WHERE memberId = #{memberId} AND quizId = #{quizId}
 	</select>
 	
-	
+    <insert id="insertPoint" parameterType="com.sp.app.model.Point">
+        INSERT INTO point(pointId, memberId, baseDate, reason, classify, points, balance)
+        VALUES (point_seq.NEXTVAL, #{memberId}, SYSDATE, #{reason, jdbcType=VARCHAR}, #{classify}, #{points},
+            NVL((SELECT balance FROM point 
+                 WHERE memberId = #{memberId}
+                 ORDER BY pointId DESC 
+                 FETCH FIRST 1 ROWS ONLY), 0) + #{points}
+                )
+    </insert>
+
 </mapper>

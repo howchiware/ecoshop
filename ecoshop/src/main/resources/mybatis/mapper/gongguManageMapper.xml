@@ -71,14 +71,14 @@
 		WHERE gongguProductId = #{gongguProductId}
 	</select>
 
-	<select id="listProductPhoto" parameterType="Long"
+	<select id="listGongguProductPhoto" parameterType="Long"
 		resultType="com.sp.app.admin.model.GongguManage">
 		SELECT gongguProductDetailId, gongguProductId, detailPhoto
 		FROM gongguProductDetail
 		WHERE gongguProductId = #{gongguProductId}
 	</select>
 
-	<delete id="deleteProductPhoto" parameterType="Long">
+	<delete id="deleteGongguProductPhoto" parameterType="Long">
 		DELETE FROM gongguProductDetail
 		WHERE gongguProductId = #{gongguProductId}
 	</delete>

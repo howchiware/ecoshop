@@ -8,7 +8,7 @@
 			<div class="reply-writer">
 				<img src="${pageContext.request.contextPath}/dist/images/person.png" class="avatar-icon">
 				<div class="writer-info">
-					<span class="name">${vo.nickname}</span>
+					<span class="name">${vo.name}</span>
 					<span class="date">${vo.regDate}</span>
 				</div>
 			</div>
@@ -17,10 +17,10 @@
 				<div class="reply-menu d-none">
 					<c:choose>
 						<c:when test="${sessionScope.member.memberId == vo.memberId}">
-							<div class="deleteReplyAnswer reply-menu-item" data-replyId="${vo.replyId}" data-parentNum="${vo.parentNum}">삭제</div>
+							<div class="deleteReplyAnswer reply-menu-item" data-replyId="${vo.magazineReplyNum}" data-parentNum="${vo.parentNum}">삭제</div>
 						</c:when>
 						<c:otherwise>
-							<div class="notifyReplyAnswer reply-menu-item" data-replyId="${vo.replyId}">신고</div>
+							<div class="notifyReplyAnswer reply-menu-item" data-replyId="${vo.magazineReplyNum}">신고</div>
 						</c:otherwise>
 					</c:choose>
 				</div>

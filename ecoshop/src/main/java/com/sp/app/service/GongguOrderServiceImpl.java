@@ -62,36 +62,38 @@ public class GongguOrderServiceImpl implements GongguOrderService {
 	}
 
 	@Override
-	public void insertGongguOrder(GongguOrder dto) throws Exception {
-		try {
-			// 주문 정보 저장
-			mapper.insertGongguOrder(dto);
+	public void insertGongguOrder(GongguOrder dto, long gongguProductId) throws Exception {
+	    try {
+	        int cnt = 1;
+	        dto.setGongguProductId(gongguProductId);
+	        dto.setCnt(cnt);
 
-			// 결재 내역 저장
-			mapper.insertGongguPayDetail(dto);
-			
-			// 상세 주문 정보 및 주문 상태 저장
-		
-			dto.setGongguProductId(dto.getGongguProductId());
-			dto.setCnt(dto.getCnt());
-				
-			dto.setProductMoney(dto.getProductMoney());
-			dto.setPrice(dto.getPrice());
-			
-			// 상세 주문 정보 저장
-			mapper.insertGongguOrderDetail(dto);
+	        GongguOrder productInfo = mapper.findByGongguProduct(gongguProductId);
 
-			// 배송지 저장 
-			mapper.insertGongguOrderDelivery(dto);
-		} catch (Exception e) {
-			log.info("insertGongguOrder : ", e);
-			
-			throw e;
-		}
-}
+	        int salePrice = productInfo.getSalePrice();
+	        int totalAmount = cnt * salePrice;
+	        int deliveryCharge = totalAmount >= 30000 ? 0 : 2000;
+	        int totalPayment = totalAmount + deliveryCharge;
+
+	        dto.setPrice(salePrice); 
+	        dto.setTotalAmount(totalAmount);
+	        dto.setDeliveryCharge(deliveryCharge);
+	        dto.setPayment(totalPayment); 
+	        dto.setItemCount(1);
+	        
+	        mapper.insertGongguOrder(dto);
+	        mapper.insertGongguPayDetail(dto);
+	        mapper.insertGongguOrderDelivery(dto);
+	        mapper.insertGongguOrderDetail(dto);
+	        
+	    } catch (Exception e) {
+	        log.error("insertGongguOrder : ", e);
+	        throw e;
+	    }
+	}
 
 	@Override
-	public List<GongguOrder> listGongguOrderProduct(List<Map<String, Long>> list) {
+	public List<GongguOrder> listGongguOrderProduct(List<GongguOrder> list) {
 		List<GongguOrder> listGongguProduct = null;
 		
 		try {
@@ -105,21 +107,27 @@ public class GongguOrderServiceImpl implements GongguOrderService {
 
 
 	@Override
-	public GongguOrder findByGongguProduct(long gongguProductNum) {
-		// TODO Auto-generated method stub
-		return null;
+	public GongguOrder findByGongguProduct(long gongguProductId) {
+	    GongguOrder dto = null;
+
+	    try {
+	        dto = mapper.findByGongguProduct(gongguProductId);
+	    } catch (Exception e) {
+	        log.error("findByGongguProduct : ", e);
+	    }
+
+	    return dto;
 	}
 
 	@Override
-	public List<GongguOrder> didIBuyGonggu(Map<String, Object> map) {
-		List<GongguOrder> list = null;
-		try {
-			list = mapper.didIBuyGonggu(map);
-		} catch (Exception e) {
-			log.info("didIBuyGonggu : ", e);
-		}
-		
-		return list;
+	public boolean didIBuyGonggu(Map<String, Object> map) {
+	    try {
+	        int count = mapper.countBuyGonggu(map); 
+	        return count > 0;
+	    } catch (Exception e) {
+	        log.info("didIBuyGonggu : ", e);
+	    }
+	    return false;
 	}
 
 

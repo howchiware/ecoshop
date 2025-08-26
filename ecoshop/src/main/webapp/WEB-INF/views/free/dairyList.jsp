@@ -83,13 +83,14 @@
 	</table>
 	
 	<div class="table-bottom-controls">
-         <div class="align-self-center">
-             <button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/free/write';">글 작성</button>
-         </div>
-         <div class="page-navigation">
-             ${dataCount == 0 ? "" : paging}
-         </div>
-     </div>
+	    <div class="page-navigation">
+	        ${dataCount == 0 ? "" : paging}
+	    </div>
+
+	    <div class="align-self-center">
+	        <button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/free/write';">글 작성</button>
+	    </div>
+	</div>
 
 </main>
 

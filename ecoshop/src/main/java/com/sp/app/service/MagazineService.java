@@ -27,7 +27,7 @@ public interface MagazineService {
 	
 	public void updateReplyReport(Map<String, Object> map) throws Exception;
 	
-	public void insertMagazinDeLike(Map<String, Object> map) throws Exception;
+	public void insertMagazineLike(Map<String, Object> map) throws Exception;
 	public void deleteMagazineLike(Map<String, Object> map) throws Exception;
 	public int magazineLikeCount(long num);
 	public boolean isUserMagazineLiked(Map<String, Object> map);

@@ -8,14 +8,31 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Magazine {
-	private long magazineId;
 	private long memberId;
+	private String userId;
+	private String password;
+	private int userLevel;
+	private String name;
+	private String nickname;
+	
+	private long magazineId;
 	private String subject;
 	private String content;
 	private int hitCount;
-	private String reg_date;
+	private String regDate;
 	private String originalFilename;
 	private String saveFilename;
 	
+	private long magazineReplyNum;
+	private String replyContent;
+	private String replyRegDate;
+	private long parentNum;
+	private int showReply;
+	private int block;
+	private int report;
+	private int replyCount;
+	private int answerCount;
+
 	private int magazineLikeCount;
+	
 }

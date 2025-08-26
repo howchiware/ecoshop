@@ -17,10 +17,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.app.model.Attendance;
-import com.sp.app.model.Member;
+import com.sp.app.model.Point;
 import com.sp.app.model.Quiz;
 import com.sp.app.model.SessionInfo;
 import com.sp.app.service.EventService;
@@ -113,12 +114,29 @@ public class EventController {
 	        service.insertAttendance(info.getMemberId(), dayIndex);
 
 	        int totalCount = service.getWeeklyCount(info.getMemberId());
+	     	
 	        if (totalCount == 5) {
-	            service.addPoints(info.getMemberId(), 500);
+	        	Point dto = new Point();
+	        	
+	        	dto.setPoints(500);
+	        	dto.setClassify(1); // 적립
+	        	dto.setMemberId(info.getMemberId());
+	        	dto.setReason("출석체크 성공 보상");
+	        	dto.setPostId(-1L);
+	        	dto.setOrderId("-1");
+	        	
+	            service.insertPoint(dto);
 	            map.put("point", true);
+	            map.put("success", true);
+		        map.put("message", "이번 주 출석체크 완료! 500 포인트가 지급되었습니다. 😆");
+	        } else if (totalCount < 5){
+	        	map.put("point", true);
+	        	map.put("message", "이번 주 출석체크를 이미 완료하셨습니다.");
+	        } else {
+	        	map.put("success", true);
+	        	map.put("message", "출석체크 완료! (이번 주 누적: " + totalCount + "일)");
 	        }
-
-	        map.put("success", true);
+	        
 	    } catch (Exception e) {
 	    		log.error("checkAttendance: ", e);
 	    		map.put("success", false);
@@ -134,7 +152,6 @@ public class EventController {
 	@GetMapping("quiz")
 	public String quizPage(Model model, HttpSession session) throws SQLException {
 	    
-		
 		try {
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
 			if (info == null) {
@@ -157,21 +174,67 @@ public class EventController {
 		return "event/quiz";
 	}
 	
-	@PostMapping("/quiz/play")
 	@ResponseBody
-	public String quizPlay(Member dto, HttpSession session) {
-	   
+	@PostMapping("/quiz/play")
+	public Map<String, Object> quizPlay(@RequestParam(value = "quizId") long quizId,
+	                                    @RequestParam(value = "userAnswer") String userAnswer,
+	                                    HttpSession session) {
+	    Map<String, Object> map = new HashMap<>();
+
 	    try {
-	    	SessionInfo info = (SessionInfo) session.getAttribute("member");
-	    	dto.setMemberId(info.getMemberId());
-	    	
-	    	service.playQuiz(dto.getMemberId());
-	    	 
+	        SessionInfo info = (SessionInfo) session.getAttribute("member");
+	        if (info == null) {
+	            map.put("success", false);
+	            map.put("message", "로그인이 필요합니다.");
+	            return map;
+	        }
+	        
+	        long memberId = info.getMemberId();
+	        
+	        boolean isSolved = service.isQuizSolved(memberId, quizId);
+	        if(isSolved) {
+	            map.put("success", false);
+	            map.put("message", "이미 오늘 퀴즈에 참여했습니다.");
+	            return map;
+	        }
+
+	        int userAnswerInt = "O".equalsIgnoreCase(userAnswer) ? 1 : 0;
+	        Quiz correctQuiz = service.findTodayQuiz();
+	        
+	        Quiz answerDto = new Quiz();
+	        answerDto.setMemberId(memberId);
+	        answerDto.setQuizId(quizId);
+	        answerDto.setQuizAnswer(userAnswerInt);
+	        service.playQuiz(answerDto);
+	        
+	        if (correctQuiz.getAnswer() == userAnswerInt) {
+	            Point pDto = new Point();
+	            pDto.setPoints(100);
+	            pDto.setClassify(1);
+	            pDto.setMemberId(memberId);
+	            pDto.setReason("퀴즈 정답 보상");
+	            pDto.setPostId(-1L);
+	            pDto.setOrderId("-1");
+	            service.insertPoint(pDto);
+
+	            map.put("success", true);
+	            map.put("isCorrect", true);
+	            map.put("message", "정답입니다! 100 포인트가 지급되었습니다.");
+	            map.put("explanation", correctQuiz.getCommentary());
+	        } else {
+	            map.put("success", true);
+	            map.put("isCorrect", false);
+	            map.put("message", "아쉽지만 오답입니다.");
+	            map.put("explanation", correctQuiz.getCommentary());
+	        }
+
 	    } catch (Exception e) {
-	    	log.info("quizPlay");
+	        log.error("quizPlay Error: ", e);
+	        map.put("success", false);
+	        map.put("message", "퀴즈 처리 중 오류가 발생했습니다.");
 	    }
 	    
-	    return "redirect:/event/quiz";
+	    return map;
 	}
 
 

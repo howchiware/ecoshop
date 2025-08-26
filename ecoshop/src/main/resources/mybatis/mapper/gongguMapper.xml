@@ -123,7 +123,7 @@
         SELECT COUNT(DISTINCT god.orderId)
         FROM gongguOrderDetail god
         JOIN productOrder po ON god.orderId = po.orderId
-        WHERE god.gongguProductId = #{gongguProductId} AND po.orderState = '결제완료'
+        WHERE god.gongguProductId = #{gongguProductId} AND po.orderState = 1
     </select>
     
     <select id="didIBuyProduct" parameterType="map" resultType="com.sp.app.model.GongguOrder">

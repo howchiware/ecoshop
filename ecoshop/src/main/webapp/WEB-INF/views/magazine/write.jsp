@@ -22,10 +22,8 @@
 
 <main class="container my-5">
 	
-	<jsp:include page="/WEB-INF/views/layout/freeHeader.jsp"/>
-	
 	<div class="page-header">
-		<h2>${mode=='update'?'일상이야기 수정':'일상이야기 등록'}</h2>
+		<h2>${mode=='update'?'매거진 수정':'매거진 등록'}</h2>
 	</div>
 
 	<form name="dairyForm" class="write-form" method="post" enctype="multipart/form-data">
@@ -47,9 +45,9 @@
 		
 		<div class="button-group">
 			<button type="button" class="btn btn-accent btn-md" onclick="sendOk();">${mode=='update'?'수정완료':'등록완료'}</button>
-			<button type="button" class="btn btn-default btn-md" onclick="location.href='${pageContext.request.contextPath}/free/dairyList';">${mode=='update'?'수정취소':'등록취소'}</button>
+			<button type="button" class="btn btn-default btn-md" onclick="location.href='${pageContext.request.contextPath}/magazine/list';">${mode=='update'?'수정취소':'등록취소'}</button>
 			<c:if test="${mode=='update'}">
-				<input type="hidden" name="freeId" value="${dto.freeId}">
+				<input type="hidden" name="magazineId" value="${dto.magazineId}">
 				<input type="hidden" name="page" value="${page}">
 			</c:if>
 		</div>
@@ -101,7 +99,7 @@ function sendOk() {
 	}
 	f.content.value = htmlContent;
 	
-	f.action = '${pageContext.request.contextPath}/free/${mode}';
+	f.action = '${pageContext.request.contextPath}/magazine/${mode}';
 	f.submit();
 }
 </script>

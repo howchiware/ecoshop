@@ -2,12 +2,12 @@ package com.sp.app.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 
 import com.sp.app.common.MyUtil;
 import com.sp.app.mapper.MagazineMapper;
-import com.sp.app.model.Free;
 import com.sp.app.model.Magazine;
 
 import lombok.RequiredArgsConstructor;
@@ -48,7 +48,7 @@ public class MagazineServiceImpl implements MagazineService {
 
 	@Override
 	public int dataCount(Map<String, Object> map) {
-int result = 0;
+		int result = 0;
 		
 		try {
 			result = mapper.dataCount(map);
@@ -142,68 +142,144 @@ int result = 0;
 
 	@Override
 	public void insertReply(Magazine dto) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			mapper.insertReply(dto);
+		} catch (Exception e) {
+			log.info("insertReply : ", e);
+			throw e;
+		}
 	}
 
 	@Override
 	public List<Magazine> listReply(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Magazine> list = null;
+		
+		try {
+			list = mapper.listReply(map);
+			for(Magazine dto : list) {
+				dto.setContent(myUtil.htmlSymbols(dto.getContent()));
+				map.put("magazineReplyNum", dto.getMagazineReplyNum());
+			}
+		} catch (Exception e) {
+			log.info("listReply : ", e);
+		}
+		
+		return list;
 	}
 
 	@Override
 	public int replyCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try {
+			result = mapper.replyCount(map);
+		} catch (Exception e) {
+			log.info("replyCount : ", e);
+		}
+		
+		return result;
 	}
 
 	@Override
 	public void deleteReply(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			mapper.deleteReply(map);
+		} catch (Exception e) {
+			log.info("deleteReply : ", e);
+			throw e;
+		}
 	}
 
 	@Override
 	public List<Magazine> listReplyAnswer(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Magazine> list = null;
+		
+		try {
+			list = mapper.listReplyAnswer(map);
+			for(Magazine dto : list) {
+				dto.setContent(myUtil.htmlSymbols(dto.getContent()));
+			}
+		} catch (Exception e) {
+			log.info("listReplyAnswer : ", e);
+		}
+		
+		return list;
 	}
 
 	@Override
 	public int replyAnswerCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try {
+			result = mapper.replyAnswerCount(map);
+		} catch (Exception e) {
+			log.info("replyAnswerCount : ", e);
+		}
+		
+		return result;
 	}
 
 	@Override
 	public void updateReplyReport(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
+		try {
+			mapper.updateReplyReport(map);
+		} catch (Exception e) {
+			log.info("updateReplyShowHide : ", e);
+			throw e;
+		}
 		
 	}
 
 	@Override
-	public void insertMagazinDeLike(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
+	public void insertMagazineLike(Map<String, Object> map) throws Exception {
+		try {
+			mapper.insertMagazineLike(map);
+		} catch (Exception e) {
+			log.info("insertMagazineLike : ", e);
+			throw e;
+		}
 		
 	}
 
 	@Override
 	public void deleteMagazineLike(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
+		try {
+			mapper.deleteMagazineLike(map);
+		} catch (Exception e) {
+			log.info("deleteMagazineLike : ", e);
+			throw e;
+		}
 		
 	}
 
 	@Override
-	public int magazineLikeCount(long num) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int magazineLikeCount(long magazineId) {
+		int result = 0;
+		
+		try {
+			result = mapper.magazineLikeCount(magazineId);
+		} catch (Exception e) {
+			log.info("magazineLikeCount", e);
+		}
+		
+		return result;
 	}
 
 	@Override
 	public boolean isUserMagazineLiked(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean result = false;
+		
+		try {
+			Magazine dto = mapper.hasUserMagazineLiked(map);
+			if(dto != null) {
+				result = true;
+			}
+			result = Objects.nonNull(mapper.hasUserMagazineLiked(map));
+		} catch (Exception e) {
+			log.info("isUserMagazineLiked: ", e);
+		}
+		
+		return result;
 	}
 
 }
