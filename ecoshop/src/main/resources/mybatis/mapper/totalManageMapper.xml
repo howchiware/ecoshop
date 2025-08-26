@@ -1,22 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.admin.mapper.TotalManageMapper">
+	<!-- 오늘 판매 현황 -->
 	<select id="todayProduct" resultType="map">
 		SELECT COUNT(*) count, NVL(SUM(totalAmount - cancelAmount), 0) total
 		FROM productOrder
 		WHERE orderState != 6 AND orderState != 8 AND
 			TO_CHAR(orderStateDate, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
 	</select>
-	
+	<!-- 이번달 판매 현황 -->
 	<select id="thisMonthProduct" resultType="map">
-
+		SELECT COUNT(*) count, NVL(SUM(totalAmount - cancelAmount), 0) total
+		FROM productOrder
+		WHERE orderState != 6 AND orderState != 8 AND
+			TO_CHAR(orderStateDate, 'YYYYMM') = TO_CHAR(SYSDATE, 'YYYYMM')
 	</select>
-	
+	<!--  -->
 	<select id="previousMonthProduct" resultType="map">
 		SELECT COUNT(*) count, NVL(SUM(totalAmount - cancelAmount), 0) total
 		FROM productOrder
 		WHERE orderState != 6 AND orderState != 8 AND
 			TO_CHAR(orderStateDate, 'YYYYMM') = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYYMM')
+	</select>
+	
+	<select id="memberCount" resultType="map">
+		SELECT COUNT(*) count
+		FROM MEMBER1
+		WHERE userLevel = 1
+	</select>
+	
+	<select id="staffCount" resultType="map">
+		SELECT COUNT(*) count
+		FROM MEMBER1
+		WHERE userLevel = 51
 	</select>
 	
 	<!-- 7일간 일별 판매 금액 -->

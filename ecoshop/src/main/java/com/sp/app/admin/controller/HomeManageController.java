@@ -27,10 +27,14 @@ public class HomeManageController {
 			Map<String, Object> today = service.todayProduct();
 			Map<String, Object> thisMonth = service.thisMonthProduct();
 			Map<String, Object> previousMonth = service.previousMonthProduct();
+			Map<String, Object> member = service.memberCount();
+			Map<String, Object> staff = service.staffCount();
 			
 			model.addAttribute("today", today);
 			model.addAttribute("thisMonth", thisMonth);
 			model.addAttribute("previousMonth", previousMonth);
+			model.addAttribute("member", member);
+			model.addAttribute("staff", staff);
 			
 		} catch (Exception e) {
 			log.info("handleHome : ", e);

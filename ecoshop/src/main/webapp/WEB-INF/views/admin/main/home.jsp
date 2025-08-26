@@ -5,6 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ECOMORE</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
@@ -15,6 +16,27 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <link href="//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css" rel="stylesheet" type="text/css">	
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ 
+ <style type="text/css">
+body {
+	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
+	background-color: #f7f6f3;
+	color: #333;
+	margin: 0;
+}
+
+@font-face {
+	font-family: 'Pretendard-Regular';
+	src:
+		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+		format('woff');
+	font-style: normal;
+}
+
+
+
+
+</style>
 </head>
 <body>
 <!-- 헤더 -->
@@ -22,18 +44,18 @@
 <!-- 메인 영역 -->
 <main class="main-container">
   <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
-  	<div class="right-panel">
-		<div class="page-title" data-aos="fade-up" data-aos-delay="200">
-			<h2>판매 현황</h2>
-		</div>
+	<div class="right-panel">
+	    <div class="title">
+	        <h3>판매 현황</h3>
+	    </div>
 
 		<div class="section p-5" data-aos="fade-up" data-aos-delay="200">
 			<div class="section-body p-5">
 				<div class="row gy-4 m-0">
 					<div class="col-lg-12 p-2 m-2" data-aos="fade-up" data-aos-delay="200">
 						
-						<div class="row g-1 p-1">
-							<div class="col-4 p-2">
+						<div class="row g-1 p-1" style="background: white; border-radius: 10px;">
+							<div class="col-3 p-2">
 								<div class="fs-6 fw-semibold mb-2"><i class="bi bi-chevron-right"></i> 오늘 판매 현황</div>
 								<div class="border rounded p-5 text-center">
 									<div class="fs-5 mb-2">총 판매 건수 : 
@@ -45,7 +67,7 @@
 								</div>
 							</div>
 							
-							<div class="col-4 p-2">
+							<div class="col-3 p-2">
 								<div class="fs-6 fw-semibold mb-2"><i class="bi bi-chevron-right"></i> 이번달 판매 현황</div>
 								<div class="border rounded p-5 text-center">
 									<div class="fs-5 mb-2">총 판매 건수 : 
@@ -57,7 +79,7 @@
 								</div>
 							</div>
 				    	
-							<div class="col-4 p-2">
+							<div class="col-3 p-2">
 								<div class="fs-6 fw-semibold mb-2"><i class="bi bi-chevron-right"></i> 전월 판매 현황</div>
 								<div class="border rounded p-5 text-center">
 									<div class="fs-5 mb-2">총 판매 건수 : 
@@ -68,9 +90,21 @@
 									</div>
 								</div>
 							</div>
+							
+							<div class="col-3 p-2">
+								<div class="fs-6 fw-semibold mb-2"><i class="bi bi-chevron-right"></i>회원 수</div>
+								<div class="border rounded p-5 text-center">
+									<div class="fs-5 mb-2">총 판매 건수 : 
+										<span class="product-totalAmount fw-semibold text-primary">${member.COUNT}</span>명
+									</div>
+									<div class="fs-5">총 판매 금액 : 
+										<span class="product-totalAmount fw-semibold text-danger">${staff.COUNT}</span>명
+									</div>
+								</div>
+							</div>
 						</div>
 				    
-						<div class="row mt-3 p-1">
+						<div class="row mt-3 p-1" style="background: white; border-radius: 10px;">
 							<div class="col-4 p-2">
 								<div class="fs-6 fw-semibold mb-2"><i class="bi bi-chevron-right"></i> 최근 1주일 판매 현황</div>
 								<div class="charts-day border rounded" style="height: 430px; width: 100%;"></div>
@@ -84,7 +118,6 @@
 								<div class="charts-month border rounded" style="height: 430px; width: 100%;"></div>
 							</div>
 						</div>
-
 					</div>
 				</div>
 			</div>
@@ -111,7 +144,7 @@ $(function(){
 			let s = parseInt(item.ORDERSTATEDATE.substring(5, 7)) + '월 ';
 			s += parseInt(item.ORDERSTATEDATE.substring(8)) + '일';
 
-			let obj = {value:item.TOTALAMOUT, name:s};
+			let obj = {value:item.TOTALAMOUNT, name:s};
 			chartData.push(obj);
 		}
 		
@@ -210,7 +243,7 @@ $(function(){
 		
 		for(let item of data.months) {
 			let s = parseInt(item.ORDERSTATEDATE.substring(4)) + '월';
-			let obj = {value:item.TOTALAMOUT, name:s};
+			let obj = {value:item.TOTALAMOUNT, name:s};
 			chartData.push(obj);
 		}
 		

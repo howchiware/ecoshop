@@ -93,5 +93,31 @@ public class TotalManageServiceImpl implements TotalManageService {
 		
 		return resultMap;
 	}
+	
+	@Override
+	public Map<String, Object> memberCount() {
+		Map<String, Object> resultMap = null;
+		
+		try {
+			resultMap = mapper.memberCount();
+		} catch (Exception e) {
+			log.info("memberCount : ", e);
+		}
+		
+		return resultMap;
+	}
+
+	@Override
+	public Map<String, Object> staffCount() {
+		Map<String, Object> resultMap = null;
+		
+		try {
+			resultMap = mapper.staffCount();
+		} catch (Exception e) {
+			log.info("staffCount : ", e);
+		}
+		
+		return resultMap;
+	}
 
 }

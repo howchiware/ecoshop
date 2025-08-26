@@ -10,6 +10,8 @@ public interface TotalManageMapper {
 	public Map<String, Object> todayProduct();
 	public Map<String, Object> thisMonthProduct();
 	public Map<String, Object> previousMonthProduct();
+	public Map<String, Object> memberCount();
+	public Map<String, Object> staffCount();
 	
 	public List<Map<String, Object>> dayTotalAmount(String date);
 	public List<Map<String, Object>> dayTotalAmount2(String date);
