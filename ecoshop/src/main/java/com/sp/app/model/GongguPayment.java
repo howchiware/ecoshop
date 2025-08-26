@@ -33,6 +33,7 @@ public class GongguPayment {
 	private String deliveryName;
 	private String invoiceNumber;
 	private long afterDelivery; // 배송 완료 후 날짜 (리뷰 작성)
+	private int productMoney;
 
 	// 공동구매 주문상세
 	private long gongguOrderDetailId;

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sp.app.common.PaginateUtil;
@@ -20,14 +21,17 @@ import com.sp.app.model.Destination;
 import com.sp.app.model.GongguOrder;
 import com.sp.app.model.GongguPayment;
 import com.sp.app.model.GongguProductDeliveryRefundInfo;
+import com.sp.app.model.GongguReview;
 import com.sp.app.model.Member;
 import com.sp.app.model.SessionInfo;
 import com.sp.app.service.GongguOrderService;
+import com.sp.app.service.GongguProductReviewService;
 import com.sp.app.service.GongguService;
 import com.sp.app.service.MemberService;
 import com.sp.app.service.MyGongguShoppingService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +46,8 @@ public class GongguOrderController {
 	private final MemberService memberService;
 	private final MyGongguShoppingService myGongguShoppingService;
 	private final PaginateUtil paginateUtil;
+	private final GongguProductReviewService gongguProductReviewService;
+	private String uploadPath;
 	
 	@RequestMapping(name = "payment", method = {RequestMethod.GET, RequestMethod.POST})
 	public String paymentForm(
@@ -170,7 +176,7 @@ public class GongguOrderController {
 			return "redirect:/";
 		}
 		
-		return "complete";
+		return "gongguOrder/complete";
 	}
 
 	
@@ -223,5 +229,160 @@ public class GongguOrderController {
 		return "myPage/gongguPaymentList";
 	}
 	
+	@GetMapping("updateGongguOrderHistory")
+	public String updateGongguOrderHistory(
+			@RequestParam(name = "gongguOrderDetailId") long gongguOrderDetailId,
+			@RequestParam(name = "page") String page,
+			HttpSession session) throws Exception {
+		
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			if(info == null) {
+				return "redirect:/member/login";
+			}
+			gongguOrderService.updateGongguOrderHistory(gongguOrderDetailId);
+		} catch (Exception e) {
+			log.error("updateGongguOrderHistory : ", e);
+		}
+		
+		return "redirect:/gongguOrder/gongguPaymentList?page=" + page;
+	}
+	
+	@GetMapping("confirmation")
+	public String confirmation(
+			@RequestParam(name = "gongguOrderDetailId") long gongguOrderDetailId,
+			@RequestParam(name = "page") String page,
+			HttpSession session) throws Exception {
+		
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			if(info == null) {
+				return "redirect:/member/login";
+			}
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("gongguOrderDetailId", gongguOrderDetailId);
+			map.put("detailState", 8);
+			map.put("stateMemo", "구매확정완료");
+			map.put("memberId", info.getMemberId());
+			gongguOrderService.updateGongguOrderDetailState(map);
+			
+		} catch (Exception e) {
+			log.error("confirmation : ", e);
+		}
+		
+		return "redirect:/gongguOrder/gongguPaymentList?page=" + page;
+	}
+	
+	@GetMapping("gongguOrderDetailView")
+	@ResponseBody
+	public Map<String, Object> gongguOrderDetailView(
+			@RequestParam(name = "orderId") long orderId,
+			@RequestParam(name = "gongguOrderDetailId") long gongguOrderDetailId,
+			HttpServletResponse resp,
+			HttpSession session) throws Exception {
+		
+		Map<String, Object> model = new HashMap<>();
+		
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			if(info == null) {
+				model.put("state", "noLogin");
+				return model;
+			}
+			
+			Map<String, Object> paramMap = new HashMap<>();
+			paramMap.put("orderId", orderId);
+			paramMap.put("gongguOrderDetailId", gongguOrderDetailId);
+			paramMap.put("memberId", info.getMemberId());
+			
+			GongguPayment dto = gongguOrderService.findByGongguOrderDetail(paramMap);
+			
+			List<GongguPayment> listBuy = gongguOrderService.listGongguPurchase(paramMap); 
+			
+			GongguOrder orderDelivery = gongguOrderService.findByGongguOrderDelivery(paramMap);
+			
+			model.put("dto", dto);
+			model.put("listBuy", listBuy);
+			model.put("orderDelivery", orderDelivery);
+			model.put("state", "true");
+			
+		} catch (NullPointerException e) {
+			model.put("state", "notFound");
+		} catch (Exception e) {
+			log.error("gongguOrderDetailView : ", e);
+			model.put("state", "false");
+		}
+		
+		return model;
+	}
+	
+	@PostMapping("orderDetailUpdate")
+	public String orderDetailUpdate(
+			@ModelAttribute GongguOrder dto,
+			@RequestParam(name = "page") String page,
+			@ModelAttribute GongguPayment pDto,
+			HttpSession session) throws Exception {
+		
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			if(info == null) {
+				return "redirect:/member/login";
+			}
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("gongguOrderDetailId", dto.getGongguOrderDetailId());
+			map.put("detailState", dto.getDetailState());
+			map.put("stateMemo", pDto.getStateMemo());
+			map.put("memberId", info.getMemberId());
+			
+			gongguOrderService.updateGongguOrderDetailState(map);
+			
+		} catch (Exception e) {
+			log.error("orderDetailUpdate : ", e);
+		}
+		
+		return "redirect:/gongguOrder/gongguPaymentList?page=" + page;
+	}
 
+	@PostMapping("reviewWrite")
+	@ResponseBody
+	public Map<String, ?> reviewWriteSubmit(
+			GongguReview dto,
+			HttpSession session) throws Exception {
+		
+		Map<String, Object> model = new HashMap<>();
+		String state = "false";
+		
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			if (info == null) {
+				model.put("message", "로그인이 필요합니다.");
+				return model;
+			}
+			
+			dto.setMemberId(info.getMemberId());
+			gongguProductReviewService.insertGongguReview(dto, uploadPath);
+			
+			state = "true";
+		} catch (Exception e) {
+			log.error("reviewWriteSubmit : ", e);
+		}
+		
+		model.put("state", state);
+		return model;
+	}
+
+	@PostMapping("/gonggu/updateDetailState")
+	@ResponseBody
+	public Map<String, Object> updateDetailState(@RequestParam long gongguOrderDetailId) {
+	    Map<String, Object> model = new HashMap<>();
+	    try {
+	        gongguOrderService.updateDetailState(gongguOrderDetailId, 1); // 1 : 구매확정상태임
+	        model.put("state", "true");
+	    } catch (Exception e) {
+	        model.put("state", "false");
+	    }
+	    return model;
+	}
 }

@@ -35,4 +35,5 @@ public interface GongguOrderMapper {
 	public void insertGongguDetailStateInfo(Map<String, Object> map) throws SQLException;
 	public void updateGongguReviewWrite(long gongguOrderDetailId) throws SQLException;
 	public GongguPayment findGongguOrderDetailForReview(long gongguOrderDetailId);
+	public void updateOrderState(Map<String, Object> map);
 }

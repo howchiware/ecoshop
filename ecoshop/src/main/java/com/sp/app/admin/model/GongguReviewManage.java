@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GongguReviewManage {
-    private long gongguReviewId;
+    private long gongguOrderDetailId;
     private String userName;
     private String content;
     private Date regDate;

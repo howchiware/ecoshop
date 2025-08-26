@@ -7,27 +7,13 @@
 <meta charset="UTF-8">
 <title>ECOMORE</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-	rel="stylesheet" />
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/home.css"
-	type="text/css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/mypage.css"
-	type="text/css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/paginate.css"
-	type="text/css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/tabs.css"
-	type="text/css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/board.css"
-	type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css"type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/mypage.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/paginate.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/tabs.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/board.css" type="text/css">
 <style type="text/css">
 .tab-pane {
 	min-height: 300px;
@@ -115,6 +101,9 @@
 	cursor: pointer;
 }
 </style>
+<script type="text/javascript" src="${pageContext.request.contextPath}/dist/vendor/jquery/js/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
 </head>
 <body>
 
@@ -141,11 +130,6 @@
 									data-bs-target="#tab-pane-2" type="button" role="tab"
 									aria-controls="2" aria-selected="false">취소/반품 내역</button>
 							</li>
-							<li class="nav-item" role="presentation">
-								<button class="nav-link" id="tab-3" data-bs-toggle="tab"
-									data-bs-target="#tab-pane-3" type="button" role="tab"
-									aria-controls="3" aria-selected="false">정기배송 신청내역</button>
-							</li>
 						</ul>
 
 						<div class="tab-content pt-2" id="myTabContent">
@@ -165,7 +149,7 @@
 												</div>
 												<div class="col-6 text-end">
 													<label class='payment-delete' title="주문내역삭제"
-														data-orderDetailNum="${dto.gongguOrderDetailId}"><i
+														data-gongguOrderDetailId="${dto.gongguOrderDetailId}"><i
 														class="bi bi-x-lg"></i></label>
 												</div>
 											</div>
@@ -187,21 +171,18 @@
 												</div>
 											</div>
 											<div class="mt-3 p-3 text-end">
-												<c:if
-													test="${dto.reviewWrite==0 && (dto.detailState==1 || dto.detailState==2)}">
-													<button type="button"
-														class="btn-default btnReviewWriteForm"
-														style="width: 130px;">리뷰쓰기</button>
+												<c:if test="${dto.reviewWrite==0 && (dto.detailState==1 || dto.detailState==2)}">
+													<button type="button" class="btn-default btnReviewWriteForm" style="width: 130px;">리뷰쓰기</button>
 												</c:if>
 												<button type="button" class="btn-default"
 													style="width: 130px;"
-													data-orderDetailNum="${dto.orderDetailNum}">배송조회</button>
+													data-gongguOrderDetailId="${dto.gongguOrderDetailId}">배송조회</button>
 
 												<c:if test="${dto.detailState==0 || dto.detailState==8}">
 													<button type="button"
 														class="btn border payment-confirmation"
 														style="width: 130px;"
-														data-orderDetailNum="${dto.gongguOrderDetailId}">구매확정
+														data-gongguOrderDetailId="${dto.gongguOrderDetailId}">구매확정
 													</button>
 												</c:if>
 												<button type="button" class="btn-default"
@@ -215,21 +196,21 @@
 												</button>
 												<div class="payment-menu">
 													<div class="payment-menu-item order-details"
-														data-orderNum="${dto.orderId}"
-														data-orderDetailNum="${dto.gongguOrderDetailId}">주문상세</div>
+														data-orderId="${dto.orderId}"
+														data-gongguOrderDetailId="${dto.gongguOrderDetailId}">주문상세</div>
 													<c:if test="${dto.detailState==0 && dto.orderState==1}">
 														<div class="payment-menu-item order-cancel"
-															data-orderDetailNum="${dto.gongguOrderDetailId}">구매취소</div>
+															data-gongguOrderDetailId="${dto.gongguOrderDetailId}">구매취소</div>
 													</c:if>
 													<c:if
 														test="${dto.detailState==0 && dto.orderState==5 && dto.afterDelivery < 3}">
 														<div class="payment-menu-item return-request"
-															data-orderDetailNum="${dto.gongguOrderDetailId}">반품요청</div>
+															data-gongguOrderDetailId="${dto.gongguOrderDetailId}">반품요청</div>
 														<div class="payment-menu-item exchange-request"
-															data-orderDetailNum="${dto.gongguOrderDetailId}">교환요청</div>
+															data-gongguOrderDetailId="${dto.gongguOrderDetailId}">교환요청</div>
 													</c:if>
 													<div class="payment-menu-item"
-														data-orderDetailNum="${dto.gongguOrderDetailId}">1:1 문의</div>
+														data-gongguOrderDetailId="${dto.gongguOrderDetailId}">1:1 문의</div>
 												</div>
 
 											</div>
@@ -245,12 +226,12 @@
 																<a href="#" class="on"><i class="bi bi-star-fill"></i></a>
 																<a href="#" class="on"><i class="bi bi-star-fill"></i></a>
 																<a href="#" class="on"><i class="bi bi-star-fill"></i></a>
-																<input type="hidden" name="score" value="5"> 
+																<input type="hidden" name="rate" value="5"> 
 																<input type="hidden" name="gongguProductId" value="${dto.gongguProductId}">
 															</p>
 														</div>
 														<div class="p-1">
-															<textarea name="review" class="form-control"></textarea>
+															<textarea name="content" class="form-control"></textarea>
 														</div>
 														<div class="p-1">
 															<div class="img-grid">
@@ -326,7 +307,7 @@
 							</div>
 							<div class="col-auto p-1">
 								<input type="hidden" name="page" value="${page}"> <input
-									type="hidden" name="orderDetailNum"> <input
+									type="hidden" name="gongguOrderDetailId"> <input
 									type="hidden" name="detailState">
 								<button type="button"
 									class="btn-default btnUserOrderDetailUpdateOk">요청하기</button>
@@ -386,10 +367,10 @@ $(function(){
 			return false;
 		}		
 		
-		let orderDetailNum = $(this).attr('data-orderDetailNum');
+		let gongguOrderDetailId = $(this).attr('data-gongguOrderDetailId'); 
 
-		let params = 'orderDetailNum=' + orderDetailNum + '&page=${page}';
-		location.href = '${pageContext.request.contextPath}/myPage/updateOrderHistory?' + params;
+		let params = 'gongguOrderDetailId=' + gongguOrderDetailId + '&page=${page}';
+		location.href = '${pageContext.request.contextPath}/gongguOrder/updateGongguOrderHistory?' + params; 
 	});
 });
 
@@ -400,8 +381,8 @@ $(function(){
 			return false;
 		}
 		
-		let orderDetailNum = $(this).attr('data-orderDetailNum');
-		let url = '${pageContext.request.contextPath}/myPage/confirmation?orderDetailNum=' + orderDetailNum + '&page=${page}';
+		let gongguOrderDetailId = $(this).attr('data-gongguOrderDetailId'); 
+		let url = '${pageContext.request.contextPath}/gongguOrder/confirmation?gongguOrderDetailId=' + gongguOrderDetailId + '&page=${page}'; 
 		location.href = url;
 	});
 });
@@ -409,16 +390,55 @@ $(function(){
 $(function(){
 	// 주문 상세 정보
 	$('.order-details').click(function(){
-		let orderNum = $(this).attr('data-orderNum');
-		let orderDetailNum = $(this).attr('data-orderDetailNum');
+		let orderId = $(this).attr('data-orderId'); 
+		let gongguOrderDetailId = $(this).attr('data-gongguOrderDetailId');
 		
-		let params = 'orderNum=' + orderNum + '&orderDetailNum=' + orderDetailNum;
-		let url = '${pageContext.request.contextPath}/myPage/detailView';
+		let params = 'orderId=' + orderId + '&gongguOrderDetailId=' + gongguOrderDetailId;
+		let url = '${pageContext.request.contextPath}/gongguOrder/gongguOrderDetailView'; 
 		
 		const fn = function(data) {
-			$('.order-detail-view').html(data);
+			if(data.state === 'noLogin') {
+				alert('로그인이 필요합니다.');
+				location.href = '${pageContext.request.contextPath}/member/login';
+				return;
+			} else if (data.state === 'notFound') {
+				alert('주문 상세 정보를 찾을 수 없습니다.');
+				return;
+			} else if (data.state === 'false') {
+				alert('주문 상세 정보 조회 중 오류가 발생했습니다.');
+				return;
+			}
+			// AJAX 응답으로 받은 데이터를 직접 모달 바디에 렌더링하도록 수정
+			// JSON 객체를 받아서 HTML로 구성하는 로직이 필요
+			let dto = data.dto;
+			let orderDelivery = data.orderDelivery;
+
+			let detailHtml = `
+				<div class="row">
+					<div class="col-md-6">
+						<h5>주문 정보</h5>
+						<p><strong>주문번호:</strong> \${dto.orderId}</p>
+						<p><strong>주문일:</strong> \${dto.orderDate}</p>
+						<p><strong>상품명:</strong> \${dto.gongguProductName}</p>
+						<p><strong>수량:</strong> \${dto.cnt}</p>
+						<p><strong>상품금액:</strong> \${new Intl.NumberFormat().format(dto.productMoney)}원</p>
+						<p><strong>결제금액:</strong> \${new Intl.NumberFormat().format(dto.payment)}원</p>
+						<p><strong>주문상태:</strong> \${dto.orderStateInfo}</p>
+						<p><strong>상세상태:</strong> \${dto.detailStateInfo}</p>
+					</div>
+					<div class="col-md-6">
+						<h5>배송 정보</h5>
+						<p><strong>수령인:</strong> \${orderDelivery.recipientName}</p>
+						<p><strong>연락처:</strong> \${orderDelivery.tel}</p>
+						<p><strong>우편번호:</strong> \${orderDelivery.zip}</p>
+						<p><strong>주소:</strong> \${orderDelivery.addr1} \${orderDelivery.addr2}</p>
+						<p><strong>요청사항:</strong> \${orderDelivery.requestMemo ? orderDelivery.requestMemo : '없음'}</p>
+					</div>
+				</div>
+			`;
+			$('.order-detail-view').html(detailHtml);
 		};
-		ajaxRequest(url, 'get', params, 'text', fn);		
+		ajaxRequest(url, 'get', params, 'json', fn); 
 		
 		$('#orderDetailViewDialogModal').modal('show');
 	});
@@ -427,11 +447,11 @@ $(function(){
 $(function(){
 	// 구매(주문) 취소
 	$(".order-cancel").click(function(){
-		let orderDetailNum = $(this).attr('data-orderDetailNum');
+		let gongguOrderDetailId = $(this).attr('data-gongguOrderDetailId'); 
 
 		const f = document.userOrderDetailForm;
-		f.orderDetailNum.value = orderDetailNum;
-		f.detailState.value = 4;
+		f.gongguOrderDetailId.value = gongguOrderDetailId; 
+		f.detailState.value = 4; 
 
 		$('#orderDetailUpdateDialogModalLabel').text('구매취소');
 		$('#orderDetailUpdateDialogModal').modal('show');
@@ -441,11 +461,11 @@ $(function(){
 $(function(){
 	// 반품 요청
 	$(".return-request").click(function(){
-		let orderDetailNum = $(this).attr('data-orderDetailNum');
+		let gongguOrderDetailId = $(this).attr('data-gongguOrderDetailId'); 
 		
 		const f = document.userOrderDetailForm;
-		f.orderDetailNum.value = orderDetailNum;
-		f.detailState.value = 10;
+		f.gongguOrderDetailId.value = gongguOrderDetailId; 
+		f.detailState.value = 10; 
 		
 		$('#orderDetailUpdateDialogModalLabel').text('반품요청');
 		$('#orderDetailUpdateDialogModal').modal('show');
@@ -455,11 +475,11 @@ $(function(){
 $(function(){
 	// 교환 요청
 	$(".exchange-request").click(function() {
-		let orderDetailNum = $(this).attr('data-orderDetailNum');
+		let gongguOrderDetailId = $(this).attr('data-gongguOrderDetailId'); 
 
 		const f = document.userOrderDetailForm;
-		f.orderDetailNum.value = orderDetailNum;
-		f.detailState.value = 6;
+		f.gongguOrderDetailId.value = gongguOrderDetailId; 
+		f.detailState.value = 6; 
 		
 		$('#orderDetailUpdateDialogModalLabel').text('교환요청');
 		$('#orderDetailUpdateDialogModal').modal('show');
@@ -477,7 +497,7 @@ $(function(){
 			return false;
 		}
 		
-		f.action = '${pageContext.request.contextPath}/myPage/orderDetailUpdate';
+		f.action = '${pageContext.request.contextPath}/gongguOrder/orderDetailUpdate'; 
 		f.submit();
 	});
 });
@@ -508,9 +528,8 @@ $(function(){
 		}
 		
 		let s = $(this).closest('.review-form').find('.star .on').length;
-		$(this).closest('.review-form').find('input[name=score]').val(s);
+		$(this).closest('.review-form').find('input[name=rate]').val(s); 
 		
-		// e.preventDefault(); // 화면 위로 이동 안되게
 		return false;
 	});
 });
@@ -523,15 +542,15 @@ $(function(){
 		const f = this.closest('form');
 		let s;
 		
-		if(f.score.value === '0') {
+		if(f.rate.value === '0') { 
 			alert('평점은 1점부터 가능합니다.');
 			return false;
 		}
 		
-		s = f.review.value.trim();
+		s = f.content.value.trim(); 
 		if( ! s ) {
 			alert('리뷰를 입력하세요.')	;
-			f.review.focus();
+			f.content.focus(); 
 			return false;
 		}
 		
@@ -540,19 +559,24 @@ $(function(){
 			return false;
 		}
 		
-		let url = '${pageContext.request.contextPath}/review/write';
-		// FormData : form 필드와 그 값을 나타내는 일련의 key/value 쌍을 쉽게 생성하는 방법을 제공 
-		// FormData는 Content-Type을 명시하지 않으면 multipart/form-data로 전송
+		let url = '${pageContext.request.contextPath}/gongguOrder/reviewWrite'; 
 		let formData = new FormData(f); 
 		
 		const fn = function(data) {
 			if(data.state === 'true') {
 				$plist.find('.btnReviewWriteForm').remove();
 				$plist.find('.review-form').remove();
+				alert('리뷰가 성공적으로 등록되었습니다.');
+				location.reload(); 
+			} else if (data.message === '로그인이 필요합니다.') {
+				alert(data.message);
+				location.href = '${pageContext.request.contextPath}/member/login';
+			} else {
+				alert('리뷰 등록 중 오류가 발생했습니다.');
 			}
 		};
 		
-		ajaxRequest(url, 'post', formData, 'json', fn, true);
+		ajaxRequest(url, 'post', formData, 'json', fn, true); 
 	});
 });
 
@@ -564,7 +588,7 @@ $(function(){
 		$(this).closest('.review-form').find('input[name=selectFile]').trigger('click');
 	});
 	
-	$('form[name=reviewForm] input[name=selectFile]').change(function(e){
+	$('.tab-content').on('change', 'form[name=reviewForm] input[name=selectFile]', function(e){ 
 		if(! this.files) {
 			let dt = new DataTransfer();
 			for(let f of sel_files) {
@@ -578,7 +602,6 @@ $(function(){
 		
 		let $form = $(this).closest('form');
 		
-		// 유사 배열을  배열로 변환
 		const fileArr = Array.from(this.files);
 		
 		fileArr.forEach((file, index) => {
@@ -602,7 +625,7 @@ $(function(){
 		this.files = dt.files;
 	});
 	
-	$('.tab-content').on('click', '.review-form .img-item', function(){
+	$('.tab-content').on('click', '.review-form .img-item', function(){ 
 		if(! confirm('선택한 파일을 삭제 하시겠습니까 ? ')) {
 			return false;
 		}
@@ -633,4 +656,3 @@ $(function(){
 		src="${pageContext.request.contextPath}/dist/jsMember/menubar.js"></script>
 </body>
 </html>
-자 여기에서 $가 빠진 곳은 어디니? 그리고 어디에서 잘못되었니?

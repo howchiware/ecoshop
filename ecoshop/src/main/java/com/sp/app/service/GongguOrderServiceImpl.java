@@ -3,6 +3,7 @@ package com.sp.app.service;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -73,6 +74,8 @@ public class GongguOrderServiceImpl implements GongguOrderService {
 	        int cnt = 1;
 	        dto.setGongguProductId(gongguProductId);
 	        dto.setCnt(cnt);
+	        String orderId = gongguproductOrderNumber();
+	        dto.setOrderId(orderId);
 
 	        GongguOrder productInfo = mapper.findByGongguProduct(gongguProductId);
 
@@ -88,9 +91,14 @@ public class GongguOrderServiceImpl implements GongguOrderService {
 	        dto.setItemCount(1);
 	        
 	        mapper.insertGongguOrder(dto);
-	        mapper.insertGongguPayDetail(dto);
 	        mapper.insertGongguOrderDelivery(dto);
+	        mapper.insertGongguPayDetail(dto);
 	        mapper.insertGongguOrderDetail(dto);
+	        
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("orderId", orderId);
+	        map.put("orderState", 1);
+	        mapper.updateOrderState(map); 
 	        
 	    } catch (Exception e) {
 	        log.error("insertGongguOrder : ", e);
@@ -285,4 +293,28 @@ public class GongguOrderServiceImpl implements GongguOrderService {
 		}
 	}
 
+	@Override
+	public void updateDetailState(long gongguOrderDetailId, int detailState) throws Exception {
+	    try {
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("gongguOrderDetailId", gongguOrderDetailId);
+	        map.put("detailState", detailState);
+	        mapper.updateGongguOrderDetailState(map);
+	    } catch (Exception e) {
+	        throw e;
+	    }
+	}
+
+	@Override
+	public void updateOrderState(long orderId, int orderState) throws Exception {
+	    try {
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("orderId", orderId);
+	        map.put("orderState", orderState);
+	        mapper.updateOrderState(map);
+	    } catch (Exception e) {
+	        log.error("updateOrderState 오류: ", e);
+	        throw e;
+	    }
+	}
 }

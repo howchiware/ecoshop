@@ -13,7 +13,7 @@
 		INSERT INTO productOrder(orderId, memberId, orderDate, totalAmount, 
 			 deliveryCharge, payment, cancelAmount, orderState, usedPoint, classify, orderStateDate, itemCount) 
 		VALUES (#{orderId}, #{memberId}, SYSDATE, #{totalAmount}, 
-			 #{deliveryCharge}, #{payment}, 0, 1, 0, 2, SYSDATE, 1)
+			 #{deliveryCharge}, #{payment}, 0, 0, 0, 2, SYSDATE, 1)
 	</insert>
 
 	<!-- 결제 내역 등록 -->
@@ -29,7 +29,7 @@
 		INSERT INTO gongguOrderDetail(gongguOrderDetailId, orderId, cnt, price, 
 			gongguProductId, userDelete, detailState) 
 		VALUES (gongguOrderDetail_seq.NEXTVAL, #{orderId}, #{cnt}, #{price},  
-			#{gongguProductId}, 0, 1)
+			#{gongguProductId}, 0, 0)
 	</insert>
 	
 	<!-- 배송지 등록 -->
@@ -54,6 +54,13 @@
 			</foreach>
 	</select>
 
+	<!-- 주문상태 업데이트 -->
+	<update id="updateDetailState" parameterType="map">
+	    UPDATE gongguOrderDetail
+	    SET detailState = 1
+	    WHERE gongguOrderDetailId = #{gongguOrderDetailId}
+	</update>
+	
 	<select id="countBuyGonggu" parameterType="map" resultType="int">
 	    SELECT COUNT(*)
 	    FROM gongguOrderDetail od
@@ -98,7 +105,10 @@
 	</select>
 
 	<select id="listGongguPayment" parameterType="map" resultType="com.sp.app.model.GongguPayment">
-		SELECT po.orderId, po.memberId, po.orderDate, po.totalAmount, po.payment, po.orderState, po.orderStateDate, po.deliveryName, po.invoiceNumber, god.gongguOrderDetailId, god.gongguProductId, god.cnt, god.price, god.detailState, g.gongguProductName, g.gongguThumbnail ,po.classify, po.deliveryCharge
+		SELECT po.orderId, po.memberId, po.orderDate, po.totalAmount, po.payment, po.orderState, po.orderStateDate,
+			 po.deliveryName, po.invoiceNumber, god.gongguOrderDetailId, god.gongguProductId, god.cnt, god.price,
+			 god.detailState, g.gongguProductName, g.gongguThumbnail ,po.classify, po.deliveryCharge, 
+			 (god.price * god.cnt) AS productMoney
 		FROM productOrder po
 		JOIN gongguOrderDetail god ON po.orderId = god.orderId
 		JOIN gongguProduct g ON god.gongguProductId = g.gongguProductId
@@ -110,7 +120,7 @@
 	<select id="listGongguPurchase" parameterType="map" resultType="com.sp.app.model.GongguPayment">
 		SELECT po.orderId, po.memberId, TO_CHAR(po.orderDate, 'YYYY-MM-DD HH24:MI:SS') AS orderDate,
 			po.totalAmount, po.payment, po.orderState,
-			po.itemCount, po.deliveryName, po.invoiceNumber, po.deliveryCharge
+			po.itemCount, po.deliveryName, po.invoiceNumber, po.deliveryCharge,
 			god.gongguOrderDetailId, god.cnt, god.price, god.detailState,
 			gp.gongguProductName, gp.gongguThumbnail
 		FROM productOrder po
@@ -121,26 +131,28 @@
 	</select>
 
 	<select id="findByGongguOrderDetail" parameterType="map" resultType="com.sp.app.model.GongguPayment">
-		SELECT po.orderId, po.memberId, TO_CHAR(po.orderDate, 'YYYY-MM-DD HH24:MI:SS') AS orderDate,
-			po.totalAmount, po.usedPoint, po.payment, po.orderState, TO_CHAR(po.orderStateDate, 'YYYY-MM-DD HH24:MI:SS') AS orderStateDate,
-			po.itemCount, po.deliveryName, po.invoiceNumber, po.classify,
-			god.gongguOrderDetailId, god.cnt, god.userDelete,
-			god.gongguProductId, god.price, god.detailState,
-			gp.gongguProductName, gp.gongguThumbnail, gp.originalPrice, gp.sale,
-			(gp.originalPrice - (gp.originalPrice * gp.sale / 100)) AS gongguPrice,
-			(SELECT fee FROM gongguDeliveryFee WHERE gongguDeliveryFeeNum = (SELECT MAX(gongguDeliveryFeeNum) FROM gongguDeliveryFee)) AS deliveryFee, <!-- 공동구매 배송비 추가 -->
-			(SELECT stateInfo FROM orderStateDetail WHERE detailState = god.detailState) AS detailStateInfo,
-			TO_CHAR(py.applyDate, 'YYYY-MM-DD HH24:MI:SS') AS applyDate, py.payMethod, py.cardName, py.cardNumber, py.applyNum, py.imp_uid,
-			(SELECT loginId FROM member2 WHERE memberId = po.memberId) AS loginId, <!-- loginId 추가 -->
-			(SELECT COUNT(*) FROM gongguReview gr WHERE gr.gongguProductId = god.gongguProductId AND gr.memberId = po.memberId AND gr.gongguOrderDetailId = god.gongguOrderDetailId) AS reviewWrite,
-			osi.stateMemo, TO_CHAR(osi.stateDate, 'YYYY-MM-DD HH24:MI:SS') AS stateDate
-		FROM productOrder po
-		JOIN gongguOrderDetail god ON po.orderId = god.orderId
-		JOIN gongguProduct gp ON god.gongguProductId = gp.gongguProductId
-		LEFT JOIN payment py ON po.orderId = py.orderId
-		LEFT JOIN orderStateInfo osi ON god.gongguOrderDetailId = osi.orderDetailId AND osi.state = god.detailState
-		WHERE po.memberId = #{memberId} AND god.gongguOrderDetailId = #{gongguOrderDetailId}
+	SELECT po.orderId, po.memberId, TO_CHAR(po.orderDate, 'YYYY-MM-DD HH24:MI:SS') AS orderDate,
+		po.totalAmount, po.usedPoint, po.payment, po.orderState, TO_CHAR(po.orderStateDate, 'YYYY-MM-DD HH24:MI:SS') AS orderStateDate,
+		po.itemCount, po.deliveryName, po.invoiceNumber, po.classify,
+		god.gongguOrderDetailId, god.cnt, god.userDelete,
+		god.gongguProductId, god.price, god.detailState,
+		gp.gongguProductName, gp.gongguThumbnail, gp.originalPrice, gp.sale,
+		(gp.originalPrice - (gp.originalPrice * gp.sale / 100)) AS gongguPrice,
+		(SELECT fee FROM gongguDeliveryFee WHERE gongguDeliveryFeeNum = (SELECT MAX(gongguDeliveryFeeNum) FROM gongguDeliveryFee)) AS deliveryFee, 
+		(god.price * god.cnt) AS productMoney, TO_CHAR(py.applyDate, 'YYYY-MM-DD HH24:MI:SS') AS applyDate,
+		 py.payMethod, py.cardName, py.cardNumber, py.applyNum, py.imp_uid,
+		(SELECT memberId FROM member2 WHERE memberId = po.memberId) AS loginId, 
+		(SELECT COUNT(*) FROM gongguReview gr WHERE gr.gongguProductId = god.gongguProductId AND gr.memberId = po.memberId AND gr.gongguOrderDetailId = god.gongguOrderDetailId) AS reviewWrite,
+		gdsi.stateMemo, TO_CHAR(gdsi.detailStateDate, 'YYYY-MM-DD HH24:MI:SS') AS stateDate
+	FROM productOrder po
+	JOIN gongguOrderDetail god ON po.orderId = god.orderId
+	JOIN gongguProduct gp ON god.gongguProductId = gp.gongguProductId
+	LEFT JOIN payment py ON po.orderId = py.orderId
+	LEFT JOIN gongguDetailStateInfo gdsi ON god.gongguOrderDetailId = gdsi.gongguOrderDetailId AND god.detailState = gdsi.detailState
+	WHERE po.memberId = #{memberId} AND god.gongguOrderDetailId = #{gongguOrderDetailId}
 	</select>
+
+
 
 	<select id="findByGongguOrderDelivery" parameterType="map" resultType="com.sp.app.model.GongguOrder">
 		SELECT recipientName, tel, zip, addr1, addr2,
@@ -160,10 +172,16 @@
 	</update>
 
 	<insert id="insertGongguDetailStateInfo" parameterType="map">
-		INSERT INTO orderStateInfo(stateInfoId, orderDetailId, state, stateMemo, stateDate)
-		VALUES(orderStateInfo_seq.NEXTVAL, #{gongguOrderDetailId}, #{detailState}, #{stateMemo}, SYSDATE)
+		INSERT INTO gongguDetailStateInfo (gongguStateNum, gongguOrderDetailId, detailState, stateMemo, detailStateDate)
+		VALUES(gongguDetailStateInfo_seq.NEXTVAL, #{gongguOrderDetailId}, #{detailState}, #{stateMemo}, SYSDATE)
 	</insert>
 
+	<update id="updateOrderState" parameterType="java.util.Map">
+	    UPDATE productOrder
+	    SET orderState = #{orderState}
+	    WHERE orderId = #{orderId}
+	</update>
+	
 	<update id="updateGongguReviewWrite" parameterType="long">
 		UPDATE gongguOrderDetail SET reviewWrite = 1
 		WHERE gongguOrderDetailId = #{gongguOrderDetailId}

@@ -16,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class GongguReview {
-    private long gongguReviewId;
+    private long gongguOrderDetailId;
     private String username;
     private int rate;
     private String content;
@@ -29,7 +29,7 @@ public class GongguReview {
     private String answerDate;
     private String answer;  
     private String answerName;
-    
+    private int block;
     private long reviewPhotoId;
     private String reviewImg;
 	private List<MultipartFile> selectFile;

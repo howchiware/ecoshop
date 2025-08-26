@@ -24,5 +24,7 @@ public interface GongguOrderService {
     public GongguOrder findByGongguOrderDelivery(Map<String, Object> map);
     public void updateGongguOrderDetailState(Map<String, Object> map) throws Exception;
     public void updateGongguOrderHistory(long gongguOrderDetailId) throws Exception;
+    public void updateDetailState(long gongguOrderDetailId, int detailState) throws Exception;
+    public void updateOrderState(long orderId, int orderState) throws Exception;
 }
 
