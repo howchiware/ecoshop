@@ -47,23 +47,21 @@
 								<th width="125">총금액</th>
 							</tr>
 							
-							<c:forEach var="dto" items="${listGongguProduct}" varStatus="status">
-								<tr class="text-center" valign="middle">
-									<td>
-										<img class="border rounded md-img" src="${pageContext.request.contextPath}/uploads/gonggu/${dto.gongguThumbnail}">
-									</td>
-									<td>
-										<div class="fw-semibold">${dto.gongguProductName}</div>
-							
-										<input type="hidden" name="gongguProductId" value="${dto.gongguProductId}">
-										<input type="hidden" name="prices" value="${dto.salePrice}">
-										<input type="hidden" name="cnt" value="${dto.cnt}">
-										<input type="hidden" name="usedPoint" value="0">										
-										<input type="hidden" name="classify" value="2">
-									</td>
-									<td>
-										${dto.cnt}
-									</td>
+							<c:set var="dto" value="${listGongguProduct[0]}" /> <tr class="text-center" valign="middle">
+								<td>
+									<img class="border rounded md-img" src="${pageContext.request.contextPath}/uploads/gonggu/${dto.gongguThumbnail}">
+								</td>
+								<td>
+									<div class="fw-semibold">${dto.gongguProductName}</div>
+									<input type="hidden" name="gongguProductId" value="${dto.gongguProductId}">
+									<input type="hidden" name="prices" value="${dto.salePrice}">
+									<input type="hidden" name="cnt" value="${dto.cnt}">
+									<input type="hidden" name="usedPoint" value="0">										
+									<input type="hidden" name="classify" value="2">
+								</td>
+								<td>
+									${dto.cnt}
+								</td>
 									<td >
 										<div>
 											<label class="original-price">
@@ -81,8 +79,7 @@
 												<fmt:formatNumber value="${dto.salePrice}"/>원
 										</label>
 									</td>
-								</tr>
-							</c:forEach>
+								</tr>						
 						</table>
 						
 						<input type="hidden" name="orderId" value="${gongguOrderNumber}">

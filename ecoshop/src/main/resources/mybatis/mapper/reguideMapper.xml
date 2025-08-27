@@ -7,13 +7,10 @@
 	</select>
 	<insert id="insertReguide" parameterType="com.sp.app.model.Reguide">
 	    INSERT INTO reguide(
-	        guidId, memberId, categoryCode, subject, content, hitCount, regDate, imageFilename
-	    ) VALUES (
-	        reguide_seq.NEXTVAL, #{memberId}, #{categoryCode}, #{subject}, #{content}, 0, SYSDATE, #{imageFilename,jdbcType=VARCHAR}
-	    )
+	        guidId, memberId, categoryCode, subject, content, hitCount, regDate, imageFilename) 
+	        VALUES (reguide_seq.NEXTVAL, #{memberId}, #{categoryCode}, #{subject}, #{content}, 0, SYSDATE, #{imageFilename,jdbcType=VARCHAR})
 	</insert>
 	
-
 	<sql id="where-list">
 		<choose>
 			<when test="schType == 'all' ">

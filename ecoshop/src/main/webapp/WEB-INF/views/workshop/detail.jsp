@@ -126,8 +126,6 @@
 </div>
 
 
-
-				<!-- 탭 -->
 				<ul class="nav nav-tabs mt-3" id="workshopTabs" role="tablist">
 					<li class="nav-item"><button class="nav-link active"
 							data-bs-toggle="tab" data-bs-target="#intro" type="button">워크샵
@@ -197,8 +195,6 @@
 						<div id="faqList" class="py-2 text-start text-muted">로딩 중...</div>
 					</div>
 				</div>
-			</div>
-		</div>
 	</main>
 
 	<footer>

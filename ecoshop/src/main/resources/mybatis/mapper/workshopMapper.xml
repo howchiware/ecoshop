@@ -4,14 +4,24 @@
 	<!-- 카테고리 -->
 	<insert id="insertCategory"
 		parameterType="com.sp.app.model.Workshop">
-		INSERT INTO programCategory (categoryId, categoryName)
-		VALUES (programCategory_seq.NEXTVAL, #{categoryName})
+		INSERT INTO programCategory (categoryId, categoryName,
+		is_active AS active)
+		VALUES (programCategory_seq.NEXTVAL,
+		#{categoryName}, NVL(#{is_active}, 1))
 	</insert>
 
 	<update id="updateCategory"
 		parameterType="com.sp.app.model.Workshop">
 		UPDATE programCategory
-		SET categoryName = #{categoryName}
+		SET categoryName =
+		#{categoryName}, is_active = NVL(#{active},1)
+		WHERE categoryId =
+		#{categoryId}
+	</update>
+
+	<update id="categoryActive" parameterType="map">
+		UPDATE programCategory
+		SET is_active = #{active}
 		WHERE categoryId = #{categoryId}
 	</update>
 
@@ -22,11 +32,13 @@
 
 	<select id="listCategory" parameterType="map"
 		resultType="com.sp.app.model.Workshop">
-		SELECT categoryId, categoryName
+		SELECT categoryId, categoryName, NVL(is_active, 1) AS
+		active
 		FROM programCategory
 		ORDER BY
 		categoryId DESC
-		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+		OFFSET #{offset} ROWS
+		FETCH NEXT #{size} ROWS ONLY
 	</select>
 
 	<!-- 프로그램 -->
@@ -82,17 +94,20 @@
 	<select id="findProgramById" parameterType="long"
 		resultType="com.sp.app.model.Workshop">
 		SELECT
-			p.programId,
-			p.categoryId,
-			c.categoryName,
-			p.programTitle,
-			p.programContent,
-			p.regDate,
-			p.updDate
+		p.programId,
+		p.categoryId,
+		c.categoryName,
+		p.programTitle,
+		p.programContent,
+		p.regDate,
+		p.updDate
 		FROM program p
-		LEFT JOIN programCategory c
-		ON p.categoryId = c.categoryId
-		WHERE p.programId = #{num}
+		LEFT
+		JOIN programCategory c
+		ON p.categoryId =
+		c.categoryId
+		WHERE p.programId =
+		#{num}
 	</select>
 
 	<update id="updateProgram"
@@ -323,6 +338,11 @@
 		WHERE workshopId = #{value}
 	</delete>
 
+	<!-- (메인) 모집 중인 워크샵 -->
+	<select id="listWorkshopMain"
+		resultType="com.sp.app.model.Workshop">
+	</select>
+
 	<!-- 출석체크 -->
 	<update id="markAttendance"
 		parameterType="com.sp.app.model.Participant">
@@ -346,6 +366,10 @@
 		p.programId
 		JOIN programCategory pc ON p.categoryId = pc.categoryId
 		<where>
+			<if test="activeCategory != null">
+				AND pc.is_active = 1
+			</if>
+
 			<if test="categoryId != null">
 				AND pc.categoryId = #{categoryId}
 			</if>
@@ -367,6 +391,16 @@
 		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
 
+	<select id="listActiveCategory"
+		resultType="com.sp.app.model.Workshop">
+		SELECT categoryId, categoryName
+		FROM programCategory
+		WHERE
+		is_active = 1
+		ORDER BY categoryName
+	</select>
+
+
 	<select id="userWorkshopDataCount" parameterType="map"
 		resultType="int">
 		SELECT NVL(COUNT(*), 0)
@@ -375,9 +409,15 @@
 		p.programId
 		JOIN programCategory pc ON p.categoryId = pc.categoryId
 		<where>
+
+			<if test="activeCategory != null">
+				AND pc.is_active = #{activeCategory}
+			</if>
+
 			<if test="categoryId != null">
 				AND pc.categoryId = #{categoryId}
 			</if>
+
 			<if test="onlyRecruiting == true">
 				AND w.workshopStatus = 1
 			</if>
@@ -625,29 +665,36 @@
 		m.name AS "memberName",
 		wks.workshopTitle AS "workshopTitle",
 		wr.workshopReviewId AS "workshopReviewId",
-		wr.participantId AS "participantId",
+		wr.participantId AS
+		"participantId",
 		wr.workshopId AS "workshopId",
-		p.memberId AS "memberId",
+		p.memberId AS
+		"memberId",
 		CASE WHEN EXISTS (
 		SELECT 1
 		FROM point pnt
-		WHERE pnt.memberId = p.memberId
+		WHERE pnt.memberId
+		= p.memberId
 		AND pnt.postId = wr.workshopReviewId
 		AND pnt.classify = 1
 		AND pnt.orderId IS NULL
 		)
 		THEN 1 ELSE 0 END AS "paid"
-		FROM workshopReview wr
+		FROM workshopReview
+		wr
 		JOIN participant p ON wr.participantId = p.participantId
-		JOIN member2 m ON p.memberId = m.memberId
-		JOIN workshop wks ON wr.workshopId = wks.workshopId
+		JOIN member2
+		m ON p.memberId = m.memberId
+		JOIN workshop wks ON wr.workshopId =
+		wks.workshopId
 		<where>
 			<if test="workshopId != null">
 				AND wr.workshopId = #{workshopId}
 			</if>
 		</where>
 		ORDER BY wr.regDate DESC
-		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS
+		ONLY
 	</select>
 
 

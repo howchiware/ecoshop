@@ -122,11 +122,6 @@ select.form-select {
 			</div>
 
 			<hr>
-			
-			<div class="d-flex justify-content-end mb-2">
-				<button class="btn-manage btn-register" data-bs-toggle="modal"
-					data-bs-target="#faqModal">등록</button>
-			</div>
 
 			<div class="outside">
 			<form method="get" action="${ctx}/admin/workshop/faq/manage">
@@ -188,6 +183,11 @@ select.form-select {
 					</tbody>
 				</table>
 			</div>
+			
+			<div class="mt-2 text-start">
+				<button class="btn-manage btn-register" data-bs-toggle="modal"
+					data-bs-target="#faqModal">FAQ 등록</button>
+			</div>
 
 			<nav aria-label="페이징">
 				<ul class="pagination justify-content-center">
@@ -202,10 +202,10 @@ select.form-select {
 		<div class="modal-dialog modal-lg modal-dialog-centered">
 			<div class="modal-content">
 				<form method="post" action="${ctx}/admin/workshop/faq/write">
-					<div class="modal-header">
+					<!-- <div class="modal-header">
 						<h5 class="modal-title fw-bold">FAQ 등록</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-					</div>
+					</div> -->
 					<div class="modal-body">
 						<input type="hidden" name="faqId" id="faqId">
 						<div class="mb-3">
@@ -231,7 +231,7 @@ select.form-select {
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="submit" class="btn-submit">저장</button>
+						<button type="submit" class="btn-submit">등록</button>
 					</div>
 				</form>
 			</div>

@@ -80,6 +80,21 @@ public class WorkshopServiceImpl implements WorkshopService {
 		}
 	}
 
+	@Override
+	public void categoryActive(Long categoryId, Integer active) {
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("categoryId", categoryId);
+			map.put("active", active);
+
+			mapper.categoryActive(map);
+		} catch (Exception e) {
+			log.info("updateProgram : ", e);
+
+			throw e;
+		}
+	}
+
 	// 프로그램
 	@Override
 	public void insertProgram(Workshop dto) throws Exception {
@@ -638,5 +653,26 @@ public class WorkshopServiceImpl implements WorkshopService {
 			return null;
 		}
 	}
+
+	@Override
+	public List<Workshop> listWorkshopMain(Map<String, Object> map) {
+		List<Workshop> list = null;
+
+		try {
+			list = mapper.listWorkshop(map);
+		} catch (Exception e) {
+			log.info("listWorkshopMain : ", e);
+
+			throw e;
+		}
+		return list;
+	}
+
+	@Override
+	public List<Workshop> listActiveCategory() {
+		return mapper.listActiveCategory();
+	}
+	
+	
 
 }

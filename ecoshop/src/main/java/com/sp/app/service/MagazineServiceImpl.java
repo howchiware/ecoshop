@@ -97,7 +97,7 @@ public class MagazineServiceImpl implements MagazineService {
 	}
 
 	@Override
-	public void insertMagazine(Magazine dto) throws Exception {
+	public void insertMagazine(Magazine dto, String uploadPath) throws Exception {
 		try {
 			mapper.insertMagazine(dto);
 		} catch (Exception e) {
@@ -108,11 +108,11 @@ public class MagazineServiceImpl implements MagazineService {
 	}
 
 	@Override
-	public void updateMagazine(Magazine dto) throws Exception {
+	public void updateMagazine(Magazine dto, String uploadPath) throws Exception {
 		try {
 			mapper.updateMagazine(dto);
 		} catch (Exception e) {
-			log.info("updateDairy: ", e);
+			log.info("updateMagazine: ", e);
 			throw e;
 		}
 		

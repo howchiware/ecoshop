@@ -87,9 +87,40 @@ public interface ChallengeMapper {
     
     public int countSpecialPosts(@Param("participationId") long participationId) throws SQLException;
     
+    public List<Challenge> listMyChallenges(long memberId) throws Exception;
+    
+    // 총 건수 
+    public int countMyChallenges(@Param("memberId") long memberId) throws Exception;
+    
+    // 페이징 목록
+    public List<Challenge> listMyChallengesPaged(@Param("memberId") long memberId,
+    											@Param("offset") int offset,
+    											@Param("size") int size) throws Exception;
+    // 마이페이지 
+    public int updatePostVisibility(@Param("postId") long postId,
+    								@Param("memberId") long memberId,
+    								@Param("isPublic") String isPublic) throws Exception;
+    public int countPublicSpecialPosts(@Param("kwd") String kwd) throws Exception;
+    public List<Challenge> listPublicSpecialPostsPaged(@Param("offset") int offset,
+    												  @Param("size") int size,
+    												  @Param("sort") String sort,
+    												  @Param("kwd") String kwd) throws Exception;
     
     
-    
+    // 내 인증글 관리용 (스페셜 인증글만: dayNumber IS NOT NULL)
+    public int countMySpecialPosts(
+            @Param("memberId") long memberId,
+            @Param("challengeId") Long challengeId,   // 선택 필터(없으면 null)
+            @Param("kwd") String kwd                   // 내용 키워드(없으면 null)
+    ) throws Exception;
+
+    public List<Challenge> listMySpecialPostsPaged(
+            @Param("memberId") long memberId,
+            @Param("challengeId") Long challengeId,   // 선택 필터(없으면 null)
+            @Param("offset") int offset,
+            @Param("size") int size,
+            @Param("kwd") String kwd                   // 내용 키워드(없으면 null)
+    ) throws Exception;
     
 }
 	

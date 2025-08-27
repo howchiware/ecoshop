@@ -8,8 +8,11 @@
 <title>워크샵 목록</title>
 <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/dist/css/admin.css">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
 <style type="text/css">
 * {
 	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
@@ -39,13 +42,6 @@ body {
 	font-size: 0.9rem;
 	transition: background 0.2s, color 0.2s;
 	cursor: pointer;
-	height: 30px;
-	width: 51px;
-}
-
-.btn-register {
-	height: 30px;
-	width: 51px;
 }
 
 .btn-search {
@@ -100,36 +96,30 @@ select.form-select {
 .table tbody tr:hover {
 	background-color: #fdfdfd;
 }
+
 .table .btn {
-  margin: 0 2px;
+	margin: 0 2px;
 }
 
 .text-padding-start {
-padding-left: 20px;
+	padding-left: 20px;
 }
 </style>
 </head>
 <body>
 
-	
+
 	<c:set var="ctx" value="${pageContext.request.contextPath}" />
 
 	<main class="main-container">
 		<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
-		
+
 		<div class="container py-4">
 			<div class="d-flex justify-content-between align-items-center mb-3">
 				<h3 class="m-0">워크샵 관리</h3>
 			</div>
 
 			<hr>
-
-			<div class="d-flex justify-content-end mb-2">
-				<form action="${ctx}/admin/workshop/write" method="get">
-					<button type="submit" class="btn-manage btn-register">등록</button>
-				</form>
-			</div>
-
 
 			<div class="outside">
 				<form class="row g-2 align-items-end mb-3" method="get"
@@ -162,7 +152,8 @@ padding-left: 20px;
 
 					<div class="col-md-4">
 						<label class="form-label"></label> <input type="text"
-							class="form-control" name="kwd" value="${kwd}" style="height: 36.5px;">
+							class="form-control" name="kwd" value="${kwd}"
+							style="height: 36.5px;">
 					</div>
 
 					<div class="col-md-1">
@@ -175,13 +166,14 @@ padding-left: 20px;
 					<table class="table table-sm align-middle">
 						<thead class="table-light">
 							<tr>
-								<th style="width: 40px;" class="text-center">번호</th>
-								<th style="width: 180px;">프로그램</th>
-								<th style="width: 220px;">워크샵명</th>
-								<th style="width: 70px;" class="text-center">일정</th>
-								<th style="width: 50px;" class="text-center">정원</th>
-								<th style="width: 80px;" class="text-center">상태</th>
+								<th style="width: 6%;" class="text-center">번호</th>
+								<th style="width: 28%;">프로그램</th>
+								<th style="width: 34%;">워크샵명</th>
+								<th style="width: 11%;" class="text-center">일정</th>
+								<th style="width: 8%;" class="text-center">정원</th>
+								<th style="width: 11%;" class="text-center">상태</th>
 							</tr>
+
 						</thead>
 						<tbody>
 							<c:choose>
@@ -196,7 +188,8 @@ padding-left: 20px;
 										<tr>
 											<td class="text-center"><c:out
 													value="${(page-1)*size + st.index + 1}" /></td>
-											<td class="text-center"><c:out value="${row.programTitle}" /></td>
+											<td class="text-center"><c:out
+													value="${row.programTitle}" /></td>
 											<td class="text-padding-start"><a
 												href="${ctx}/admin/workshop/detail?num=${row.workshopId}">
 													${row.workshopTitle} </a></td>
@@ -223,6 +216,14 @@ padding-left: 20px;
 					</table>
 				</div>
 			</div>
+
+			<div class="mt-2 text-start">
+				<form action="${ctx}/admin/workshop/write" method="get">
+					<button type="submit" class="btn-manage btn-register">워크샵
+						등록</button>
+				</form>
+			</div>
+
 
 			<nav aria-label="페이지네이션">
 				<ul class="pagination justify-content-center">

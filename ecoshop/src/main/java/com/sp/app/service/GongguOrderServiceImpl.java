@@ -1,15 +1,22 @@
 package com.sp.app.service;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Service;
 
 import com.sp.app.mapper.GongguOrderMapper;
 import com.sp.app.model.GongguOrder;
+import com.sp.app.model.GongguPayment;
 import com.sp.app.model.GongguReview;
+import com.sp.app.state.OrderState;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -67,6 +74,8 @@ public class GongguOrderServiceImpl implements GongguOrderService {
 	        int cnt = 1;
 	        dto.setGongguProductId(gongguProductId);
 	        dto.setCnt(cnt);
+	        String orderId = gongguproductOrderNumber();
+	        dto.setOrderId(orderId);
 
 	        GongguOrder productInfo = mapper.findByGongguProduct(gongguProductId);
 
@@ -82,9 +91,14 @@ public class GongguOrderServiceImpl implements GongguOrderService {
 	        dto.setItemCount(1);
 	        
 	        mapper.insertGongguOrder(dto);
-	        mapper.insertGongguPayDetail(dto);
 	        mapper.insertGongguOrderDelivery(dto);
+	        mapper.insertGongguPayDetail(dto);
 	        mapper.insertGongguOrderDetail(dto);
+	        
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("orderId", orderId);
+	        map.put("orderState", 1);
+	        mapper.updateOrderState(map); 
 	        
 	    } catch (Exception e) {
 	        log.error("insertGongguOrder : ", e);
@@ -143,4 +157,164 @@ public class GongguOrderServiceImpl implements GongguOrderService {
 		return dto;
 	}
 
+	@Override
+	public int countGongguPayment(Map<String, Object> map) {
+		int result = 0;
+		
+		try {
+			result = mapper.countGongguPayment(map);
+		} catch (Exception e) {
+			log.info("countGongguPayment : ", e);
+		}
+		
+		return result;
+	}
+
+	// 결제리스트
+	@Override
+	public List<GongguPayment> listGongguPayment(Map<String, Object> map) {
+		List<GongguPayment> gongguList = null;
+		
+		try {
+			// OrderState.ORDERSTATEINFO : 주문상태 정보
+			// OrderState.DETAILSTATEINFO : 주문상세상태 정보
+			
+			String orderState;
+			
+			gongguList = mapper.listGongguPayment(map);
+
+			Date endDate = new Date();
+			long gap;
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			
+			for(GongguPayment dto : gongguList) {
+				dto.setOrderDate(dto.getOrderDate().replaceAll("-", ".").substring(5,10));
+				dto.setOrderStateInfo(OrderState.ORDERSTATEINFO[dto.getOrderState()]);
+				dto.setDetailStateInfo(OrderState.DETAILSTATEINFO[dto.getDetailState()]);
+				
+				if(dto.getOrderState() == 7 || dto.getOrderState() == 9) {
+					orderState = "결제완료";
+				} else {
+					orderState = OrderState.ORDERSTATEINFO[dto.getOrderState()];
+				}
+				if(dto.getDetailState() > 0) {
+					orderState = OrderState.DETAILSTATEINFO[dto.getDetailState()];
+				}
+				dto.setStateProduct(orderState);
+				
+				// 배송 완료후 지난 일자
+				if(dto.getOrderState() == 5 && dto.getStateDate() != null) {
+					Date beginDate = formatter.parse(dto.getStateDate());
+					gap = (endDate.getTime() - beginDate.getTime()) / (24 * 60 * 60 * 1000);
+					dto.setAfterDelivery(gap);
+				}
+			}
+
+		} catch (Exception e) {
+			log.info("listGongguPayment : ", e);
+		}
+		
+		return gongguList;
+	}
+
+	// 구매 리스트
+	@Override
+	public List<GongguPayment> listGongguPurchase(Map<String, Object> map) {
+		List<GongguPayment> gongguList = null;
+		
+		try {
+			gongguList = mapper.listGongguPurchase(map);
+		} catch (Exception e) {
+			log.info("listGongguPurchase : ", e);
+		}
+		
+		return gongguList;
+	}
+
+	@Override
+	public GongguPayment findByGongguOrderDetail(Map<String, Object> map) {
+		GongguPayment dto = null;
+		
+		try {
+			dto = Objects.requireNonNull(mapper.findByGongguOrderDetail(map));
+			
+			if((dto.getOrderState() == 1 || dto.getOrderState() == 7 || dto.getOrderState() == 9)
+					&& dto.getDetailState() == 0) {
+				dto.setDetailStateInfo("상품 준비중");
+			} else {
+				dto.setDetailStateInfo(OrderState.DETAILSTATEMANAGER[dto.getDetailState()]);
+			}
+			
+		} catch (NullPointerException e) {
+		} catch (Exception e) {
+			log.info("findByOrderDetail : ", e);
+		}
+		
+		return dto;
+	}
+
+	@Override
+	public GongguOrder findByGongguOrderDelivery(Map<String, Object> map) {
+		GongguOrder dto = null;
+		
+		try {
+			dto = mapper.findByGongguOrderDelivery(map);
+		} catch (Exception e) {
+			log.info("findByGongguOrderDelivery : ", e);
+		}
+		
+		return dto;
+	}
+
+	@Override
+	public void updateGongguOrderDetailState(Map<String, Object> map) throws Exception {
+		try {
+			// gongguOrderDetail 테이블 상태 변경
+			mapper.updateGongguOrderDetailState(map);
+			
+			// gongguDetailStateInfo 테이블에 상태 변경 내용 및 날짜 저장
+			mapper.insertGongguDetailStateInfo(map);
+			
+		} catch (Exception e) {
+			log.info("updateGongguOrderDetailState : ", e);
+			
+			throw e;
+		}
+	}
+
+	@Override
+	public void updateGongguOrderHistory(long gongguOrderDetailId) throws Exception {
+		try {
+			mapper.updateGongguOrderHistory(gongguOrderDetailId);
+		} catch (Exception e) {
+			log.info("updateOrderHistory : ", e);
+			
+			throw e;
+		}
+	}
+
+	@Override
+	public void updateDetailState(long gongguOrderDetailId, int detailState) throws Exception {
+	    try {
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("gongguOrderDetailId", gongguOrderDetailId);
+	        map.put("detailState", detailState);
+	        mapper.updateGongguOrderDetailState(map);
+	    } catch (Exception e) {
+	        throw e;
+	    }
+	}
+
+	@Override
+	public void updateOrderState(long orderId, int orderState) throws Exception {
+	    try {
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("orderId", orderId);
+	        map.put("orderState", orderState);
+	        mapper.updateOrderState(map);
+	    } catch (Exception e) {
+	        log.error("updateOrderState 오류: ", e);
+	        throw e;
+	    }
+	}
 }

@@ -3,12 +3,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.admin.mapper.GongguReviewInquiryManageMapper">
 	<select id="findAllReviews" resultType="com.sp.app.admin.model.GongguReviewManage">
-	SELECT g.gongguReviewId, m2.name AS userName, g.content, g.regDate, (CASE WHEN g.answer IS NOT NULL THEN 1 ELSE 0 END) AS status, g.gongguProductId, g.memberId, g.showReview, g.answerId, g.answerDate, g.answer, p.gongguProductName, g.rate, d.reviewImg AS photoFileName
+	SELECT g.gongguOrderDetailId, m2.name AS userName, g.content, g.regDate, (CASE WHEN g.answer IS NOT NULL THEN 1 ELSE 0 END) AS status, g.gongguProductId, g.memberId, g.showReview, g.answerId, g.answerDate, g.answer, p.gongguProductName, g.rate, d.reviewImg AS photoFileName
 	FROM gongguReview g
 	JOIN member1 m1 ON g.memberId = m1.memberId
 	JOIN member2 m2 ON m1.memberId = m2.memberId
 	JOIN gongguProduct p ON g.gongguProductId = p.gongguProductId
-	LEFT OUTER JOIN gongguReviewDetail d ON g.gongguReviewId = d.gongguReviewId
+	LEFT OUTER JOIN gongguReviewDetail d ON g.gongguOrderDetailId = d.gongguOrderDetailId
 	ORDER BY g.regDate DESC
 	</select>
 	
@@ -24,12 +24,12 @@
 	</select>
 	
 	<select id="findReviewsBySearch" parameterType="map" resultType="com.sp.app.admin.model.GongguReviewManage">
-    SELECT g.gongguReviewId, m2.name AS userName, g.content, g.regDate, (CASE WHEN g.answer IS NOT NULL THEN 1 ELSE 0 END) AS status, g.gongguProductId, g.memberId, g.showReview, g.answerId, g.answerDate, g.answer, p.gongguProductName, g.rate, d.reviewImg AS photoFileName
+    SELECT g.gongguOrderDetailId, m2.name AS userName, g.content, g.regDate, (CASE WHEN g.answer IS NOT NULL THEN 1 ELSE 0 END) AS status, g.gongguProductId, g.memberId, g.showReview, g.answerId, g.answerDate, g.answer, p.gongguProductName, g.rate, d.reviewImg AS photoFileName
     FROM gongguReview g
     JOIN member1 m1 ON g.memberId = m1.memberId
     JOIN member2 m2 ON m1.memberId = m2.memberId
     JOIN gongguProduct p ON g.gongguProductId = p.gongguProductId
-    LEFT OUTER JOIN gongguReviewDetail d ON g.gongguReviewId = d.gongguReviewId
+    LEFT OUTER JOIN gongguReviewDetail d ON g.gongguOrderDetailId = d.gongguOrderDetailId
     <where>
         <if test="gongguProductName != null and !gongguProductName.isEmpty()">
             AND p.gongguProductName LIKE '%' || #{gongguProductName} || '%'
@@ -62,7 +62,7 @@
 	
 	<update id="updateAnswer" parameterType="com.sp.app.admin.model.GongguReviewManage">
 		UPDATE gongguReview SET answer = #{answer}, answerDate = SYSDATE, answerId = #{answerId}
-		WHERE gongguReviewId = #{gongguReviewId}
+		WHERE gongguOrderDetailId = #{gongguOrderDetailId}
 	</update>
 	
 	<select id="answerNameFindById" parameterType="Long" resultType="String">
@@ -72,10 +72,10 @@
 	</select>
 	
 	<update id="deleteAnswer" parameterType="Long">
-		UPDATE gongguReview SET answerId = null, answer = null, answerDate = null WHERE gongguReviewId = #{gongguReviewId}
+		UPDATE gongguReview SET answerId = null, answer = null, answerDate = null WHERE gongguOrderDetailId = #{gongguOrderDetailId}
 	</update>
 	
 	<delete id="deleteReview" parameterType="Long">
-		DELETE FROM gongguReview WHERE gongguReviewId = #{gongguReviewId}
+		DELETE FROM gongguReview WHERE gongguOrderDetailId = #{gongguOrderDetailId}
 	</delete>
 </mapper>

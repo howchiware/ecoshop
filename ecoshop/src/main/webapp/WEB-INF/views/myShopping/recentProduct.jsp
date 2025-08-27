@@ -78,7 +78,7 @@ function recentProductView() {
 	
 	let product = JSON.parse(localStorage.getItem('recentProduct')) || [];
 	let out = '';
-	
+
 	if(product.length === 0) {
 		$('.recentProductView').html('<p class="text-center">최근에 본 상품 목록이 없습니다.</p>');
 		return;
@@ -87,6 +87,8 @@ function recentProductView() {
 	out = '<div class="text-end pb-2"><button type="button" class="btn-default" onclick="productDeleteAll();"> 전체삭제 </button></div>';
 	out +='  <div class="row">'; 
 	for(let item of product) {
+		let productClassify = item.pclassify;
+		console.log(productClassify);
 		let productNum = item.pnum;
 		let productName = item.pname;
 		let img = item.pimg;
@@ -96,14 +98,14 @@ function recentProductView() {
 		out += `
 		    <div class="col-md-6">
 			    <div class="product-card">
-			        <img class="product-img btn-productCart" data-productNum="\${productNum}" src="${pageContext.request.contextPath}/uploads/products/\${img}">
+			        <img class="product-img btn-productCart" data-classify="\${productClassify}" data-productNum="\${productNum}" src="${pageContext.request.contextPath}/uploads/products/\${img}">
 			        <div class="product-info">
 			            <div class="product-title">\${productName}</div>
 			            <div class="product-price">
 			                <span class="original-price">\${price}</span>
 			            </div>
 			            <div class="product-actions">
-			                <button class="btn btn-sm btn-outline-primary btn-productCart" data-productNum="\${productNum}" title="장바구니 담기">
+			                <button class="btn btn-sm btn-outline-primary btn-productCart" data-classify="\${productClassify}" data-productNum="\${productNum}" title="장바구니 담기">
 			                    <i class="bi bi-cart-plus"></i>
 			                </button>
 		                    <button class="btn btn-sm btn-outline-danger btn-productDelete" data-productNum="\${productNum}" title="삭제">
@@ -132,8 +134,13 @@ function productDeleteAll() {
 $(function(){
 	$('.recentProductView').on('click', '.btn-productCart', function(){
 		const productNum = $(this).attr('data-productNum');
-		let url = '${pageContext.request.contextPath}/products/' + productNum;
-		location.href = url;
+		if($(this).attr('data-classify') === '1'){
+			let url = '${pageContext.request.contextPath}/products/' + productNum;
+			location.href = url;			
+		} else if($(this).attr('data-classify') === '2'){
+			let url = '${pageContext.request.contextPath}/gonggu/' + productNum;
+			location.href = url;			
+		}
 	});
 
 	$('.recentProductView').on('click', '.btn-productDelete', function(){

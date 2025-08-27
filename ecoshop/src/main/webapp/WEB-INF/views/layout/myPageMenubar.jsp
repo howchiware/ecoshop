@@ -10,9 +10,9 @@
 			<ul class="list-unstyled">
 				<li><a href="${pageContext.request.contextPath}/" data-view="orders">주문/배송 내역</a></li>
 				<li><a href="${pageContext.request.contextPath}/review/review" data-view="reviewNInquiry">상품 리뷰/문의</a></li>
-				<li><a href="${pageContext.request.contextPath}/" data-view="likes">찜한 상품</a></li>
-				<li><a href="${pageContext.request.contextPath}/" data-view="recentView">최근 본 상품</a></li>
-				<li><a href="${pageContext.request.contextPath}/myShopping/myPoint" data-view="points">포인트</a></li>
+				<li><a href="${pageContext.request.contextPath}/myShopping/productLike" data-view="likes">찜한 상품</a></li>
+				<li><a href="${pageContext.request.contextPath}/myShopping/recentProduct" data-view="recentView">최근 본 상품</a></li>
+				<li><a href="${pageContext.request.contextPath}/" data-view="points">배송지 관리</a></li>
 			</ul>
 
 			<h5 class="nav-section-title">마이활동</h5>
@@ -28,6 +28,7 @@
 			<h5 class="nav-section-title">마이정보</h5>
 			<ul class="list-unstyled">
 				<li><a href="${pageContext.request.contextPath}/member/pwd" data-view="myProfile">회원정보 수정</a></li>
+				<li><a href="${pageContext.request.contextPath}/myShopping/myPoint" data-view="points">포인트</a></li>
 				<li><a href="${pageContext.request.contextPath}/" data-view="shipping">배송지/환불계좌</a></li>
 				<li><a href="${pageContext.request.contextPath}/" data-view="withdraw">회원탈퇴</a></li>
 			</ul>

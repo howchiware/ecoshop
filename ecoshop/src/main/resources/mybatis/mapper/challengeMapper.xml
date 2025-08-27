@@ -255,6 +255,197 @@
 	    AND dayNumber IN (1,2,3)
   </select>
   
-  
+  <!-- 마이페이지 챌린지 확인용 -->
+  <select id="listMyChallenges" parameterType="long" resultType="com.sp.app.model.Challenge">
+  	SELECT
+      cp.participationId,
+      cp.memberId,
+      cp.status AS participationStatus,
+      TO_CHAR(cp.participateDate,'YYYY-MM-DD') AS participateDate,
 
+      
+      c.challengeId,
+      c.title,
+      c.challengeType,
+      c.rewardPoints,
+
+      
+      TO_CHAR(s.startDate,'YYYY-MM-DD') AS startDate,
+      TO_CHAR(s.endDate,  'YYYY-MM-DD') AS endDate,
+      s.requireDays,
+
+      
+      (SELECT NVL(COUNT(*),0)
+         FROM certificationPost p
+        WHERE p.participationId = cp.participationId) AS certCount,
+
+      (SELECT NVL(COUNT(*),0)
+         FROM certificationPost p
+        WHERE p.participationId = cp.participationId
+          AND p.approvalStatus = 1
+          AND p.dayNumber IS NOT NULL) AS approvedDays,
+
+      (SELECT TO_CHAR(MAX(regDate),'YYYY-MM-DD HH24:MI:SS')
+         FROM certificationPost p
+        WHERE p.participationId = cp.participationId) AS postRegDate
+        
+
+    FROM challengeParticipation cp
+    JOIN challenge c ON c.challengeId = cp.challengeId
+    LEFT JOIN specialChallenge s ON s.challengeId = c.challengeId
+    WHERE cp.memberId = #{memberId}
+    ORDER BY cp.participateDate DESC
+  </select>
+
+  	<!-- 마이페이지: 총 건수 -->
+	<select id="countMyChallenges" parameterType="long" resultType="int">
+	  SELECT COUNT(*) 
+	  FROM challengeParticipation cp
+	  WHERE cp.memberId = #{memberId}
+	</select>
+
+	<!-- 마이페이지: 페이징 목록 -->
+	<select id="listMyChallengesPaged" parameterType="map" resultType="com.sp.app.model.Challenge">
+	  SELECT
+	    cp.participationId,
+	    cp.memberId,
+	    cp.status AS participationStatus,
+	    TO_CHAR(cp.participateDate,'YYYY-MM-DD') AS participateDate,
+	
+	    c.challengeId,
+	    c.title,
+	    c.challengeType,
+	    c.rewardPoints,
+	
+	    TO_CHAR(s.startDate,'YYYY-MM-DD') AS startDate,
+	    TO_CHAR(s.endDate,  'YYYY-MM-DD') AS endDate,
+	    s.requireDays,
+	
+	    (SELECT NVL(COUNT(*),0)
+	       FROM certificationPost p
+	      WHERE p.participationId = cp.participationId) AS certCount,
+	
+	    (SELECT NVL(COUNT(*),0)
+	       FROM certificationPost p
+	      WHERE p.participationId = cp.participationId
+	        AND p.approvalStatus = 1
+	        AND p.dayNumber IS NOT NULL) AS approvedDays,
+	
+	    (SELECT TO_CHAR(MAX(regDate),'YYYY-MM-DD HH24:MI:SS')
+	       FROM certificationPost p
+	      WHERE p.participationId = cp.participationId) AS postRegDate
+	
+	  FROM challengeParticipation cp
+	  JOIN challenge c ON c.challengeId = cp.challengeId
+	  LEFT JOIN specialChallenge s ON s.challengeId = c.challengeId
+	  WHERE cp.memberId = #{memberId}
+	  ORDER BY cp.participateDate DESC
+	  OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+	
+	<!-- 마이페이지 공개전환 -->
+  	<update id="updatePostVisibility" parameterType="map">
+	  UPDATE certificationPost p
+	     SET isPublic = #{isPublic}
+	   WHERE p.postId = #{postId}
+	     AND EXISTS (
+	           SELECT 1
+	             FROM challengeParticipation cp
+	            WHERE cp.participationId = p.participationId
+	              AND cp.memberId = #{memberId}
+	         )
+	</update>
+  
+  	<!-- 공개된 스페셜 인증글 총 개수 -->
+  	<select id="countPublicSpecialPosts" parameterType="string" resultType="int">
+	  SELECT COUNT(*)
+	    FROM certificationPost p
+	    JOIN challengeParticipation cp ON cp.participationId = p.participationId
+	    JOIN challenge c ON c.challengeId = cp.challengeId
+	   WHERE p.isPublic = 'Y'
+	     AND p.approvalStatus = 1
+	     AND p.dayNumber IS NOT NULL
+	     <if test="kwd != null and kwd != ''">
+	       AND (c.title LIKE '%' || #{kwd} || '%' OR p.content LIKE '%' || #{kwd} || '%')
+	     </if>
+	</select>
+
+	<!-- 공개된 스페셜 인증글 목록 (카드 피드용) -->
+	<select id="listPublicSpecialPostsPaged" parameterType="map" resultType="com.sp.app.model.Challenge">
+	  SELECT
+	    c.challengeId,
+	    c.title,
+	    c.challengeType,
+	    p.postId,
+	    p.dayNumber,
+	    p.content,
+	    TO_CHAR(p.regDate,'YYYY-MM-DD HH24:MI:SS') AS postRegDate,
+	   
+	    (SELECT photoUrl FROM certificationPhoto ph
+	      WHERE ph.postId = p.postId FETCH FIRST 1 ROWS ONLY) AS photoUrl,
+	   
+	    m.userName AS memberName
+	  FROM certificationPost p
+	  JOIN challengeParticipation cp ON cp.participationId = p.participationId
+	  JOIN member1 m ON m.memberId = cp.memberId
+	  JOIN challenge c ON c.challengeId = cp.challengeId
+	  WHERE p.isPublic = 'Y'
+	    AND p.approvalStatus = 1
+	    AND p.dayNumber IS NOT NULL
+	  <choose>
+	    <when test="sort == 'POPULAR'">
+	      ORDER BY p.postId DESC  
+	    </when>
+	    <otherwise>
+	      ORDER BY p.regDate DESC
+	    </otherwise>
+	  </choose>
+	  OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+  	
+  	<!--  내 인증글 관리: 총 개수  -->
+	<select id="countMySpecialPosts" parameterType="map" resultType="int">
+	  SELECT COUNT(*)
+	    FROM certificationPost p
+	    JOIN challengeParticipation cp ON cp.participationId = p.participationId
+	   WHERE cp.memberId = #{memberId}
+	     AND p.dayNumber IS NOT NULL               <!-- 스페셜 인증글만 -->
+	  <if test="challengeId != null">
+	     AND cp.challengeId = #{challengeId}
+	  </if>
+	  <if test="kwd != null and kwd != ''">
+	     AND p.content LIKE '%'||#{kwd}||'%'
+	  </if>
+	</select>
+
+	<!--  내 인증글 관리: 페이징 목록  -->
+	<select id="listMySpecialPostsPaged" parameterType="map" resultType="com.sp.app.model.Challenge">
+	  SELECT
+	     p.postId,
+	     p.dayNumber,
+	     p.isPublic,
+	     p.approvalStatus,
+	     TO_CHAR(p.regDate,'YYYY-MM-DD HH24:MI:SS') AS postRegDate,
+	     cp.participationId,
+	     cp.challengeId,
+	     c.title,
+	     (SELECT photoUrl FROM certificationPhoto ph
+	       WHERE ph.postId = p.postId FETCH FIRST 1 ROWS ONLY) AS photoUrl
+	  FROM certificationPost p
+	  JOIN challengeParticipation cp ON cp.participationId = p.participationId
+	  JOIN challenge c ON c.challengeId = cp.challengeId
+	  WHERE cp.memberId = #{memberId}
+	    AND p.dayNumber IS NOT NULL
+	  <if test="challengeId != null">
+	    AND cp.challengeId = #{challengeId}
+	  </if>
+	  <if test="kwd != null and kwd != ''">
+	    AND p.content LIKE '%'||#{kwd}||'%'
+	  </if>
+	  ORDER BY p.regDate DESC
+	  OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+  	
+  
+  
 </mapper>

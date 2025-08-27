@@ -21,6 +21,7 @@ public interface WorkshopMapper {
 	public void updateCategory(Workshop dto);
 	public void deleteCategory(Long categoryId);
 	public List<Workshop> listCategory(Map<String, Object> map);
+	public void categoryActive(Map<String, Object> map);
 	
 	// 프로그램
 	public void insertProgram(Workshop dto);
@@ -37,6 +38,7 @@ public interface WorkshopMapper {
 	public int workshopDataCount(Map<String, Object> map);
 	public List<Workshop> listWorkshop(Map<String, Object> map);
 	public Workshop findWorkshopById(long num);
+	public List<Workshop> listActiveCategory();
 	
 	// 워크샵 사진
 	public void insertWorkshopPhoto(Workshop dto) throws SQLException;

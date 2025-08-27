@@ -15,10 +15,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sp.app.common.MyUtil;
+import com.sp.app.common.PaginateUtil;
 import com.sp.app.model.Challenge;
 import com.sp.app.model.SessionInfo;
 import com.sp.app.service.ChallengeService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +33,9 @@ public class ChallengeController {
 	// 사용자 화면
 	private final ChallengeService service;
 	private final MyUtil myUtil;
+	private final PaginateUtil paginateUtil;
 
-	// 메인(사용자 목록) : 데일리 + 스페셜(첫 로드)
+	// 메인 : 데일리 + 스페셜(첫 로드)
 	@GetMapping("list")
 	public String list(@RequestParam(name = "weekday", required = false) Integer weekday,
 			@RequestParam(name = "size", required = false) Integer size,
@@ -115,7 +118,6 @@ public class ChallengeController {
 				return "redirect:/challenge/list";
 			}
 
-			// 공용 join.jsp에서 사용
 			model.addAttribute("dto", dto);
 			model.addAttribute("submitAction", "/challenge/dailySubmit");
 		} catch (Exception e) {
@@ -217,12 +219,68 @@ public class ChallengeController {
 		if (info == null)
 			return Map.of("ok", false, "msg", "로그인이 필요합니다.");
 		try {
-			
+
 			service.requestSpecialFinalApproval(participationId, info.getMemberId());
 			return Map.of("ok", true);
 		} catch (Exception e) {
 			return Map.of("ok", false, "msg", e.getMessage());
 		}
+	}
+
+	@ResponseBody
+	@GetMapping("mypage/challengelist")
+	public List<Challenge> listMyChallenges(@RequestParam("memberId") long memberId) {
+
+		return service.listMyChallenges(memberId);
+	}
+
+	@GetMapping("mypage/list")
+	public String mypageChallengeList(
+	        HttpSession session,
+	        Model model,
+	        HttpServletRequest req,
+	        @RequestParam(name="page", defaultValue="1") int page,
+	        @RequestParam(name="size", defaultValue="10") int size) {
+
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    if (info == null) return "redirect:/member/login";
+
+	    int dataCount = service.countMyChallenges(info.getMemberId());
+	    int total_page = paginateUtil.pageCount(dataCount, size);
+	    if (total_page == 0) total_page = 1;
+	    if (page > total_page) page = total_page;
+	    if (page < 1) page = 1;
+
+	    int offset = (page - 1) * size;
+
+	    List<Challenge> list = service.listMyChallengesPaged(info.getMemberId(), offset, size);
+
+	    String listUrl = req.getContextPath() + "/challenge/mypage/list";
+	    String paging  = paginateUtil.pagingUrl(page, total_page, listUrl);
+
+	    model.addAttribute("list", list);
+	    model.addAttribute("page", page);
+	    model.addAttribute("size", size);
+	    model.addAttribute("dataCount", dataCount);
+	    model.addAttribute("paging", paging);
+
+	    return "myPage/challengeList";
+	}
+	
+	// 마이페이지 공개전환
+	@PostMapping("post/visibility")
+	@ResponseBody
+	public Map<String,Object> toggleVisibility(@RequestParam("postId") long postId,
+	                                           @RequestParam("isPublic") String isPublic,
+	                                           HttpSession session) {
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    if (info == null) return Map.of("ok", false, "msg", "로그인이 필요합니다.");
+	    try {
+	        int n = service.updatePostVisibility(postId, info.getMemberId(), isPublic);
+	        return Map.of("ok", n==1);
+	    } catch (Exception e) {
+	        return Map.of("ok", false, "msg", e.getMessage());
+	    }
 	}
 
 }

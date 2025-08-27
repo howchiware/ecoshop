@@ -15,6 +15,7 @@ public interface WorkshopService {
 	public void updateCategory(Workshop dto);
 	public void deleteCategory(Long categoryId);
 	public List<Workshop> listCategory(Map<String, Object> map);
+	public void categoryActive(Long categoryId, Integer active);
 	
 	// 프로그램
 	public void insertProgram(Workshop dto) throws Exception;
@@ -37,6 +38,7 @@ public interface WorkshopService {
 	public void updateWorkshop(Workshop dto) throws Exception;
 	public void deleteWorkshop(long num) throws Exception;
 	public int workshopDataCount(Map<String, Object> map);
+	public List<Workshop> listWorkshopMain(Map<String, Object> map);
 	
 	// 워크샵 사진
 	public void insertWorkshopPhoto(Workshop dto) throws Exception; // workshopImagePath로 수정
@@ -62,6 +64,7 @@ public interface WorkshopService {
 	public List<Workshop> listUserWorkshop(Map<String, Object> map);
 	public int userWorkshopDataCount(Map<String, Object> map);
 	public Workshop findWorkshopDetail(long workshopId);
+	public List<Workshop> listActiveCategory();
 	
 	// 사용자 리뷰
 	public Long findParticipantById(long memberId, long workshopId);

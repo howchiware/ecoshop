@@ -10,7 +10,7 @@
 	        g.categoryId,
 	        cm.categoryName,
 	        NVL(COUNT(DISTINCT gpl.memberId), 0) AS likeCount,
-	        NVL(COUNT(DISTINCT gr.gongguReviewId), 0) AS reviewCount,
+	        NVL(COUNT(DISTINCT gr.gongguOrderDetailId), 0) AS reviewCount,
 	        NVL(AVG(gr.rate), 0) AS rate,
             (g.originalPrice - (g.originalPrice * g.sale / 100)) AS gongguPrice,
 	        <if test="memberId != null">
