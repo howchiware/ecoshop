@@ -7,11 +7,21 @@
 <meta charset="UTF-8">
 <title>ECOMORE - 내 워크샵</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/mypage.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/paginate.css" type="text/css">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet" />
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/dist/css/home.css"
+	type="text/css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/dist/css/mypage.css"
+	type="text/css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/dist/css/paginate.css"
+	type="text/css">
 
 <style>
 :root {
@@ -139,6 +149,7 @@
 	border-radius: 999px;
 	font-weight: 700;
 	font-size: 12px;
+	background: #fafafa
 }
 
 .state-applied {
@@ -218,7 +229,7 @@
 				<div class="contentsArea">
 
 					<div class="main-wrap">
-					<h3 class="pb-2 mb-4 border-bottom section-title">나의 워크샵</h3>
+						<h3 class="pb-2 mb-4 border-bottom section-title">나의 워크샵</h3>
 						<div class="tabs">
 							<a
 								href="${ctx}/workshop/mypage?mode=applied&page=1&size=${size}&onlyFuture=${onlyFuture}"
@@ -264,7 +275,8 @@
 												</div>
 
 												<div class="ws-title">
-													<a href="${pageContext.request.contextPath}/workshop/detail?workshopId=${row.workshopId}">${row.workshopTitle}</a>
+													<a
+														href="${pageContext.request.contextPath}/workshop/detail?workshopId=${row.workshopId}">${row.workshopTitle}</a>
 												</div>
 												<div
 													class="ws-meta d-flex flex-wrap align-items-center small text-muted">
@@ -284,14 +296,24 @@
 
 											<div class="ws-right">
 												<c:choose>
-													<c:when test="${mode=='applied'}">
-														<span class="state state-applied">대기</span>
-													</c:when>
-													<c:otherwise>
+													<c:when test="${row.isAttended == 'Y'}">
 														<span class="state state-attended">참석</span>
+													</c:when>
+
+													<c:when test="${row.participantStatus == 1}">
+														<span class="state state-confirm">확정</span>
+													</c:when>
+
+													<c:when test="${row.participantStatus == 2}">
+														<span class="state state-wait">대기</span>
+													</c:when>
+
+													<c:otherwise>
+														<span class="state state-cancel">취소</span>
 													</c:otherwise>
 												</c:choose>
 											</div>
+
 										</div>
 									</c:forEach>
 								</div>

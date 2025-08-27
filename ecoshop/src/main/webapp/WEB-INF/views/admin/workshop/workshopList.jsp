@@ -13,63 +13,9 @@
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssWorkshop/workshop.css">
+
 <style type="text/css">
-* {
-	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
-	box-sizing: border-box;
-}
-
-@font-face {
-	font-family: 'Pretendard';
-	src:
-		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-		format('woff');
-	font-style: normal;
-}
-
-body {
-	background-color: #f7f6f3;
-	color: #333;
-	margin: 0;
-}
-
-.btn-manage {
-	background: #fff;
-	border: 1px solid #000;
-	border-radius: 4px;
-	padding: 3px 10px;
-	color: #000;
-	font-size: 0.9rem;
-	transition: background 0.2s, color 0.2s;
-	cursor: pointer;
-}
-
-.btn-search {
-	background: #fff;
-	border: 1px solid #000;
-	border-radius: 4px;
-	padding: 3px 10px;
-	color: #000;
-	font-size: 0.9rem;
-	transition: background 0.2s, color 0.2s;
-	cursor: pointer;
-	height: 30px;
-	width: 51px;
-	margin-bottom: 5px;
-}
-
-.outside {
-	background: #fff;
-	border: 1px solid #dee2e6;
-	border-radius: 8px;
-	padding: 20px;
-	margin-bottom: 20px;
-}
-
-.main-container {
-	font-size: 15px;
-}
-
 select.form-control {
 	font-size: 15px;
 }
@@ -225,12 +171,12 @@ select.form-select {
 			</div>
 
 
-			<nav aria-label="페이지네이션">
-				<ul class="pagination justify-content-center">
-					<li class="page-item active"><span class="page-link">${page}</span></li>
-				</ul>
-			</nav>
-
+			<c:if test="${dataCount > 0}">
+				<div class="page-navigation">
+					<c:out value="${paging}" escapeXml="false" />
+				</div>
+			</c:if>
+			
 		</div>
 	</main>
 

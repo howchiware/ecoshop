@@ -13,46 +13,9 @@
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
 	rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssWorkshop/workshop.css">
 
 <style>
-* {
-	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
-	box-sizing: border-box;
-}
-
-@font-face {
-	font-family: 'Pretendard-Regular';
-	src:
-		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-		format('woff');
-	font-style: normal;
-}
-
-body {
-	background-color: #f7f6f3;
-	color: #333;
-	margin: 0;
-}
-
-.main-container {
-	position: relative;
-	margin-left: 250px; /* 사이드바 너비만큼 띄우기 */
-	padding: 20px;
-	box-sizing: border-box;
-	min-height: calc(100vh - 60px);
-	background-color: #f9f9f9;
-	font-size: 15px;
-}
-
-.outside {
-	background: #fff;
-	border: 1px solid #dee2e6;
-	border-radius: 8px;
-	padding: 20px;
-	margin-bottom: 20px;
-}
-
-/* 표 기본 스타일 */
 .table {
 	background-color: #fff;
 	border-collapse: collapse;
@@ -75,62 +38,6 @@ body {
 
 .table .btn {
 	margin: 0 2px;
-}
-
-.btn-manage {
-	background: #fff;
-	border: 1px solid #000;
-	border-radius: 4px;
-	padding: 3px 10px;
-	color: #000;
-	font-size: 0.9rem;
-	transition: background 0.2s, color 0.2s;
-	cursor: pointer;
-}
-
-.modal-backdrop {
-	z-index: 9998 !important;
-}
-
-.modal {
-	z-index: 9999 !important;
-}
-
-.page-navigation {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: 6px;
-	flex-wrap: wrap;
-}
-
-.page-navigation a, .page-navigation strong, .page-navigation span {
-	background: #fff;
-	border-radius: 4px;
-	padding: 3px 10px;
-	color: #363636;
-	font-weight: 500;
-	text-decoration: none;
-	cursor: pointer;
-	transition: all 0.2s ease;
-}
-
-.page-navigation a:hover {
-	background: #e0e0e0;
-	border-color: #999;
-}
-
-.page-navigation .disabled {
-	background: #f8f8f8;
-	border-color: #ddd;
-	color: #aaa;
-	cursor: not-allowed;
-}
-
-.page-navigation strong, .page-navigation span {
-	background: #ccc;
-	border-color: #999;
-	color: #333;
 }
 </style>
 </head>
@@ -177,15 +84,15 @@ body {
 										<td class="text-center"><select
 											class="form-select form-select-sm category-status d-inline-block"
 											style="width: 110px" data-id="${c.categoryId}">
-												<option value="1" ${c.active == 1 ? 'selected' : ''}>활성</option>
-												<option value="0" ${c.active == 0 ? 'selected' : ''}>비활성</option>
+												<option value="1" ${c.isActive == 1 ? 'selected' : ''}>활성</option>
+												<option value="0" ${c.isActive == 0 ? 'selected' : ''}>비활성</option>
 										</select></td>
 
 										<td class="text-center">
 											<button type="button" class="btn-manage"
 												data-bs-toggle="modal" data-bs-target="#categoryModal"
 												data-id="${c.categoryId}" data-name="${c.categoryName}"
-												data-active="${c.active}">수정</button>
+												data-active="${c.isActive}">수정</button>
 
 											<form method="post"
 												action="${ctx}/admin/workshop/category/delete"
@@ -219,8 +126,7 @@ body {
 		</div>
 	</main>
 
-	<script
-		src="${pageContext.request.contextPath}/dist/jsInquiry/inquiry.js"></script>
+	<script>
 
 	<div class="modal fade" id="categoryModal" tabindex="-1"
 		aria-hidden="true">
@@ -241,7 +147,7 @@ body {
 
 						<div class="mb-3">
 							<label class="form-label">상태</label> <select class="form-select"
-								name="active" id="active">
+								name="isActive" id="isActive">
 								<option value="1" selected>활성</option>
 								<option value="0">비활성</option>
 							</select>
@@ -265,7 +171,7 @@ body {
     const button = event.relatedTarget;
     const categoryId = button ? button.getAttribute('data-id') : null;
     const categoryName = button ? button.getAttribute('data-name') : '';
-    const active = button ? (button.getAttribute('data-active') ?? '1') : '1';
+    const isActive = button ? (button.getAttribute('data-active') ?? '1') : '1';
 
     const modalTitle = categoryModal.querySelector('.modal-title');
     const form = categoryModal.querySelector('form');
@@ -275,14 +181,14 @@ body {
       form.action = '${ctx}/admin/workshop/category/update';
       categoryModal.querySelector('#categoryId').value = categoryId;
       categoryModal.querySelector('#categoryName').value = categoryName;
-      categoryModal.querySelector('#active').value = active; 
+      categoryModal.querySelector('#isActive').value = isActive; 
     } else {
       modalTitle.innerHTML = '카테고리 등록';
       form.action = '${ctx}/admin/workshop/category/write';
       form.reset();
       categoryModal.querySelector('#categoryId').value = '';
       categoryModal.querySelector('#categoryName').value = '';
-      categoryModal.querySelector('#active').value = '1'; 
+      categoryModal.querySelector('#isActive').value = '1'; 
     }
   });
 </script>
@@ -298,8 +204,8 @@ body {
 
     const sel = e.target;
     const id = sel.getAttribute('data-id');
-    const active = sel.value;
-    const prev = active === '1' ? '0' : '1';
+    const isActive = sel.value;
+    const prev = isActive === '1' ? '0' : '1';
 
     sel.disabled = true;
 
@@ -310,7 +216,7 @@ body {
       const res = await fetch('${ctx}/admin/workshop/category/toggle', {
         method: 'POST',
         headers,
-        body: new URLSearchParams({ categoryId: id, active })
+        body: new URLSearchParams({ categoryId: id, isActive })
       });
 
       if (!res.ok) throw new Error('bad response');

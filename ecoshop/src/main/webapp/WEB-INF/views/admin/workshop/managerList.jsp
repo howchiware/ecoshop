@@ -6,78 +6,15 @@
 <meta charset="UTF-8">
 <title>담당자 관리</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
-	rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssWorkshop/workshop.css">
 <style>
-* {
-	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
-	box-sizing: border-box;
-}
-
-@font-face {
-	font-family: 'Pretendard-Regular';
-	src:
-		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-		format('woff');
-	font-style: normal;
-}
-
-body {
-	background-color: #f7f6f3;
-	color: #333;
-	margin: 0;
-}
-
-.main-container {
-	position: relative;
-	margin-left: 250px;
-	padding: 20px;
-	box-sizing: border-box;
-	min-height: calc(100vh - 60px);
-	background-color: #f9f9f9;
-	font-size: 15px;
-}
-
-.btn-manage {
-	background: #fff;
-	border: 1px solid #000;
-	border-radius: 4px;
-	padding: 3px 10px;
-	color: #000;
-	font-size: 0.9rem;
-	transition: background 0.2s, color 0.2s;
-	cursor: pointer;
-}
-
-.btn-search {
-	background: #fff;
-	border: 1px solid #000;
-	border-radius: 4px;
-	padding: 3px 10px;
-	color: #000;
-	font-size: 0.9rem;
-	transition: background 0.2s, color 0.2s;
-	cursor: pointer;
-	height: 30px;
-	width: 51px;
-	margin-bottom: 5px;
-}
-
 select.form-control {
 	font-size: 15px;
 }
 
 select.form-select {
 	font-size: 15px;
-}
-
-.outside {
-	background: #fff;
-	border: 1px solid #dee2e6;
-	border-radius: 8px;
-	padding: 20px;
-	margin-bottom: 20px;
 }
 
 .table {
@@ -102,14 +39,6 @@ select.form-select {
 
 .table .btn {
 	margin: 0 2px;
-}
-
-.modal-backdrop {
-	z-index: 9998 !important;
-}
-
-.modal {
-	z-index: 9999 !important;
 }
 </style>
 </head>
@@ -152,7 +81,6 @@ select.form-select {
 					</div>
 				</form>
 
-				<!-- 목록 -->
 				<div class="table-responsive">
 					<table class="table table-sm align-middle">
 						<thead class="table-light">
@@ -212,11 +140,11 @@ select.form-select {
 					data-bs-target="#managerModal" onclick="openManagerModal('write')">담당자 등록</button>
 			</div>
 
-			<nav aria-label="페이징">
-				<ul class="pagination justify-content-center">
-					<li class="page-item active"><span class="page-link">${page}</span></li>
-				</ul>
-			</nav>
+			<c:if test="${dataCount > 0}">
+				<div class="page-navigation">
+					<c:out value="${paging}" escapeXml="false" />
+				</div>
+			</c:if>
 
 		</div>
 	</main>

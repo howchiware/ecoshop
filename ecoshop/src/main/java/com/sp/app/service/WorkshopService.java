@@ -32,6 +32,7 @@ public interface WorkshopService {
 	public Workshop findManagerById(long num);
 	public void updateManager(Workshop dto) throws Exception;
 	public void deleteManager(long num) throws Exception;
+	public int managerDataCount(Map<String, Object> map);
 	
 	// 워크샵
 	public void insertWorkshop(Workshop dto) throws Exception;
@@ -52,6 +53,7 @@ public interface WorkshopService {
 	
 	// 참가자 관리
 	public List<Participant> listParticipant(Map<String, Object> map);
+	public int ParticipantDataCount(Map<String, Object> map);
 	public int updateParticipantStatus(Map<String, Object> map);
 	public int updateAttendance(Map<String, Object> map);
 	

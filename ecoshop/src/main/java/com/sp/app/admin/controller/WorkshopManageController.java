@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sp.app.common.MyUtil;
+import com.sp.app.common.PaginateUtil;
 import com.sp.app.common.StorageService;
 import com.sp.app.mapper.PointMapper;
 import com.sp.app.mapper.WorkshopMapper;
@@ -41,6 +42,7 @@ public class WorkshopManageController {
 	private final StorageService storageService;
 	private final WorkshopMapper workshopMapper;
 	private final PointMapper pointMapper;
+	private final PaginateUtil paginateUtil;
 
 	private String uploadPath;
 
@@ -49,41 +51,71 @@ public class WorkshopManageController {
 		uploadPath = this.storageService.getRealPath("/uploads/workshop");
 	}
 
-	// 카테고리 목록
 	@GetMapping("/category/manage")
-	public String categoryManage(@RequestParam(name = "page", defaultValue = "1") int current_page, Model model) {
-		try {
-			int size = 10;
-			int offset = (Math.max(current_page, 1) - 1) * size;
+	public String categoryManage(
+	        @RequestParam(name = "page", defaultValue = "1") int current_page,
+	        Model model,
+	        HttpServletRequest req) {
 
-			Map<String, Object> pmap = new HashMap<>();
-			pmap.put("offset", offset);
-			pmap.put("size", size);
+	    try {
+	        int size = 10;
+	        int total_page = 0;
+	        int offset = (Math.max(current_page, 1) - 1) * size;
 
-			List<Workshop> categoryList = service.listCategory(pmap);
+	        Map<String, Object> pmap = new HashMap<>();
+	        pmap.put("offset", offset);
+	        pmap.put("size", size);
 
-			model.addAttribute("page", current_page);
-			model.addAttribute("categoryList", categoryList);
-		} catch (Exception e) {
-			log.info("categoryManage : ", e);
-			model.addAttribute("categoryList", List.of());
-		}
+	        // 전체 데이터 개수
+	        int dataCount = service.categoryDataCount(pmap);
+	        if (dataCount > 0) {
+	            total_page = paginateUtil.pageCount(dataCount, size);
+	        }
 
-		return "admin/workshop/categoryManage";
+	        if (current_page > total_page) {
+	            current_page = total_page > 0 ? total_page : 1; // 최소 1페이지 보정
+	        }
+	        
+	        offset = (current_page - 1) * size;
+	        if (offset < 0) offset = 0;
+	        pmap.put("offset", offset);
+
+	        // 목록
+	        List<Workshop> categoryList = service.listCategory(pmap);
+
+	        // 페이징 처리
+	        String cp = req.getContextPath();
+	        String listUrl = cp + "/admin/workshop/category/manage";
+	        String paging = paginateUtil.pagingUrl(current_page, total_page, listUrl);
+
+	        model.addAttribute("page", current_page);
+	        model.addAttribute("categoryList", categoryList);
+	        model.addAttribute("dataCount", dataCount);
+	        model.addAttribute("paging", paging);
+
+	    } catch (Exception e) {
+	        log.info("categoryManage : ", e);
+	        model.addAttribute("page", 1);
+	        model.addAttribute("categoryList", List.of());
+	        model.addAttribute("dataCount", 0);
+	        model.addAttribute("paging", "");
+	    }
+
+	    return "admin/workshop/categoryManage";
 	}
 
 	// 카테고리 등록
 	@PostMapping("/category/write")
 	public String addCategory(Workshop dto, 
 			@RequestParam("categoryName") String categoryName, 
-			@RequestParam(value = "active", required = false) Integer active,
+			@RequestParam(value = "isActive", required = false) Integer isActive,
 			HttpSession session) {
 		try {
 			String name = categoryName == null ? "" : categoryName.trim();
 			if(name.isEmpty()) throw new IllegalAccessException();
 			
 			dto.setCategoryName(name);
-			dto.setActive(active == null ? 1 : (active == 1 ? 1 : 0));
+			dto.setIsActive(isActive == null ? 1 : (isActive == 1 ? 1 : 0));
 			
 			service.insertCategory(dto);
 			session.setAttribute("msg", "카테고리가 등록되었습니다.");
@@ -98,9 +130,9 @@ public class WorkshopManageController {
 	@PostMapping("/category/toggle")
 	@ResponseBody
 	public Map<String, Object> toggleCategory(@RequestParam (name = "categoryId") Long categoryId,
-	                                          @RequestParam (name = "active") Integer active) {
+	                                          @RequestParam (name = "isActive") Integer isActive) {
 	    try {
-	        int status = (active != null && active == 1) ? 1 : 0;
+	        int status = (isActive != null && isActive == 1) ? 1 : 0;
 	        service.categoryActive(categoryId, status);
 	        return Map.of("success", true, "message", "상태가 변경되었습니다.");
 	    } catch (Exception e) {
@@ -115,7 +147,7 @@ public class WorkshopManageController {
 	public String updateCategory(Workshop dto, 
 			@RequestParam(name = "categoryId") Long categoryId,
 			@RequestParam(name = "categoryName") String categoryName,
-			@RequestParam(value = "active", required = false) Integer active,
+			@RequestParam(value = "isActive", required = false) Integer isActive,
 			HttpSession session) {
 		try {
 			String name = categoryName == null ? "" : categoryName.trim();
@@ -123,7 +155,7 @@ public class WorkshopManageController {
 			
 			dto.setCategoryId(categoryId);
 	        dto.setCategoryName(name);
-	        dto.setActive(active == null ? 1 : (active == 1 ? 1 : 0));
+	        dto.setIsActive(isActive == null ? 1 : (isActive == 1 ? 1 : 0));
 			
 			service.updateCategory(dto);
 			session.setAttribute("msg", "카테고리가 수정되었습니다.");
@@ -184,12 +216,14 @@ public class WorkshopManageController {
 	@GetMapping("/program/list")
 	public String programList(@RequestParam(name = "page", defaultValue = "1") int current_page,
 			@RequestParam(name = "kwd", defaultValue = "") String kwd,
-			@RequestParam(name = "categoryId", required = false) Long categoryId, Model model) {
+			@RequestParam(name = "categoryId", required = false) Long categoryId, Model model,
+			HttpServletRequest req) {
 
 		try {
 			kwd = myUtil.decodeUrl(kwd);
 
 			int size = 10;
+			int total_page = 0;
 			int offset = (current_page - 1) * size;
 			if (offset < 0)
 				offset = 0;
@@ -197,6 +231,15 @@ public class WorkshopManageController {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("offset", offset);
 			map.put("size", size);
+
+	        int dataCount = service.programDataCount(map);
+	        if (dataCount > 0) {
+	            total_page = paginateUtil.pageCount(dataCount, size);
+	        }
+	        
+	        if (current_page > total_page) {
+	            current_page = total_page > 0 ? total_page : 1;
+	        }
 
 			if (!kwd.isBlank())
 				map.put("kwd", kwd);
@@ -210,7 +253,13 @@ public class WorkshopManageController {
 			cmap.put("offset", 0);
 			cmap.put("size", 200);
 			List<Workshop> category = service.listCategory(cmap);
-
+			
+			 String cp = req.getContextPath();
+		        String listUrl = cp + "/admin/workshop/program/list";
+		        String paging = paginateUtil.pagingUrl(current_page, total_page, listUrl);
+		        
+		    model.addAttribute("paging", paging);
+		    model.addAttribute("dataCount", dataCount);
 			model.addAttribute("list", list);
 			model.addAttribute("page", current_page);
 			model.addAttribute("size", size);
@@ -322,12 +371,14 @@ public class WorkshopManageController {
 	public String managerList(@RequestParam(name = "page", defaultValue = "1") int current_page,
 			@RequestParam(name = "schType", defaultValue = "all") String schType,
 			@RequestParam(name = "kwd", defaultValue = "") String kwd,
-			@RequestParam(name = "managerId", required = false) Long managerId, Model model) throws Exception {
+			@RequestParam(name = "managerId", required = false) Long managerId, 
+			HttpServletRequest req, Model model) throws Exception {
 
 		try {
 			kwd = myUtil.decodeUrl(kwd);
 
 			int size = 10;
+			int total_page = 0;
 			int offset = (current_page - 1) * size;
 			if (offset < 0)
 				offset = 0;
@@ -341,14 +392,29 @@ public class WorkshopManageController {
 				map.put("kwd", kwd);
 			if (managerId != null)
 				map.put("managerId", managerId);
+			
+	        int dataCount = service.managerDataCount(map);
+	        if (dataCount > 0) {
+	            total_page = paginateUtil.pageCount(dataCount, size);
+	        }
+
+	        if (current_page > total_page) {
+	            current_page = total_page > 0 ? total_page : 1; 
+	        }
 
 			List<Workshop> list = service.listManager(map);
+			
+			 String cp = req.getContextPath();
+		     String listUrl = cp + "/admin/workshop/manager/list";
+		     String paging = paginateUtil.pagingUrl(current_page, total_page, listUrl);
 
 			model.addAttribute("list", list);
 			model.addAttribute("page", current_page);
 			model.addAttribute("size", size);
 			model.addAttribute("kwd", kwd);
 			model.addAttribute("managerId", managerId);
+			model.addAttribute("dataCount", dataCount);
+			model.addAttribute("paging", paging);
 
 		} catch (Exception e) {
 			log.info("manager List : ", e);
@@ -436,31 +502,23 @@ public class WorkshopManageController {
 			List<Workshop> list = service.listWorkshop(map);
 
 			Map<String, Object> programMap = new HashMap<>();
+			
 			programMap.put("offset", 0);
 			programMap.put("size", 100);
 			List<Workshop> programList = service.listProgram(programMap);
 			model.addAttribute("programList", programList);
 
 			String cp = req.getContextPath();
-			String query = "";
 			String listUrl = cp + "/admin/workshop/list";
-			String detailUrl = cp + "/admin/workshop/detail?page=" + current_page;
-
-			if (!kwd.isBlank()) {
-				query = "schType=" + schType + "&kwd=" + myUtil.encodeUrl(kwd);
-
-				listUrl += "?" + query;
-				detailUrl += "&" + query;
-			}
+			// String detailUrl = cp + "/admin/workshop/detail?page=" + current_page;
+			String paging = paginateUtil.pagingUrl(current_page, total_page, listUrl);
 
 			model.addAttribute("list", list);
 			model.addAttribute("dataCount", dataCount);
 			model.addAttribute("size", size);
 			model.addAttribute("total_page", total_page);
 			model.addAttribute("page", current_page);
-
-			model.addAttribute("listUrl", listUrl);
-			model.addAttribute("detailUrl", detailUrl);
+			model.addAttribute("paging", paging);
 
 			model.addAttribute("schType", schType);
 			model.addAttribute("kwd", kwd);
@@ -759,39 +817,62 @@ public class WorkshopManageController {
 	// 참여자 목록
 	@GetMapping("/participant/list")
 	public String participantList(@RequestParam(name = "page", defaultValue = "1") int current_page,
-			@RequestParam(name = "workshopId", required = false) Long workshopId, Model model) {
+			@RequestParam(name = "workshopId", required = false) Long workshopId, 
+			HttpServletRequest req, Model model) {
 
 		try {
 			int size = 20;
+	        int total_page = 0;
+	        int offset = (Math.max(current_page, 1) - 1) * size;
 
-			Map<String, Object> wmap = new HashMap<String, Object>();
-			wmap.put("offset", 0);
-			wmap.put("size", size);
+	        Map<String, Object> wmap = new HashMap<>();
+	        wmap.put("offset", offset);
+	        wmap.put("size", size);
+	        
+	        int dataCount = service.workshopDataCount(wmap);
+	        if (dataCount > 0) {
+	            total_page = paginateUtil.pageCount(dataCount, size);
+	        }
 
-			model.addAttribute("page", current_page);
+	        if (current_page > total_page) {
+	            current_page = total_page > 0 ? total_page : 1;
+	        }
 
-			List<Workshop> workshopList = service.listWorkshop(wmap);
-			model.addAttribute("workshopList", workshopList);
+	        offset = (current_page - 1) * size;
+	        if (offset < 0) offset = 0;
+	        wmap.put("offset", offset);
 
-			if (workshopId == null && workshopList != null && !workshopList.isEmpty()) {
-				workshopId = workshopList.get(0).getWorkshopId();
-			}
-			model.addAttribute("workshopId", workshopId);
+	        List<Workshop> workshopList = service.listWorkshop(wmap);
+	        model.addAttribute("workshopList", workshopList);
 
-			List<Participant> participantList = List.of();
-			if (workshopId != null) {
-				Map<String, Object> map = new HashMap<>();
-				map.put("workshopId", workshopId);
-				participantList = service.listParticipant(map);
-			}
-			model.addAttribute("participantList", participantList);
+	        if (workshopId == null && workshopList != null && !workshopList.isEmpty()) {
+	            workshopId = workshopList.get(0).getWorkshopId();
+	        }
+	        model.addAttribute("workshopId", workshopId);
 
+	        List<Participant> participantList = List.of();
+	        if (workshopId != null) {
+	            Map<String, Object> map = new HashMap<>();
+	            map.put("workshopId", workshopId);
+	            participantList = service.listParticipant(map);
+	        }
+	        model.addAttribute("participantList", participantList);
+
+	        String cp = req.getContextPath();
+	        String listUrl = cp + "/admin/workshop/participant/list";
+	        if (workshopId != null) listUrl += "?workshopId=" + workshopId;
+
+	        String paging = paginateUtil.pagingUrl(current_page, total_page, listUrl);
+
+	        model.addAttribute("page", current_page);
+	        model.addAttribute("size", size);
+	        model.addAttribute("dataCount", dataCount);
+	        model.addAttribute("paging", paging);
 		} catch (Exception e) {
 			log.info("participantList : ", e);
 		}
 
 		return "admin/workshop/participantList";
-
 	}
 
 	// 출석체크

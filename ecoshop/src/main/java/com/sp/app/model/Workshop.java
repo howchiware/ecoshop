@@ -12,7 +12,7 @@ import lombok.Setter;
 public class Workshop {
 	private Long categoryId;
 	private String categoryName;
-	private Integer active;
+	private Integer isActive;
 
 	private Long programId;
 	private String programTitle;

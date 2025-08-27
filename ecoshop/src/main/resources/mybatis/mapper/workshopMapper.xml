@@ -5,16 +5,17 @@
 	<insert id="insertCategory"
 		parameterType="com.sp.app.model.Workshop">
 		INSERT INTO programCategory (categoryId, categoryName,
-		is_active AS active)
+		is_active)
 		VALUES (programCategory_seq.NEXTVAL,
-		#{categoryName}, NVL(#{is_active}, 1))
+		#{categoryName},
+		NVL(#{isActive}, 1))
 	</insert>
 
 	<update id="updateCategory"
 		parameterType="com.sp.app.model.Workshop">
 		UPDATE programCategory
 		SET categoryName =
-		#{categoryName}, is_active = NVL(#{active},1)
+		#{categoryName}, is_active = NVL(#{isActive},1)
 		WHERE categoryId =
 		#{categoryId}
 	</update>
@@ -44,7 +45,7 @@
 	<select id="categoryDataCount" parameterType="map"
 		resultType="int">
 		SELECT NVL(COUNT(*), 0)
-		FROM program
+		FROM programCategory
 	</select>
 
 	<!-- 프로그램 -->
@@ -141,8 +142,8 @@
 
 	<select id="listManager" parameterType="map"
 		resultType="com.sp.app.model.Workshop">
-		SELECT managerId, name, tel, email, department
-		FROM workshopManager
+		SELECT m.managerId, m.name, m.tel, m.email, m.department
+		FROM workshopManager m
 		<where>
 			<include refid="where-list-manager" />
 		</where>
@@ -152,22 +153,40 @@
 	</select>
 
 	<sql id="where-list-manager">
-		<trim prefixOverrides="AND">
-			<if test="kwd != null and kwd != ''">
-				AND (LOWER(name) LIKE '%' || LOWER(#{kwd}) || '%'
-				OR
-				LOWER(department) LIKE '%' || LOWER(#{kwd}) || '%')
-			</if>
-			<if test="managerId != null">
-				AND managerId = #{managerId}
-			</if>
-		</trim>
+		<if test="managerId != null">
+			AND m.managerId = #{managerId}
+		</if>
+
+		<if test="kwd != null and kwd != ''">
+			<choose>
+				<when test="schType == 'name'">
+					AND LOWER(m.name) LIKE '%' || LOWER(#{kwd}) || '%'
+				</when>
+				<when test="schType == 'department'">
+					AND LOWER(m.department) LIKE '%' || LOWER(#{kwd}) || '%'
+				</when>
+				<when test="schType == 'email'">
+					AND LOWER(m.email) LIKE '%' || LOWER(#{kwd}) || '%'
+				</when>
+				<when test="schType == 'tel'">
+					AND m.tel LIKE '%' || #{kwd} || '%'
+				</when>
+				<otherwise>
+					AND (
+					LOWER(m.name) LIKE '%' || LOWER(#{kwd}) || '%'
+					OR LOWER(m.department) LIKE '%' || LOWER(#{kwd}) || '%'
+					OR LOWER(m.email) LIKE '%' || LOWER(#{kwd}) || '%'
+					OR m.tel LIKE '%' || #{kwd} || '%'
+					)
+				</otherwise>
+			</choose>
+		</if>
 	</sql>
 
 	<select id="managerDataCount" parameterType="map"
 		resultType="int">
 		SELECT NVL(COUNT(*), 0)
-		FROM workshopManager
+		FROM workshopManager m
 		<where>
 			<include refid="where-list-manager" />
 		</where>
@@ -383,7 +402,6 @@
 			<if test="onlyRecruiting == true">
 				AND w.workshopStatus = 1
 				AND w.applyDeadline >= SYSDATE
-
 			</if>
 		</where>
 		<choose>
@@ -633,6 +651,12 @@
 		#{workshopId}
 		ORDER BY p.appliedDate ASC
 	</select>
+	
+	<select id="ParticipantDataCount" parameterType="map"
+		resultType="int">
+		SELECT NVL(COUNT(*), 0)
+		FROM participant
+	</select>
 
 	<update id="updateParticipantStatus" parameterType="map">
 		UPDATE
@@ -727,32 +751,37 @@
 		resultType="com.sp.app.model.Workshop">
 		SELECT w.workshopId AS workshopId, w.workshopTitle AS workshopTitle,
 		w.scheduleDate AS scheduleDate,
-		w.applyDeadline AS applyDeadline, w.location AS location, w.workshopStatus AS
+		w.applyDeadline AS applyDeadline,
+		w.location AS location, w.workshopStatus AS
 		workshopStatus,
-		w.capacity AS capacity, w.thumbnailPath AS
-		thumbnailPath, p.programTitle AS programTitle,
-		pc.categoryName AS categoryName, pt.appliedDate AS appliedDate, pt.participantStatus
-		AS participantStatus,
+		w.capacity
+		AS capacity, w.thumbnailPath AS
+		thumbnailPath, p.programTitle AS
+		programTitle,
+		pc.categoryName AS categoryName, pt.appliedDate AS
+		appliedDate, pt.participantStatus AS participantStatus,
 		pt.isAttended AS isAttended
 		FROM participant pt
-		JOIN workshop w ON pt.workshopId =
-		w.workshopId
+		JOIN workshop w ON pt.workshopId = w.workshopId
 		JOIN program p ON w.programId = p.programId
-		JOIN
-		programCategory pc ON pc.categoryId = p.categoryId
-		WHERE pt.memberId =
-		#{memberId}
-		AND pt.participantStatus = 1
+		JOIN programCategory pc ON pc.categoryId = p.categoryId
+		WHERE pt.memberId = #{memberId}
 		<choose>
-			<when test="mode == 'applied'">
-				AND pt.isAttended = 'N'
-				<if test="onlyFuture">
-					AND w.scheduleDate >= SYSDATE
-				</if>
-			</when>
-			<when test="mode == 'attended'">
-				AND pt.isAttended = 'Y'
-			</when>
+        <when test="mode == 'applied'">
+            AND pt.isAttended = 'N'
+            <if test="onlyFuture">
+                AND w.scheduleDate >= SYSDATE
+            </if>
+        </when>
+        <when test="mode == 'attended'">
+            AND pt.isAttended = 'Y'
+        </when>
+        <when test="mode == 'waiting'">
+            AND pt.participantStatus = 2
+        </when>
+        <when test="mode == 'canceled'">
+            AND pt.participantStatus = 0
+        </when>
 		</choose>
 		ORDER BY w.scheduleDate DESC
 		OFFSET #{offset} ROWS FETCH NEXT #{size}

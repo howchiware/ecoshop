@@ -1,0 +1,106 @@
+* {
+	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
+	box-sizing: border-box;
+}
+
+@font-face {
+	font-family: 'Pretendard-Regular';
+	src:
+		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+		format('woff');
+	font-style: normal;
+}
+
+body {
+	background-color: #f7f6f3;
+	color: #333;
+	margin: 0;
+}
+
+.main-container {
+	position: relative;
+	margin-left: 250px; /* 사이드바 너비만큼 띄우기 */
+	padding: 20px;
+	box-sizing: border-box;
+	min-height: calc(100vh - 60px);
+	background-color: #f9f9f9;
+	font-size: 15px;
+}
+
+.outside {
+	background: #fff;
+	border: 1px solid #dee2e6;
+	border-radius: 8px;
+	padding: 20px;
+	margin-bottom: 20px;
+}
+
+.btn-manage {
+	background: #fff;
+	border: 1px solid #000;
+	border-radius: 4px;
+	padding: 3px 10px;
+	color: #000;
+	font-size: 0.9rem;
+	transition: background 0.2s, color 0.2s;
+	cursor: pointer;
+}
+
+.btn-search {
+	background: #fff;
+	border: 1px solid #000;
+	border-radius: 4px;
+	padding: 3px 10px;
+	color: #000;
+	font-size: 0.9rem;
+	transition: background 0.2s, color 0.2s;
+	cursor: pointer;
+	height: 30px;
+	width: 51px;
+	margin-bottom: 5px;
+}
+
+.page-navigation {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 6px;
+	flex-wrap: wrap;
+}
+
+.page-navigation a, .page-navigation strong, .page-navigation span {
+	background: #fff;
+	border-radius: 4px;
+	padding: 3px 10px;
+	color: #363636;
+	font-weight: 500;
+	text-decoration: none;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.page-navigation a:hover {
+	background: #e0e0e0;
+	border-color: #999;
+}
+
+.page-navigation .disabled {
+	background: #f8f8f8;
+	border-color: #ddd;
+	color: #aaa;
+	cursor: not-allowed;
+}
+
+.page-navigation strong, .page-navigation span {
+	background: #ccc;
+	border-color: #999;
+	color: #333;
+}
+
+.modal-backdrop {
+	z-index: 9998 !important;
+}
+
+.modal {
+	z-index: 9999 !important;
+}

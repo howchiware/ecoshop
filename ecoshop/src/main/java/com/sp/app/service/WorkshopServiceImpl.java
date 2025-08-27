@@ -249,6 +249,18 @@ public class WorkshopServiceImpl implements WorkshopService {
 			throw e;
 		}
 	}
+	
+	@Override
+	public int managerDataCount(Map<String, Object> map) {
+		int result = 0;
+
+		try {
+			result = mapper.managerDataCount(map);
+		} catch (Exception e) {
+			log.info("managerDataCount : ", e);
+		}
+		return result;
+	}
 
 	// 워크샵
 	@Override
@@ -323,7 +335,7 @@ public class WorkshopServiceImpl implements WorkshopService {
 		try {
 			result = mapper.workshopDataCount(map);
 		} catch (Exception e) {
-			log.info("workshop DataCount : ", e);
+			log.info("workshopDataCount : ", e);
 		}
 		return result;
 	}
@@ -438,6 +450,18 @@ public class WorkshopServiceImpl implements WorkshopService {
 
 			throw e;
 		}
+	}
+	
+	@Override
+	public int ParticipantDataCount(Map<String, Object> map) {
+		int result = 0;
+
+		try {
+			result = mapper.ParticipantDataCount(map);
+		} catch (Exception e) {
+			log.info("ParticipantDataCount : ", e);
+		}
+		return result;
 	}
 
 	@Override

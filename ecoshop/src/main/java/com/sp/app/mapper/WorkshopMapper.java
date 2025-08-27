@@ -67,6 +67,7 @@ public interface WorkshopMapper {
 	
 	// 참가자
 	public List<Participant> listParticipant(Map<String, Object> map);
+	public int ParticipantDataCount(Map<String, Object> map);
 	public int updateParticipantStatus(Map<String, Object> map);
 	public int updateAttendance(Map<String, Object> map);
 	
