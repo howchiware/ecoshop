@@ -122,6 +122,7 @@
 									</div>
 									<div class="col ps-1">
 										<input type="hidden" name="mode" value="buy">
+										<input type="hidden" name="gongguOrderDetailId" value="${dto.gongguOrderDetailId}">
 											<button type="button" class="btn-accent btn-lg w-100 btn-gongguBuy" onclick="requestGongguPayment();" 
 											${remainCount < 1 ? 'disabled':''} 
 											${empty sessionScope.member ? 'disabled' : ''}>
