@@ -21,33 +21,63 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <style>
-    .table thead th { white-space:nowrap; }
-    .badge { font-size:12px; }
-    .admin-main-container { display:flex; }
-    .admin-sidebar { width:250px; flex-shrink:0; }
-    .admin-content { flex-grow:1; margin-left:20px; }
-    .thumb { width: 72px; height: 48px; object-fit: cover; border-radius: 8px; border:1px solid #eaeef4; }
 
-    /* Paging UI */
-    .paging-wrap{
-      display:flex; justify-content:center; align-items:center;
-      gap:10px; margin:26px 0 10px; font-size:18px;
-    }
-    .paging-wrap a, .paging-wrap span{
-      display:inline-flex; align-items:center; justify-content:center;
-      min-width:44px; height:44px; padding:0 14px;
-      border:1px solid #e5e7eb; border-radius:9999px;
-      background:#fff; color:#334155; text-decoration:none;
-      box-shadow:0 1px 2px rgba(0,0,0,.04);
-    }
-    .paging-wrap a:hover{ background:#f8fafc; }
-    .paging-wrap .current,
-    .paging-wrap span.current,
-    .paging-wrap span:has(> b){
-      background:#0d6efd; border-color:#0d6efd; color:#fff; font-weight:700;
-    }
-    .paging-wrap a[rel="prev"], .paging-wrap a.prev,
-    .paging-wrap a[rel="next"], .paging-wrap a.next{ padding:0 16px; min-width:48px; }
+:root{
+  --ink:#111827;
+  --muted:#64748b;
+  --bd:#e5e7eb;
+
+ 
+  --pill-special-bg:#e5e7eb;  /* SPECIAL: 진한 회색 */
+  --pill-special-bd:#d1d5db;
+  --pill-special-ink:#111827;
+
+  --pill-daily-bg:#f3f4f6;    /* DAILY: 더 옅은 회색 */
+  --pill-daily-bd:#e5e7eb;
+  --pill-daily-ink:#374151;
+}
+
+.table thead th { white-space:nowrap; }
+.admin-main-container { display:flex; }
+.admin-sidebar { width:250px; flex-shrink:0; }
+.admin-content { flex-grow:1; margin-left:20px; }
+.thumb { width:72px; height:48px; object-fit:cover; border-radius:8px; border:1px solid #eaeef4; }
+.text-muted { color:var(--muted) !important; }
+
+/* 제목 링크: 검정 + 볼드 */
+.title-link{
+  color:var(--ink); font-weight:800; text-decoration:none;
+}
+.title-link:hover{ text-decoration:underline; }
+
+/* SPECIAL / DAILY 배지 */
+.pill{
+  display:inline-flex; align-items:center; justify-content:center;
+  height:28px; padding:0 12px; border-radius:9999px; font-weight:700; font-size:12px;
+}
+.pill.special{ background:var(--pill-special-bg); color:var(--pill-special-ink); border:1px solid var(--pill-special-bd); }
+.pill.daily  { background:var(--pill-daily-bg);   color:var(--pill-daily-ink);   border:1px solid var(--pill-daily-bd); }
+
+/* 페이징 */
+.paging-wrap{
+  display:flex; justify-content:center; align-items:center;
+  gap:10px; margin:26px 0 10px; font-size:18px;
+}
+.paging-wrap a, .paging-wrap span{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:44px; height:44px; padding:0 14px;
+  border:1px solid var(--bd); border-radius:10px;
+  background:#fff; color:#334155; text-decoration:none;
+  box-shadow:0 1px 2px rgba(0,0,0,.04);
+}
+.paging-wrap a:hover{ background:#f8fafc; }
+.paging-wrap .current,
+.paging-wrap span.current,
+.paging-wrap span:has(> b){
+  background:#0d6efd; border-color:#0d6efd; color:#fff; font-weight:700;
+}
+.paging-wrap a[rel="prev"], .paging-wrap a.prev,
+.paging-wrap a[rel="next"], .paging-wrap a.next{ padding:0 16px; min-width:48px; }
   </style>
 </head>
 <body>
@@ -125,7 +155,7 @@
             </c:otherwise>
           </c:choose>
 
-          <!-- 상세 링크: 파라미터 보존 -->
+          <!-- 상세 링크 -->
           <c:url var="articleLink" value="/admin/challengeManage/article">
             <c:param name="challengeId" value="${d.challengeId}"/>
             <c:param name="page" value="${page}"/>
@@ -156,7 +186,7 @@
                    onerror="this.onerror=null; this.src='${NOIMG}'">
             </td>
             <td>
-              <a href="${articleLink}" class="text-decoration-none fw-semibold">
+              <a href="${articleLink}" class="title-link">
                 <c:out value="${d.title}"/>
               </a>
               <div class="text-muted small text-truncate" style="max-width:520px;">
@@ -165,9 +195,15 @@
             </td>
             <td>
               <c:choose>
-                <c:when test="${d.challengeType=='DAILY'}"><span class="badge bg-info">DAILY</span></c:when>
-                <c:when test="${d.challengeType=='SPECIAL'}"><span class="badge bg-primary">SPECIAL</span></c:when>
-                <c:otherwise><span class="badge bg-secondary">-</span></c:otherwise>
+                <c:when test="${d.challengeType=='DAILY'}">
+                  <span class="pill daily">DAILY</span>
+                </c:when>
+                <c:when test="${d.challengeType=='SPECIAL'}">
+                  <span class="pill special">SPECIAL</span>
+                </c:when>
+                <c:otherwise>
+                  <span class="pill" style="background:#f8fafc;border:1px solid #e5e7eb;color:#64748b;">-</span>
+                </c:otherwise>
               </c:choose>
             </td>
             <td>
@@ -208,6 +244,7 @@
       </table>
     </div>
 
+    <!-- 페이징 -->
     <div class="paging-wrap">
       ${paging}
     </div>

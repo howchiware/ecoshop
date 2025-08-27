@@ -178,6 +178,7 @@
           </ul>
         </div>
 
+		<!-- 설명부분 보충하기 -->
         <div class="card p-4 mt-3">
           <div class="section-title mb-2">작성 팁</div>
           <ul class="small text-muted mb-0">
@@ -234,7 +235,7 @@
     });
   }
 
-  // 요일 배지 <-> select 동기화
+  // 요일 배지 - select 동기화
   const weekdaySelect = document.getElementById('weekdaySelect');
   const badges = document.querySelectorAll('.weekday-badges .badge');
   function syncBadges(val){

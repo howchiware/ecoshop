@@ -164,5 +164,217 @@
   <delete id="deleteSpecial" parameterType="long">
     DELETE FROM specialChallenge WHERE challengeId = #{challengeId}
   </delete>
+  
+  
+  <!-- 관리자 인증 개수 -->
+<select id="countAdminCerts" parameterType="map" resultType="int">
+  SELECT NVL(COUNT(*), 0)
+  FROM certificationPost p
+  JOIN challengeParticipation cp ON cp.participationId = p.participationId
+  JOIN challenge c               ON c.challengeId       = cp.challengeId
+  LEFT JOIN specialChallenge s   ON s.challengeId       = c.challengeId
+  <where>
+    <!-- 타입 필터 -->
+    <if test="type != null and type == 'DAILY'">
+      p.dayNumber IS NULL
+    </if>
+    <if test="type != null and type == 'SPECIAL'">
+      p.dayNumber IS NOT NULL
+    </if>
+    <if test="type == null or type == 'ALL'">
+      1=1
+    </if>
+
+    <!-- 승인 상태 -->
+    <if test="approvalStatus != null">
+      AND p.approvalStatus = #{approvalStatus}
+    </if>
+
+    <!-- SPECIAL + 대기(0)일 때 '마지막 일차'만 카운트 -->
+    <if test="type == 'SPECIAL' and approvalStatus != null and approvalStatus == 0">
+      AND p.dayNumber = NVL(s.requireDays, 3)
+    </if>
+
+    <!-- 키워드 -->
+    <if test="keyword != null and keyword != ''">
+      AND (
+           INSTR(c.title, #{keyword}) &gt; 0
+        OR TO_CHAR(cp.memberId) = #{keyword}
+        OR EXISTS (
+            SELECT 1
+            FROM member1 mm1 JOIN member2 mm2 ON mm2.memberId = mm1.memberId
+            WHERE mm1.memberId = cp.memberId
+              AND INSTR(mm2.name, #{keyword}) &gt; 0
+        )
+      )
+    </if>
+  </where>
+</select>
+
+
+<!-- 관리자 인증 목록 -->
+<select id="listAdminCerts" parameterType="map" resultType="com.sp.app.model.Challenge">
+  SELECT
+    p.postId, p.participationId, p.dayNumber, p.approvalStatus,
+    TO_CHAR(p.regDate,'YYYY-MM-DD HH24:MI:SS') AS postRegDate,
+    p.content,
+
+    cp.memberId,
+    cp.status AS participationStatus,
+    TO_CHAR(cp.participateDate,'YYYY-MM-DD HH24:MI:SS') AS participateDate,
+
+    c.challengeId, c.title, c.challengeType, c.rewardPoints,
+    TO_CHAR(s.startDate,'YYYY-MM-DD') AS startDate,
+    TO_CHAR(s.endDate,  'YYYY-MM-DD') AS endDate,
+    s.requireDays  AS requireDays,  
+
+    (SELECT MIN(photoUrl) FROM certificationPhoto WHERE postId = p.postId) AS photoUrl,
+    m2.name AS memberName
+
+  FROM certificationPost p
+  JOIN challengeParticipation cp ON cp.participationId = p.participationId
+  JOIN challenge c               ON c.challengeId       = cp.challengeId
+  JOIN member1 m1                ON m1.memberId         = cp.memberId
+  JOIN member2 m2                ON m2.memberId         = m1.memberId
+  LEFT JOIN specialChallenge s   ON s.challengeId       = c.challengeId
+  <where>
+    <!-- 타입 필터 -->
+    <if test="type != null and type == 'DAILY'">
+      p.dayNumber IS NULL
+    </if>
+    <if test="type != null and type == 'SPECIAL'">
+      p.dayNumber IS NOT NULL
+    </if>
+    <if test="type == null or type == 'ALL'">
+      1=1
+    </if>
+
+    <!-- 승인 상태 -->
+    <if test="approvalStatus != null">
+      AND p.approvalStatus = #{approvalStatus}
+    </if>
+
+    <!-- SPECIAL + 대기(0)일 때는 '마지막 일차'만 노출 -->
+    <if test="type == 'SPECIAL' and approvalStatus != null and approvalStatus == 0">
+      AND p.dayNumber = NVL(s.requireDays, 3)
+    </if>
+
+    <!-- 검색어 -->
+    <if test="keyword != null and keyword != ''">
+      AND ( INSTR(c.title, #{keyword}) &gt; 0
+            OR TO_CHAR(cp.memberId) = #{keyword} )
+    </if>
+  </where>
+  ORDER BY p.postId DESC
+  OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+</select>
+
+
+
+	<!-- 단건 상세 -->
+	<select id="findCertDetail" parameterType="long" resultType="com.sp.app.model.Challenge">
+	  SELECT
+	    
+	    p.postId,
+	    p.participationId,
+	    p.dayNumber,
+	    p.approvalStatus,
+	    TO_CHAR(p.regDate, 'YYYY-MM-DD HH24:MI:SS') AS postRegDate,
+	    p.content,
+	    p.isPublic,
+	
+	    
+	    cp.memberId,
+	    m2.name AS memberName,
+	    cp.status AS participationStatus,
+	    TO_CHAR(cp.participateDate, 'YYYY-MM-DD HH24:MI:SS') AS participateDate,
+	
+	    
+	    c.challengeId,
+	    c.title,
+	    c.description,
+	    c.challengeType,
+	    c.rewardPoints,
+	
+	    
+	    TO_CHAR(s.startDate, 'YYYY-MM-DD') AS startDate,
+	    TO_CHAR(s.endDate,   'YYYY-MM-DD') AS endDate,
+	    s.requireDays,
+	    s.status AS specialStatus
+	
+	  FROM certificationPost p
+	  JOIN challengeParticipation cp ON cp.participationId = p.participationId
+	  JOIN challenge c               ON c.challengeId       = cp.challengeId
+	  JOIN member1 m1                ON m1.memberId         = cp.memberId
+	  JOIN member2 m2                ON m2.memberId         = m1.memberId
+	  LEFT JOIN specialChallenge s   ON s.challengeId       = c.challengeId
+	  WHERE p.postId = #{postId}
+	
+	</select>
+
+	<!-- 사진 -->
+	<select id="listCertPhotos" parameterType="long" resultType="string">
+	  SELECT photoUrl
+	  FROM certificationPhoto
+	  WHERE postId = #{postId}
+	  ORDER BY photoId
+	</select>
+	
+	<!-- 승인상태 변경 -->
+	<update id="updateCertApproval" parameterType="map">
+	  UPDATE certificationPost
+	  SET approvalStatus = #{approvalStatus}
+	  WHERE postId = #{postId}
+	</update>
+	
+	<!-- 보상/완료 처리용 정보 -->
+	<select id="selectRewardInfoByPostId" parameterType="long" resultType="com.sp.app.model.Challenge">
+	  SELECT
+	    p.postId,
+	    p.participationId,
+	    p.dayNumber,
+	    cp.memberId,
+	    c.challengeId,
+	    c.rewardPoints,
+	    c.title,
+	    c.challengeType
+	  FROM certificationPost p
+	  JOIN challengeParticipation cp ON cp.participationId = p.participationId
+	  JOIN challenge c               ON c.challengeId       = cp.challengeId
+	  WHERE p.postId = #{postId}
+	</select>
+	
+	<!-- 스페셜 승인된 일차 수 -->
+	<select id="countApprovedDays" parameterType="long" resultType="int">
+	  SELECT NVL(COUNT(*), 0)
+	  FROM certificationPost
+	  WHERE participationId = #{participationId}
+	    AND approvalStatus = 1
+	    AND dayNumber IS NOT NULL
+	</select>
+	
+	<!-- 참여 상태 변경 -->
+	<update id="updateParticipationStatus" parameterType="map">
+	  UPDATE challengeParticipation
+	  SET status = #{status}
+	  WHERE participationId = #{participationId}
+	</update>
+	
+	
+	<!-- 스페셜 requireDays 조회 -->
+	<select id="selectRequireDaysByChallengeId" parameterType="long" resultType="int">
+	  SELECT NVL(s.requireDays, 3)
+	  FROM specialChallenge s
+	  WHERE s.challengeId = #{challengeId}
+	</select>
+	
+	<!--  포인트 중복 적립 여부 -->
+	<select id="existsPointByPostId" parameterType="long" resultType="boolean">
+	  SELECT CASE WHEN COUNT(*) &gt; 0 THEN 1 ELSE 0 END
+	  FROM point
+	  WHERE postId = #{postId}
+	    AND classify = 1
+	</select>
+	  
 
 </mapper>

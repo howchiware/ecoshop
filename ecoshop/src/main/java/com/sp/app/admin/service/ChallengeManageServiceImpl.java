@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sp.app.admin.mapper.ChallengeManageMapper;
 import com.sp.app.common.StorageService;
+import com.sp.app.mapper.PointMapper;
 import com.sp.app.model.Challenge;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,8 @@ public class ChallengeManageServiceImpl implements ChallengeManageService {
 
 	private final ChallengeManageMapper mapper;
 	private final StorageService storageService;
+	
+	private final PointMapper pointMapper;
 
 	@Override
 	public Long nextChallengeId() {
@@ -102,7 +105,7 @@ public class ChallengeManageServiceImpl implements ChallengeManageService {
 	@Override
 	public List<Challenge> listChallenge(Map<String, Object> map) {
 		try {
-			// offset/size 가드(Optional)
+			
 			if (map != null) {
 				Object size = map.get("size");
 				if (size instanceof Number) {
@@ -147,7 +150,7 @@ public class ChallengeManageServiceImpl implements ChallengeManageService {
 	                dto.setThumbnail(oldThumbnail);
 	            }
 	        } else {
-	            // 3) 변경 없음 → 기존 값 유지
+	            // 3) 변경 없음 -> 기존 값 유지
 	            dto.setThumbnail(oldThumbnail);
 	        }
 
@@ -204,4 +207,132 @@ public class ChallengeManageServiceImpl implements ChallengeManageService {
 	    }
 	}
 
+	// 관리자 인증 관리 
+	 @Override
+	 public List<Challenge> listAdminCerts(Map<String, Object> param) {
+	        try {
+	            // 기본값 가드(옵션)
+	            if (param != null) {
+	                if (!param.containsKey("type")) param.put("type", "ALL");
+	                if (!param.containsKey("offset")) param.put("offset", 0);
+	                if (!param.containsKey("limit")) param.put("limit", 20);
+	            }
+	            return mapper.listAdminCerts(param);
+	        } catch (Exception e) {
+	            log.error("listAdminCerts error", e);
+	            return List.of();
+	        }
+	    }	    
+
+	 @Override
+	 public int countAdminCerts(Map<String, Object> param) {
+	        try {
+	            if (param != null && !param.containsKey("type")) param.put("type", "ALL");
+	            return mapper.countAdminCerts(param);
+	        } catch (Exception e) {
+	            log.error("countAdminCerts error", e);
+	            return 0;
+	        }
+	    }    
+
+	@Override
+	public Challenge findCertDetail(long postId) {
+        try {
+            return mapper.findCertDetail(postId);
+        } catch (Exception e) {
+            log.error("findCertDetail error", e);
+            return null;
+        }
+    }
+	
+	@Override
+	public List<String> listCertPhotos(long postId) {
+        try {
+            return mapper.listCertPhotos(postId);
+        } catch (Exception e) {
+            log.error("listCertPhotos error", e);
+            return List.of();
+        }
+    }
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void approveCert(long postId) throws Exception {
+	    try {
+	        // 1) 인증글 승인 처리
+	        int updated = mapper.updateCertApproval(postId, 1);
+	        if (updated != 1) {
+	            throw new IllegalStateException("승인 처리 대상이 존재하지 않거나 중복 요청입니다.");
+	        }
+
+	        // 2) 보상 판단 정보
+	        Challenge ctx = mapper.selectRewardInfoByPostId(postId);
+	        if (ctx == null) return;
+
+	        if (!"SPECIAL".equalsIgnoreCase(ctx.getChallengeType())) {
+	            // DAILY라면 포인트 지급 정책이 없으면 여기서 종료
+	            return;
+	        }
+
+	        long participationId = ctx.getParticipationId();
+	        long memberId        = ctx.getMemberId();
+	        long challengeId     = ctx.getChallengeId();
+	        int  rewardPoints    = (ctx.getRewardPoints() == null ? 0 : ctx.getRewardPoints());
+
+	        // 3) 마지막 일차인지(=requireDays인지) 
+	        Integer requireDays = mapper.selectRequireDaysByChallengeId(challengeId);
+	        if (requireDays == null || requireDays <= 0) requireDays = 3;
+
+	        if (ctx.getDayNumber() == null || !ctx.getDayNumber().equals(requireDays)) {
+	            // 마지막 일차가 아니면 포인트 지급/완료 처리 없음 (승인만 반영)
+	            return;
+	        }
+
+	        // 4) (선호) 누적 승인 일차가 requireDays 이상인지 확인
+	        // int approvedDays = mapper.countApprovedDays(participationId);
+	        // if (approvedDays < requireDays) {
+	            // 아직 누적이 모자라면 지급 보류 (마지막 승인인데 과거가 미승인인 상황)
+	          //  return;
+	        // }
+
+	        // 5) 중복 적립 방지 (이 postId로 이미 적립했는지)
+	        boolean alreadyGiven = mapper.existsPointByPostId(postId);
+	        if (alreadyGiven) return;
+
+	        // 6) 포인트 적립 
+	        com.sp.app.model.Point p = new com.sp.app.model.Point();
+	        p.setMemberId(memberId);
+	        p.setReason("SPECIAL_COMPLETE");
+	        p.setClassify(1);        // 적립
+	        p.setPoints(rewardPoints);
+	        p.setPostId(postId);
+	        pointMapper.insertPoint(p);
+
+	        // 7) 참여 상태 완료로 변경 (선택)
+	        mapper.updateParticipationStatus(participationId, 2); // 2=완료
+
+	    } catch (Exception e) {
+	        log.error("approveCert error", e);
+	        throw e;
+	    }
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+    public void rejectCert(long postId) throws Exception {
+        try {
+            int updated = mapper.updateCertApproval(postId, 2);
+            if (updated != 1) {
+                throw new IllegalStateException("반려 처리 대상이 존재하지 않거나 중복 요청입니다.");
+            }
+
+            
+            // Challenge ctx = mapper.selectRewardInfoByPostId(postId);
+            // mapper.updateParticipationStatus(ctx.getParticipationId(), 3);
+
+        } catch (Exception e) {
+            log.error("rejectCert error", e);
+            throw e;
+        }
+    }
 }
