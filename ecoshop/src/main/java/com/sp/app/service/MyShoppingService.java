@@ -11,22 +11,23 @@ import com.sp.app.model.ProductOrder;
 
 public interface MyShoppingService {
 	public void insertCart(ProductOrder dto) throws Exception;
-	public List<ProductOrder> listCart(Long member_id);
+	public List<ProductOrder> listCart(Long memberId);
 	public void deleteCart(Map<String, Object> map) throws Exception;
 	
 	public void insertProductLike(Map<String, Object> map) throws SQLException;
-	public List<ProductLike> listProductLike(Long member_id);
+	public List<ProductLike> listProductLike(Map<String, Object> map);
 	public ProductLike findByProductLikeId(Map<String, Object> map);
 	public void deleteProductLike(Map<String, Object> map) throws Exception;
 
 	public void insertDestination(Destination dto) throws Exception;
-	public int destinationCount(Long member_id);
-	public List<Destination> listDestination(Long member_id);
+	public int destinationCount(Long memberId);
+	public List<Destination> listDestination(Long memberId);
 	public void updateDestination(Destination dto) throws Exception;
 	public void updateDefaultDestination(Map<String, Object> map) throws Exception;
 	public void deleteDestination(Map<String, Object> map) throws Exception;
-	public Destination defaultDelivery(Long member_id);
+	public Destination defaultDelivery(Long memberId);
 
+	public int productLikeDataCount(Map<String, Object> map);
 	public int pointDataCount(Map<String, Object> map);
 	public List<Point> listPointHistory(Map<String, Object> map);
 }

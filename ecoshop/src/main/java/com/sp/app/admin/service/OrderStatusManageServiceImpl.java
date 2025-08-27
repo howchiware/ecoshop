@@ -73,6 +73,40 @@ public class OrderStatusManageServiceImpl implements OrderStatusManageService {
 		
 		return dto;
 	}
+	
+	@Override
+	public OrderManage findPrevByOrderId(String orderId) {
+		OrderManage dto = null;
+		
+		// OrderState.ORDERSTATEINFO : 주문상태 정보
+		
+		try {
+			dto = Objects.requireNonNull(mapper.findPrevByOrderId(orderId));
+			
+		} catch (NullPointerException e) {
+		} catch (Exception e) {
+			log.info("findPrevByOrderId : ", e);
+		}
+		
+		return dto;
+	}
+	
+	@Override
+	public OrderManage findNextByOrderId(String orderId) {
+		OrderManage dto = null;
+		
+		// OrderState.ORDERSTATEINFO : 주문상태 정보
+		
+		try {
+			dto = Objects.requireNonNull(mapper.findNextByOrderId(orderId));
+			
+		} catch (NullPointerException e) {
+		} catch (Exception e) {
+			log.info("findPrevByOrderId : ", e);
+		}
+		
+		return dto;
+	}
 
 	@Override
 	public List<OrderDetailManage> listOrderDetails(String orderId) {

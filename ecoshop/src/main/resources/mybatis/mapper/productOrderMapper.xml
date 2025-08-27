@@ -12,9 +12,9 @@
 	<!-- 주문 등록 -->
 	<insert id="insertOrder" parameterType="com.sp.app.model.ProductOrder">
 		INSERT INTO productOrder(orderId, memberId, orderDate, totalAmount, 
-			usedPoint, deliveryCharge, payment, cancelAmount, orderState, classify) 
+			usedPoint, deliveryCharge, payment, cancelAmount, orderState, classify, orderStateDate) 
 		VALUES (#{orderId}, #{memberId}, SYSDATE, #{totalAmount}, 
-			#{usedPoint}, #{deliveryCharge}, #{payment}, 0, 1, 1)
+			#{usedPoint}, #{deliveryCharge}, #{payment}, 0, 1, 1, SYSDATE)
 	</insert>
 
 	<!-- 결제 내역 등록 -->

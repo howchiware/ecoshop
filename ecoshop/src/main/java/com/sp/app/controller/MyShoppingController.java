@@ -246,21 +246,62 @@ public class MyShoppingController {
 		return model;
 	}
 	
+	// AJAX
+	// 찜 리스트
+	@GetMapping("list2")
+	@ResponseBody
+	public Map<String, ?> productLikeList2(
+			@RequestParam(name = "pageNo", defaultValue = "1") int current_page,
+			HttpSession session) throws Exception {
+		Map<String, Object> model = new HashMap<String, Object>();
+
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			
+			int size = 10;
+			int dataCount = 0;
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("memberId", info.getMemberId());
+			
+			dataCount = service.productLikeDataCount(map);
+			
+			int total_page = paginateUtil.pageCount(dataCount, size);
+
+			current_page = Math.min(current_page, total_page);
+
+			int offset = (current_page - 1) * size;
+			if(offset < 0) offset = 0;
+
+			map.put("offset", offset);
+			map.put("size", size);
+			
+			System.out.println(offset);
+			System.out.println(size);
+			List<ProductLike> list = service.listProductLike(map);
+			
+			String paging = paginateUtil.pagingMethod(current_page, total_page, "listProductLike");
+			
+			model.put("list", list);
+			model.put("dataCount", dataCount);
+			model.put("size", size);
+			model.put("pageNo", current_page);
+			model.put("paging", paging);
+			model.put("total_page", total_page);
+			
+		} catch (Exception e) {
+			log.info("productLikeList2 : ", e);
+		}
+		
+		return model;
+	}	
+	
 	// 찜 리스트
 	@GetMapping("productLike")
 	public String productLikeList(Model model,
 			HttpSession session) throws Exception {
 		
-		try {
-			SessionInfo info = (SessionInfo)session.getAttribute("member");
-
-			List<ProductLike> list = service.listProductLike(info.getMemberId());
-			
-			model.addAttribute("list", list);
-			
-		} catch (Exception e) {
-			log.info("productLikeList : ", e);
-		}
+		model.addAttribute("mode", "productLike");
 		
 		return "myShopping/wishList";
 	}	

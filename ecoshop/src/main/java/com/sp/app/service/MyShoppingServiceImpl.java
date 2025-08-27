@@ -96,11 +96,11 @@ public class MyShoppingServiceImpl implements MyShoppingService {
 	}
 
 	@Override
-	public List<ProductLike> listProductLike(Long member_id) {
+	public List<ProductLike> listProductLike(Map<String, Object> map) {
 		List<ProductLike> list = null;
 		
 		try {
-			list = mapper.listProductLike(member_id);
+			list = mapper.listProductLike(map);
 		} catch (Exception e) {
 			log.info("listProductLike : ", e);
 		}
@@ -157,7 +157,7 @@ public class MyShoppingServiceImpl implements MyShoppingService {
 	}
 
 	@Override
-	public int destinationCount(Long member_id) {
+	public int destinationCount(Long memberId) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -241,6 +241,19 @@ public class MyShoppingServiceImpl implements MyShoppingService {
 		}
 		
 		return list;
+	}
+	
+	@Override
+	public int productLikeDataCount(Map<String, Object> map) {
+		int result = 0;
+		
+		try {
+			result = mapper.productLikeDataCount(map);
+		} catch (Exception e) {
+			log.info("productLikeDataCount : ", e);
+		}
+		
+		return result;
 	}
 
 	@Override

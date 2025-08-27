@@ -134,6 +134,8 @@ public class OrderStatusManageController {
 			
 			// 주문 정보
 			OrderManage order = Objects.requireNonNull(service.findByOrderId(orderId));
+			OrderManage orderPrev = service.findPrevByOrderId(orderId);
+			OrderManage orderNext = service.findNextByOrderId(orderId);
 			
 			// 주문 정보의 상세 리스트 
 			List<OrderDetailManage> listDetail = service.listOrderDetails(orderId);
@@ -149,6 +151,8 @@ public class OrderStatusManageController {
 			model.addAttribute("listDetail", listDetail);
 			model.addAttribute("listDeliveryCompany", listDeliveryCompany);
 			model.addAttribute("delivery", delivery);
+			model.addAttribute("orderPrev", orderPrev);
+			model.addAttribute("orderNext", orderNext);
 
 			model.addAttribute("query", query);
 			model.addAttribute("page", page);

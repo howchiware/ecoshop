@@ -172,13 +172,14 @@
     </delete>
     
 	<!-- 유저의 찜리스트 -->
-	<select id="listProductLike" resultType="com.sp.app.model.ProductLike" parameterType="Long">
+	<select id="listProductLike" resultType="com.sp.app.model.ProductLike" parameterType="map">
     	SELECT pl.productLikeNum, pl.memberId, pl.productCode, productLikeDate,
     		p.productName, p.price, p.point, p.thumbnail
     	FROM productLike pl
     	JOIN product p ON pl.productCode = p.productCode
 		WHERE pl.memberId = #{memberId}
 		ORDER BY productLikeNum DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
     </select>
 
     <select id="findByProductLikeId" resultType="com.sp.app.model.ProductLike" parameterType="map">
@@ -211,6 +212,13 @@
 			</when>
 		</choose>
 	</sql>
+
+	<!-- 글개수 -->
+	<select id="productLikeDataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM productLike
+    	WHERE memberId = #{memberId}
+	</select>
 
 	<!-- 글개수 -->
 	<select id="pointDataCount" parameterType="map" resultType="Integer">

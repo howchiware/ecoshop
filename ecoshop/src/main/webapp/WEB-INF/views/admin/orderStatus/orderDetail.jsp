@@ -110,6 +110,13 @@ text-align: center;
 	border: none;
 	color: black; 
 }
+.modal-backdrop {
+	z-index: 9998 !important;
+}
+
+.modal {
+	z-index: 9999 !important;
+}
 </style>
 </head>
 <body>
@@ -289,8 +296,8 @@ text-align: center;
 
                   <div class="row pt-1 px-2 mb-2">
                      <div class="col-md-6 align-self-center">
-                        <button type="button" class="btn-default">이전주문</button>
-                        <button type="button" class="btn-default">다음주문</button>
+                        <button type="button" class="btn-default" ${empty orderPrev.orderId ? 'disabled' :''} onclick="location.href='${pageContext.request.contextPath}/admin/order/orderManage/${orderPrev.productCode}/${orderPrev.orderId}?${query}';">이전주문</button>
+                        <button type="button" class="btn-default" ${empty orderNext.orderId ? 'disabled' :''} onclick="location.href='${pageContext.request.contextPath}/admin/order/orderManage/${orderNext.productCode}/${orderNext.orderId}?${query}';">다음주문</button>
                      </div>   
                      <div class="col-md-6 align-self-center text-end">
                         <button type="button" class="btn-default" onclick="location.href='${pageContext.request.contextPath}/admin/order/orderManage/${itemId}?${query}';">리스트</button>

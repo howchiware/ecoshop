@@ -37,7 +37,10 @@
 		FROM productOrder po
 		LEFT OUTER JOIN member2 m2 ON po.memberId = m2.memberId
 		<where>
-			<include refid="itemId-list"/>
+			classify = 1
+			<if test="itemId == 100 or itemId == 110">
+				AND <include refid="itemId-list"/>		
+			</if>
 			<if test="kwd!=null and kwd!='' ">
 				AND <include refid="search-list"/>
 			</if>
@@ -65,7 +68,10 @@
             GROUP BY orderId
         ) od ON po.orderId = od.orderId
 		<where>
-			<include refid="itemId-list"/>
+			classify = 1
+			<if test="itemId == 100 or itemId == 110">
+				AND <include refid="itemId-list"/>		
+			</if>
 			<if test="kwd!=null and kwd!='' ">
 				AND <include refid="search-list"/>
 			</if>
@@ -94,7 +100,37 @@
             FROM orderDetail
             GROUP BY orderId
         ) od ON po.orderId = od.orderId
-		WHERE po.orderId = #{orderId}
+		WHERE po.orderId = #{orderId} AND classify = 1
+	</select>
+	
+	<!-- 주문 정보 -->
+	<select id="findPrevByOrderId" parameterType="String" resultType="com.sp.app.admin.model.OrderManage">
+		SELECT po.orderId, po.productCode
+		FROM productOrder po
+		JOIN member2 m ON po.memberId = m.memberId
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="search-list"/>
+			</if>
+			AND (orderId &gt; #{orderId}) AND classify = 1
+		</where>
+		ORDER BY orderId ASC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<!-- 주문 정보 -->
+	<select id="findNextByOrderId" parameterType="String" resultType="com.sp.app.admin.model.OrderManage">
+		SELECT po.orderId
+		FROM productOrder po
+		JOIN member2 m ON po.memberId = m.memberId
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="search-list"/>
+			</if>
+			AND (orderId &lt; #{orderId}) AND classify = 1
+		</where>
+		ORDER BY orderId ASC
+		FETCH FIRST 1 ROWS ONLY
 	</select>
 	
 	<!-- 주문 상세 정보 리스트 -->
@@ -160,7 +196,10 @@
 		JOIN product p ON od.productCode = p.productCode
 		LEFT OUTER JOIN member2 m2 ON po.memberId = m2.memberId
 		<where>
-			<include refid="detailItemId-list"/>
+			classify = 1
+			<if test="itemId == 100 or itemId == 110 or itemId == 200 or itemId == 210 or itemId == 220 or itemId == 230">
+				AND <include refid="detailItemId-list"/>		
+			</if>
 			<if test="kwd!=null and kwd!='' ">
 				AND <include refid="detailSearch-list"/>
 			</if>
@@ -184,7 +223,10 @@
 		LEFT OUTER JOIN member1 m1 ON po.memberId = m1.memberId
 		LEFT OUTER JOIN member2 m2 ON po.memberId = m2.memberId
 		<where>
-			<include refid="detailItemId-list"/>
+			classify = 1
+			<if test="itemId == 100 or itemId == 110 or itemId == 200 or itemId == 210 or itemId == 220 or itemId == 230">
+				AND <include refid="detailItemId-list"/>		
+			</if>
 			<if test="kwd!=null and kwd!='' ">
 				AND <include refid="detailSearch-list"/>
 			</if>
@@ -208,13 +250,13 @@
 		LEFT OUTER JOIN optionDetail d2 ON od.optionDetailNum2 = d2.optionDetailNum
 		LEFT OUTER JOIN member1 m1 ON po.memberId = m1.memberId
 		LEFT OUTER JOIN member2 m2 ON po.memberId = m2.memberId
-		WHERE od.orderDetailId = #{orderDetailId}
+		WHERE od.orderDetailId = #{orderDetailId} AND classify = 1
 	</select>
 
 	<!-- 주문 상태 변경 -->
 	<update id="updateOrderState" parameterType="map">
 		UPDATE productOrder SET orderState = #{orderState}, orderStateDate = SYSDATE
-		WHERE orderId = #{orderId}
+		WHERE orderId = #{orderId} AND classify = 1
 	</update>
 
 	<!-- 주문에 대한 상세 주문의 취소금액 합(취소/반품) -->
@@ -233,13 +275,13 @@
 	
 	<update id="updateCancelAmount" parameterType="map">
 		UPDATE productOrder SET cancelAmount = #{cancelAmount}
-		WHERE orderId = #{orderId}
+		WHERE orderId = #{orderId} AND classify = 1
 	</update>
 	
 	<update id="updateOrderInvoiceNumber" parameterType="map">
 		UPDATE productOrder SET orderState = #{orderState}, orderStateDate = SYSDATE, 
 			deliveryName = #{deliveryName}, invoiceNumber = #{invoiceNumber}
-		WHERE orderId = #{orderId}
+		WHERE orderId = #{orderId} AND classify = 1
 	</update>
 
 	<update id="updateOrderDetailState" parameterType="map">
