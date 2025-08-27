@@ -31,7 +31,7 @@
 				    <div class="input-group">
 				        <input type="text" name="kwd" value="" class="form-control" placeholder="검색어를 입력하세요">
 				        <input type="hidden" id="searchValue" value="">
-				        <button type="button" class="btn my-btn" onclick="searchList();"><i class="bi bi-search"></i></button>
+				        <button type="button" class="btn my-btn" onclick="searchList();">검색</button>
 				    </div>
 				</form>
 				<div class="action-buttons">

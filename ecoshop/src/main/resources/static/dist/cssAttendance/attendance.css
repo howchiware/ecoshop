@@ -18,9 +18,7 @@
 
 @font-face {
 	font-family: 'Pretendard-Regular';
-	src:
-		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-		format('woff');
+	src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
 	font-style: normal;
 }
 
@@ -44,7 +42,16 @@ body {
 .box {
 	background-color: #fff;
 	border-radius: 12px;
-	padding: 2rem;
+	padding: 1rem 2rem;
+	border: 1px solid var(--color-border);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+	margin-bottom: 10px;
+}
+
+.box2 {
+	background-color: #fff;
+	border-radius: 12px;
+	padding: 2rem 2rem;
 	border: 1px solid var(--color-border);
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 	margin-bottom: 10px;
@@ -164,21 +171,35 @@ body.modal-open {
 	min-height: 100vh;
 }
 
+.table {
+	border-top: 2px solid var(--color-primary);
+}
+
+.table thead th {
+	background-color: #f8f9fa;
+	font-weight: 600;
+	text-align: center;
+	border-bottom: 1px solid var(--color-border);
+}
+
+.table tbody td {
+	vertical-align: middle;
+	text-align: center;
+}
+/* 페이징 */
 .page-navigation {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	gap: 6px;
-	margin-top: 2rem;
 	flex-wrap: wrap;
 }
 
 .page-navigation a, .page-navigation strong, .page-navigation span {
 	background: #fff;
-	border: 1px solid #ccc;
 	border-radius: 4px;
 	padding: 3px 10px;
-	color: #333;
+	color: #363636;
 	font-weight: 500;
 	text-decoration: none;
 	cursor: pointer;

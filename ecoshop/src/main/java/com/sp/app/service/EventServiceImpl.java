@@ -169,7 +169,18 @@ public class EventServiceImpl implements EventService {
 		}
 	}
 
-	
-	
+	@Override
+	public Quiz findUserAnswer(long memberId, Long quizId) {
+		Quiz dto = null;
+		
+		try {
+			dto = mapper.findUserAnswer(memberId, quizId);
+
+		} catch (Exception e) {
+			log.info("findUserAnswer : ", e);
+		}
+		
+		return dto;	
+	}
 
 }

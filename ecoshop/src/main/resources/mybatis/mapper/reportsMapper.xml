@@ -16,6 +16,9 @@
 					OR INSTR(reasonDetail, #{kwd}) &gt; 0
 				)
 			</when>
+			<when test="schType == 'reporterName' ">
+	            INSTR(m.name, #{kwd}) &gt; 0
+	        </when>	
 			<when test="schType == 'reportDate' ">
 				( INSTR(TO_CHAR(reportDate, 'YYYYMMDD'), #{kwd}) &gt; 0
 					OR TO_CHAR(reportDate, 'YYYY-MM-DD') = #{kwd} )

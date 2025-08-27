@@ -9,7 +9,7 @@
 <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssBlockAndInquiry/inquiry.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssInquiry/inquiry.css">
 </head>
 <body>
 
@@ -28,7 +28,7 @@
                <form name="searchForm" class="search-form" style="max-width: 400px; width: 100%;">
                    <div class="input-group">
                        <input type="text" name="kwd" class="form-control" placeholder="제목, 작성자 검색">
-                       <button type="button" class="btn my-btn" onclick="searchList();"><i class="bi bi-search"></i></button>
+                       <button type="button" class="btn my-btn" onclick="searchList();">검색</button>
                    </div>
                </form>
                <button type="button" class="btn my-btn btn-sm btnCategoryManage">카테고리 관리</button>
@@ -61,7 +61,7 @@
 
 <%-- 모달 영역 --%>
 <div class="modal fade" id="myDialogModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-	<div class="modal-dialog modal-xl">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="myDialogModalLabel">1:1 문의 확인 및 답변</h5>

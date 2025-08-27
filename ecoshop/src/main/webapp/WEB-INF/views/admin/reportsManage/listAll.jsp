@@ -29,7 +29,7 @@
 							<c:param name="kwd" value="${kwd}"/>
 						</c:if>									
 					</c:url>
-					<div class="text-wrap"><a href="${url}">${dto.contentTitle}</a></div>
+					<div class="text-start text-wrap"><a href="${url}">${dto.contentTitle}</a></div>
 				</td>
 				<td>${dto.targetNum}</td>
 				<td>${dto.reporterName}</td>

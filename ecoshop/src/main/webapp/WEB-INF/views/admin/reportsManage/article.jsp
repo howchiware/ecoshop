@@ -19,13 +19,14 @@
   <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
 	<div class="right-panel">
 		<div class="page-title" data-aos="fade-up" data-aos-delay="200">
-			<h2>게시글 신고 관리</h2>
+			<h3>게시글 신고 관리</h3>
 		</div>
+		<hr>
 
 		<div class="section p-5" data-aos="fade-up" data-aos-delay="200">
-			<div class="section-body p-5">
+			<div class="section-body">
 				<div class="row gy-4 m-0">
-					<div class="col-lg-12 board-section p-5 m-2" data-aos="fade-up" data-aos-delay="200">
+					<div class="col-lg-12 board-section m-2" data-aos="fade-up" data-aos-delay="200">
 
 						<div class="card shadow-sm mb-3">
 							<div class="card-header bg-light-secondary py-3">
@@ -173,7 +174,7 @@
 				    <input type="hidden" name="kwd" value="${kwd}">
 
 				    <div class="text-end">
-						<button type="button" class="btn-accent" onclick="reportProcessSaved();"> 등록 </button>
+						<button type="button" class="btn-default" onclick="reportProcessSaved();"> 등록 </button>
 						<button type="button" class="btn-default" data-bs-dismiss="modal"> 취소 </button>
 				    </div>
 				</form>

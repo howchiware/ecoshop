@@ -16,10 +16,12 @@ public interface EventService {
 	public boolean isAlreadyChecked(long memberId, LocalDate today);
 	public int getWeeklyCount(long memberId);
 	
+	
 	public void playQuiz(Quiz dto) throws SQLException;
 	public boolean isAlreadyCheckedQuiz(long memberId, LocalDate today);
 	public Quiz findTodayQuiz();
 	public boolean isQuizSolved(long memberId, Long quizId);
+	public Quiz findUserAnswer(long memberId, Long quizId);
 	
 	public void insertPoint(Point dto) throws SQLException;
 }

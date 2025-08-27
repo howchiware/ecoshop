@@ -42,7 +42,8 @@ hr {
     box-shadow: var(--card-shadow);
     display: flex;
     flex-direction: column;
-    height: 100%;
+    min-height: 100px;
+    padding: 15px;
 }
 .card-header {
     padding: 1.25rem 1.75rem;

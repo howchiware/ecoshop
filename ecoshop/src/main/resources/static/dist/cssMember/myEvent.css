@@ -1,0 +1,27 @@
+:root {
+	--color-primary: #4a69bd;
+	--color-primary-darker: #3b5496;
+	--color-primary-lighter: #eef2f9;
+	--color-bg: #f8f9fa;
+	--color-content-bg: #ffffff;
+	--color-text-primary: #2c3e50;
+	--color-text-secondary: #8492a6;
+	--color-border: #e0e6ed;
+	--color-danger: #e74c3c;
+}
+
+* {
+	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif !important;
+	box-sizing: border-box;
+	color: #363636 !important;
+}
+
+@font-face {
+	font-family: 'Pretendard-Regular';
+	src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+	font-style: normal;
+}
+
+html {
+	overflow-y: scroll;
+}

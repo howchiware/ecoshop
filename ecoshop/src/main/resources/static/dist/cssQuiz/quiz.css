@@ -43,10 +43,6 @@ body {
 	margin-bottom: 0;
 }
 
-.right-panel {
-	padding: 1.5rem 2rem;
-}
-
 .board-container {
 	background-color: var(--color-content-bg);
 	padding: 2rem;
@@ -143,43 +139,7 @@ body.modal-open {
 	min-height: 100vh;
 }
 
-.page-navigation {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: 6px;
-	flex-wrap: wrap;
-}
 
-.page-navigation a, .page-navigation strong, .page-navigation span {
-	background: #fff;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	padding: 3px 10px;
-	color: #333;
-	font-weight: 500;
-	text-decoration: none;
-	cursor: pointer;
-	transition: all 0.2s ease;
-}
-
-.page-navigation a:hover {
-	background: #e0e0e0;
-	border-color: #999;
-}
-
-.page-navigation .disabled {
-	background: #f8f8f8;
-	border-color: #ddd;
-	color: #aaa;
-	cursor: not-allowed;
-}
-
-.page-navigation strong, .page-navigation span {
-	background: #ccc;
-	border-color: #999;
-	color: #333;
-}
 
 .main-container {
 	display: flex;
@@ -281,7 +241,6 @@ body.modal-open {
 
 .table thead th {
 	background-color: #f8f9fa;
-	color: #363636;
 	font-weight: 600;
 	text-align: center;
 	border-bottom: 1px solid var(--color-border);
@@ -290,7 +249,6 @@ body.modal-open {
 .table tbody td {
 	vertical-align: middle;
 	text-align: center;
-	color: #495057;
 }
 
 .table tbody tr:hover {
@@ -310,15 +268,15 @@ body.modal-open {
 
 .table-bottom-controls {
 	display: flex;
-	align-items: center; /* 세로 중앙 정렬 */
+	align-items: center;
 	min-height: 50px;
-	flex-wrap: nowrap; /* 중요: 자식 요소들이 줄바꿈되지 않도록 강제합니다. */
+	flex-wrap: nowrap;
 }
 
 .page-navigation {
 	flex-grow: 1;
 	display: flex;
-	justify-content: center; /* 가로 중앙 정렬 */
+	justify-content: center; 
 }
 
 .action-buttons {
@@ -334,7 +292,6 @@ body.modal-open {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	border-top: 1px solid var(--color-border);
 	padding-top: 1.5rem;
 	margin-top: 2rem;
 }
@@ -370,4 +327,52 @@ body.modal-open {
 	font-size: 14px;
 	line-height: 1.5;
 	color: #363636;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* 페이징 */
+.page-navigation {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 6px;
+	flex-wrap: wrap;
+}
+
+.page-navigation a, .page-navigation strong, .page-navigation span {
+	background: #fff;
+	border-radius: 4px;
+	padding: 3px 10px;
+	color: #363636;
+	font-weight: 500;
+	text-decoration: none;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.page-navigation a:hover {
+	background: #e0e0e0;
+	border-color: #999;
+}
+
+.page-navigation .disabled {
+	background: #f8f8f8;
+	border-color: #ddd;
+	color: #aaa;
+	cursor: not-allowed;
+}
+
+.page-navigation strong, .page-navigation span {
+	background: #ccc;
+	border-color: #999;
+	color: #333;
 }

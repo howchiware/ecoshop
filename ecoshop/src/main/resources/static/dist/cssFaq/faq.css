@@ -143,22 +143,20 @@ body.modal-open {
 	justify-content: center;
 	min-height: 100vh;
 }
-
+/* 페이징 */
 .page-navigation {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	gap: 6px;
-	margin-top: 2rem;
 	flex-wrap: wrap;
 }
 
 .page-navigation a, .page-navigation strong, .page-navigation span {
 	background: #fff;
-	border: 1px solid #ccc;
 	border-radius: 4px;
 	padding: 3px 10px;
-	color: #333;
+	color: #363636;
 	font-weight: 500;
 	text-decoration: none;
 	cursor: pointer;

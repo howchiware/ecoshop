@@ -1,25 +1,153 @@
-#reportHandledDialogModal,
-#postsDialogModal {
-    z-index: 9999; 
+#reportHandledDialogModal, #postsDialogModal {
+	z-index: 9999;
 }
-/* CSS 변수 및 기본 설정 */
-:root {
-    --admin-bg-color: #f8f9fa;       
-    --color-white: #ffffff;         
-    --primary-text-color: #212529;   
-    --secondary-text-color: #6c757d; 
-    --accent-color: #0d6efd;          
-    --color-border: #dee2e6;         
+.modal-backdrop {
+	z-index: 9998 !important;
 }
 
-@font-face {
-	font-family: 'Pretendard-Regular';
-	src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-	font-style: normal;
+:root {
+	--color-primary: #4a69bd;
+	--color-primary-darker: #3b5496;
+	--color-primary-lighter: #eef2f9;
+	--color-bg: #f8f9fa;
+	--color-content-bg: #ffffff;
+	--color-text-primary: #2c3e50;
+	--color-text-secondary: #8492a6;
+	--color-border: #e0e6ed;
+	--color-danger: #e74c3c;
+}
+
+body {
+	background-color: var(--color-bg);
+}
+
+.right-panel {
+	padding: 30px !important;
 }
 
 * {
 	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
 	box-sizing: border-box;
 	color: #363636 !important;
+}
+
+@font-face {
+	font-family: 'Pretendard-Regular';
+	src:
+		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+		format('woff');
+	font-style: normal;
+}
+
+.title h3 {
+	font-weight: 500;
+	font-size: 1.75rem;
+	color: var(--primary-text-color);
+	margin-bottom: 0;
+}
+
+.section {
+	background-color: #fff;
+	border-radius: 12px;
+	padding: 2rem;
+	border: 1px solid var(--color-border);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+textarea.form-control {
+	resize: none;
+	min-height: 200px;
+}
+
+.btn-default {
+	background: #fff;
+	border: 1px solid black;
+	border-radius: 4px;
+	padding: 3px 10px
+}
+
+.form-search {
+	display: flex;
+	gap: 5px;
+	align-items: center;
+	max-width: 500px;
+}
+
+.form-search .form-select {
+	flex: 0 0 120px;
+}
+
+.form-search .form-control {
+	flex-grow: 1;
+}
+
+.form-search button {
+	flex-shrink: 0;
+}
+
+.form-search-wrapper {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.form-search {
+	display: flex;
+	gap: 5px;
+	align-items: center;
+	width: auto;
+}
+
+.text-wrap a {
+	text-decoration: none;
+}
+
+.table tbody td, th {
+	vertical-align: middle;
+	text-align: center;
+}
+
+.modal-backdrop {
+	z-index: 9998 !important;
+}
+
+.modal {
+	z-index: 9999 !important;
+}
+/* 페이징 */
+.page-navigation {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 6px;
+	flex-wrap: wrap;
+	margin-bottom: 10px;
+}
+
+.page-navigation a, .page-navigation strong, .page-navigation span {
+	background: #fff;
+	border-radius: 4px;
+	padding: 3px 10px;
+	color: #363636;
+	font-weight: 500;
+	text-decoration: none;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.page-navigation a:hover {
+	background: #e0e0e0;
+	border-color: #999;
+}
+
+.page-navigation .disabled {
+	background: #f8f8f8;
+	border-color: #ddd;
+	color: #aaa;
+	cursor: not-allowed;
+}
+
+.page-navigation strong, .page-navigation span {
+	background: #ccc;
+	border-color: #999;
+	color: #333;
 }

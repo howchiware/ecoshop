@@ -25,6 +25,7 @@
 	    WHERE memberId = #{memberId} AND regDate &gt;= TRUNC(SYSDATE, 'IW') AND regDate &lt; TRUNC(SYSDATE, 'IW') + 7
 	</select>
 	
+
 	
 	<!-- 퀴즈 -->
 	<insert id="playQuiz" parameterType="com.sp.app.model.Quiz">
@@ -45,6 +46,13 @@
    		WHERE memberId = #{memberId} AND quizId = #{quizId}
 	</select>
 	
+	<select id="findUserAnswer" parameterType="map" resultType="com.sp.app.model.Quiz">
+	    SELECT quizAnswer
+	    FROM quizAnswer
+	    WHERE memberId = #{memberId} AND quizId = #{quizId}
+	</select>
+	
+	<!-- 포인트 -->
     <insert id="insertPoint" parameterType="com.sp.app.model.Point">
         INSERT INTO point(pointId, memberId, baseDate, reason, classify, points, balance)
         VALUES (point_seq.NEXTVAL, #{memberId}, SYSDATE, #{reason, jdbcType=VARCHAR}, #{classify}, #{points},
