@@ -17,7 +17,7 @@
 <link href="//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css" rel="stylesheet" type="text/css">	
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
  
- <style type="text/css">
+<style type="text/css">
 body {
 	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
 	background-color: #f7f6f3;
@@ -94,10 +94,10 @@ body {
 							<div class="col-3 p-2">
 								<div class="fs-6 fw-semibold mb-2"><i class="bi bi-chevron-right"></i>회원 수</div>
 								<div class="border rounded p-5 text-center">
-									<div class="fs-5 mb-2">총 판매 건수 : 
+									<div class="fs-5 mb-2">총 회원 수: 
 										<span class="product-totalAmount fw-semibold text-primary">${member.COUNT}</span>명
 									</div>
-									<div class="fs-5">총 판매 금액 : 
+									<div class="fs-5">총 직원 수 : 
 										<span class="product-totalAmount fw-semibold text-danger">${staff.COUNT}</span>명
 									</div>
 								</div>
@@ -124,7 +124,7 @@ body {
 		</div>
 	</div>
 </main>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.6.0/echarts.min.js"></script>
 <script type="text/javascript">
 $(function(){
@@ -211,7 +211,7 @@ $(function(){
 		chartData.push(data.dayOfWeek.THU);
 		chartData.push(data.dayOfWeek.FRI);
 		chartData.push(data.dayOfWeek.SAT);
-		
+			
 		const chartDom = document.querySelector('.charts-dayOfWeek');
 		let myChart = echarts.init(chartDom);
 		let option;
