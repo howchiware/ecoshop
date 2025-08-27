@@ -672,6 +672,16 @@ public class WorkshopServiceImpl implements WorkshopService {
 	public List<Workshop> listActiveCategory() {
 		return mapper.listActiveCategory();
 	}
+
+	@Override
+	public List<Workshop> listMyWorkshop(Map<String, Object> map) {
+		return mapper.listMyWorkshop(map);
+	}
+
+	@Override
+	public int countMyWorkshops(Map<String, Object> map) {
+		return mapper.countMyWorkshops(map);
+	}
 	
 	
 

@@ -362,4 +362,46 @@ public class WorkshopController {
 		return Map.of("success", true);
 	}
 
+	// 마이페이지 워크샵
+	@GetMapping("/mypage")
+	public String myWorkshop(@RequestParam(name = "mode", defaultValue = "applied") String mode,
+			@RequestParam(name = "page", defaultValue = "1") int currentPage,
+			@RequestParam(name = "size", defaultValue = "10") int size,
+			@RequestParam(name = "onlyFuture", defaultValue = "true") boolean onlyFuture, Model model,
+			HttpSession session) {
+
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+        if (info == null) {
+            return "redirect:/member/login";
+        }
+		
+		if(!"applied".equals(mode) && !"attended".equals(mode)) {
+			mode = "applied";
+		}
+		
+		if (currentPage < 1) currentPage = 1;
+	    if (size < 1) size = 10;
+	    int offset = (currentPage - 1) * size;
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberId", info.getMemberId());
+		map.put("mode", mode);
+		map.put("onlyFuture", onlyFuture);
+		map.put("offset", offset);
+		map.put("size", size);
+
+		List<Workshop> list = service.listMyWorkshop(map);
+		int total = service.countMyWorkshops(map);
+
+		model.addAttribute("list", list);
+		model.addAttribute("total", total);
+		model.addAttribute("page", currentPage);
+		model.addAttribute("size", size);
+		model.addAttribute("mode", mode);
+		model.addAttribute("onlyFuture", onlyFuture);
+
+		return "myPage/workshopList";
+
+	}
+
 }

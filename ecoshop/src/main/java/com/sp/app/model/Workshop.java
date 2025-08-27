@@ -40,5 +40,8 @@ public class Workshop {
 
 	private Long photoId;
 	private String workshopImagePath;
-
+	
+	private Date appliedDate;
+    private Integer participantStatus;
+    private String isAttended;
 }

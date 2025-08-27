@@ -716,4 +716,52 @@
 		#{participantId}
 	</select>
 
+	<!-- [마이페이지] 내 워크샵 목록 -->
+	<select id="listMyWorkshop" parameterType="map" resultType="com.sp.app.model.Workshop">
+		SELECT w.workshopId AS workshopId, w.workshopTitle AS workshopTitle, w.scheduleDate AS scheduleDate, 
+		w.applyDeadline AS applyDeadline, w.location AS location, w.workshopStatus AS workshopStatus,
+		w.capacity AS capacity, w.thumbnailPath AS thumbnailPath, p.programTitle AS programTitle, 
+		pc.categoryName AS categoryName, pt.appliedDate AS appliedDate, pt.participantStatus AS participantStatus, 
+		pt.isAttended AS isAttended
+		FROM participant pt
+		JOIN workshop w ON pt.workshopId = w.workshopId
+		JOIN program p ON w.programId = p.programId
+		JOIN programCategory pc ON pc.categoryId = p.categoryId
+		WHERE pt.memberId = #{memberId}
+		AND pt.participantStatus = 1
+		<choose>
+			<when test="mode == 'applied'">
+				AND pt.isAttended = 'N'
+				<if test="onlyFuture">
+					AND w.scheduleDate >= SYSDATE
+				</if>
+			</when>
+			<when test="mode == 'attended'">
+				AND pt.isAttended = 'Y'
+			</when>
+		</choose>
+		ORDER BY w.scheduleDate DESC
+		OFFSET #{offset} ROWS FETCH NEXT #{size}
+		ROWS ONLY
+	</select>
+
+	<select id="countMyWorkshops" parameterType="map" resultType="int">
+		SELECT NVL(COUNT(*), 0)
+		FROM participant pt
+		JOIN workshop w ON pt.workshopId = w.workshopId
+		WHERE pt.memberId = #{memberId}
+		AND pt.participantStatus = 1
+		<choose>
+			<when test="mode == 'applied'">
+				AND pt.isAttended = 'N'
+				<if test="onlyFuture == true">
+					AND w.scheduleDate >= SYSDATE
+				</if>
+			</when>
+			<when test="mode == 'attended'">
+				AND pt.isAttended = 'Y'
+			</when>
+		</choose>
+	</select>
+
 </mapper>

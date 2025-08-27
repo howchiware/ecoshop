@@ -66,6 +66,10 @@ public interface WorkshopService {
 	public Workshop findWorkshopDetail(long workshopId);
 	public List<Workshop> listActiveCategory();
 	
+	// 마이페이지
+	public List<Workshop> listMyWorkshop(Map<String, Object> map);
+	public int countMyWorkshops(Map<String, Object> map);
+	
 	// 사용자 리뷰
 	public Long findParticipantById(long memberId, long workshopId);
 	public List<WorkshopReview> listUserReview(Map<String, Object> map);

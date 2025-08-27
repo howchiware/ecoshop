@@ -212,7 +212,6 @@ select.form-select {
 					data-bs-target="#managerModal" onclick="openManagerModal('write')">담당자 등록</button>
 			</div>
 
-			<!-- 페이징 -->
 			<nav aria-label="페이징">
 				<ul class="pagination justify-content-center">
 					<li class="page-item active"><span class="page-link">${page}</span></li>
@@ -222,7 +221,6 @@ select.form-select {
 		</div>
 	</main>
 
-	<!-- 담당자 등록/수정 모달 -->
 	<div class="modal fade" id="managerModal" tabindex="-1"
 		aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
@@ -264,7 +262,7 @@ select.form-select {
 				</div>
 
 				<div class="modal-footer">
-					<button type="submit" form="managerForm" class="btn-manage">등록</button>
+					<button type="submit" id="submitBtn" form="managerForm" class="btn-manage">등록</button>
 				</div>
 
 			</div>

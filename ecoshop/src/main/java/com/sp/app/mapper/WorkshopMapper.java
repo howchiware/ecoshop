@@ -99,6 +99,9 @@ public interface WorkshopMapper {
 	List<Map<String,Object>> listReviewRewardRows(Map<String,Object> map);
 	int countReviewRewardRows(Map<String,Object> map);
 	Long findMemberIdByParticipantId(long participantId);
-
+	
+	// 마이페이지
+	public List<Workshop> listMyWorkshop(Map<String, Object> map);
+	public int countMyWorkshops(Map<String, Object> map);
 	
 }

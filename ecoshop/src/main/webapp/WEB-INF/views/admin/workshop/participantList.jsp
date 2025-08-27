@@ -174,7 +174,7 @@ select.form-select {
 														<option value="2"
 															<c:if test="${p.participantStatus == 2}">selected</c:if>>대기</option>
 														<option value="0"
-															<c:if test="${p.participantStatus == 0}">selected</c:if>>취소</option>
+															<c:if test="${p.participantStatus == 0}">selected</c:if>>반려</option>
 												</select></td>
 												<td class="text-center"><input type="checkbox"
 													class="form-check-input js-attend"
