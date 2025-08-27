@@ -16,6 +16,7 @@ public interface WorkshopService {
 	public void deleteCategory(Long categoryId);
 	public List<Workshop> listCategory(Map<String, Object> map);
 	public void categoryActive(Long categoryId, Integer active);
+	public int categoryDataCount(Map<String, Object> map);
 	
 	// 프로그램
 	public void insertProgram(Workshop dto) throws Exception;
@@ -23,6 +24,7 @@ public interface WorkshopService {
 	public Workshop findProgramById(Long num);
 	public void updateProgram(Workshop dto) throws Exception;
 	public void deleteProgram(Long num) throws Exception;
+	public int programDataCount(Map<String, Object> map);
 	
 	// 담당자
 	public void insertManager(Workshop dto) throws Exception;

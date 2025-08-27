@@ -94,6 +94,19 @@ public class WorkshopServiceImpl implements WorkshopService {
 			throw e;
 		}
 	}
+	
+	@Override
+	public int categoryDataCount(Map<String, Object> map) {
+		int result = 0;
+
+		try {
+			result = mapper.categoryDataCount(map);
+		} catch (Exception e) {
+			log.info("categoryDataCount : ", e);
+		}
+		return result;
+	}	
+	
 
 	// 프로그램
 	@Override
@@ -158,6 +171,18 @@ public class WorkshopServiceImpl implements WorkshopService {
 			throw e;
 		}
 
+	}
+	
+	@Override
+	public int programDataCount(Map<String, Object> map) {
+		int result = 0;
+
+		try {
+			result = mapper.programDataCount(map);
+		} catch (Exception e) {
+			log.info("programDataCount : ", e);
+		}
+		return result;
 	}
 
 	// 담당자
@@ -682,7 +707,5 @@ public class WorkshopServiceImpl implements WorkshopService {
 	public int countMyWorkshops(Map<String, Object> map) {
 		return mapper.countMyWorkshops(map);
 	}
-	
-	
 
 }

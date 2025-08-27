@@ -22,6 +22,7 @@ public interface WorkshopMapper {
 	public void deleteCategory(Long categoryId);
 	public List<Workshop> listCategory(Map<String, Object> map);
 	public void categoryActive(Map<String, Object> map);
+	public int categoryDataCount(Map<String, Object> map);
 	
 	// 프로그램
 	public void insertProgram(Workshop dto);

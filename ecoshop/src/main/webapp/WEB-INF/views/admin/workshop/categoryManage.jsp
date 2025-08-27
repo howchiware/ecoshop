@@ -95,6 +95,43 @@ body {
 .modal {
 	z-index: 9999 !important;
 }
+
+.page-navigation {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 6px;
+	flex-wrap: wrap;
+}
+
+.page-navigation a, .page-navigation strong, .page-navigation span {
+	background: #fff;
+	border-radius: 4px;
+	padding: 3px 10px;
+	color: #363636;
+	font-weight: 500;
+	text-decoration: none;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.page-navigation a:hover {
+	background: #e0e0e0;
+	border-color: #999;
+}
+
+.page-navigation .disabled {
+	background: #f8f8f8;
+	border-color: #ddd;
+	color: #aaa;
+	cursor: not-allowed;
+}
+
+.page-navigation strong, .page-navigation span {
+	background: #ccc;
+	border-color: #999;
+	color: #333;
+}
 </style>
 </head>
 <body>
@@ -172,14 +209,18 @@ body {
 					data-bs-target="#categoryModal">카테고리 등록</button>
 			</div>
 
-			<nav aria-label="페이지네이션">
-				<ul class="pagination justify-content-center">
-					<li class="page-item active"><span class="page-link">${page}</span></li>
-				</ul>
-			</nav>
+			<c:if test="${dataCount > 0}">
+				<div class="page-navigation">
+					<c:out value="${paging}" escapeXml="false" />
+				</div>
+			</c:if>
+
 
 		</div>
 	</main>
+
+	<script
+		src="${pageContext.request.contextPath}/dist/jsInquiry/inquiry.js"></script>
 
 	<div class="modal fade" id="categoryModal" tabindex="-1"
 		aria-hidden="true">
