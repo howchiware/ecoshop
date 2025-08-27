@@ -263,6 +263,8 @@ public class ChallengeController {
 	    model.addAttribute("size", size);
 	    model.addAttribute("dataCount", dataCount);
 	    model.addAttribute("paging", paging);
+	    
+	    model.addAttribute("tab", "list"); // 탭 활성화
 
 	    return "myPage/challengeList";
 	}
@@ -270,11 +272,15 @@ public class ChallengeController {
 	// 마이페이지 공개전환
 	@PostMapping("post/visibility")
 	@ResponseBody
-	public Map<String,Object> toggleVisibility(@RequestParam("postId") long postId,
-	                                           @RequestParam("isPublic") String isPublic,
-	                                           HttpSession session) {
+	public Map<String,Object> toggleVisibility(
+									@RequestParam("postId") long postId,
+                                    @RequestParam("isPublic") String isPublic,
+                                    HttpSession session) {
 	    SessionInfo info = (SessionInfo) session.getAttribute("member");
 	    if (info == null) return Map.of("ok", false, "msg", "로그인이 필요합니다.");
+	    if(!"Y".equals(isPublic) && !"N".equals(isPublic)) {
+	    	return Map.of("ok", false, "msg", "잘못된 요청입니다.");
+	    }
 	    try {
 	        int n = service.updatePostVisibility(postId, info.getMemberId(), isPublic);
 	        return Map.of("ok", n==1);
@@ -282,5 +288,53 @@ public class ChallengeController {
 	        return Map.of("ok", false, "msg", e.getMessage());
 	    }
 	}
+	
+	@GetMapping("mypage/specialPosts")
+	public String mySpecialPosts(
+							HttpSession session,
+							Model model,
+							HttpServletRequest req,
+							@RequestParam(name = "page", defaultValue = "1") int page,
+							@RequestParam(name = "size", defaultValue = "12") int size,
+							@RequestParam(name = "challengeId", required = false) Long challengeId,
+							@RequestParam(name = "kwd", required = false) String kwd) {
+		
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if(info == null) return "redirect:/member/login";
+		
+		int dataCount = service.countMySpecialPosts(info.getMemberId(), challengeId, kwd);
+		int total_page = paginateUtil.pageCount(dataCount, size);
+		if(total_page == 0) total_page = 1;
+		if(page > total_page) page = total_page;
+		if(page < 1) page = 1;
+		
+		int offset = (page - 1) * size;
+		
+		List<Challenge> list = service.listMySpecialPostsPaged(info.getMemberId(), challengeId, offset, size, kwd);
+		
+		// 페이징 URL
+		
+		StringBuilder base = new StringBuilder(req.getContextPath())
+				.append("/challenge/mypage/specialPosts?size=").append(size);
+		if(challengeId != null) base.append("&challengeId=").append(challengeId);
+		if(kwd != null && !kwd.isBlank())
+			base.append("&kwd=").append(myUtil.encodeUrl(kwd)); 
+		String paging = paginateUtil.pagingUrl(page, total_page, base.toString());
+		
+		model.addAttribute("list",list);
+		model.addAttribute("page",page);
+		model.addAttribute("size",size);
+		model.addAttribute("dataCount",dataCount);
+		model.addAttribute("paging",paging);
+		model.addAttribute("kwd",kwd);
+		model.addAttribute("challengeId",challengeId);
+		
+		model.addAttribute("tab", "posts"); // 탭 활성화
+		
+		return "myPage/specialPosts";
+				
+	}
+	
+	
 
 }

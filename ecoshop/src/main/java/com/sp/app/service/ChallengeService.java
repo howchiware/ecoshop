@@ -55,5 +55,12 @@ public interface ChallengeService {
     public int countPublicSpecialPosts(String kwd);
     public List<Challenge> listPublicSpecialPostsPaged(int offset, int size, String sort, String kwd);
     
+    public int countMySpecialPosts(long memberId, Long challengeId, String kwd);
+    public List<Challenge> listMySpecialPostsPaged(long memberId, Long challengeId, int offset, int size, String kwd);
+    
+    public Challenge findPublicSpecialPost(long postId);
+    public List<String> listPostPhotos(long postId);
+    
+    
     
 }

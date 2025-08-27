@@ -122,6 +122,11 @@ public interface ChallengeMapper {
             @Param("kwd") String kwd                   // 내용 키워드(없으면 null)
     ) throws Exception;
     
+    
+    public Challenge findPublicSpecialPost(@Param("postId") long postId) throws Exception;
+    public List<String> listPostPhotos(@Param("postId") long postId) throws Exception;
+    
+    
 }
 	
 

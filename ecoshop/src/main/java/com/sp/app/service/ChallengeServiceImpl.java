@@ -467,7 +467,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 	@Override
 	public List<Challenge> listPublicSpecialPostsPaged(int offset, int size, String sort, String kwd) {
 		try {
-	        // 방어 로직
+	        
 	        int pageSize = (size <= 0 || size > 60) ? 12 : size;
 	        String s = (sort == null || sort.isBlank()) ? "RECENT" : sort;
 
@@ -476,5 +476,54 @@ public class ChallengeServiceImpl implements ChallengeService {
 	        log.error("listPublicSpecialPostsPaged error:", e);
 	        return List.of();
 	    }
+	}
+
+
+
+	@Override
+	public int countMySpecialPosts(long memberId, Long challengeId, String kwd) {
+		try {
+			return mapper.countMySpecialPosts(memberId, challengeId, kwd);
+		} catch (Exception e) {
+			log.error("countMySpecialPosts :", e);
+		}
+		return 0;
+	}
+
+
+
+	@Override
+	public List<Challenge> listMySpecialPostsPaged(long memberId, Long challengeId, int offset, int size, String kwd) {
+		try {
+			return mapper.listMySpecialPostsPaged(memberId, challengeId, offset, size, kwd);
+			
+		} catch (Exception e) {
+			log.error("listMySpecialPostsPaged :", e);
+		}
+		return List.of();
+	}
+
+
+
+	@Override
+	public Challenge findPublicSpecialPost(long postId) {
+		try {
+			return mapper.findPublicSpecialPost(postId);
+		} catch (Exception e) {
+			log.error("findPublicSpecialPost error: ", e);
+		}
+		return null;
+	}
+
+
+
+	@Override
+	public List<String> listPostPhotos(long postId) {
+		try {
+			return mapper.listPostPhotos(postId);
+		} catch (Exception e) {
+			log.error("listPostPhotos :", e);
+		}
+		return List.of();
 	}
 }

@@ -60,4 +60,9 @@ public class Challenge {
     private Integer certCount;    // 인증글 수
     private Integer approvedDays; // 승인된 일차 수
     
+    //챌린지 톡
+    private Integer likeCount;
+    private Integer commentCount;
+    private Integer hitCount;
+    
 }
