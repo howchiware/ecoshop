@@ -7,24 +7,13 @@
 <meta charset="UTF-8">
 <title>ECOMORE - 내 워크샵</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-	rel="stylesheet" />
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/home.css"
-	type="text/css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/mypage.css"
-	type="text/css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/paginate.css"
-	type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/mypage.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/paginate.css" type="text/css">
 
 <style>
-/* ===== Simple, clean ===== */
 :root {
 	--ink: #222;
 	--muted: #666;
@@ -33,21 +22,8 @@
 	--soft: #f7f7f8;
 }
 
-body {
-	background: var(--soft);
-	color: var(--ink);
-}
-
 .main-wrap {
 	background: var(--card);
-	border: 1px solid var(--line);
-	border-radius: 14px;
-	padding: 24px;
-}
-
-.section-title {
-	font-weight: 700;
-	font-size: 20px;
 }
 
 .tabs {
@@ -234,15 +210,15 @@ body {
 	<main class="main-container">
 		<c:set var="ctx" value="${pageContext.request.contextPath}" />
 		<div class="row">
-			<div class="col-lg-2">
+			<div class="col-md-2">
 				<jsp:include page="/WEB-INF/views/layout/myPageMenubar.jsp" />
 			</div>
 
-			<div class="col-lg-10">
-				<div class="container">
-					<h3 class="pb-2 mb-3 border-bottom section-title">나의 워크샵</h3>
+			<div class="col-md-10">
+				<div class="contentsArea">
 
 					<div class="main-wrap">
+					<h3 class="pb-2 mb-4 border-bottom section-title">나의 워크샵</h3>
 						<div class="tabs">
 							<a
 								href="${ctx}/workshop/mypage?mode=applied&page=1&size=${size}&onlyFuture=${onlyFuture}"
