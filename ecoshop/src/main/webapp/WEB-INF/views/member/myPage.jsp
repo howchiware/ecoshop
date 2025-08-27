@@ -29,10 +29,7 @@
 	  <div class="contentsArea">
 	  	<h3 class="pb-2 mb-4 border-bottom sub-title">마이페이지</h3>
 	  </div>
-	  
-	  
     </div>
-    
   </div>
   
 </main>

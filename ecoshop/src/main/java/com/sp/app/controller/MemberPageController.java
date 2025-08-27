@@ -17,10 +17,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.sp.app.model.Attendance;
+import com.sp.app.model.Inquiry;
 import com.sp.app.model.Quiz;
 import com.sp.app.model.SessionInfo;
 import com.sp.app.service.EventService;
-import com.sp.app.service.MemberService;
+import com.sp.app.service.InquiryService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(value = "/member/*")
 public class MemberPageController {
 	
-	private final MemberService service;
 	private final EventService eventService;
+	private final InquiryService inquiryService;
 	
 	@GetMapping("myPage")
 	public String myPageHome(HttpSession session) {
@@ -49,19 +50,6 @@ public class MemberPageController {
 		}
 		
 		return "member/myPage";
-	}
-	
-	@GetMapping("myProfile")
-	public String myProfile(HttpSession session) {
-		
-		try {
-			
-			
-		} catch (Exception e) {
-			
-		}
-		
-		return "member/myProfile";
 	}
 	
 	/* 이벤트 참여 현황 */
@@ -97,7 +85,7 @@ public class MemberPageController {
 				weekDate.add(mw);
 			}
 
-			model.addAttribute("attendanceDays", new ArrayList<>(attendanceDays));
+			model.addAttribute("attendanceDays", attendanceDays);
 			model.addAttribute("weekDate", weekDate);
 			
 			/* 퀴즈 */
@@ -130,13 +118,27 @@ public class MemberPageController {
 		return "member/myEvent";
 	}
 	
-	/* 이벤트 참여 현황 - 상세 */
-	@GetMapping("myEventAttendance")
-	public String myEventAttendance(Model model, HttpSession session) {
+	@GetMapping("inquiry")
+	public String myInquiry(HttpSession session, Model model) {
 		
-		
-		
-		return "member/myEventAttendance";
+		try {
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			if (info == null) {
+                return "redirect:/member/login";
+            }
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("memberId", info.getMemberId());
+			
+			List<Inquiry> myInquiries = inquiryService.listInqByMember(map); 
+			model.addAttribute("myInquiries", myInquiries);
+						
+		} catch (Exception e) {
+			log.info("myInquiry: ", e);
+			throw e;
+		}
+				
+		return "member/myInquiry";
 	}
-	
+
 }

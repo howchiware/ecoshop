@@ -18,10 +18,85 @@
 
 @font-face {
 	font-family: 'Pretendard-Regular';
-	src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+	src:
+		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+		format('woff');
 	font-style: normal;
 }
 
 html {
 	overflow-y: scroll;
+}
+
+.contentsArea {
+	background-color: #fcfcfc;
+}
+
+/* 카드 공통 스타일 수정 */
+.card {
+	border: 1px solid var(--color-border);
+	box-shadow: 0 4px 12px var(--color-shadow);
+}
+
+.card-header {
+	background-color: #fff !important;
+	border-bottom: 1px solid var(--color-border);
+}
+
+.attendance-calendar {
+	border-collapse: separate;
+	border-spacing: 5px;
+	border: none;
+}
+
+.attendance-calendar th, .attendance-calendar td {
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+}
+
+.attendance-calendar .date-text {
+	font-size: 0.9rem;
+	color: var(--color-text-secondary);
+}
+
+.attendance-calendar .attendance-mark {
+	font-size: 2rem;
+	line-height: 1;
+	color: var(--color-primary);
+}
+
+.attendance-calendar td.attended {
+	background-color: var(--color-primary-light);
+	border-color: var(--color-primary);
+}
+
+.quiz-prompt {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1.5rem;
+	background-color: #f8f9fa;
+	border: 1px solid var(--color-border);
+	border-radius: 0.5rem;
+}
+
+.quiz-prompt-text p {
+	margin-bottom: 0.25rem;
+}
+
+.btn-quiz {
+	background-color: var(--color-primary);
+	color: #fff;
+	padding: 0.75rem 1.5rem;
+	border-radius: 50px;
+	font-weight: 600;
+	text-decoration: none;
+	transition: background-color 0.3s ease, transform 0.2s ease;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-quiz:hover {
+	background-color: #43a047;
+	color: #fff;
+	transform: scale(1.05);
 }

@@ -1,0 +1,54 @@
+body {
+	background-color: #f7f6f3;
+	color: #333;
+	font-family: 'Noto Sans KR', sans-serif;
+}
+
+.result-section {
+	background-color: #f7f6f3;
+	min-height: calc(100vh - 60px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.result-card {
+	background-color: #ffffff;
+	padding: 40px;
+	border-radius: 8px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+	max-width: 500px;
+	width: 100%;
+}
+
+.result-title {
+	font-size: 1.8rem;
+	font-weight: 600;
+	margin-bottom: 2rem;
+	text-align: center;
+	color: #315e4e;
+}
+
+.result-message {
+	font-size: 1rem;
+	line-height: 1.6;
+	color: #555;
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+	text-align: center;
+}
+
+.btn-accent {
+	background-color: #315e4e;
+	border: none;
+	color: #fff;
+	padding: 12px 20px;
+	font-size: 1.1rem;
+	border-radius: 5px;
+	width: 100%;
+	transition: background-color 0.2s ease-in-out;
+}
+
+.btn-accent:hover {
+	background-color: #2a4c3f;
+}

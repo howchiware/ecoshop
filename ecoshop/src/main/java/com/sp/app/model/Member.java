@@ -15,6 +15,7 @@ public class Member {
 	private int userLevel;
 	private String regDate;
 	private String regUpdate;
+	private int enabled;
 	
 	private String name;
 	private String nickname;

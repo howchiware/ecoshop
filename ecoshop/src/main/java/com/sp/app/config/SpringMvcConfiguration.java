@@ -22,6 +22,7 @@ public class SpringMvcConfiguration implements WebMvcConfigurer {
 		excludePaths.add("/member/logout");
 		excludePaths.add("/member/account");
 		excludePaths.add("/member/userIdCheck");
+		excludePaths.add("/member/nicknameCheck");
 		excludePaths.add("/member/complete");
 		excludePaths.add("/member/pwdFind");
 		excludePaths.add("/products/**");

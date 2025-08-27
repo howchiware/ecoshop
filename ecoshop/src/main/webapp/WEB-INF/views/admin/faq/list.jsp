@@ -2,11 +2,6 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
-<head>
-<style>
-
-</style>
-</head>
 <c:if test="${list.size() > 0}">
   <div class="accordion accordion-flush mt-1" id="accordionFlush"> 
     <c:forEach var="dto" items="${list}" varStatus="status">

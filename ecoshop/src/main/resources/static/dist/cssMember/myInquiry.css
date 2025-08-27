@@ -1,0 +1,120 @@
+:root {
+	--color-primary: #4a69bd;
+	--color-primary-darker: #3b5496;
+	--color-primary-lighter: #eef2f9;
+	--color-bg: #f8f9fa;
+	--color-content-bg: #ffffff;
+	--color-text-primary: #2c3e50;
+	--color-text-secondary: #8492a6;
+	--color-border: #e0e6ed;
+	--color-danger: #e74c3c;
+}
+
+* {
+	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif !important;
+	box-sizing: border-box;
+	color: #363636 !important;
+}
+
+@font-face {
+	font-family: 'Pretendard-Regular';
+	src:
+		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+		format('woff');
+	font-style: normal;
+}
+
+html {
+	overflow-y: scroll;
+}
+
+.sub-title {
+    color: var(--color-text-primary) !important;
+    font-weight: 600;
+}
+
+.inquiry-table {
+    border-top: 2px solid var(--color-text-primary);
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+}
+
+.inquiry-table thead th {
+    text-align: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-primary) !important;
+    font-weight: 600;
+}
+
+.inquiry-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.inquiry-table tbody tr:hover {
+    background-color: var(--color-primary-lighter);
+}
+
+.inquiry-table tbody td {
+    padding: 1.25rem 1rem;
+    color: var(--color-text-secondary) !important;
+    border-top: 1px solid var(--color-border);
+}
+
+.inquiry-table td.inquiry-subject,
+.inquiry-table td.inquiry-subject a {
+    color: var(--color-text-primary) !important;
+    font-weight: 500;
+}
+
+.inquiry-table td:not(.inquiry-subject) {
+    text-align: center;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.35em 0.8em;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff !important;
+    border-radius: 50rem;
+}
+
+.status-badge.pending {
+    background-color: var(--color-text-secondary);
+}
+
+.status-badge.answered {
+    background-color: var(--color-primary);
+}
+
+.status-badge.deleted {
+    background-color: var(--color-danger);
+}
+
+.inquiry-subject a {
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+
+.inquiry-subject a:hover {
+    color: var(--color-primary) !important;
+}
+
+.btn-inquiry {
+    background-color: #fff;
+    color: #4a69bd !important;
+    border: 1px solid #4a69bd;
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-inquiry:hover {
+    background-color: #4a69bd;
+    color: #fff !important;
+}

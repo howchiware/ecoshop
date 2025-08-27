@@ -230,52 +230,6 @@ public class MemberController {
 		return "redirect:/";
 	}
 	
-	/*
-	// 패스워드 찾기
-		@GetMapping("pwdFind")
-		public String pwdFindForm(HttpSession session) throws Exception {
-			SessionInfo info = (SessionInfo)session.getAttribute("member");
-			
-			if(info != null) {
-				return "redirect:/";
-			}
-			
-			return "member/pwdFind";
-		}
-		
-		@PostMapping("pwdFind")
-		public String pwdFindSubmit(@RequestParam(name = "login_id") String login_id,
-				RedirectAttributes reAttr,
-				Model model) throws Exception {
-			
-			try {
-				Member dto = service.findById(login_id);
-				if(dto == null || dto.getEmail() == null || dto.getUserLevel() == 0 || dto.getEnabled() == 0) {
-					model.addAttribute("message", "등록된 아이디가 아닙니다.");
-					
-					return "member/pwdFind";
-				}
-				
-				service.generatePwd(dto);
-				
-				StringBuilder sb = new StringBuilder();
-				sb.append("회원님의 이메일로 임시패스워드를 전송했습니다.<br>");
-				sb.append("로그인 후 패스워드를 변경하시기 바랍니다.<br>");
-				
-				reAttr.addFlashAttribute("title", "패스워드 찾기");
-				reAttr.addFlashAttribute("message", sb.toString());
-				
-				return "redirect:/member/complete";
-				
-			} catch (Exception e) {
-				model.addAttribute("message", "이메일 전송이 실패했습니다.");
-			}
-			
-			return "member/pwdFind";
-		}
-		
-		*/
-	
 	@PostMapping("update")
 	public String updateSubmit(Member dto, final RedirectAttributes reAttr, Model model, HttpSession session) {
 		
@@ -298,6 +252,51 @@ public class MemberController {
 		reAttr.addFlashAttribute("message", sb.toString());
 		
 		return "redirect:/member/complete";
+	}
+	
+	@GetMapping("pwdFind")
+	public String pwdFindForm(HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		if(info != null) {
+			return "redirect:/";
+		}
+		
+		return "member/pwdFind";
+	}
+	
+	@PostMapping("pwdFind")
+	public String pwdFindSubmit(@RequestParam(name = "userId") String userId, @RequestParam(name = "name") String name, RedirectAttributes reAttr, Model model) throws Exception {
+		
+		Member dto = service.findById(userId);
+		if(dto == null || dto.getEmail() == null || dto.getUserLevel() == 0 || dto.getEnabled() == 0) {
+		    model.addAttribute("message", "등록된 아이디가 아닙니다.");
+		    return "member/pwdFind";
+		}
+
+		if (!dto.getName().equals(name)) {
+		    model.addAttribute("message", "아이디 또는 이름이 일치하지 않습니다.");
+		    return "member/pwdFind";
+		}
+		
+		try {
+			
+			service.generatePwd(dto);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("회원님의 이메일로 임시 패스워드를 전송했습니다.<br>");
+			sb.append("로그인 후 패스워드를 꼭 변경해주시길 바랍니다.<br>");
+			
+			reAttr.addFlashAttribute("title", "패스워드 찾기");
+			reAttr.addFlashAttribute("message", sb.toString());
+			
+			return "redirect:/member/complete";
+		} catch (Exception e) {
+			model.addAttribute("message", "이메일 전송 실패했습니다.<br>");
+			model.addAttribute("message", "잠시 후 이용부탁드립니다.<br>");
+		}
+		
+		return "member/pwdFind";
 	}
 	
 }

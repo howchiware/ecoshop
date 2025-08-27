@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	const calendarEl = document.getElementById('calendar');
 
 	const calendar = new FullCalendar.Calendar(calendarEl, {
-		// --- 기본 설정 ---
 		headerToolbar: {
 			left: 'prev,next today',
 			center: 'title',         
@@ -74,3 +73,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	calendar.render();
 });
+

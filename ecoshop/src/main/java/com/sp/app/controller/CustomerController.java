@@ -87,9 +87,9 @@ public class CustomerController {
 		
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		if (info == null) {
-			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-			return null;
-         }
+		    resp.sendError(HttpServletResponse.SC_UNAUTHORIZED); 
+		    return null;
+		}
 		
 		try {
 			int size = 10;

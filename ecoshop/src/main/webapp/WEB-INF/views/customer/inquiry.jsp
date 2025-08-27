@@ -2,81 +2,8 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
-<style>
-	.content-header h3 {
-		font-weight: 600;
-		color: var(--text-dark);
-		margin-bottom: 1.5rem;
-	}
-	.nav-tabs {
-		border-bottom: 1px solid var(--border-color);
-	}
-	.nav-tabs .nav-link {
-		font-weight: 600;
-		color: var(--text-light);
-		border: none;
-		border-bottom: 3px solid transparent;
-	}
-	.nav-tabs .nav-link.active {
-		color: var(--primary-color);
-		background-color: transparent;
-		border-bottom: 3px solid var(--primary-color);
-	}
-	.form-label {
-		font-weight: 600;
-		margin-bottom: 0.75rem;
-	}
-	.inquiry-table th {
-		background-color: #f8f9fa;
-		font-weight: 600;
-		text-align: center;
-	}
-	.inquiry-table td {
-		vertical-align: middle;
-		text-align: center;
-	}
-	.inquiry-table .inquiry-subject {
-		text-align: left;
-	}
-	.inquiry-table a {
-		text-decoration: none;
-		color: var(--text-dark);
-		font-weight: 500;
-	}
-	.inquiry-table a:hover {
-		color: var(--primary-color);
-	}
-	.status-badge {
-		font-size: 0.8em;
-		padding: 0.4em 0.7em;
-		font-weight: 600;
-		border-radius: 6px;
-	}
-	.status-badge.pending {
-		color: #ffc107;
-		background-color: #fff8e1;
-	}
-	.status-badge.answered {
-		color: #28a745;
-		background-color: #eaf6ec;
-	}
-	.form-card {
-		background-color: #fcfcfd;
-		border: 1px solid var(--border-color);
-		border-radius: 12px;
-		padding: 2rem;
-	}
-	textarea.form-control {
-		resize: none;
-	}
-</style>
-
 <div class="content-header">
     <h3>1:1 문의</h3>
-</div>
-
-<div>
-	
 </div>
 
 <ul class="nav nav-tabs" id="inquiryTab" role="tablist">
@@ -151,7 +78,7 @@
 					<textarea class="form-control" id="question" name="question" rows="8" placeholder="문의하실 내용을 자세히 작성해주세요" required></textarea>
 				</div>
 				<div class="d-grid">
-					 <button type="submit" class="btn btn-primary btn-lg" style="background-color: var(--primary-color);">문의 등록</button>
+					 <button type="submit" class="btn btn-outline-primary my-btn">문의 등록</button>
 				</div>
 			</form>
 		</div>
