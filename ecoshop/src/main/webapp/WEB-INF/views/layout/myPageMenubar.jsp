@@ -22,7 +22,7 @@
 				<li><a href="${pageContext.request.contextPath}/member/inquiry" data-view="inquiries">1:1 문의내역</a></li>
 				<li><a href="${pageContext.request.contextPath}/" data-view="reviews">리뷰</a></li>
 				<li><a href="${pageContext.request.contextPath}/" data-view="qna">상품Q&amp;A 내역</a></li>
-				<li><a href="${pageContext.request.contextPath}/" data-view="events">이벤트 참여 현황</a></li>
+				<li><a href="${pageContext.request.contextPath}/member/myEvent" data-view="events">이벤트 참여 현황</a></li>
 			</ul>
 
 			<h5 class="nav-section-title">마이정보</h5>
