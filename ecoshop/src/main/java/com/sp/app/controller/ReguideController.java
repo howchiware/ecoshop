@@ -196,7 +196,7 @@
 		    model.addAttribute("dto", dto);
 		    model.addAttribute("prevDto", prevDto);
 		    model.addAttribute("nextDto", nextDto);
-		    model.addAttribute("query", query); // <-- 이걸 그대로 JSP에서 사용
+		    model.addAttribute("query", query); 
 		    model.addAttribute("page", page);
 		    model.addAttribute("size", size);
 	

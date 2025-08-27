@@ -7,6 +7,7 @@ import java.util.Objects;
 import org.springframework.stereotype.Service;
 
 import com.sp.app.common.MyUtil;
+import com.sp.app.common.StorageService;
 import com.sp.app.mapper.MagazineMapper;
 import com.sp.app.model.Magazine;
 
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MagazineServiceImpl implements MagazineService {
 	private final MyUtil myUtil;
 	private final MagazineMapper mapper;
+	private final StorageService storageService;
 	
 	@Override
 	public List<Magazine> magazineList(Map<String, Object> map) {
@@ -99,17 +101,42 @@ public class MagazineServiceImpl implements MagazineService {
 	@Override
 	public void insertMagazine(Magazine dto, String uploadPath) throws Exception {
 		try {
-			mapper.insertMagazine(dto);
-		} catch (Exception e) {
-			log.info("insertMagazine: ", e);
-			throw e;
-		}
-		
+			String saveFilename = null;
+			
+			 if (dto.getSelectFile() != null && !dto.getSelectFile().isEmpty()) {
+		            saveFilename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
+		        }
+			 
+			 if (saveFilename == null || saveFilename.isBlank()) {
+		            dto.setOriginalFilename(saveFilename);
+		        } else {
+		            dto.setOriginalFilename(saveFilename);
+		        }
+
+		        mapper.insertMagazine(dto);
+		    } catch (Exception e) {
+		        log.info("insertReguide : ", e);
+		        throw e;
+		    }
 	}
 
 	@Override
 	public void updateMagazine(Magazine dto, String uploadPath) throws Exception {
 		try {
+			if (dto.getSelectFile() != null && !dto.getSelectFile().isEmpty()) {
+
+	            // 기존 이미지 삭제
+	            if (dto.getOriginalFilename() != null && !dto.getOriginalFilename().isBlank()) {
+	                deleteUploadFile(uploadPath, dto.getOriginalFilename());
+	            }
+
+	            String originalFilename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
+	            if (originalFilename == null || originalFilename.isBlank()) {
+	                dto.setOriginalFilename(null);;
+	            } else {
+	                dto.setOriginalFilename(originalFilename);
+	            }
+	        }
 			mapper.updateMagazine(dto);
 		} catch (Exception e) {
 			log.info("updateMagazine: ", e);
@@ -119,8 +146,15 @@ public class MagazineServiceImpl implements MagazineService {
 	}
 
 	@Override
-	public void deleteMagazine(long magazineId, Long memberId, int userLevel) throws Exception {
+	public void deleteMagazine(long magazineId, Long memberId, int userLevel, String uploadPath, String filename) throws Exception {
 		try {
+			
+			if (filename != null && !filename.isBlank()) {
+	            deleteUploadFile(uploadPath, filename);
+	        }
+			
+			mapper.deleteMagazine(magazineId);
+			
 			Magazine dto = findByMagazine(magazineId);
 
 	        if (dto == null) {
@@ -280,6 +314,12 @@ public class MagazineServiceImpl implements MagazineService {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public boolean deleteUploadFile(String uploadPath, String filename) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

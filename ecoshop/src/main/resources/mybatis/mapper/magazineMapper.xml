@@ -3,16 +3,16 @@
 <mapper namespace="com.sp.app.mapper.MagazineMapper">
 	<insert id="insertMagazine" parameterType="com.sp.app.model.Magazine">
 		INSERT INTO magazine(magazineId, subject, content, hitCount, regDate, saveFilename, originalFilename, memberId)
-		VALUES(magazine_seq.NEXTVAL, #{subject}, #{content}, 0, SYSDATE, #{saveFilename}, 0, #{memberId})
+		VALUES(magazine_seq.NEXTVAL, #{subject}, #{content}, 0, SYSDATE, 0 , #{originalFilename, jdbcType=VARCHAR} , #{memberId})
 	</insert>
 	<sql id="where-list">
 	    <if test="kwd != null and kwd != ''">
 	        <choose>
-	            <when test="schType == 'name'">
-	                AND nickname LIKE '%' || #{kwd} || '%'
+	            <when test="schType ==	 'name'">
+	               AND subject LIKE '%' || #{kwd} || '%'
 	            </when>
 	            <otherwise>
-	                AND subject LIKE '%' || #{kwd} || '%'
+	               AND content LIKE '%' || #{kwd} || '%'
 	            </otherwise>
 	        </choose>
 	    </if>
@@ -30,7 +30,7 @@
 	</select>
 	
 	<select id="magazineList" parameterType="map" resultType="com.sp.app.model.Magazine">
-		SELECT ma.magazineId, ma.subject, ma.content, ma.hitCount, TO_CHAR(ma.regDate, 'YYYY-MM-DD') regDate, m2.memberId, m2.name, NVL(replyCount, 0) replyCount, saveFilename
+		SELECT ma.magazineId, ma.subject, ma.content, ma.hitCount, TO_CHAR(ma.regDate, 'YYYY-MM-DD') regDate, m2.memberId, m2.name, NVL(replyCount, 0) replyCount, originalFilename
 		FROM magazine ma
 		JOIN member2 m2 ON ma.memberId = m2.memberId
 		LEFT OUTER JOIN (
@@ -49,7 +49,7 @@
 	</select>
 	
 	<select id="findByMagazine" parameterType="Long" resultType="com.sp.app.model.Magazine">
-		SELECT ma.magazineId, ma.subject, ma.content, ma.hitCount, TO_CHAR(ma.regDate, 'YYYY-MM-DD') regDate, m2.memberId, m2.name, NVL(magazineLikeCount, 0) magazineLikeCount, saveFilename
+		SELECT ma.magazineId, ma.subject, ma.content, ma.hitCount, TO_CHAR(ma.regDate, 'YYYY-MM-DD') regDate, m2.memberId, m2.name, NVL(magazineLikeCount, 0) magazineLikeCount, originalFilename
 		FROM magazine ma
 		JOIN member2 m2 ON m2.memberId = ma.memberId
 		LEFT OUTER JOIN (
@@ -94,8 +94,11 @@
 	</select>
 	
 	<update id="updateMagazine" parameterType="com.sp.app.model.Magazine">
-		UPDATE magazine SET subject = #{subject}, content = #{content}
-		WHERE magazineId = #{magazineId}
+	    UPDATE magazine 
+	    SET subject = #{subject}, 
+	        content = #{content}, 
+	        originalFilename = #{originalFilename, jdbcType=VARCHAR}
+	    WHERE magazineId = #{magazineId}
 	</update>
 	
 	<delete id="deleteMagazine" parameterType="Long">

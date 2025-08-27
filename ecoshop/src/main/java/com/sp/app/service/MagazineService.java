@@ -15,7 +15,10 @@ public interface MagazineService {
 		
 	public void insertMagazine(Magazine dto, String uploadPath) throws Exception;
 	public void updateMagazine(Magazine dto, String uploadPath) throws Exception;
-	public void deleteMagazine(long magazineId, Long memberId, int userLevel) throws Exception;
+	public void deleteMagazine(long magazineId, Long memberId, int userLevel, String uploadPath, String filename) throws Exception;
+	
+	// 파일
+	public boolean deleteUploadFile(String uploadPath, String filename);
 	
 	public void insertReply(Magazine dto) throws Exception;
 	public List<Magazine> listReply(Map<String, Object> map);

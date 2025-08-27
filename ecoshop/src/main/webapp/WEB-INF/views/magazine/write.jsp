@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/dairyWrite.css" type="text/css">
 <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/quill-resize-module@2.0.4/dist/resize.css" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/board.css" type="text/css">
 </head>
 <body>
     <header>
@@ -33,14 +34,23 @@
 		</div>
 		
 		<div class="mb-3">
-			<label for="nickname" class="form-label">닉네임</label>
-			<input type="text" id="nickname" name="nickname" class="form-control" value="${sessionScope.member.nickname}" readonly>
+			<label for="name" class="form-label">이름</label>
+			<input type="text" id="name" name="name" class="form-control" value="${sessionScope.member.name}" readonly>
 		</div>
 		
 		<div class="mb-4">
 			<label for="editor" class="form-label">내용</label>
 			<div id="editor">${dto.content}</div>
 			<input type="hidden" name="content">
+		</div>
+		
+		<div class="mb-5">
+		  	<div class="preview-session">
+				<label for="selectFile" class="me-2" tabindex="0" title="표지 업로드">
+					<span class="image-viewer"></span>
+					<input type="file" name="selectFile" id="selectFile" hidden="" accept="image/png, image/jpeg">
+				</label>
+			</div>
 		</div>
 		
 		<div class="button-group">
@@ -67,6 +77,49 @@
 <script src="${pageContext.request.contextPath}/dist/js/qeditor.js"></script>
 <script src="${pageContext.request.contextPath}/dist/jsFree/dairyWrite.js"></script>
 <script type="text/javascript">
+window.addEventListener('DOMContentLoaded', evt => {
+	const imageViewer = document.querySelector('form .image-viewer');
+	const inputEL = document.querySelector('form input[name=selectFile]');
+	
+	let uploadImage = '${dto.originalFilename}';
+	let img;
+	if( uploadImage ) {  
+		img = '${pageContext.request.contextPath}/uploads/magazine/' + uploadImage;
+	} else {
+		img = '${pageContext.request.contextPath}/dist/images/add_photo.png';
+	}
+	imageViewer.textContent = '';
+	imageViewer.style.backgroundImage = 'url(' + img + ')';
+	
+	inputEL.addEventListener('change', ev => {
+		let file = ev.target.files[0];
+		if(! file) {
+			let img;
+			if( uploadImage ) { 
+				img = '${pageContext.request.contextPath}/uploads/magazine/' + uploadImage;
+			} else {
+				img = '${pageContext.request.contextPath}/dist/images/add_photo.png';
+			}
+			imageViewer.textContent = '';
+			imageViewer.style.backgroundImage = 'url(' + img + ')';
+			
+			return;
+		}
+		
+		if(! file.type.match('image.*')) {
+			inputEL.focus();
+			return;
+		}
+		
+		const reader = new FileReader();
+		reader.onload = e => {
+			imageViewer.textContent = '';
+			imageViewer.style.backgroundImage = 'url(' + e.target.result + ')';
+		};
+		reader.readAsDataURL(file);
+	});
+	
+});
 function hasContent(htmlContent) {
 	htmlContent = htmlContent.replace(/<p[^>]*>/gi, '');
 	htmlContent = htmlContent.replace(/<\/p>/gi, '');

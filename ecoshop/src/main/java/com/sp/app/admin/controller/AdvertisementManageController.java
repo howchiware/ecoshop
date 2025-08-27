@@ -222,7 +222,7 @@ import lombok.extern.slf4j.Slf4j;
 		            model.addAttribute("page", page);
 		            model.addAttribute("listFile", listFile);
 		           
-		            
+		            dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
 	
 		        } catch (NullPointerException e) {
 		            resp.sendError(410);

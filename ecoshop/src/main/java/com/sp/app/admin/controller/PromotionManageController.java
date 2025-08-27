@@ -50,7 +50,7 @@
 				HttpServletRequest req) throws Exception {
 			
 			try {
-				int size = 6;
+				int size = 9;
 				int total_page = 0;
 				int dataCount = 0;
 	

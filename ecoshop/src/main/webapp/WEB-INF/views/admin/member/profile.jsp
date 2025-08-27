@@ -152,7 +152,30 @@ table.member-info td:first-child {
 						<tr>
 							<td class="bg-light">이름</td>
 							<td>
-								<input type="text" name="name" class="form-control" value="${dto.name}" style="width: 95%;">
+								<input type="text" name="name" class="form-control" value="${dto.name}" style="width: 95%;" readonly>
+							</td>
+						</tr>
+						<tr>
+							<td class="bg-light">닉네임</td>
+							<td>
+								<input type="text" name="nickname" class="form-control" value="${dto.email}" style="width: 95%;">
+							</td>
+							<td>
+								<c:if test="${mode=='account'}">
+                                    <button type="button" class="btn btn-default" onclick="nicknameCheck();">중복 검사</button>
+                                </c:if>
+							</td>
+						</tr>
+						<tr>
+							<td class="bg-light">생년월일</td>
+							<td>
+								<input class="form-control" type="date" id="birth" name="birth" value="${dto.birth}" readonly>
+							</td>
+						</tr>
+						<tr>				
+							<td class="bg-light">이메일</td>
+							<td>
+								<input type="text" name="email" class="form-control" value="${dto.email}" style="width: 95%;">
 							</td>
 						</tr>
 						<tr>
@@ -162,11 +185,27 @@ table.member-info td:first-child {
 							</td>
 						</tr>
 						<tr>
-							<td class="bg-light">이메일</td>
+							<td class="bg-light">우편번호</td>
 							<td>
-								<input type="text" name="tel" class="form-control" value="${dto.email}" style="width: 95%;">
+								<input class="form-control" type="text" name="zip" id="zip" value="${dto.zip}" readonly tabindex="-1">
+							</td>
+							<td>
+								<button type="button" class="btn btn-default" id="btn-zip" onclick="daumPostcode();">주소 검색</button>
 							</td>
 						</tr>
+						<tr>
+							<td class="bg-light">기본주소</td>
+							<td>
+								<input class="form-control" type="text" name="addr1" id="addr1" value="${dto.addr1}" readonly tabindex="-1">
+							</td>
+						</tr>
+						<tr>
+							<td class="bg-light">상세주소</td>
+							<td>
+								<input class="form-control" type="text" name="addr2" id="addr2" value="${dto.addr2}">
+							</td>
+						</tr>
+						
 						
 					</table>
 					<div class="text-end">

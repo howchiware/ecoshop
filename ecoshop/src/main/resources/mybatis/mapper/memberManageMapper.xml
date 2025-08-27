@@ -84,7 +84,7 @@
 		WHERE memberId = #{memberId}
     </update>
     <update id="updateMember2" parameterType="map">
-		UPDATE member2 SET name = #{name}, birth = TO_DATE(#{birth}, 'YYYY-MM-DD')
+		UPDATE member2 SET name = #{name}, birth = TO_DATE(#{birth}, 'YYYY-MM-DD'), nickname = #{nickname}, tel = #{tel}, zip = #{zip}, addr1 = #{addr1}, addr2 = #{addr2}, email = #{email}
 		WHERE memberId = #{memberId}
     </update>
     <delete id="deleteMember2" parameterType="map">

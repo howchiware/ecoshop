@@ -179,7 +179,9 @@ public class NoticeManageController {
 
 			// 파일
 			List<NoticeManage> listFile = service.listNoticeFile(noticeId);
-
+			
+			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+			
 			model.addAttribute("dto", dto);
 			model.addAttribute("prevDto", prevDto);
 			model.addAttribute("nextDto", nextDto);

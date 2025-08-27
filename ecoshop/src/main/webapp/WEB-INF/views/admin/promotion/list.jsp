@@ -203,7 +203,7 @@
 				
 					<div class="row gy-4 mb-3">
 						<c:forEach var="dto" items="${list}" varStatus="status">
-							<div class="col-lg-4 col-md-6">
+							<div class="col-lg-4 col-md-9">
 								<div class="photo-content h-100">
 									<img src="${pageContext.request.contextPath}/uploads/promotion/${dto.imageFilename}" class="img-fluid border rounded w-100" style="height: 235px;" alt="">
 									<div class="photo-info">

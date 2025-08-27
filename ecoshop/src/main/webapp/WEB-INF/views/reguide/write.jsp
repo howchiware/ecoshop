@@ -28,7 +28,7 @@
 <main class="container my-5">
 	
 	<div class="page-header">
-		<h2>${mode=='update'?'팁 수정':'팁 등록'}</h2>
+		<h2>${mode=='update'?'분리배출 가이드 수정':'분리배출 가이드 등록'}</h2>
 	</div>
 
 	<form name="tipForm" class="write-form" method="post" enctype="multipart/form-data">
@@ -171,6 +171,12 @@ function sendOk() {
 	const f = document.tipForm;
 	
 	let mode = '${mode}';
+	
+	if (!f.subject.value.trim()) {
+        alert("제목을 입력하세요.");
+        f.subject.focus();
+        return;
+    }
 
 	let htmlContent = document.querySelector('#editor .ql-editor').innerHTML;
 	if (!htmlContent || htmlContent.trim() === "<p><br></p>") {

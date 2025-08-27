@@ -1,5 +1,7 @@
 package com.sp.app.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,8 +22,10 @@ public class Magazine {
 	private String content;
 	private int hitCount;
 	private String regDate;
+	
 	private String originalFilename;
 	private String saveFilename;
+	private MultipartFile selectFile;
 	
 	private long magazineReplyNum;
 	private String replyContent;

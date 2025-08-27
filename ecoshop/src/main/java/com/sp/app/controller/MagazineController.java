@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.app.common.MyUtil;
 import com.sp.app.common.PaginateUtil;
+import com.sp.app.common.StorageService;
 import com.sp.app.model.Magazine;
 import com.sp.app.model.SessionInfo;
 import com.sp.app.service.MagazineService;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -36,11 +38,19 @@ public class MagazineController {
 	private final MagazineService service;
 	private final PaginateUtil paginateUtil;
 	private final MyUtil myUtil;
+	private final StorageService storageService;
+	
+	private String uploadPath;
 	
 	@GetMapping("magazineHome")
 	public String magazineHome() {
 		return "magazine/list";
 	}
+	
+	 @PostConstruct
+		public void init() {
+			uploadPath = this.storageService.getRealPath("/uploads/magazine");		
+		}
 	
 	@GetMapping("list")
 	public String magazineList(@RequestParam(name = "page", defaultValue = "1") int current_page,
@@ -50,7 +60,7 @@ public class MagazineController {
 								HttpServletRequest req) throws Exception {
 			
 		try {
-			int size = 10;
+			int size = 5;
 			int total_page = 0;
 			int dataCount = 0;
 			
@@ -123,7 +133,7 @@ public class MagazineController {
 			dto.setMemberId(info.getMemberId());
 			dto.setName(info.getName());
 			
-			service.insertMagazine(dto, null);
+			service.insertMagazine(dto, uploadPath);
 		} catch (Exception e) {
 			log.info("magazineWrite: ", e);
 		}
@@ -201,6 +211,7 @@ public class MagazineController {
 			return "magazine/write";
 			
 		} catch (NullPointerException e) {
+			log.info("updateForm : ", e);
 		} catch (Exception e) {
 			log.info("updateForm : ", e);
 		}
@@ -213,9 +224,9 @@ public class MagazineController {
 		
 		try {
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
-			
+			service.updateMagazine(dto, uploadPath);
 			dto.setMemberId(info.getMemberId());
-			service.updateMagazine(dto, page);
+			//service.updateMagazine(dto, page);
 		} catch (Exception e) {
 			log.info("updateMagazine: ", e);
 		}
@@ -240,7 +251,7 @@ public class MagazineController {
 			
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
 			
-			service.deleteMagazine(magazineId, info.getMemberId(), info.getUserLevel());
+			service.deleteMagazine(magazineId, info.getMemberId(), info.getUserLevel(), uploadPath, query);
 		} catch (Exception e) {
 			log.info("deleteMagazine : ", e);
 		}
