@@ -17,7 +17,7 @@
 
 			<h5 class="nav-section-title">마이활동</h5>
 			<ul class="list-unstyled">
-				<li><a href="${pageContext.request.contextPath}/" data-view="challenges">챌린지</a></li>
+				<li><a href="${pageContext.request.contextPath}/challenge/mypage/list" data-view="challenges">챌린지</a></li>
 				<li><a href="${pageContext.request.contextPath}/" data-view="workshops">워크숍</a></li>
 				<li><a href="${pageContext.request.contextPath}/member/inquiry" data-view="inquiries">1:1 문의내역</a></li>
 				<li><a href="${pageContext.request.contextPath}/" data-view="reviews">리뷰</a></li>
