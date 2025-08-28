@@ -236,11 +236,11 @@ import lombok.extern.slf4j.Slf4j;
 		 
 		 @ResponseBody
 		 @PostMapping("updateAdvertisement")
-		 public Map<String, ?> updateAdvertisement(@RequestParam Map<String, Object> paramMap) throws Exception {
+		 public Map<String, ?> updateAdvertisement(AdvertisementManage dto) throws Exception {
 		     Map<String, Object> model = new HashMap<>();
 		     String state = "true";
 		     try {
-		         service.updateAdvertisement(paramMap);
+		         service.updateAdvertisement(dto);
 		     } catch (Exception e) {
 		         state = "false";
 		     }

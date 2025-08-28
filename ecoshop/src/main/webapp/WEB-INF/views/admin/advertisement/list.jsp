@@ -324,7 +324,7 @@ $(document).on('show.bs.collapse', 'tr.collapse', function (e) {
 	
 	let url = '${pageContext.request.contextPath}/admin/advertisement/updateAdvertisement';
 	let params = $('#advertisementUpdateForm').serialize();
-	
+	alert(params);
 	const fn = function(data){
 		listAdvertisement(page);
 	};

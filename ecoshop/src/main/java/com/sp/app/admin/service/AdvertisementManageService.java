@@ -10,7 +10,7 @@ public interface AdvertisementManageService {
 	public List<AdvertisementManage> listAdvertisement(Map<String, Object> map);
 	
 	public void updateStatus(Map<String, Object> map) throws Exception;
-	public void updateAdvertisement(Map<String, Object> map) throws Exception;
+	public void updateAdvertisement(AdvertisementManage dto) throws Exception;
 	
 	public AdvertisementManage findById(long advertisingId);
 	

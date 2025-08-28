@@ -46,7 +46,7 @@ public class AdvertisementManageServiceImpl implements AdvertisementManageServic
 	@Override
 	public void updateStatus(Map<String, Object> map) throws Exception {
 		try {
-			mapper.updateStatus(map);
+			mapper.updateStatus(null, map);
 		} catch (Exception e) {
 			log.info("updateStatus : ", e);
 			
@@ -81,16 +81,6 @@ public class AdvertisementManageServiceImpl implements AdvertisementManageServic
 		return dto;
 	}
 
-	@Override
-	public void updateAdvertisement(Map<String, Object> map) throws Exception {
-		try {
-			mapper.updateAdvertisement(map);
-		} catch (Exception e) {
-			log.info("updateAdvertisement : ", e);
-			
-			throw e;
-		}
-	}
 
 	@Override
 	public List<AdvertisementManage> listAdvertisementFile(long advertisingId) {
@@ -104,7 +94,30 @@ public class AdvertisementManageServiceImpl implements AdvertisementManageServic
 		}
 		return listFile;
 	}
-	
-	
+
+	@Override
+	public void updateAdvertisement(AdvertisementManage dto) throws Exception {
+	    try {
+	        // 기존 데이터 조회
+	        AdvertisementManage beforeDto = mapper.findById(dto.getAdvertisingId());
+
+	        // 광고 업데이트
+	        mapper.updateAdvertisement(dto);
+
+	        // 로그 남기기
+	        AdvertisementManage logDto = new AdvertisementManage();
+	        logDto.setAdvertisingId(dto.getAdvertisingId());
+	        logDto.setOldStatus(beforeDto.getStatus());           
+	        logDto.setNewStatus(dto.getStatus());                
+	        logDto.setOldPosting(beforeDto.getPostingStatus());  
+	        logDto.setNewPosting(dto.getPostingStatus());        
+
+	        mapper.insertadvertisingStatus(logDto);
+
+	    } catch (Exception e) {
+	        log.info("updateAdvertisement : ", e);
+	        throw e;
+	    }
+	}
 
 }

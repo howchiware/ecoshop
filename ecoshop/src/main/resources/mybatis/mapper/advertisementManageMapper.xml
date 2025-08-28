@@ -81,11 +81,16 @@
 	
 	<update id="updateAdvertisement">
 	    UPDATE advertising
-	    SET 
-	        inquiryType = #{inquiryType, jdbcType=NUMERIC},
+	    SET inquiryType = #{inquiryType, jdbcType=NUMERIC},
 	        postingStatus = #{postingStatus, jdbcType=NUMERIC}
-	    WHERE advertisingId = #{advertisingId, jdbcType=NUMERIC}
+	    WHERE advertisingId = #{advertisingId}
 	</update>
+	
+	<!-- 광고 상태 변경 기록  -->
+	<insert id="insertadvertisingStatus" parameterType="com.sp.app.admin.model.AdvertisementManage">
+		INSERT INTO advertisingStatus(statuslogId, advertisingId, changeDate, oldStatus, newStatus, oldPosting, newPosting )
+		VALUES(advertisingStatus_seq.NEXTVAL, #{advertisingId}, SYSDATE , #{oldStatus}, #{newStatus}, #{oldPosting}, #{newPosting})
+	</insert>
 	
 	
 	<!-- 상세보기 -->
