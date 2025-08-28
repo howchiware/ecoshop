@@ -195,7 +195,7 @@ $('#categoryCodeSelect').on('change', function() {
     $('#categoryCodeHidden').val(this.value);
 });
 
-// --- 카테고리 등록/수정 AJAX 처리 ---
+// --- 카테고리 등록 / 삭제 ---
 function CsendOk() {
     const url = '${pageContext.request.contextPath}/reguide/addCategory';
     const params = $('form[name=categoryForm]').serialize();
@@ -227,6 +227,23 @@ function CsendOk() {
     };
 
     ajaxRequest(url, 'post', params, 'json', fn);
+}
+
+function deleteCategory(categoryCode) {
+    if (!confirm("정말 삭제하시겠습니까?")) return;
+
+    const url = '${pageContext.request.contextPath}/reguide/deleteCategory?categoryCode=' + categoryCode;
+
+    $.get(url, function(data) {
+        if (data === '성공') {
+            $('#cat-' + categoryCode).remove(); 
+            $('#categoryCodeSelect option[value="'+categoryCode+'"]').remove();
+        } else if (data === '사용중') {
+            alert("이미 사용 중인 카테고리는 삭제할 수 없습니다.");
+        } else {
+            alert("삭제 실패");
+        }
+    });
 }
 
 </script>

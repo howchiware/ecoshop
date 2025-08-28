@@ -24,5 +24,6 @@ public interface ReguideService {
 
 	public List<ReguideCategory> listCategory();
 	public void insertCategory(ReguideCategory dto) throws Exception;
+	public void deleteCategory(long categoryCode) throws Exception;
 
 }

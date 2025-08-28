@@ -125,4 +125,9 @@
 	    FROM reCategory
 	    ORDER BY categoryCode
 	</select>
+	
+	<delete id="deleteCategory" parameterType="Long">
+		DELETE FROM reCategory
+		WHERE categoryCode = #{categoryCode}
+	</delete>
 </mapper>

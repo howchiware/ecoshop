@@ -110,8 +110,8 @@
                     <a style="text-decoration: none; color: black" href="${url}">${item.subject}</a>
                 </div>
                 <div class="card-magazine-summary">
-                    ${fn:substring(item.content, 0, 150)}
-                </div>
+				    ${fn:substring(item.content.replaceAll('<img[^>]*>', ''), 0, 150)}
+				</div>
                 <div class="text-muted small mt-5">
                     ${item.name} · ${item.regDate} · 조회수 ${item.hitCount} · 댓글 ${item.replyCount}
                 </div>

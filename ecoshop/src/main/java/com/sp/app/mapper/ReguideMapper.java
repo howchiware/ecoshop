@@ -26,5 +26,6 @@ public interface ReguideMapper {
 	public Reguide findByNext(Map<String, Object> map);
 	
 	List<ReguideCategory> listCategory();
-    void insertCategory(ReguideCategory dto) throws SQLException;
+    public void insertCategory(ReguideCategory dto) throws SQLException;
+    public void deleteCategory(long categoryCode) throws SQLException;
 }

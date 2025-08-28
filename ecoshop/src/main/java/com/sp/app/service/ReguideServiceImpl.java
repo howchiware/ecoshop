@@ -182,4 +182,14 @@ public class ReguideServiceImpl implements ReguideService {
 	    return list;
 	}
 
+	@Override
+	public void deleteCategory(long categoryCode) throws Exception {
+		try {
+	        mapper.deleteCategory(categoryCode);
+	    } catch (Exception e) {
+	        log.info("deleteCategory : ", e);
+	        throw e;
+	    }
+	}
+
 }

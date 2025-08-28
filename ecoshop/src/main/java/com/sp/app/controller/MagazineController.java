@@ -85,6 +85,11 @@ public class MagazineController {
 			
 			List<Magazine> magazineList = service.magazineList(map);
 			
+			// img 제거
+			for(Magazine m : magazineList) {
+			    m.setContent(m.getContent().replaceAll("<img[^>]*>", ""));
+			}
+			
 			String cp = req.getContextPath();
 			String query = "";
 			String listUrl = cp + "/magazine/list";

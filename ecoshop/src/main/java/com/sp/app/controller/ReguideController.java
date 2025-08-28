@@ -138,7 +138,9 @@
 		}
 		
 		@GetMapping("addCategory")
-		public String addCategoryForm() {
+		public String addCategoryForm(Model model) {
+		    List<ReguideCategory> list = service.listCategory();
+		    model.addAttribute("list", list);
 		    return "reguide/category"; 
 		}
 		
@@ -160,6 +162,24 @@
 		    }
 		    return result;
 		}
+		
+		@GetMapping("deleteCategory")
+		@ResponseBody
+		public String deleteCategory(@RequestParam(name = "categoryCode") long categoryCode) {
+		    try {
+		        service.deleteCategory(categoryCode);
+		        return "성공";
+		    } catch (Exception e) {
+		    	if (e.getMessage() != null && e.getMessage().contains("ORA-02292")) {
+		            // 외래키 제약 위배
+		            return "사용중"; 
+		        }
+		        log.error("카테고리 삭제 실패", e);
+		        return "error";
+		    }
+		}
+		
+		
 		
 		@GetMapping("article")
 		public String article(@RequestParam(name = "guidId") long guidId,
