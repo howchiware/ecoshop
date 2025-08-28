@@ -34,7 +34,7 @@
 
 /*  데일리 카드  */
 .daily-card { border:1px solid #e9eef6; border-radius:16px; background:#fff; overflow:hidden; box-shadow:0 6px 18px rgba(28,47,88,0.06); }
-.daily-media { width:100%; aspect-ratio: 16/6; background:#eef3f9 center/cover no-repeat; }
+.daily-media { width:100%; aspect-ratio: 16/10; background:#eef3f9 center/cover no-repeat; }
 .daily-body { padding:20px; }
 .daily-title { margin:0 0 6px; font-size:20px; font-weight:700; color:#1e293b; }
 .daily-desc { color:#65748a; margin-bottom:12px; }
@@ -52,12 +52,17 @@
 @media (max-width: 575px){ .special-grid{ grid-template-columns: 1fr; } }
 
 .card { border:1px solid #e9eef6; border-radius:16px; background:#fff; overflow:hidden; box-shadow:0 6px 18px rgba(28,47,88,0.06); display:flex; flex-direction:column; }
-.card-thumb { width:100%; aspect-ratio: 16/10; background:#eef3f9 center/cover no-repeat; }
+.card-thumb { width:100%; aspect-ratio: 16/10; background:#eef3f9 center/cover no-repeat; }  
 .card-body { padding:16px; display:flex; flex-direction:column; gap:8px; }
 .card-title { margin:0; font-size:16px; font-weight:700; color:#1e293b; }
 .card-desc { color:#65748a; height:3.1em; overflow:hidden; }
 .card-foot { display:flex; justify-content:space-between; align-items:center; margin-top:auto; }
 .btn-more { display:block; margin:18px auto 0; border:1px solid #dbe3ee; background:#fff; color:#1f2a44; font-weight:700; padding:12px 18px; border-radius:12px; }
+
+
+
+
+
 </style>
 </head>
 <body>
@@ -121,25 +126,40 @@
               </div>
               <p class="daily-desc">${empty today.description ? '일회용품 플라스틱 제로에 도전!' : today.description}</p>
 
-              <div class="daily-meta">
-                <span class="badge-soft">TODAY</span>
-                <span class="badge-soft">
-                  <c:choose>
-                    <c:when test="${not empty today.weekday}">
-                      <c:choose>
-                        <c:when test="${today.weekday==0}">일</c:when>
-                        <c:when test="${today.weekday==1}">월</c:when>
-                        <c:when test="${today.weekday==2}">화</c:when>
-                        <c:when test="${today.weekday==3}">수</c:when>
-                        <c:when test="${today.weekday==4}">목</c:when>
-                        <c:when test="${today.weekday==5}">금</c:when>
-                        <c:otherwise>토</c:otherwise>
-                      </c:choose>요일
-                    </c:when>
-                    <c:otherwise>요일</c:otherwise>
-                  </c:choose>
-                </span>
-              </div>
+			 <!-- 데일리 챌린지 타드 정보 -->	
+			<!-- 기존 daily-meta 블록을 아래로 교체 -->
+			<!-- daily-meta: "오늘"일 때만 TODAY 표시 -->
+			<jsp:useBean id="now" class="java.util.Date" />
+			<fmt:formatDate value="${now}" pattern="u" var="dowStr" /> <%-- 1(월)~7(일) --%>
+			<fmt:parseNumber integerOnly="true" value="${dowStr}" var="dow" />
+			<c:set var="todayIdx0to6" value="${dow == 7 ? 0 : dow}" /> <%-- 0(일)~6(토)로 변환 --%>
+			
+			<fmt:parseNumber integerOnly="true" value="${today.weekday}" var="challengeDow" />
+			
+			<div class="daily-meta">
+			  <c:if test="${not empty challengeDow and todayIdx0to6 == challengeDow}">
+			    <span class="badge-soft">TODAY</span>
+			  </c:if>
+			
+			  <span class="badge-soft">
+			    <c:choose>
+			      <c:when test="${not empty challengeDow}">
+			        <c:choose>
+			          <c:when test="${challengeDow==0}">일</c:when>
+			          <c:when test="${challengeDow==1}">월</c:when>
+			          <c:when test="${challengeDow==2}">화</c:when>
+			          <c:when test="${challengeDow==3}">수</c:when>
+			          <c:when test="${challengeDow==4}">목</c:when>
+			          <c:when test="${challengeDow==5}">금</c:when>
+			          <c:otherwise>토</c:otherwise>
+			        </c:choose>요일
+			      </c:when>
+			      <c:otherwise>요일</c:otherwise>
+			    </c:choose>
+			  </span>
+			</div>
+
+
 
               <div class="d-flex gap-2">
                 <a class="btn-ghost" href="${cp}/challenge/detail/${today.challengeId}">상세보기</a>
