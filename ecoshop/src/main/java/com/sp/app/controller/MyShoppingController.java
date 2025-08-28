@@ -409,7 +409,7 @@ public class MyShoppingController {
 	
 	// 최근상품목혹
 	@GetMapping("recentProduct")
-	public String handleㄲecentProduct() {
+	public String handlerecentProduct() {
 		return "myShopping/recentProduct";
 	}
 	

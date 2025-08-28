@@ -105,7 +105,7 @@
 	
 	<!-- 주문 정보 -->
 	<select id="findPrevByOrderId" parameterType="String" resultType="com.sp.app.admin.model.OrderManage">
-		SELECT po.orderId, po.productCode
+		SELECT po.orderId
 		FROM productOrder po
 		JOIN member2 m ON po.memberId = m.memberId
 		<where>
@@ -129,7 +129,7 @@
 			</if>
 			AND (orderId &lt; #{orderId}) AND classify = 1
 		</where>
-		ORDER BY orderId ASC
+		ORDER BY orderId DESC
 		FETCH FIRST 1 ROWS ONLY
 	</select>
 	

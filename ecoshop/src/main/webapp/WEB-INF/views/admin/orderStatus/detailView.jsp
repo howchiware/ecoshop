@@ -115,7 +115,7 @@ text-align: center;
 	<jsp:include page="/WEB-INF/views/admin/layout/header.jsp"/>
 </header>
 
-<main class="main-container">
+<main class="main-container" style="z-index: 100">
 	<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp"/>
 
 	<div class="right-PANEL">
@@ -245,7 +245,7 @@ text-align: center;
 									</tr>
 									<tr>
 										<td class="table-light" width="140">총금액</td>
-										<td width="180"><fmt:formatNumber value="${dto.totalMoney + dto.deliveryCharge}"/></td>
+										<td width="180"><fmt:formatNumber value="${dto.totalAmount + dto.deliveryCharge}"/></td>
 										<td class="table-light" width="140">포인트사용액</td>
 										<td width="180"><fmt:formatNumber value="${dto.usedPoint}"/></td>
 										<td class="table-light" width="140">결제금액</td>

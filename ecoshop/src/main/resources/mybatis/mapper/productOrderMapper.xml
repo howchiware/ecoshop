@@ -123,4 +123,115 @@
 		ORDER BY pointId DESC
 		FETCH FIRST 1 ROWS ONLY
 	</select>
+	
+	<select id="countPayment" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM productOrder po
+		JOIN orderDetail od ON po.orderId = od.orderId
+		WHERE po.memberId = #{memberId} AND userDelete = 0
+	</select>
+	
+	<!-- 유저의 전체 구매 리스트 -->
+	<select id="listPayment" parameterType="map" resultType="com.sp.app.model.Payment">
+	    SELECT po.orderId, po.memberId, po.orderDate, po.totalAmount, po.usedPoint, po.payment,
+	    	po.deliveryCharge, po.orderStateDate, po.orderState, po.deliveryName, po.invoiceNumber,
+	    	od.orderDetailId, od.productCode, od.optionDetailNum, od.optionDetailNum2, od.qty, od.price,
+	    	od.productMoney, od.detailState, od.savedPoint,
+	    	p.productName, p.optionCount, p.thumbnail,
+	    	d1.optionValue, d2.optionValue optionValue2,
+	    	NVL(r.reviewWrite, 0) reviewWrite
+	    FROM productOrder po
+	    JOIN orderDetail od ON po.orderId = od.orderId
+	    JOIN product p ON od.productCode = p.productCode
+	    LEFT OUTER JOIN optionDetail d1 ON od.optionDetailNum = d1.optionDetailNum
+	    LEFT OUTER JOIN optionDetail d2 ON od.optionDetailNum2 = d2.optionDetailNum
+	    LEFT OUTER JOIN (
+	    	SELECT reviewId, 1 reviewWrite
+	    	FROM productReview
+	    	WHERE memberId = #{memberId}
+	    ) r ON od.orderDetailId = r.reviewId
+	    WHERE po.memberId = #{memberId} AND userDelete = 0
+	    ORDER BY orderDate DESC
+	    OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<!-- 주문 상세 정보 -->
+	<select id="findOrderByOrderDetail" parameterType="Long" resultType="com.sp.app.model.ProductOrder">
+		SELECT od.orderDetailId, od.orderId, od.qty, od.price, 
+			od.productCode, od.optionDetailNum, od.optionDetailNum2,
+			od.productMoney, od.savedPoint, od.userDelete, od.detailState,
+			TO_CHAR(po.orderDate, 'YYYY-MM-DD HH24:MI:SS') orderDate
+		FROM orderDetail od
+		JOIN productOrder po ON od.orderId = po.orderId
+		WHERE od.orderDetailId = #{orderDetailId}
+	</select>
+	
+	<!-- 구매 상세 정보 -->
+	<select id="findPaymentByOrderDetail" parameterType="map" resultType="com.sp.app.model.Payment">
+		SELECT po.orderId, po.orderDate, po.totalAmount, po.usedPoint, po.payment,
+			po.deliveryCharge, po.orderStateDate, po.orderState, po.deliveryName, po.invoiceNumber,
+			pd.payMethod, pd.cardName, pd.applyDate, 
+			od.orderDetailId, od.productCode, od.optionDetailNum, od.optionDetailNum2, od.qty, od.price,
+			od.productMoney, od.detailState, od.savedPoint,
+			p.productName, p.optionCount,
+			d1.optionValue, d2.optionValue optionValue2
+		FROM productOrder po
+		JOIN payment pd ON po.orderId = pd.orderId
+		JOIN orderDetail od ON po.orderId = od.orderId
+		JOIN product p ON od.productCode = p.productCode
+		LEFT OUTER JOIN optionDetail d1 ON od.optionDetailNum = d1.optionDetailNum
+		LEFT OUTER JOIN optionDetail d2 ON od.optionDetailNum2 = d2.optionDetailNum
+		WHERE po.memberId = #{memberId} AND od.orderDetailId = #{orderDetailId}
+	</select>
+	
+	<!-- 구매번호에 대한 구매 리스트 -->
+	<select id="listPurchase" parameterType="map" resultType="com.sp.app.model.Payment">
+		SELECT po.orderId, po.orderDate, po.totalAmount, po.usedPoint, po.payment,
+			po.deliveryCharge, po.orderStateDate, po.orderState, po.deliveryName, po.invoiceNumber,
+			od.orderDetailId, od.productCode, od.optionDetailNum, od.optionDetailNum2, od.qty, od.price,
+			od.productMoney, od.detailState, od.savedPoint,
+			p.productName, p.optionCount, p.thumbnail,
+			d1.optionValue, d2.optionValue optionValue2
+		FROM productOrder po
+		JOIN orderDetail od ON po.orderId = od.orderId
+		JOIN product p ON od.productCode = p.productCode
+		LEFT OUTER JOIN optionDetail d1 ON od.optionDetailNum = d1.optionDetailNum
+		LEFT OUTER JOIN optionDetail d2 ON od.optionDetailNum2 = d2.optionDetailNum
+		WHERE po.orderId = #{orderId}
+	</select>
+	
+	<!-- 구매 상품의 배송지 정보 -->
+	<select id="findByOrderDelivery" parameterType="map" resultType="com.sp.app.model.ProductOrder">
+		SELECT orderId, recipientName, tel, zip, addr1, addr2, pickup, accessInfo, passcode, requestMemo
+		FROM deliveryDestination
+		WHERE orderId = #{orderId}
+	</select>
+	
+	<!-- 주문상세상태 변경 -->
+	<update id="updateOrderDetailState" parameterType="map">
+		UPDATE orderDetail SET detailState = #{detailState}
+		WHERE orderDetailId = #{orderDetailId}
+	</update>
+	
+	<!-- 유저의 주문 내역을 삭제 상태로 변경 -->
+	<update id="updateOrderHistory" parameterType="Long">
+		UPDATE orderDetail SET userDelete = 1
+		WHERE orderDetailId = #{orderDetailId}
+	</update>
+	
+	<!-- 주문상세 상태 정보 등록 -->
+	<insert id="insertDetailStateInfo" parameterType="map">
+		INSERT INTO detailStateInfo(stateNum, orderDetailId, memberId, detailState, 
+			stateMemo, detailStateDate)
+		VALUES(detailState_seq.NEXTVAL, #{orderDetailId}, #{memberId}, #{detailState}, 
+			#{stateMemo,jdbcType=VARCHAR}, SYSDATE)
+	</insert>
+	
+	<select id="stateView" parameterType="map" resultType="com.sp.app.model.Payment">
+	    SELECT orderState, orderStateDate, deliveryName, invoiceNumber
+	    FROM productOrder p
+        LEFT OUTER JOIN orderDetail od ON p.orderId = od.orderId
+	    WHERE memberId = #{memberId} AND orderDetailId = #{orderDetailId};
+	</select>
+	
 </mapper>

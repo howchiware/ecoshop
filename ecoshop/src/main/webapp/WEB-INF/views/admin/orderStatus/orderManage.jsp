@@ -114,7 +114,7 @@ text-align: center;
 	<jsp:include page="/WEB-INF/views/admin/layout/header.jsp"/>
 </header>
 
-<main class="main-container">
+<main class="main-container" style="z-index: 100">
 	<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp"/>
 
 	<div class="right-PANEL">

@@ -191,7 +191,7 @@
 							<div class="text-end">
 								<label class="fs-6">포인트 적립 : </label>
 								<label class="fs-5">
-									<fmt:formatNumber value="${totalSavedMoney}"/>원
+									<fmt:formatNumber value="${totalSavedPoint}"/>원
 								</label>
 							</div>
 						</div>
