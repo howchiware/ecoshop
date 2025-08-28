@@ -26,10 +26,19 @@
             <p class="result-message">${message}</p>
                 
             <div>
-                <button type="button" class="btn-accent" onclick="location.href='${pageContext.request.contextPath}/member/login';">
-                 	로그인하러 가기
-                </button>                    
-            </div>
+			    <c:choose>
+			        <c:when test="${mode == 'dropout'}">
+			            <button type="button" class="btn-accent" onclick="location.href='${pageContext.request.contextPath}/'">
+			                메인화면으로 이동하기
+			            </button> 
+			        </c:when>
+			        <c:otherwise>
+			            <button type="button" class="btn-accent" onclick="location.href='${pageContext.request.contextPath}/member/login';">
+			                로그인하러 가기
+			            </button>
+			        </c:otherwise>
+			    </c:choose>
+			</div>
         </div>
     </main>
     

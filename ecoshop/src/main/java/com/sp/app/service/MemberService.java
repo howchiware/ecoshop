@@ -13,7 +13,7 @@ public interface MemberService {
 	public Member findById(String userId);
 	public Member findByMemberId(long memberId);
 	public Member findByNickname(String nickname);
-	public void deleteMember(Map<String, Object> map) throws Exception;
 	public void generatePwd(Member dto) throws Exception;
-	
+	public void updateMemberEnabled(long memberId) throws Exception;
+	public void deleteMember(long memberId) throws Exception;
 }

@@ -100,12 +100,6 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void deleteMember(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void generatePwd(Member dto) throws Exception {
 
 		String lowercase = "abcdefghijklmnopqrstuvwxyz";
@@ -179,4 +173,26 @@ public class MemberServiceImpl implements MemberService {
 		return dto;
 	}
 
+	@Override
+	public void updateMemberEnabled(long memberId) throws Exception {
+		try {
+			mapper.updateMemberEnabled(memberId);
+		} catch (Exception e) {
+			log.info("updateMemberEnabled : ", e);
+			throw e;
+		}
+	}
+	
+	@Override
+	@Transactional
+	public void deleteMember(long memberId) throws Exception {
+		try {
+			mapper.deleteMember2(memberId);
+			mapper.updateMemberEnabled(memberId);
+		} catch (Exception e) {
+			log.info("deleteMember", e);
+		}
+	}
+	
+	
 }

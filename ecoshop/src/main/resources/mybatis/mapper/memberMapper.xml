@@ -4,16 +4,15 @@
 <mapper namespace="com.sp.app.mapper.MemberMapper">
 	
 	<select id="loginMember" parameterType="map" resultType="com.sp.app.model.Member">
-		SELECT m1.memberId, m1.userId, password, name, nickname, email, userLevel 
+		SELECT m1.memberId, m1.userId, password, name, nickname, email, userLevel, enabled
 		FROM member1 m1
 		LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
-		WHERE m1.userId = #{userId} AND password = #{password}
+		WHERE m1.userId = #{userId} AND password = #{password} AND enabled = 1
 	</select>
 	
 	<select id="selectMemberId" resultType="long">
 	    SELECT
-	        (
-	            SELECT r FROM (
+	        ( SELECT r FROM (
 	                SELECT TRUNC(DBMS_RANDOM.VALUE(100000, 999999)) AS r
 	                FROM dual
 	                CONNECT BY LEVEL &lt;= 1000
@@ -75,5 +74,13 @@
 		WHERE memberId = #{memberId}
 	</update>
 
-	
+	<delete id="deleteMember2" parameterType="map">
+		DELETE FROM member2
+		WHERE memberId = #{memberId}
+    </delete>
+    
+    <update id="updateMemberEnabled" parameterType="map">
+		UPDATE member1 SET enabled = 0
+		WHERE memberId = #{memberId}
+    </update>
 </mapper>

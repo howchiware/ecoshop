@@ -18,6 +18,7 @@
     </header>
     
     <main class="container my-5">
+    
         <div class="form-section">
             <h2 class="form-title">${mode == "update" ? "회원 정보 수정" : "회원가입"}</h2>
             <form name="memberForm" method="post">
@@ -129,7 +130,7 @@
                         </button>
                         <button type="button" class="btn btn-default btn-lg" onclick="location.href='${pageContext.request.contextPath}/';">
                             ${mode == "update" ? "수정취소" : "가입취소"} <i class="bi bi-x"></i>
-                        </button>
+                        </button>                 
                         <input type="hidden" name="loginIdValid" id="loginIdValid" value="false">
                         <input type="hidden" name="nicknameValid" id="nicknameValid" value="false">
                     </div>

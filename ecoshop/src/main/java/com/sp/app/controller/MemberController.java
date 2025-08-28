@@ -183,6 +183,10 @@ public class MemberController {
 
 		try {
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			if(info == null) {
+				return "redirect:/";
+			}
+			
 			Member dto = Objects.requireNonNull(service.findByMemberId(info.getMemberId()));
 
 			if (! dto.getPassword().equals(password)) {
@@ -194,9 +198,8 @@ public class MemberController {
 			
 			if (mode.equals("dropout")) {
 				
-				  Map<String, Object> map = new HashMap<>();
-				  map.put("memberId", info.getMemberId());
-				 
+				service.deleteMember(info.getMemberId());
+				
 				session.removeAttribute("member");
 				session.invalidate();
 
@@ -218,9 +221,28 @@ public class MemberController {
 		} catch (NullPointerException e) {
 			session.invalidate();
 		} catch (Exception e) {
+			log.info("pwdSubmit: ", e);
 		}
 		
 		return "redirect:/";
+	}
+	
+	@GetMapping("update")
+	public String updateForm(Model model, HttpSession session) {
+		
+		try {
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			if(info == null) {
+				return "redirect:/";
+			}
+			
+			model.addAttribute("mode", "update");
+			return "member/member";
+		} catch (Exception e) {
+			log.info("updateForm: ", e);
+		}
+		
+		return "member/editMember";
 	}
 	
 	@PostMapping("update")

@@ -108,21 +108,26 @@
             </div>
             <div class="row mb-2">
                 <label for="addr1" class="col-sm-3 col-form-label">기본주소</label>
-                <div class="col-sm-9">
+                <div class="col-sm-6">
                     <input type="text" name="addr1" id="addr1" class="form-control" readonly value="${dto.addr1}">
                 </div>
             </div>
             <div class="row mb-4">
                 <label for="addr2" class="col-sm-3 col-form-label">상세주소</label>
-                <div class="col-sm-9">
+                <div class="col-sm-6">
                     <input type="text" name="addr2" id="addr2" class="form-control" value="${dto.addr2}">
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-sm-9 offset-sm-3 d-flex justify-content-start gap-2">
+                <div class="col-sm-9 offset-sm-3 d-flex justify-content-start gap-2">      
                     <button type="button" class="btn btn-primary btn-lg" onclick="updateInfo();">정보수정</button>
                     <button type="button" class="btn btn-secondary btn-lg" onclick="location.href='${pageContext.request.contextPath}/member/myPage';">수정취소</button>
+                	 <c:if test="${mode == 'update'}">
+			            <button type="button" class="btn btn-danger btn-lg" onclick="location.href='${pageContext.request.contextPath}/member/pwd?dropout=1';">
+			                회원탈퇴 <i class="bi bi-person-x"></i>
+			            </button>
+			         </c:if>   
                 </div>
             </div>
         </form>
