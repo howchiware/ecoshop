@@ -14,6 +14,7 @@ import com.sp.app.model.Summary;
 public interface ProductReviewMapper {
 	int dataCount(Map<String, Object> map);
 	public List<ProductReview> listReview(Map<String, Object> map);
+	public List<ProductReview> listReviewOnlyPhoto(Map<String, Object> map);
 	public Summary findByReviewSummary(Map<String, Object> map);
 
 	public void insertReview(ProductReview dto) throws Exception;
@@ -30,4 +31,6 @@ public interface ProductReviewMapper {
 	
 	public List<ProductReview>listReviewFile(long num);
 	public void deleteReview(long num) throws SQLException;
+	
+	public List<ProductReview> imgList(long productCode);
 }

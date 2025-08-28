@@ -64,6 +64,32 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 		
 		return list;
 	}
+	
+	@Override
+	public List<ProductReview> listReviewOnlyPhoto(Map<String, Object> map) {
+		List<ProductReview> list = null;
+		
+		try {
+			list = mapper.listReviewOnlyPhoto(map);
+			
+			for (ProductReview dto : list) {
+				if(dto.getReviewImg() != null) {
+					dto.setListReviewImg(dto.getReviewImg().split(","));
+				}
+				dto.setName(myUtil.nameMasking(dto.getName()));
+				
+				dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+				
+				if(dto.getAnswer() != null) {
+					dto.setAnswer(dto.getAnswer().replaceAll("\n", "<br>"));
+				}
+			}
+		} catch (Exception e) {
+			log.info("listReviewOnlyPhoto : ", e);
+		}
+		
+		return list;
+	}
 
 	@Override
 	public Summary findByReviewSummary(Map<String, Object> map) {
@@ -231,6 +257,17 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 			
 			throw e;
 		}
+	}
+
+	@Override
+	public List<ProductReview> imgList(long productCode) {
+		List<ProductReview> imgList = null;
+		try {
+			imgList = mapper.imgList(productCode);
+		} catch (Exception e) {
+			log.info("imgList : ", e);
+		}
+		return imgList;
 	}	
 
 }

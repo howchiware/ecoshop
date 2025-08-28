@@ -51,9 +51,61 @@ $(function(){
 	});
 });
 
+$(function(){
+	$('#myTabContent').on('click', '#onlyPhotoReview', function(){
+		if($(this).hasClass('clicked')){
+			$(this).removeClass('clicked');
+			$(this).find('span').text('포토 구매평만 보기');
+		} else {
+			$(this).addClass('clicked');
+			$(this).find('span').text('모든 구매평 보기');
+		}
+		
+		listReview(1);
+	});
+});
+
+$(function(){
+	$('#myTabContent').on('click', '.moreBtn', function(){
+		const contextPath = document.getElementById('web-contextPath').value;
+		let productCode = $(this).attr('data-productCode');
+		console.log(productCode);
+			
+		let url = contextPath + '/products/imgView?productCode=' + productCode;
+		
+		const fn = function(data) {
+			let imgList = data.imgList;
+			
+			let out = '';
+			
+			imgList.map(item => {
+		        const { reviewImg } = item;
+				
+				out += `<div class="col-3">
+								<img class="border rounded w-100" style="height: 170px; margin: 10px 0px;" src="${contextPath}/uploads/review/${reviewImg}">
+							</div>`;
+			});
+
+
+			console.log(out);
+			$('#reviewImgModal-row').html(out);
+			$('#imgViewDialogModal').modal('show');
+		};
+
+		ajaxRequest(url, 'get', null, 'json', fn);
+		
+	});
+});
+
 function listReview(page) {
 	const contextPath = document.getElementById('web-contextPath').value;
 	const productCode = document.getElementById('product-productCode').value;
+	let onlyPhoto = document.getElementById('onlyPhotoReview').classList.contains('clicked');
+	if(onlyPhoto){
+		onlyPhoto = 1;
+	} else {
+		onlyPhoto = 0;
+	}
 	
 	let clickedLiEl = $('ul.reviewSortBy li.clicked');
 	let clickedAEl = clickedLiEl.children().first();
@@ -64,7 +116,7 @@ function listReview(page) {
 	}
 	
 	let url = contextPath + '/review/list';
-	let requestParams = {productCode:productCode, pageNo:page, sortBy:sortBy};
+	let requestParams = {productCode:productCode, pageNo:page, sortBy:sortBy, onlyPhoto:onlyPhoto};
 	
 	const fn = function(data) {
 		printReview(data);
@@ -689,7 +741,7 @@ $(function(){
 
 // 리뷰 클릭시 모달 띄우기
 $(function(){
-	$('div.detailTabList').on('click', 'span.viewReviewDetail-span', function(){
+	$('div.detailTabList').on('click', 'span.viewReviewDetail-span, div.reviewImgView-div', function(){
 		// ajax
 		const contextPath = document.getElementById('web-contextPath').value;
 		let reviewId = $(this).attr('data-reviewId');

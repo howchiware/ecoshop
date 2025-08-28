@@ -17,7 +17,29 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css_product/productInfo_css.css">
+<style type="text/css">
+  .item-box{
+    position: relative;
+  }
+  
+  .moreBtn{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    display: table;
+    background: rgb(199 199 199 / 70%);
+    color: #fff;
+  }
 
+  .moreBtn > p{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 15px;
+  }
+</style>
 </head>
 <body>
 

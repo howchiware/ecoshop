@@ -19,6 +19,7 @@ import com.sp.app.common.PaginateUtil;
 import com.sp.app.model.Product;
 import com.sp.app.model.ProductDeliveryRefundInfo;
 import com.sp.app.model.ProductOrder;
+import com.sp.app.model.ProductReview;
 import com.sp.app.model.SessionInfo;
 import com.sp.app.service.MyShoppingService;
 import com.sp.app.service.ProductOrderService;
@@ -405,7 +406,14 @@ public class ProductController {
 				leaveReview = true;
 			}
 			
+			List<ProductReview> imgList = reviewService.imgList(productId);
+			for(ProductReview vo : imgList) {
+				System.out.println(vo.getReviewId());				
+				System.out.println(vo.getReviewImg());				
+			}
+			
 			model.addAttribute("dto", dto);
+			model.addAttribute("imgList", imgList);
 			model.addAttribute("listOption", listOption);
 			model.addAttribute("listOptionDetail", listOptionDetail);
 			model.addAttribute("listPhoto", listPhoto);
@@ -520,4 +528,24 @@ public class ProductController {
 		List<Product> list = productService.listOptionDetailStock(paramMap);
 		return list;
 	}	
+	
+	// AJAX - JSON
+	@GetMapping("imgView")
+	@ResponseBody
+	public Map<String, ?> imgView(
+			@RequestParam(name = "productCode") long productCode,
+			HttpSession session){
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		try {
+			List<ProductReview> imgList = reviewService.imgList(productCode);
+			
+			model.put("imgList", imgList);
+			
+		} catch (Exception e) {
+			log.info("imgView : ", e);
+		}
+		
+		return model;
+	}
 }

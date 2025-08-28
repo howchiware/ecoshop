@@ -137,6 +137,7 @@ public class ProductReviewController {
 			@RequestParam(name = "productCode") long productCode,
 			@RequestParam(name = "sortBy", defaultValue = "0") int sortBy,
 			@RequestParam(name = "pageNo", defaultValue = "1") int current_page,
+			@RequestParam(name = "onlyPhoto", defaultValue = "0") int onlyPhoto,
 			HttpSession session) throws Exception {
 		
 		Map<String, Object> model = new HashMap<String, Object>();
@@ -150,6 +151,7 @@ public class ProductReviewController {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("productCode", productCode);
 			map.put("sortBy", sortBy);
+			map.put("onlyPhoto", onlyPhoto);
 			
 			Summary summary = Objects.requireNonNull(service.findByReviewSummary(map));
 			
@@ -164,7 +166,13 @@ public class ProductReviewController {
 			map.put("offset", offset);
 			map.put("size", size);
 
-			List<ProductReview> list = service.listReview(map);
+			List<ProductReview> list = null;
+			System.out.println(onlyPhoto);
+			if(onlyPhoto == 0) {
+				list = service.listReview(map);
+			} else if(onlyPhoto == 1) {
+				list = service.listReviewOnlyPhoto(map);
+			}
 			if(info != null) {
 				for(ProductReview dto : list) {
 					if(info.getMemberId() == info.getMemberId()) {
@@ -186,7 +194,7 @@ public class ProductReviewController {
 					dto.setUserReviewHelpful(service.userReviewHelpful(reviewMap));					
 				}
 			}
-			
+
 			String paging = paginateUtil.pagingMethod(current_page, total_page, "listReview");
 						
 			model.put("list", list);
@@ -334,5 +342,4 @@ public class ProductReviewController {
 		model.put("state", state);
 		return model;
 	}
-	
 }
