@@ -18,6 +18,7 @@ import lombok.Setter;
 public class GongguReview {
     private long gongguOrderDetailId;
     private String username;
+    private String name;
     private int rate;
     private String content;
     private String regDate;

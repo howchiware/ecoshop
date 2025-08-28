@@ -25,9 +25,9 @@
 			</when>
 		</choose>
 		<if test="onlyPhoto==1">
-			AND reviewId IN(
-				SELECT reviewId
-				FROM productReviewDetail
+			AND gongguOrderDetailId IN(
+				SELECT gongguOrderDetailId
+				FROM gongguReviewDetail
 			)
 		</if>
 	</select>
@@ -148,26 +148,26 @@
 	
 	<!-- 리뷰 도움이 돼요 삭제 -->
 	<delete id="deleteReviewHelpful" parameterType="com.sp.app.model.GongguReviewHelpful">
-		DELETE FROM reviewHelpful WHERE memberId = #{memberId} AND gongguOrderDetailId = #{gongguOrderDetailId}
+		DELETE FROM gongguReviewHelpful WHERE memberId = #{memberId} AND gongguOrderDetailId = #{gongguOrderDetailId}
 	</delete>
 	
 	<!-- 리뷰 도움이 돼요 삽입 -->
 	<insert id="insertReviewHelpful" parameterType="com.sp.app.model.GongguReviewHelpful">
-		INSERT INTO reviewHelpful(memberId, gongguOrderDetailId, reviewHelpul) 
-		VALUES(#{memberId}, #{gongguOrderDetailId}, #{reviewHelpul})
+		INSERT INTO gongguReviewHelpful(memberId, gongguOrderDetailId, reviewHelpful) 
+		VALUES(#{memberId}, #{gongguOrderDetailId}, #{userReviewHelpful})
 	</insert>
 	
 	<!-- 리뷰 도움이 돼요 개수 카운트 -->
 	<select id="countReviewHelpful" parameterType="map" resultType="Integer">
-		SELECT COUNT(DECODE(reviewHelpul, 1, 1)) helpfulCount
-		FROM reviewHelpful
+		SELECT COUNT(DECODE(reviewHelpful, 1, 1)) helpfulCount
+		FROM gongguReviewHelpful
 		WHERE gongguOrderDetailId = #{gongguOrderDetailId}
 	</select>
 	
 	<!-- 사용자의 리뷰 도움이 돼요 여부 확인 -->
 	<select id="userReviewHelpful" parameterType="map" resultType="Integer">
-		SELECT reviewHelpul
-		FROM reviewHelpful
+		SELECT reviewHelpful
+		FROM gongguReviewHelpful
 		WHERE gongguOrderDetailId = #{gongguOrderDetailId} AND memberId = #{memberId}
 	</select>
 	

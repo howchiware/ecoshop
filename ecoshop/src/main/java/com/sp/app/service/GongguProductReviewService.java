@@ -10,6 +10,7 @@ import com.sp.app.model.GongguSummary;
 public interface GongguProductReviewService {
 	public int dataCount(Map<String, Object> map);
 	public List<GongguReview> listGongguReview(Map<String, Object> map);
+	public List<GongguReview> listGongguReviewOnlyPhoto(Map<String, Object> map);
 	public GongguSummary findByGongguReviewSummary(Map<String, Object> map);
 	public void insertGongguReview(GongguReview dto, String uploadPath) throws Exception;
 	public void deleteGongguReview(long gongguOrderDetailId, String uploadPath) throws Exception;

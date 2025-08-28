@@ -15,6 +15,7 @@ import com.sp.app.mapper.GongguOrderMapper;
 import com.sp.app.model.GongguOrder;
 import com.sp.app.model.GongguPayment;
 import com.sp.app.model.GongguReview;
+import com.sp.app.model.ProductOrder;
 import com.sp.app.state.OrderState;
 
 import lombok.RequiredArgsConstructor;
@@ -134,14 +135,15 @@ public class GongguOrderServiceImpl implements GongguOrderService {
 	}
 
 	@Override
-	public boolean didIBuyGonggu(Map<String, Object> map) {
-	    try {
-	        int count = mapper.countBuyGonggu(map); 
-	        return count > 0;
-	    } catch (Exception e) {
-	        log.info("didIBuyGonggu : ", e);
-	    }
-	    return false;
+	public List<GongguOrder> didIBuyGonggu(Map<String, Object> map) {
+		List<GongguOrder> list = null;
+		try {
+			list = mapper.didIBuyThis(map);
+		} catch (Exception e) {
+			log.info("didIBuyThis : ", e);
+		}
+		
+		return list;
 	}
 
 

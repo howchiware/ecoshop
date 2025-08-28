@@ -64,12 +64,6 @@ public class GongguOrderController {
 	        map.put("memberId", info.getMemberId());
 	        map.put("gongguProductId", gongguProductId);
 	        
-	        if (gongguOrderService.didIBuyGonggu(map)) {
-	            model.addAttribute("message", "이미 구매가 완료되었습니다.");
-	            model.addAttribute("gongguProductId", gongguProductId);
-	            return "gonggu/gongguProductInfo"; 
-	        }
-	        
 			Member orderUser = memberService.findById(info.getUserId());
 			
 			String gongguOrderNumber = null; // 주문 상품 번호

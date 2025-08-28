@@ -14,6 +14,8 @@ import com.sp.app.mapper.GongguReviewMapper;
 import com.sp.app.model.GongguReview;
 import com.sp.app.model.GongguReviewHelpful;
 import com.sp.app.model.GongguSummary;
+import com.sp.app.model.ProductReview;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -242,6 +244,32 @@ public class GongguProductReviewServiceImpl implements GongguProductReviewServic
 			log.info("imgList : ", e);
 		}
 		return imgList;
-	}	
+	}
+
+	@Override
+	public List<GongguReview> listGongguReviewOnlyPhoto(Map<String, Object> map) {
+		List<GongguReview> list = null;
+		
+		try {
+			list = mapper.listReviewOnlyPhoto(map);
+			
+			for (GongguReview dto : list) {
+				if(dto.getReviewImg() != null) {
+					dto.setListReviewImg(dto.getReviewImg().split(","));
+				}
+				dto.setUsername(myUtil.nameMasking(dto.getUsername()));
+				
+				dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+				
+				if(dto.getAnswer() != null) {
+					dto.setAnswer(dto.getAnswer().replaceAll("\n", "<br>"));
+				}
+			}
+		} catch (Exception e) {
+			log.info("listReviewOnlyPhoto : ", e);
+		}
+		
+		return list;
+	}
 
 }

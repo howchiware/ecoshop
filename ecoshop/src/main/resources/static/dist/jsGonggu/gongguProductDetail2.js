@@ -39,7 +39,7 @@ function listReview(page) {
 		sortBy = 0;
 	}
 	
-	let url = contextPath + '/review/list';
+	let url = contextPath + '/gongguReview/list';
 	let requestParams = {gongguProductId:gongguProductId, pageNo:page, sortBy:sortBy};
 	
 	const fn = function(data) {
@@ -105,7 +105,7 @@ function printReview(data) {
 
             // 각 리뷰 항목에 대한 전체 HTML 구조를 반환
             return `
-				<div class="reviewTd" data-reviewId="${gongguOrderDetailId}">
+				<div class="reviewTd" data-gongguOrderDetailId="${gongguOrderDetailId}">
 					<div class="row ms-1 me-1 mt-3 border-bottom">
 		                <div class="col-10 p-2">
 		                	<div class="row">
@@ -116,13 +116,13 @@ function printReview(data) {
 		                	<div class="row">
 				                <div class="mt-2 p-2">${content}</div>
 				                ${imgNamesHtml}           
-								<div class="mt-2 mb-2"><span class="viewReviewDetail-span" data-reviewId=${reviewId}>리뷰 상세 보기</span></div>   		
+								<div class="mt-2 mb-2"><span class="viewReviewDetail-span" data-gongguOrderDetailId=${gongguOrderDetailId}>리뷰 상세 보기</span></div>   		
 		                	</div>
 		                	<div class="row">
 		                		<div class="p-2" style="display: inline-flex; align-items: center;" data-userReviewHelpful="${userReviewHelpful}">
 		                			<p style="margin: 0px; margin-right: 10px;">${reviewHelpfulCount}명에게 도움된 리뷰</p>
-									<button type="button" class="btnSendHelpful" data-reviewId=${reviewId} data-reviewHelpful="1"><i class="bi bi-hand-thumbs-up" style="${userReviewHelpful===1? 'color:#0d6efd;':''}"></i>&nbsp;<span>도움이 돼요</span></button>
-									<button type="button" class="btnSendHelpful" data-reviewId=${reviewId} data-reviewHelpful="0"><i class="bi bi-hand-thumbs-down" style="${userReviewHelpful==-0? 'color:red;':''}"></i>&nbsp;<span>도움이 안돼요</span></button>
+									<button type="button" class="btnSendHelpful" data-gongguOrderDetailId=${gongguOrderDetailId} data-reviewHelpful="1"><i class="bi bi-hand-thumbs-up" style="${userReviewHelpful===1? 'color:#0d6efd;':''}"></i>&nbsp;<span>도움이 돼요</span></button>
+									<button type="button" class="btnSendHelpful" data-gongguOrderDetailId=${gongguOrderDetailId} data-reviewHelpful="0"><i class="bi bi-hand-thumbs-down" style="${userReviewHelpful==-0? 'color:red;':''}"></i>&nbsp;<span>도움이 안돼요</span></button>
 		                		</div>
 		                	</div>
 		                </div>
@@ -199,7 +199,7 @@ function reviewWrite(){
 	let gongguProductId = document.querySelector('p.reviewWrite-pTag').getAttribute('data-gongguProductId');
 	console.log(gongguProductId);
 	
-	let url = contextPath + '/review/listMyOrder?gongguProductId=' + gongguProductId;
+	let url = contextPath + '/gongguReview/listMyOrder?gongguProductId=' + gongguProductId;
 	
 	const f = document.querySelector('form[name="reviewForm"]');
 	
@@ -299,7 +299,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		let s;
 		
 		console.log(f.rate.value);
-		if(f.reviewId.value === '0') {
+		if(f.gongguOrderDetailId.value === '0') {
 			alert('구매일을 선택해주세요.');
 			return false;
 		}
@@ -321,7 +321,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		}
 		
 		const contextPath = document.getElementById('web-contextPath').value;
-		const url = contextPath + '/review/write';
+		const url = contextPath + '/gongguReview/write';
 		console.log(url);
 		// FormData : form 필드와 그 값을 나타내는 일련의 key/value 쌍을 쉽게 생성하는 방법을 제공 
 		// FormData는 Content-Type을 명시하지 않으면 multipart/form-data로 전송
@@ -659,13 +659,13 @@ $(function(){
 	$('div.detailTabList').on('click', 'span.viewReviewDetail-span', function(){
 		// ajax
 		const contextPath = document.getElementById('web-contextPath').value;
-		let reviewId = $(this).attr('data-reviewId');
+		let gongguOrderDetailId = $(this).attr('data-gongguOrderDetailId');
 
-		let url = contextPath + '/review/viewReviewDetail?reviewId=' + reviewId;
+		let url = contextPath + '/gongguReview/viewReviewDetail?gongguOrderDetailId=' + gongguOrderDetailId;
 
 		const fn = function(data) {
 			
-			let reviewId = data.detailReview.reviewId;
+			let gongguOrderDetailId = data.detailReview.gongguOrderDetailId;
 			let name = data.detailReview.name;
 			let rate = data.detailReview.rate;
 			let content = data.detailReview.content;
@@ -727,7 +727,7 @@ $(function(){
 			// 각 리뷰 항목에 대한 전체 HTML 구조를 반환
 			reviewsHtml =  `
 			
-						<div class="reviewTd" data-reviewId="${reviewId}">
+						<div class="reviewTd" data-gongguOrderDetailId="${gongguOrderDetailId}">
 							<div class="row ms-1 me-1 mt-3 border-bottom">
 					            <div class="col-9 p-2">
 					            	<div class="row">
@@ -742,8 +742,8 @@ $(function(){
 					            	<div class="row">
 					            		<div class="p-2" style="display: inline-flex; align-items: center;" data-userReviewHelpful="${userReviewHelpful}">
 					            			<p style="margin: 0px; margin-right: 10px;">${reviewHelpfulCount}명에게 도움된 리뷰</p>
-										<button type="button" class="btnSendHelpful" data-reviewId=${reviewId} data-reviewHelpful="1"><i class="bi bi-hand-thumbs-up" style="${userReviewHelpful===1? 'color:#0d6efd;':''}"></i>&nbsp;<span>도움이 돼요</span></button>
-										<button type="button" class="btnSendHelpful" data-reviewId=${reviewId} data-reviewHelpful="0"><i class="bi bi-hand-thumbs-down" style="${userReviewHelpful==-0? 'color:red;':''}"></i>&nbsp;<span>도움이 안돼요</span></button>
+										<button type="button" class="btnSendHelpful" data-gongguOrderDetailId=${gongguOrderDetailId} data-reviewHelpful="1"><i class="bi bi-hand-thumbs-up" style="${userReviewHelpful===1? 'color:#0d6efd;':''}"></i>&nbsp;<span>도움이 돼요</span></button>
+										<button type="button" class="btnSendHelpful" data-gongguOrderDetailId=${gongguOrderDetailId} data-reviewHelpful="0"><i class="bi bi-hand-thumbs-down" style="${userReviewHelpful==-0? 'color:red;':''}"></i>&nbsp;<span>도움이 안돼요</span></button>
 					            		</div>
 					            	</div>
 					            </div>
@@ -798,7 +798,7 @@ $(function(){
 		const contextPath = document.getElementById('web-contextPath').value;
 		const $btn = $(this);
 		const $i = $(this).find('i');
-		let reviewId = $btn.attr('data-reviewId');
+		let gongguOrderDetailId = $btn.attr('data-gongguOrderDetailId');
 		let reviewHelpful = $btn.attr('data-reviewHelpful');
 		let isReviewHelpful = $btn.parent('div').attr('data-userReviewHelpful') === '1';
 		let isNotReviewHelpful = $btn.parent('div').attr('data-userReviewHelpful') === '0';
@@ -821,8 +821,8 @@ $(function(){
 			return false;
 		}
 		
-		let url = contextPath + '/review/insertReviewHelpful';
-		let params = {reviewId:reviewId, reviewHelpful:reviewHelpful, isReviewHelpful:isReviewHelpful, isNotReviewHelpful:isNotReviewHelpful};
+		let url = contextPath + '/gongguReview/insertReviewHelpful';
+		let params = {gongguOrderDetailId:gongguOrderDetailId, reviewHelpful:reviewHelpful, isReviewHelpful:isReviewHelpful, isNotReviewHelpful:isNotReviewHelpful};
 		
 		const fn = function(data){
 			let state = data.state;
