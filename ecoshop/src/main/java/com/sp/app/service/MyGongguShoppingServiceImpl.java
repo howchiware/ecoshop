@@ -44,17 +44,6 @@ public class MyGongguShoppingServiceImpl implements MyGongguShoppingService {
 		}
 	}
 
-	@Override
-	public List<GongguLike> listGongguLike(Long memberId) throws Exception {
-		List<GongguLike> list = null;
-		try {
-			list = mapper.listGongguLike(memberId);
-		} catch (Exception e) {
-			log.error("listGongguLike : ", e);
-			throw e;
-		}
-		return list;
-	}
 
 	@Override
 	public GongguLike findByGongguLikeId(Map<String, Object> map) throws Exception {
@@ -67,7 +56,20 @@ public class MyGongguShoppingServiceImpl implements MyGongguShoppingService {
 		}
 		return dto;
 	}
-
+	
+	@Override
+	public List<GongguLike> listGongguLike(Map<String, Object> map) {
+		List<GongguLike> list = null;
+		
+		try {
+			list = mapper.listGongguLike(map);
+		} catch (Exception e) {
+			log.info("listGongguLike : ", e);
+		}
+		
+		return list;
+	}
+	
 	@Override
 	public void insertDestination(Destination dto) throws Exception {
 		try {
@@ -150,4 +152,18 @@ public class MyGongguShoppingServiceImpl implements MyGongguShoppingService {
 		
 		return dto;
 	}
+
+	@Override
+	public int gongguLikeDataCount(Map<String, Object> map) {
+		int result = 0;
+		
+		try {
+			result = mapper.gongguLikeDataCount(map);
+		} catch (Exception e) {
+			log.info("gongguLikeDataCount : ", e);
+		}
+		
+		return result;
+	}
+
 }

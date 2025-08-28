@@ -192,7 +192,7 @@ public class GongguOrderServiceImpl implements GongguOrderService {
 				dto.setOrderStateInfo(OrderState.ORDERSTATEINFO[dto.getOrderState()]);
 				dto.setDetailStateInfo(OrderState.DETAILSTATEINFO[dto.getDetailState()]);
 				
-				if(dto.getOrderState() == 7 || dto.getOrderState() == 9) {
+				if(dto.getOrderState() == 1) {
 					orderState = "결제완료";
 				} else {
 					orderState = OrderState.ORDERSTATEINFO[dto.getOrderState()];
@@ -245,6 +245,7 @@ public class GongguOrderServiceImpl implements GongguOrderService {
 				dto.setDetailStateInfo(OrderState.DETAILSTATEMANAGER[dto.getDetailState()]);
 			}
 			
+			
 		} catch (NullPointerException e) {
 		} catch (Exception e) {
 			log.info("findByOrderDetail : ", e);
@@ -269,10 +270,8 @@ public class GongguOrderServiceImpl implements GongguOrderService {
 	@Override
 	public void updateGongguOrderDetailState(Map<String, Object> map) throws Exception {
 		try {
-			// gongguOrderDetail 테이블 상태 변경
 			mapper.updateGongguOrderDetailState(map);
 			
-			// gongguDetailStateInfo 테이블에 상태 변경 내용 및 날짜 저장
 			mapper.insertGongguDetailStateInfo(map);
 			
 		} catch (Exception e) {
@@ -313,7 +312,7 @@ public class GongguOrderServiceImpl implements GongguOrderService {
 	        map.put("orderState", orderState);
 	        mapper.updateOrderState(map);
 	    } catch (Exception e) {
-	        log.error("updateOrderState 오류: ", e);
+	        log.error("updateOrderState : ", e);
 	        throw e;
 	    }
 	}

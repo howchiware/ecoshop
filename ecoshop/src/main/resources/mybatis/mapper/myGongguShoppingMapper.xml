@@ -23,7 +23,7 @@
     
 	<select id="listGongguLike" resultType="com.sp.app.model.GongguLike" parameterType="Long">
     	SELECT gpl.gongguProductLikeNum, gpl.memberId, gpl.gongguProductId, likeDate,
-    		gp.gongguProductName, gp.gongguPrice, gp.gongguThumbnail
+    		gp.gongguProductName, (gp.originalPrice * (1-gp.sale/100)) AS price, gp.gongguThumbnail
     	FROM gongguProductLike gpl
     	JOIN gongguProduct gp ON gpl.gongguProductId = gp.gongguProductId
 		WHERE gpl.memberId = #{memberId}
@@ -44,6 +44,12 @@
 			AND gongguProductId = #{gongguProductId}		
 		</if>
     </delete>
+    
+    <select id="gongguLikeDataCount" parameterType="map">
+    	SELECT NVL(COUNT(*), 0)
+		FROM gongguProductLike
+    	WHERE memberId = #{memberId}
+    </select>
     
     <!-- 데스터네이션(배송지) 등록 -->
 	<insert id="insertDestination" parameterType="com.sp.app.model.Destination">

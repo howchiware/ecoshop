@@ -145,7 +145,7 @@ function printProductLike(data) {
 					        <div class="product-info">
 					            <div class="product-title">\${productName}</div>
 					            <div class="product-price">
-					                <span class="original-price">\${price}원</span>
+					                <span class="price">\${price}원</span>
 					            </div>
 					            <div class="product-actions">
 					                <button class="btn btn-sm btn-outline-primary btn-productCart" data-productCode="\${productCode}" title="장바구니 담기">
@@ -227,7 +227,121 @@ $(function(){
 	});
 });
 
+
+//공동구매 - 찜 리스트
+function listGongguProductLike(page) {
+ let url = '${pageContext.request.contextPath}/myGongguShopping/gongguList'; 
+ let requstParams = 'pageNo=' + page;
+ 
+ const fn = function(data) {
+     printGongguProductLike(data);
+ };
+ 
+ ajaxRequest(url, 'get', requstParams, 'json', fn);
+}
+
+function printGongguProductLike(data) {
+	 const { dataCount, paging, size, pageNo, total_page, list } = data;
+	 
+	 let out = '';
+	 
+	 if (dataCount === 0 || !list || list.length === 0) {
+	     out += `<p class="text-center">찜한 공동구매 상품 목록이 없습니다.</p>`;
+	 } else {
+	     out += `<div class="text-end pb-2"><button type="button" class="btn-default" onclick="gongguDeleteAll();"> 전체삭제 </button></div>`;
+	     
+	     for (const item of list) {
+	         const { 
+	             gongguLikeNum, memberId, gongguProductId, gongguLikeDate,
+	             gongguProductName, price, gongguThumbnail
+	         } = item;
+	         
+	         out += `<div class="col-md-6">
+	                     <div class="product-card">
+	                         <img class="product-img btn-gongguProduct" data-gongguProductId="\${gongguProductId}" src="${pageContext.request.contextPath}/uploads/gonggu/\${gongguThumbnail}">
+	                         <div class="product-info">
+	                             <div class="product-title">\${gongguProductName}</div>
+	                             <div class="product-price">
+	                                 <span>\${price}원</span>
+	                             </div>
+	                             <div class="product-actions">
+	                                 <button class="btn btn-sm btn-outline-primary btn-gongguProduct" data-gongguProductId="\${gongguProductId}" title="상품 바로가기">
+	                                     <i class="bi bi-cart-plus"></i>
+	                                 </button>
+	                                 <button class="btn btn-sm btn-outline-danger btn-gongguDelete" data-gongguProductId="\${gongguProductId}" title="삭제">
+	                                     <i class="bi bi-trash"></i>
+	                                 </button>
+	                             </div>
+	                         </div>
+	                     </div>
+	                 </div>`;
+	     }
+	 }
+	 
+	 // 페이지네이션 추가
+	 if (dataCount > 0 && paging) { // 데이터가 있을 때만 페이지네이션 표시
+	     out += `<div class="page-navigation">\${paging}</div>`;
+	 }
+
+	 $('.list-question').html(out);
+	}
+
+//공동구매 찜 전체 삭제
+function gongguDeleteAll() {
+ if(confirm('찜한 공동구매 상품 목록을 전체 삭제하시겠습니까?')) {
+     const params = null;
+     let url = '${pageContext.request.contextPath}/myGongguShopping/gongguLike'; 
+     
+     const fn = function(data) {
+         const state = data.state;
+         
+         if(state === 'false') {
+             return false;
+         }
+         
+         $('.list-question').html('<p class="text-center">찜한 공동구매 상품 목록이 없습니다.</p>');
+     };
+     
+     ajaxRequest(url, 'delete', params, 'json', fn);
+ }
+}
+
+$(function(){
+	$('.list-question').on('click', '.btn-gongguProduct', function(){
+		const gongguProductId = $(this).attr('data-gongguProductId');
+		let url = '${pageContext.request.contextPath}/gonggu/' + gongguProductId;
+		location.href = url;
+	});
+
+	$('.list-question').on('click', '.btn-gongguDelete', function(){
+		if(confirm('선택한 공동구매 상품 목록을 삭제하시겠습니까 ? ')) {
+			const $el = $(this);
+			const $row = $el.closest('.row');
+			const gongguProductId = $(this).attr('data-gongguProductId');
+			
+			const params = {gongguProductId: gongguProductId};
+			let url = '${pageContext.request.contextPath}/myGongguShopping/gongguLike/' + gongguProductId; 
+			
+			const fn = function(data) {
+				const state = data.state;
+				
+				if(state === 'false') {
+					return false;
+				}
+				
+				$el.closest('.col-md-6').remove();
+
+				if($row.find('.col-md-6').length === 0) {
+					$('.list-question').html('<p class="text-center">찜한 공동구매 상품 목록이 없습니다.</p>');
+				}
+			};
+			
+			ajaxRequest(url, 'delete', params, 'json', fn);
+		}
+	});
+});
 </script>
+
 
 <footer>
 	<jsp:include page="/WEB-INF/views/layout/footer.jsp"/>

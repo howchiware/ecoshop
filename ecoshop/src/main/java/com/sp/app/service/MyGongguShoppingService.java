@@ -10,8 +10,9 @@ public interface MyGongguShoppingService {
 
 	public void insertGongguLike(Map<String, Object> map) throws Exception;
 	public void deleteGongguLike(Map<String, Object> map) throws Exception;
-	public List<GongguLike> listGongguLike(Long memberId) throws Exception;
+	public List<GongguLike> listGongguLike(Map<String, Object> map);
 	public GongguLike findByGongguLikeId(Map<String, Object> map) throws Exception;
+	public int gongguLikeDataCount(Map<String, Object> map);
 	
 	public void insertDestination(Destination dto) throws Exception;
 	public int destinationCount(Long member_id);

@@ -11,9 +11,9 @@
 	<!-- 주문 등록 -->
 	<insert id="insertGongguOrder" parameterType="com.sp.app.model.GongguOrder">
 		INSERT INTO productOrder(orderId, memberId, orderDate, totalAmount, 
-			 deliveryCharge, payment, cancelAmount, orderState, usedPoint, classify, orderStateDate, itemCount) 
+			 deliveryCharge, payment, cancelAmount, orderState, usedPoint, classify, orderStateDate, itemCount)
 		VALUES (#{orderId}, #{memberId}, SYSDATE, #{totalAmount}, 
-			 #{deliveryCharge}, #{payment}, 0, 0, 0, 2, SYSDATE, 1)
+			 #{deliveryCharge}, #{payment}, 0, 1, 0, 2, SYSDATE, 1)
 	</insert>
 
 	<!-- 결제 내역 등록 -->
@@ -105,7 +105,7 @@
 	</select>
 
 	<select id="listGongguPayment" parameterType="map" resultType="com.sp.app.model.GongguPayment">
-		SELECT po.orderId, po.memberId, po.orderDate, po.totalAmount, po.payment, po.orderState, po.orderStateDate,
+		SELECT po.orderId, po.memberId, po.orderDate, po.totalAmount, po.orderState, po.orderStateDate,
 			 po.deliveryName, po.invoiceNumber, god.gongguOrderDetailId, god.gongguProductId, god.cnt, god.price,
 			 god.detailState, g.gongguProductName, g.gongguThumbnail ,po.classify, po.deliveryCharge, 
 			 (god.price * god.cnt) AS productMoney
@@ -149,10 +149,9 @@
 	JOIN gongguProduct gp ON god.gongguProductId = gp.gongguProductId
 	LEFT JOIN payment py ON po.orderId = py.orderId
 	LEFT JOIN gongguDetailStateInfo gdsi ON god.gongguOrderDetailId = gdsi.gongguOrderDetailId AND god.detailState = gdsi.detailState
+	JOIN member1 m1 ON po.memberId = m1.memberId
 	WHERE po.memberId = #{memberId} AND god.gongguOrderDetailId = #{gongguOrderDetailId}
 	</select>
-
-
 
 	<select id="findByGongguOrderDelivery" parameterType="map" resultType="com.sp.app.model.GongguOrder">
 		SELECT recipientName, tel, zip, addr1, addr2,

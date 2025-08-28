@@ -15,8 +15,7 @@ public class GongguLike {
 	private String gongguProductName;
 	private int originalprice;
 	private int sale;
-	private int gongguPrice;
-	private int savedPoint;
+	private int price;
 	private int delivery;
 	private String gongguThumbnail;
 }

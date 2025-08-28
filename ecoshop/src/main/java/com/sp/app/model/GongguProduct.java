@@ -47,6 +47,8 @@ public class GongguProduct {
  	private int stock;
     private List<GongguPackage> packages; 
     
+    private long gongguOrderDetailId;
+    
     // 공동구매 상품 리뷰 및 문의
     private double rate;
     private int inquiryCount;

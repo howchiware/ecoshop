@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sp.app.common.PaginateUtil;
 import com.sp.app.model.Destination;
 import com.sp.app.model.GongguLike;
 import com.sp.app.model.SessionInfo;
@@ -29,7 +31,8 @@ import lombok.extern.slf4j.Slf4j;
 public class MyGongguShoppingController {
 
 	private final MyGongguShoppingService service; 
-
+	private final PaginateUtil paginateUtil;
+	
 	@PostMapping("/gongguLike/{gongguProductId}")
 	@ResponseBody
 	public Map<String, ?> gongguLikeSubmit(@PathVariable(name = "gongguProductId") long gongguProductId,
@@ -59,6 +62,7 @@ public class MyGongguShoppingController {
 		return model;
 	}
 	
+	// 찜 삭제
 	@DeleteMapping("/gongguLike/{gongguProductId}")
 	@ResponseBody
 	public Map<String, ?> gongguLikeDelete(@PathVariable(name = "gongguProductId") Long gongguProductId,
@@ -89,6 +93,7 @@ public class MyGongguShoppingController {
 		return model;
 	}
 	
+	// 찜 전체 삭제 : AJAX - JSON
 	@DeleteMapping("/gongguLike")
 	@ResponseBody
 	public Map<String, ?> gongguLikeDeleteAll(HttpSession session) throws Exception {
@@ -118,27 +123,65 @@ public class MyGongguShoppingController {
 		return model;
 	}
 
-	@GetMapping("/gongguLike")
-	public String gongguLikeList(Model model,
+	
+	// 찜 리스트 AJAX
+	@GetMapping("gongguList")
+	@ResponseBody
+	public Map<String, ?> gongguLikeList2(
+			@RequestParam(name = "pageNo", defaultValue = "1") int current_page,
 			HttpSession session) throws Exception {
+		Map<String, Object> model = new HashMap<String, Object>();
 		
 		try {
-			SessionInfo info = (SessionInfo) session.getAttribute("member");
-			if (info == null) {
-				return "redirect:/member/login"; 
-			}
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
 			
-			List<GongguLike> list = service.listGongguLike(info.getMemberId());
+			int size = 10;
+			int dataCount = 0;
 			
-			model.addAttribute("list", list);
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("memberId", info.getMemberId());
+			
+			dataCount = service.gongguLikeDataCount(map);
+			
+			int total_page = paginateUtil.pageCount(dataCount, size);
+
+			current_page = Math.min(current_page, total_page);
+
+			int offset = (current_page - 1) * size;
+			if(offset < 0) offset = 0;
+
+			map.put("offset", offset);
+			map.put("size", size);
+			
+			System.out.println(offset);
+			System.out.println(size);
+			List<GongguLike> list = service.listGongguLike(map);
+			
+			String paging = paginateUtil.pagingMethod(current_page, total_page, "listProductLike");
+			
+			model.put("list", list);
+			model.put("dataCount", dataCount);
+			model.put("size", size);
+			model.put("pageNo", current_page);
+			model.put("paging", paging);
+			model.put("total_page", total_page);
 			
 		} catch (Exception e) {
-			log.error("gongguLikeList : ", e);
+			log.info("gongguLikeList : ", e);
 		}
 		
-		return "myGongguShopping/wishList"; 
-	}
+		return model;
+	}	
 	
+	// 찜 리스트
+		@GetMapping("gongguLike")
+		public String gongguLikeList(Model model,
+				HttpSession session) throws Exception {
+			
+			model.addAttribute("mode", "gongguLike");
+		    return "myPage/wishList";
+		}	
+		
 	// 배송지
 		@PostMapping("deliveryAddress/write")
 		public String deliveryAddressCreated(Destination dto, HttpSession session) {
@@ -153,7 +196,7 @@ public class MyGongguShoppingController {
 				log.info("deliveryAddressCreated : ", e);
 			}
 			
-			return "redirect:/myShopping/deliveryAddress";
+			return "redirect:/myGongguShopping/deliveryAddress";
 		}
 		
 		@ResponseBody

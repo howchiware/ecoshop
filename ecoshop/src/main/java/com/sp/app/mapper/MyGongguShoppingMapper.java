@@ -14,9 +14,10 @@ public interface MyGongguShoppingMapper {
 	// 찜
 	public void insertGongguLike(Map<String, Object> map) throws SQLException;
 	public void deleteOldestGongguLikes(Long memberId) throws SQLException;
-	public List<GongguLike> listGongguLike(Long memberId);
+	public List<GongguLike> listGongguLike(Map<String, Object> map);
 	public GongguLike findByGongguLikeId(Map<String, Object> map);
 	public void deleteGongguLike(Map<String, Object> map) throws SQLException;
+	public int gongguLikeDataCount(Map<String, Object> map);
 	
 	// 배송지
 	public void insertDestination(Destination dto) throws SQLException;

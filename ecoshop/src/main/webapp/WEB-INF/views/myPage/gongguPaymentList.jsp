@@ -421,9 +421,9 @@ $(function(){
 						<p><strong>주문일:</strong> \${dto.orderDate}</p>
 						<p><strong>상품명:</strong> \${dto.gongguProductName}</p>
 						<p><strong>수량:</strong> \${dto.cnt}</p>
-						<p><strong>상품금액:</strong> \${new Intl.NumberFormat().format(dto.productMoney)}원</p>
-						<p><strong>결제금액:</strong> \${new Intl.NumberFormat().format(dto.payment)}원</p>
-						<p><strong>주문상태:</strong> \${dto.orderStateInfo}</p>
+						<p><strong>상품금액:</strong> \${new Intl.NumberFormat().format(dto.gongguPrice)}원</p>
+						<p><strong>배송비:</strong> \${new Intl.NumberFormat().format(dto.deliveryFee)}원</p>
+						<p><strong>총결제금액:</strong> \${new Intl.NumberFormat().format(dto.payment)}원</p>
 						<p><strong>상세상태:</strong> \${dto.detailStateInfo}</p>
 					</div>
 					<div class="col-md-6">
