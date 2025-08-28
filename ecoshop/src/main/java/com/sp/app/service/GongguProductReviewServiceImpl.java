@@ -14,7 +14,6 @@ import com.sp.app.mapper.GongguReviewMapper;
 import com.sp.app.model.GongguReview;
 import com.sp.app.model.GongguReviewHelpful;
 import com.sp.app.model.GongguSummary;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,20 +64,7 @@ public class GongguProductReviewServiceImpl implements GongguProductReviewServic
 		return list;
 	}
 
-	@Override
-	public GongguSummary findByReviewSummary(Map<String, Object> map) {
-		GongguSummary dto = null;
-		
-		try {
-			dto = Objects.requireNonNull(mapper.findByReviewSummary(map));
-			
-		} catch (NullPointerException e) {
-		} catch (Exception e) {
-			log.info("findByReviewSummary : ", e);
-		}
-		
-		return dto;
-	}
+	
 
 	@Override
 	public void insertGongguReview(GongguReview dto, String uploadPath) throws Exception {
@@ -246,5 +232,16 @@ public class GongguProductReviewServiceImpl implements GongguProductReviewServic
 		
 		return dto;
 	}
+	
+	@Override
+	public List<GongguReview> imgList(long gongguProductId) {
+		List<GongguReview> imgList = null;
+		try {
+			imgList = mapper.imgList(gongguProductId);
+		} catch (Exception e) {
+			log.info("imgList : ", e);
+		}
+		return imgList;
+	}	
 
 }

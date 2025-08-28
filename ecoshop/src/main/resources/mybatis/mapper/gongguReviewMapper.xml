@@ -6,7 +6,7 @@
 	<select id="dataCount"  parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*), 0)
 		FROM gongguReview
-		WHERE gongguProductId = #{gongguProductId} AND showReview = 1 AND block = 0
+		WHERE gongguProductId = #{gongguProductId} 
 		<choose>
 			<when test="sortBy==5">
 				AND rate = 5 
@@ -24,6 +24,12 @@
 				AND rate = 1 
 			</when>
 		</choose>
+		<if test="onlyPhoto==1">
+			AND reviewId IN(
+				SELECT reviewId
+				FROM productReviewDetail
+			)
+		</if>
 	</select>
 
 	<!-- 리뷰 목록 조회 -->
@@ -68,6 +74,43 @@
 		WHERE gongguProductId = #{gongguProductId} AND showReview = 1 AND block = 0
 	</select>
 	
+	<select id="listReviewOnlyPhoto" parameterType="map" resultType="com.sp.app.model.ProductReview">
+		SELECT pr.gongguOrderDetailId, pr.memberId, pr.gongguProductId, m2.name, rate, 
+			content, showReview, regDate, answer, answerId, 
+			answerDate, block, reviewImg
+		FROM gongguReview pr
+		JOIN member2 m2 ON pr.memberId = m2.memberId
+		LEFT OUTER JOIN (
+			SELECT gongguOrderDetailId, LISTAGG(reviewImg, ',') WITHIN GROUP(ORDER BY gongguOrderDetailId) reviewImg
+			FROM gongguReviewDetail
+			GROUP BY gongguOrderDetailId
+		) rd ON pr.gongguOrderDetailId = rd.gongguOrderDetailId
+		WHERE pr.gongguProductId = #{gongguProductId} AND showReview = 1 AND block = 0
+			AND pr.gongguOrderDetailId IN(
+				SELECT gongguOrderDetailId
+				FROM gongguReviewDetail
+			)
+		<choose>
+			<when test="sortBy==5">
+				AND rate = 5 
+			</when>
+			<when test="sortBy==4">
+				AND rate = 4 
+			</when>
+			<when test="sortBy==3">
+				AND rate = 3  
+			</when>
+			<when test="sortBy==2">
+				AND rate = 2 
+			</when>
+			<when test="sortBy==1">
+				AND rate = 1 
+			</when>
+		</choose>
+		ORDER BY regDate DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
 	<!-- 리뷰 삽입 -->
 	<insert id="insertReview" parameterType="com.sp.app.model.GongguReview">
 		INSERT INTO gongguReview(gongguOrderDetailId, memberId, rate, content, gongguProductId, 
@@ -82,6 +125,11 @@
 		</selectKey>
 		INSERT INTO gongguReviewDetail(reviewPhotoId, gongguOrderDetailId, reviewImg, imgSize)
 		VALUES(#{reviewPhotoId}, #{gongguOrderDetailId}, #{reviewImg}, #{imgSize})
+	</insert>
+	
+	<insert id="insertReviewPhoto" parameterType="com.sp.app.model.GongguReview">
+		INSERT INTO gongguReviewDetail(reviewPhotoId, gongguOrderDetailId, reviewImg)
+		VALUES(gongguReviewDetail_seq.NEXTVAL, #{gongguOrderDetailId}, #{reviewImg})
 	</insert>
 	
 	<!-- 리뷰 상세 조회 -->
@@ -105,20 +153,20 @@
 	
 	<!-- 리뷰 도움이 돼요 삽입 -->
 	<insert id="insertReviewHelpful" parameterType="com.sp.app.model.GongguReviewHelpful">
-		INSERT INTO reviewHelpful(memberId, gongguOrderDetailId, reviewLike) 
-		VALUES(#{memberId}, #{gongguOrderDetailId}, #{userReviewHelpful})
+		INSERT INTO reviewHelpful(memberId, gongguOrderDetailId, reviewHelpul) 
+		VALUES(#{memberId}, #{gongguOrderDetailId}, #{reviewHelpul})
 	</insert>
 	
 	<!-- 리뷰 도움이 돼요 개수 카운트 -->
 	<select id="countReviewHelpful" parameterType="map" resultType="Integer">
-		SELECT COUNT(DECODE(reviewLike, 1, 1)) helpfulCount
+		SELECT COUNT(DECODE(reviewHelpul, 1, 1)) helpfulCount
 		FROM reviewHelpful
 		WHERE gongguOrderDetailId = #{gongguOrderDetailId}
 	</select>
 	
 	<!-- 사용자의 리뷰 도움이 돼요 여부 확인 -->
 	<select id="userReviewHelpful" parameterType="map" resultType="Integer">
-		SELECT reviewLike
+		SELECT reviewHelpul
 		FROM reviewHelpful
 		WHERE gongguOrderDetailId = #{gongguOrderDetailId} AND memberId = #{memberId}
 	</select>
@@ -187,4 +235,12 @@
 		DELETE FROM gongguReview
 		WHERE gongguOrderDetailId = #{gongguOrderDetailId}
 	</delete>
+	
+	<select id="imgList" parameterType="long" resultType="com.sp.app.model.GongguReview">
+		SELECT prd.gongguOrderDetailId, prd.reviewImg 
+		FROM gongguReviewDetail grd
+		JOIN gongguReview gr ON grd.gongguOrderDetailId = gr.gongguOrderDetailId
+		WHERE gongguProductId = #{gongguProductId}
+	</select>
+	
 </mapper>

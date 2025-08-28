@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.GongguProductInquiryMapper">
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM gongguInquiry
+		WHERE gongguProductId = #{gongguProductId} AND showQuestion = 1
+	</select>
+		
+	<select id="listInquiry" parameterType="map" resultType="com.sp.app.model.GongguProductInquiry">
+		SELECT pi.gongguInquiryId, pi.memberId, m2.name, secret, title, content, regDate, 
+			answerId, mm2.name answerName, answer, answerDate,
+			showQuestion,
+			pi.gongguProductId
+		FROM gongguInquiry pi
+		JOIN member2 m2 ON pi.memberId = m2.memberId
+		LEFT OUTER JOIN member2 mm2 ON answerId = mm2.memberId		
+		WHERE pi.gongguProductId = #{gongguProductId} AND showQuestion = 1
+		ORDER BY pi.gongguInquiryId DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<insert id="insertInquiry" parameterType="com.sp.app.model.GongguProductInquiry">
+		INSERT INTO gongguInquiry (gongguInquiryId, gongguProductId, memberId, secret, title, content, 
+			showQuestion, regDate)
+		VALUES(gongguInquiry_seq.NEXTVAL, #{gongguProductId}, #{memberId}, #{secret}, #{title}, #{content}, 
+			1, SYSDATE)
+	</insert>
+	
+	<delete id="deleteInquiry" parameterType="Long">
+		DELETE FROM gongguInquiry
+		WHERE gongguInquiryId = #{gongguInquiryId}
+	</delete>
+	
+	<select id="myDataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM gongguInquiry
+		<where>
+			<if test="memberId != null">
+				memberId = #{memberId}
+			</if>
+			<if test="mode != null">
+				<if test="mode == 2">
+					AND ( answer IS NOT NULL )
+				</if>
+				<if test="mode == 3">
+					AND ( answer IS NULL )
+				</if>
+			</if>
+		</where>
+	</select>
+		
+	<select id="listMyInquiry" parameterType="map" resultType="com.sp.app.model.GongguProductInquiry">
+		SELECT i.gongguInquiryId, i.memberId, m2.name, i.secret, i.title, i.content, i.regDate, 
+			i.answerId, mm2.name answerName, i.answer, i.answerDate,
+			i.showQuestion, 
+			i.gongguProductId, p.gongguProductName
+		FROM gongguInquiry i
+		JOIN gongguProduct p ON i.gongguProductId = p.gongguProductId 
+		JOIN member2 m2 ON i.memberId = m2.memberId
+		LEFT OUTER JOIN member2 mm2 ON answerId = mm2.memberId	
+		<where>
+			<if test="memberId != null">
+				i.memberId = #{memberId}
+			</if>
+			<if test="mode != null">
+				<if test="mode == 2">
+					AND ( answer IS NOT NULL )
+				</if>
+				<if test="mode == 3">
+					AND ( answer IS NULL )
+				</if>
+			</if>
+		</where>
+		ORDER BY i.gongguInquiryId DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+</mapper>

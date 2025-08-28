@@ -160,6 +160,7 @@
 </div>
 
 <script src="${pageContext.request.contextPath}/dist/jsGonggu/gongguProductDetail.js"></script>
+<script src="${pageContext.request.contextPath}/dist/jsGonggu/gongguProductDetail2.js"></script>
 <script src="${pageContext.request.contextPath}/dist/jsGonggu/gongguProductLike.js"></script> 
 <footer>
 	<jsp:include page="/WEB-INF/views/layout/footer.jsp"/>

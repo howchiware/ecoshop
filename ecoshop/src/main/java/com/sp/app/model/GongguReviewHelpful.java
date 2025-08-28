@@ -10,5 +10,5 @@ import lombok.Setter;
 public class GongguReviewHelpful {
 	private long gongguOrderDetailId;
 	private long memberId;
-	private int userReviewHelpful;
+	private int reviewHelpful;
 }

@@ -22,5 +22,6 @@ public interface GongguProductReviewService {
 	
 	public int myGongguDataCount(Map<String, Object> map);
 	public List<GongguReview> listMyReview(Map<String, Object> map);
-	GongguSummary findByReviewSummary(Map<String, Object> map);
+	
+	public List<GongguReview> imgList(long gongguProductId);
 }

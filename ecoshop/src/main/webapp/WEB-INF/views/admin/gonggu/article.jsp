@@ -103,8 +103,8 @@
 						<div class="col">
 							<form name="searchForm" class="search-form form-inline">
 								<select name="schType" class="form-select w-25">
-									<option value="productName">상품명</option>
-									<option value="productCode">상품코드</option>
+									<option value="gongguProductName">상품명</option>
+									<option value="gongguProductId">상품코드</option>
 								</select> <input type="text" name="kwd" class="form-control"
 									placeholder="검색어를 입력하세요">
 								<button type="button" class="btn btn-primary btn-productSearch">검색</button>
@@ -146,16 +146,16 @@
                 let out = '';
                 if (data.list && data.list.length > 0) {
                     for(let item of data.list) {
-                    	let productCode = item.productCode;
-                        let productName = item.productName;
-                        let price = item.price;
-                        let thumbnail = item.thumbnail;
+                    	let gongguProductId = item.gongguProductId;
+                        let gongguProductName = item.gongguProductName;
+                        let originalPrice = item.originalPrice;
+                        let gongguThumbnail = item.gongguThumbnail;
                         out += `
                             <tr>
-                                <td>\${item.productCode}</td>
-                                <td><img src="${pageContext.request.contextPath}/uploads/products/\${item.thumbnail}" style="width:50px; height:auto;"></td> 
-                                <td class="left">\${item.productName}</td>
-                                <td>\${item.price}</td>
+                                <td>\${item.gongguProductId}</td>
+                                <td><img src="${pageContext.request.contextPath}/uploads/gonggu/\${item.gongguThumbnail}" style="width:50px; height:auto;"></td> 
+                                <td class="left">\${item.gongguProductName}</td>
+                                <td>\${item.gongguPrice}</td>
                                 <td>
                                     <button type="button" class="btn btn-default btn-sm btn-delete"
                                             title="삭제" data-packageNum="\${item.packageNum}">삭제</button>
@@ -206,7 +206,7 @@
             fetchPackageProducts();
 			
 			$('.btn-append').on('click', function(){
-				$('.search-form select[name=schType]').val('productName');
+				$('.search-form select[name=schType]').val('gongguProductName');
 				$('.search-form input[name=kwd]').val('');
 				$('.product-search-list').empty(); 
 				$('#prodectSearchModal').modal('show');
@@ -233,15 +233,15 @@
 					        out += `
 					            <tr>
 					                <td>\${productCode}</td>
-                                    <td><img src="${pageContext.request.contextPath}/uploads/products/\${thumbnail}" style="width:50px; height:auto;"></td>
+                                    <td><img src="${pageContext.request.contextPath}/uploads/gonggu/\${gongguThumbnail}" style="width:50px; height:auto;"></td>
 					                <td class="left">\${productName}</td>
 					                <td>\${price}</td>
 					                <td>
 					                    <button type="button" class="btn btn-default btn-sm btn-direct-register" 
-					                            data-productCode="\${productCode}" 
-					                            data-thumbnail="\${thumbnail}"
-					                            data-productName="\${productName}"
-					                            data-price="\${price}">등록</button>
+					                            data-gongguProductId="\${gongguProductId}" 
+					                            data-gongguThumbnail="\${gongguThumbnail}"
+					                            data-gongguProductName="\${gongguProductName}"
+					                            data-originalPrice="\${originalPrice}">등록</button>
 					                </td>
 					            </tr>
 					        `;
@@ -257,10 +257,9 @@
 			
 			$('.product-search-list').on('click', '.btn-direct-register', function(){
 				let $row = $(this).closest('tr');
-				let productCode = $(this).data('productcode');
+				let productCode = $(this).data('gongguProductId');
 			    
 			    let params = {
-			    	productCode: productCode,
 			    	gongguProductId: '${dto.gongguProductId}'
 			    };
 			    

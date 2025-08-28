@@ -63,7 +63,7 @@
 	        </div>
 	        <c:if test="${leaveReview}">
 		        <div class="col">
-		            <p style="text-align: right; text-decoration: underline;" class="reviewWrite-pTag" onclick="reviewWrite();" data-productCode="${dto.productCode}">구매평 작성하기</p>
+		            <p style="text-align: right; text-decoration: underline;" class="reviewWrite-pTag" onclick="reviewWrite();" data-gongguProductId="${dto.gongguProductId}">구매평 작성하기</p>
 		        </div>
 	        </c:if>
 	    </div>
@@ -300,7 +300,7 @@
 								<a href="#" class="on"><i class="bi bi-star-fill"></i></a>
 								<a href="#" class="on"><i class="bi bi-star-fill"></i></a>
 								<input type="hidden" name="rate" value="5">
-								<input type="hidden" name="productCode" value="${dto.productCode}">
+								<input type="hidden" name="gongguProductId" value="${dto.gongguProductId}">
 							</p>
 						</div>
 						<div class="p-1">
@@ -350,7 +350,7 @@
 							</div>
 						</div>
 						<div class="p-1">
-							<input type="hidden" name="productCode" value="${dto.productCode}">
+							<input type="hidden" name="gongguProductId" value="${dto.gongguProductId}">
 							<input type="text" name="title" placeholder="제목">
 							<textarea name="content" id="content" class="form-control" placeholder="문의 내용을 입력하세요."></textarea>
 						</div>

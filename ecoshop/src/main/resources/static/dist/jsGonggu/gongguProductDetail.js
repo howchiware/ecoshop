@@ -38,6 +38,15 @@ $(function(){
 	localStorage.setItem('recentProduct', JSON.stringify(recentGongguProducts));
 });
 
+function loginCheck(){
+	const memberLogin = document.getElementById('memberLogin').value;
+		
+	if(	memberLogin == "" || memberLogin == null || memberLogin == undefined || ( memberLogin != null && typeof memberLogin == "object" && !Object.keys(memberLogin).length )){
+		return false;
+	}
+	
+	return true;
+	}
 
 // 공동구매 예약 결제 요청 
 function requestGongguPayment() {
@@ -71,3 +80,4 @@ function requestWriteReview() {
     }
     location.href = contextPath + '/gongguReview/write?gongguProductId=' + gongguProductId;
 }
+

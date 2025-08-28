@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.mapper.GongguMapper">
-
 	<select id="listGongguProducts" parameterType="map" resultType="com.sp.app.model.GongguProduct">
 	    SELECT
 	        g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
@@ -171,6 +170,72 @@
         LEFT JOIN deliveryDestination dd ON po.orderId = dd.orderId
         LEFT JOIN payment p ON po.orderId = p.orderId
         WHERE god.gongguProductId = #{gongguProductId} AND po.memberId = #{memberId}
+    </select>  
+
+    <select id="listAllProducts" resultType="com.sp.app.model.GongguProduct">
+        SELECT gongguProductId, categoryId, gongguProductName, gongguPrice, gongguThumbnail, sale, regDate, 
+        		productShow, updateDate, content, detailInfo
+        FROM gongguProduct
     </select>
+    
+    <select id="listFiveProducts" resultType="com.sp.app.model.GongguProduct">
+        SELECT gongguProductId, categoryId, gongguProductName, gongguPrice, gongguThumbnail, sale, regDate,
+        		productShow, updateDate, content, detailInfo, NVL(gongguOrderCount, 0) gongguOrderCount
+        FROM gongguProduct p
+		LEFT OUTER JOIN (
+            SELECT gongguProductId, NVL(COUNT(*), 0) gongguOrderCount
+			FROM gongguOrderDetail
+			GROUP BY gongguProductId) od ON p.gongguProductId = od.gongguProductId
+        ORDER BY orderCount DESC
+        OFFSET 0 ROWS FETCH FIRST 5 ROWS ONLY
+    </select>
+    
+    <select id="listThreeProducts" resultType="com.sp.app.model.GongguProduct">
+        SELECT gongguProductId, categoryId, gongguProductName, gongguPrice, gongguThumbnail, sale, regDate,
+        		productShow, updateDate, content, detailInfo, NVL(gongguOrderCount, 0) gongguOrderCount
+        FROM product p
+		LEFT OUTER JOIN (
+            SELECT gongguProductId, NVL(COUNT(*), 0) gongguOrderCount
+			FROM gongguOrderDetail
+			GROUP BY gongguProductId) od ON p.gongguProductId = od.gongguProductId
+        ORDER BY orderCount DESC
+        OFFSET 0 ROWS FETCH FIRST 3 ROWS ONLY
+    </select>
+    
+    <!--
+    <select id="findById" parameterType="Long" resultType="com.sp.app.model.GongguProduct">
+		SELECT p.gongguProductId, p.categoryId, p.productShow, categoryName, 
+		    gongguProductName, gongguPrice, gongguThumbnail, p.content, p.detailInfo, p.regDate, 
+			NVL(rate, 0) rate, NVL(gongguReviewCount, 0) gongguReviewCount,
+			NVL(gongguInquiryCount, 0) gongguInquiryCount
+		FROM gongguProduct p
+		JOIN productCategory c ON p.categoryId = c.categoryId
+		LEFT OUTER JOIN (
+			SELECT gongguProductId, ROUND(AVG(rate), 1) rate, COUNT(*) gongguReviewCount
+			FROM gongguReview
+			WHERE showReview = 1
+			GROUP BY gongguProductId
+		) t ON p.gongguProductId = t.gongguProductId
+		LEFT OUTER JOIN (
+			SELECT gongguProductId, COUNT(*) gongguInquiryCount
+			FROM gongguInquiry
+			WHERE showQuestion = 1
+			GROUP BY gongguProductId
+		) q ON p.gongguProductId = q.gongguProductId
+		LEFT OUTER JOIN (
+			SELECT gongguProductId, COUNT(*) gongguSaleCount
+			FROM gongguOrderDetail
+			GROUP BY gongguProductId
+		) pc ON p.gongguProductId = pc.gongguProductId
+		WHERE p.productShow = 1 AND p.gongguProductId = #{gongguProductId}
+		FETCH FIRST 1 ROWS ONLY
+    </select>
+    -->
+    <!-- 카테고리 -->
+	<select id="findByCategoryId" parameterType="Long" resultType="com.sp.app.model.GongguProduct">
+		SELECT categoryId, categoryName, enabled, orderNo
+		FROM productCategory
+		WHERE categoryId = #{categoryId}
+	</select>
     
 </mapper>
