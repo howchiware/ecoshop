@@ -97,7 +97,7 @@ public class MemberManageController {
 
             List<MemberManage> list = service.listMember(map);
 
-            String paging = paginateUtil.pagingMethod(current_page, total_page, "listPage");
+            String paging = paginateUtil.pagingFunc(current_page, total_page, "listPage");
 
             model.addAttribute("list", list);
             model.addAttribute("pageNo", current_page);
@@ -229,5 +229,23 @@ public class MemberManageController {
         }
         model.put("passed", p);
         return model;
+    }
+    
+    @PostMapping("deleteMember")
+    public String deleteMember(@RequestParam(name = "memberId") Long memberId,
+                               @RequestParam(name = "name") String name,
+                               RedirectAttributes redirectAttributes) {
+
+        try {
+            service.deleteMember(memberId);
+            service.updateMemberEnabled(memberId);
+            redirectAttributes.addFlashAttribute("message", "사용자 " + name + "(" + memberId + ") 가 정상적으로 탈퇴 처리되었습니다.");
+
+        } catch (Exception e) {
+        	log.error("deleteMember", e);
+            redirectAttributes.addFlashAttribute("errorMessage", "처리 중 오류가 발생했습니다.");
+        }
+        
+        return "redirect:/admin/member/main";
     }
 }

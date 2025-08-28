@@ -26,4 +26,7 @@ public interface MemberManageMapper {
 	
 	public MemberManage findById1(String userId);
 	public MemberManage findByNickname(String nickname);
+	
+	public void updateMemberEnabled(long memberId) throws SQLException;
+	public void deleteMember2(long memberId) throws Exception;
 }

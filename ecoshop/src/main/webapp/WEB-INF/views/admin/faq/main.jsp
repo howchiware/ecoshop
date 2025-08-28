@@ -10,7 +10,6 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFaq/faq.css">
-
 </head>
 <body>
 

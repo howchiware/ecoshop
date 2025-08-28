@@ -84,7 +84,7 @@
 				</div>
 			</div>
 			<div class="box2">
-				<table class="table  table-hover">
+				<table class="table table-hover">
 					<thead class="table-light">
 						<tr class="text-center">
 							<th>회원번호</th>

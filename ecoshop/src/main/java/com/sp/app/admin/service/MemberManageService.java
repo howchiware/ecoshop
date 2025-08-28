@@ -16,10 +16,9 @@ public interface MemberManageService {
 	public MemberManage findById1(String userId);
 	public MemberManage findByNickname(String nickname);
 	
-	public void generatePwd(MemberManage dto) throws Exception;
-	
 	public void updateMember(Map<String, Object> map) throws Exception;
-	public void updateMemberEnabled(Map<String, Object> map) throws Exception;
+	public void updateMemberEnabled(long memberId) throws Exception;
+	public void deleteMember(long memberId) throws Exception;
 	
 	public List<MemberManage> listMemberStatus(Long memberId);
 	public MemberManage findByStatus(Long memberId);

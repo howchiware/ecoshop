@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
         <div class="form-section">
-            <form name="memberForm" method="post">
+            <form name="memberForm" method="post" class="myForm">
                 <div class="row">
                     <div class="col-md-6">
                         <label for="userId" class="form-label">아이디</label>
@@ -87,7 +87,7 @@
                                 <input class="form-control" type="text" name="zip" id="zip" value="${dto.zip}" readonly tabindex="-1">
                             </div>
                             <div class="col-sm-4 d-grid">
-                                <button type="button" class="btn btn-default" id="btn-zip" onclick="daumPostcode();">주소 검색</button>
+                                <button type="button" class="btn my-btn" id="btn-zip" onclick="daumPostcode();">주소 검색</button>
                             </div>
                         </div>
                     </div>
@@ -107,8 +107,7 @@
 	               <div class="row mt-4">
 	                    <div class="col-12 text-center">
 	                        <div class="text-center mb-3">
-	                  <button type="button" class="btn-accent btn-md" onclick="sendOk('write', 1);">등록완료</button>
-	                  <button type="button" class="btn-default btn-md"  onclick="sendCancel();">등록취소</button>
+	                  <button type="button" class="btn my-btn" onclick="sendOk('write', 1);">등록완료</button>
 	               </div>
                         <input type="hidden" name="loginIdValid" id="loginIdValid" value="false">
                         <input type="hidden" name="nicknameValid" id="nicknameValid" value="false">

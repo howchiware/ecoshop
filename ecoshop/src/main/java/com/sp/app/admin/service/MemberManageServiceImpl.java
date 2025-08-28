@@ -88,10 +88,16 @@ public class MemberManageServiceImpl implements MemberManageService {
 	}
 
 	@Override
-	public void updateMemberEnabled(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void updateMemberEnabled(long memberId) throws Exception {
+		try {
+			mapper.updateMemberEnabled(memberId);
+		} catch (Exception e) {
+			log.info("updateMemberEnabled : ", e);
+			throw e;
+		}
 	}
+	
+	
 
 	@Transactional(rollbackFor = {Exception.class})
 	@Override
@@ -146,9 +152,14 @@ public class MemberManageServiceImpl implements MemberManageService {
 	}
 
 	@Override
-	public void generatePwd(MemberManage dto) throws Exception {
-		// TODO Auto-generated method stub
-		
+	@Transactional
+	public void deleteMember(long memberId) throws Exception {
+		try {
+			mapper.deleteMember2(memberId);
+			mapper.updateMemberEnabled(memberId);
+		} catch (Exception e) {
+			log.info("deleteMember", e);
+		}
 	}
 
 	

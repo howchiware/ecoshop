@@ -191,18 +191,12 @@ public class MemberController {
 				
 				return "member/pwd";
 			}
-
+			
 			if (mode.equals("dropout")) {
-				// 게시판 테이블등 자료 삭제
-
-				// 회원탈퇴 처리
-				/*
+				
 				  Map<String, Object> map = new HashMap<>();
-				  map.put("member_id", info.getMember_id());
-				  map.put("filename", info.getAvatar());
-				 */
-
-				// 세션 정보 삭제
+				  map.put("memberId", info.getMemberId());
+				 
 				session.removeAttribute("member");
 				session.invalidate();
 
@@ -219,7 +213,6 @@ public class MemberController {
 			model.addAttribute("dto", dto);
 			model.addAttribute("mode", "update");
 			
-			// 회원정보수정폼
 			return "member/editMember";
 			
 		} catch (NullPointerException e) {

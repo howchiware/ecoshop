@@ -31,7 +31,7 @@
 				<li><a href="${pageContext.request.contextPath}/member/pwd" data-view="myProfile">회원정보 수정</a></li>
 				<li><a href="${pageContext.request.contextPath}/myShopping/myPoint" data-view="points">포인트</a></li>
 				<li><a href="${pageContext.request.contextPath}/" data-view="shipping">배송지/환불계좌</a></li>
-				<li><a href="${pageContext.request.contextPath}/" data-view="withdraw">회원탈퇴</a></li>
+				<li><a href="${pageContext.request.contextPath}/member/leave" data-view="withdraw">회원탈퇴</a></li>
 			</ul>
 		</nav>
 	</aside>
