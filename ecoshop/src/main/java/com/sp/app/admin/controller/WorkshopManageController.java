@@ -89,6 +89,7 @@ public class WorkshopManageController {
 	        String paging = paginateUtil.pagingUrl(current_page, total_page, listUrl);
 
 	        model.addAttribute("page", current_page);
+	        model.addAttribute("size", size);
 	        model.addAttribute("categoryList", categoryList);
 	        model.addAttribute("dataCount", dataCount);
 	        model.addAttribute("paging", paging);
@@ -738,31 +739,61 @@ public class WorkshopManageController {
 	// FAQ 관리
 	@GetMapping("/faq/manage")
 	public String faqManage(@RequestParam(name = "page", defaultValue = "1") int current_page,
-			@RequestParam(name = "programId", required = false) Long programId, Model model) {
+			@RequestParam(name = "programId", required = false) Long programId, 
+			HttpServletRequest req, Model model) {
 		try {
 			int size = 10;
+			int total_page = 0;
+			int offset = (Math.max(current_page, 1) - 1) * size;
 
+			// 프로그램 드롭다운
 			Map<String, Object> pmap = new HashMap<>();
 			pmap.put("offset", 0);
-			pmap.put("size", size);
-
-			model.addAttribute("page", current_page);
-
+			pmap.put("size", 1000);
 			List<Workshop> programList = service.listProgram(pmap);
-
-			model.addAttribute("programList", programList);
-
+			
 			if (programId == null && programList != null && !programList.isEmpty()) {
 				programId = programList.get(0).getProgramId();
 			}
-			model.addAttribute("programId", programId);
-
+			
 			List<WorkshopFaq> faqList = List.of();
+			int dataCount = 0;
+			
+			// 카운트
 			if (programId != null) {
-				Map<String, Object> map = new HashMap<>();
-				map.put("programId", programId);
-				faqList = service.listFaq(map);
+				Map<String, Object> cmap = new HashMap<>();
+				cmap.put("programId", programId);
+				dataCount = service.faqDataCount(cmap);
+				
+				if(dataCount > 0) {
+					total_page = paginateUtil.pageCount(dataCount, size);
+				}
+				if(current_page > total_page) {
+					current_page = total_page > 0 ? total_page : 1;
+				}
+				offset = (current_page - 1) * size;
+				if (offset < 0) offset = 0;
+				
+				// 목록
+				Map<String, Object> fmap = new HashMap<>();
+				fmap.put("programId", programId);
+				fmap.put("offset", offset);
+				fmap.put("size", size);
+				faqList = service.listFaq(fmap);
+			} else {
+				offset = 0;
 			}
+			
+			String cp = req.getContextPath();
+	        String listUrl = cp + "/admin/workshop/faq/manage?programId=" + programId;
+	        String paging = paginateUtil.pagingUrl(current_page, total_page, listUrl);
+			
+			model.addAttribute("page", current_page);
+			model.addAttribute("paging", paging);
+			model.addAttribute("size", size);
+			model.addAttribute("dataCount", dataCount);
+			model.addAttribute("programList", programList);
+			model.addAttribute("programId", programId);
 			model.addAttribute("faqList", faqList);
 
 		} catch (Exception e) {
@@ -911,25 +942,43 @@ public class WorkshopManageController {
 
 	// 포인트 목록
 	@GetMapping("/points")
-	public String reviewPointList(@RequestParam(name = "page", defaultValue = "1") int page,
+	public String reviewPointList(@RequestParam(name = "page", defaultValue = "1") int current_page,
 			@RequestParam(name = "size", defaultValue = "20") int size,
-			@RequestParam(name = "workshopId", required = false) Long workshopId, Model model) {
+			@RequestParam(name = "workshopId", required = false) Long workshopId, 
+			HttpServletRequest req, Model model) {
 		try {
-			int offset = (page - 1) * size;
+			if (current_page < 1) current_page = 1;
+	        if (size < 1) size = 20;
+			
 			Map<String, Object> q = new HashMap<>();
+			if (workshopId != null) q.put("workshopId", workshopId);
+			int total = workshopMapper.countReviewRewardRows(q); 
+			
+			int total_page = 0; 
+			if(total > 0) {
+				total_page = paginateUtil.pageCount(total, size);
+			}
+			if(current_page > total_page) {
+				current_page = total_page > 0 ? total_page : 1;
+			}
+			
+			int offset = (current_page - 1) * size;
 			q.put("offset", offset);
 			q.put("size", size);
-			if (workshopId != null)
-				q.put("workshopId", workshopId);
 
 			List<Map<String, Object>> rows = workshopMapper.listReviewRewardRows(q);
-			int total = workshopMapper.countReviewRewardRows(q);
+			
+			String cp = req.getContextPath();
+	        String listUrl = cp + "/admin/workshop/points";
+	        String paging = paginateUtil.pagingUrl(current_page, total_page, listUrl);
 
 			model.addAttribute("rows", rows);
 			model.addAttribute("pointPolicy", 1000);
-			model.addAttribute("page", page);
+			model.addAttribute("page", current_page);
 			model.addAttribute("size", size);
 			model.addAttribute("total", total);
+			model.addAttribute("paging", paging);
+			model.addAttribute("workshopId", workshopId);
 
 			return "admin/workshop/pointManage";
 		} catch (Exception e) {

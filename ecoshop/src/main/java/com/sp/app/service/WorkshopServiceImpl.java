@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sp.app.admin.model.MemberManage;
 import com.sp.app.common.StorageService;
@@ -107,7 +109,6 @@ public class WorkshopServiceImpl implements WorkshopService {
 		return result;
 	}	
 	
-
 	// 프로그램
 	@Override
 	public void insertProgram(Workshop dto) throws Exception {
@@ -488,6 +489,18 @@ public class WorkshopServiceImpl implements WorkshopService {
 			throw e;
 		}
 	}
+	
+	@Override
+	public int faqDataCount(Map<String, Object> map) {
+		int result = 0;
+
+		try {
+			result = mapper.faqDataCount(map);
+		} catch (Exception e) {
+			log.info("faqDataCount : ", e);
+		}
+		return result;
+	}	
 
 	// ** 사용자 **
 	@Override
@@ -559,6 +572,37 @@ public class WorkshopServiceImpl implements WorkshopService {
 			throw e;
 		}
 
+	}
+	
+	@Override
+	@Transactional
+	public int reApplyWorkshop(Workshop dto) {
+		Long workshopId = dto.getWorkshopId();
+		Long memberId = dto.getMemberId();
+		if (workshopId == null || memberId == null) {
+	        throw new IllegalArgumentException("workshopId/memberId 누락");
+	    }
+		
+		int revived = mapper.reApplyWorkshop(dto);
+		if (revived > 0) {
+	        return revived;
+	    }
+		
+		Map<String, Object> map = new HashMap<>();
+	    map.put("workshopId", workshopId);
+	    map.put("memberId", memberId);
+	    if (mapper.hasApplied(map) > 0) {           
+	        throw new IllegalStateException("이미 신청된 워크샵입니다.");
+	    }
+	    
+	    try {
+	        mapper.applyWorkshop(map);               
+	    } catch (DataIntegrityViolationException e) { 
+	        if (mapper.reApplyWorkshop(dto) == 0) {
+	            throw new IllegalStateException("이미 신청된 워크샵입니다.", e);
+	        }
+	    }
+		return 1;
 	}
 
 	@Override

@@ -37,6 +37,7 @@ public class Workshop {
 	private int capacity;
 	private String thumbnailPath;
 	private String workshopContent;
+	private Long memberId;
 
 	private Long photoId;
 	private String workshopImagePath;

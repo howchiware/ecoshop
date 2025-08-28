@@ -162,6 +162,21 @@
 	color: #eee;
 }
 
+.state-confirm {
+	background: #111;
+	color: #fff;
+}
+
+.state-wait {
+	background: #fafafa;
+	color: #000;
+}
+
+.state-cancel {
+	background: #e9ecef;
+	color: #666;
+}
+
 .empty {
 	text-align: center;
 	color: var(--muted);

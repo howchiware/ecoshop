@@ -201,23 +201,6 @@ public class WorkshopController {
 				return "redirect:/workshop/apply?workshopId=" + workshopId;
 			}
 
-			// 신청 여부
-			Map<String, Object> map = new HashMap<>();
-			map.put("workshopId", workshopId);
-			map.put("memberId", info.getMemberId());
-
-			if (service.hasApplied(map) > 0) {
-				session.setAttribute("msg", "이미 신청하셨습니다.");
-				return "redirect:/workshop/apply?workshopId=" + workshopId;
-			}
-
-			// 모집 상태
-			Workshop status = service.findWorkshopStatusAndCapacity(workshopId);
-			if (status.getWorkshopStatus() != 1) {
-				session.setAttribute("msg", "모집이 마감되었습니다.");
-				return "redirect:/workshop/apply?workshopId=" + workshopId;
-			}
-
 			Map<String, Object> p = new HashMap<>();
 			p.put("workshopId", workshopId);
 			p.put("memberId", info.getMemberId());
@@ -227,7 +210,10 @@ public class WorkshopController {
 			p.put("agreeTerms", agreeTerms);
 			p.put("agreeMarketing", agreeMarketing);
 
-			service.applyWorkshop(p);
+			Workshop dto = new Workshop();
+			dto.setWorkshopId(workshopId);
+			dto.setMemberId(info.getMemberId());
+			service.reApplyWorkshop(dto);
 
 			session.setAttribute("msg", "신청이 완료되었습니다.");
 			return "redirect:/workshop/detail?workshopId=" + workshopId;
@@ -367,21 +353,23 @@ public class WorkshopController {
 	public String myWorkshop(@RequestParam(name = "mode", defaultValue = "applied") String mode,
 			@RequestParam(name = "page", defaultValue = "1") int currentPage,
 			@RequestParam(name = "size", defaultValue = "10") int size,
-			@RequestParam(name = "onlyFuture", defaultValue = "true") boolean onlyFuture, Model model,
+			@RequestParam(name = "onlyFuture", defaultValue = "false") boolean onlyFuture, Model model,
 			HttpSession session) {
 
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
-        if (info == null) {
-            return "redirect:/member/login";
-        }
-		
-		if(!"applied".equals(mode) && !"attended".equals(mode)) {
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null) {
+			return "redirect:/member/login";
+		}
+
+		if (!"applied".equals(mode) && !"attended".equals(mode)) {
 			mode = "applied";
 		}
-		
-		if (currentPage < 1) currentPage = 1;
-	    if (size < 1) size = 10;
-	    int offset = (currentPage - 1) * size;
+
+		if (currentPage < 1)
+			currentPage = 1;
+		if (size < 1)
+			size = 10;
+		int offset = (currentPage - 1) * size;
 
 		Map<String, Object> map = new HashMap<>();
 		map.put("memberId", info.getMemberId());

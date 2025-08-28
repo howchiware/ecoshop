@@ -63,6 +63,7 @@ public interface WorkshopService {
 	public void applyWorkshop(Map<String, Object> map) throws Exception;
 	public void cancelApplication(Map<String, Object> map) throws Exception;
 	public MemberManage findMemberById(long memberId);
+	public int reApplyWorkshop(Workshop dto);
 	
 	// (사용자) 워크샵 목록 상세
 	public List<Workshop> listUserWorkshop(Map<String, Object> map);
@@ -89,5 +90,5 @@ public interface WorkshopService {
 	public Long findProgramIdByWorkshopId(Long workshopId);
 	public WorkshopFaq findFaqById(Long faqId);
 	public void updateWorkshopStatus(Workshop dto);
-	
+	public int faqDataCount(Map<String,Object> map);
 }

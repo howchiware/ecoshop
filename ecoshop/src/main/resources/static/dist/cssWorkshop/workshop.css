@@ -60,6 +60,17 @@ body {
 	margin-bottom: 5px;
 }
 
+.btn-submit {
+	background: #000;
+	color: #fff;
+	border: 1px solid #000;
+	border-radius: 4px;
+	padding: 3px 10px;
+	font-size: 0.9rem;
+	transition: background 0.2s, color 0.2s;
+	cursor: pointer;
+}
+
 .page-navigation {
 	display: flex;
 	justify-content: center;
@@ -95,6 +106,22 @@ body {
 	background: #ccc;
 	border-color: #999;
 	color: #333;
+}
+
+.badge-done {
+	background: #e8f5e9;
+	color: #1b5e20;
+	padding: 4px 8px;
+	border-radius: 999px;
+	font-size: 12px;
+}
+
+.badge-pending {
+	background: #fff7ed;
+	color: #b45309;
+	padding: 4px 8px;
+	border-radius: 999px;
+	font-size: 12px;
 }
 
 .modal-backdrop {

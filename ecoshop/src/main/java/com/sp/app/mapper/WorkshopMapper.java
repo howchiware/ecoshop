@@ -64,6 +64,7 @@ public interface WorkshopMapper {
 	public List<WorkshopFaq> listFaq(Map<String, Object> map);
 	public Long findProgramIdByWorkshopId(long workshopId);
 	public WorkshopFaq findFaqById(long faqId);
+	public int faqDataCount(Map<String,Object> map);
 	
 	// 참가자
 	public List<Participant> listParticipant(Map<String, Object> map);
@@ -82,9 +83,10 @@ public interface WorkshopMapper {
 	public int countAppliedByWorkshop(long workshopId);
 	public void applyWorkshop(Map<String, Object> map);
 	public int cancelApplication(Map<String, Object> map);
-	int isParticipantOfMember(@Param("participantId") long participantId,
+	public int isParticipantOfMember(@Param("participantId") long participantId,
             @Param("memberId") long memberId);
 	public MemberManage findMemberById(long memberId);
+	public int reApplyWorkshop(Workshop dto);
 	
 	// 워크샵 후기
 	public void insertReview(WorkshopReview dto) throws SQLException;
@@ -98,9 +100,9 @@ public interface WorkshopMapper {
 	public Workshop findWorkshopStatusAndCapacity(long workshopId);
 	public void updateWorkshopStatus(Workshop dto);	
 	
-	List<Map<String,Object>> listReviewRewardRows(Map<String,Object> map);
-	int countReviewRewardRows(Map<String,Object> map);
-	Long findMemberIdByParticipantId(long participantId);
+	public List<Map<String,Object>> listReviewRewardRows(Map<String,Object> map);
+	public int countReviewRewardRows(Map<String,Object> map);
+	public Long findMemberIdByParticipantId(long participantId);
 	
 	// 마이페이지
 	public List<Workshop> listMyWorkshop(Map<String, Object> map);

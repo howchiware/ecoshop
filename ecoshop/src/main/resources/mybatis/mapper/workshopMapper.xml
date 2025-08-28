@@ -435,7 +435,7 @@
 		<where>
 
 			<if test="activeCategory != null">
-				AND pc.is_active = #{activeCategory}
+				AND pc.is_active = 1
 			</if>
 
 			<if test="categoryId != null">
@@ -444,6 +444,7 @@
 
 			<if test="onlyRecruiting == true">
 				AND w.workshopStatus = 1
+				AND w.applyDeadline >= SYSDATE
 			</if>
 		</where>
 	</select>
@@ -472,7 +473,8 @@
 		FROM
 		programFaq
 		WHERE programId = #{programId}
-		ORDER BY regDate DESC
+		ORDER BY regDate DESC, faqId DESC
+		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
 
 	<insert id="insertFaq"
@@ -496,6 +498,13 @@
 		DELETE FROM programFaq
 		WHERE faqId = #{faqId}
 	</delete>
+	
+	<select id="faqDataCount" parameterType="map"
+		resultType="int">
+		SELECT NVL(COUNT(*), 0)
+		FROM programFaq
+		WHERE programId = #{programId}
+	</select>
 
 	<select id="findProgramIdByWorkshopId" parameterType="long"
 		resultType="long">
@@ -588,7 +597,7 @@
 		AND
 		workshopId = #{workshopId}
 		AND
-		participantStatus = 1
+		participantStatus IN (1, 2)
 	</select>
 
 	<select id="countParticipantofMember" parameterType="map"
@@ -626,7 +635,7 @@
 		isAttended,
 		appliedDate)
 		VALUES (participant_seq.NEXTVAL, #{workshopId},
-		#{memberId}, 1, 'N',
+		#{memberId}, 2, 'N',
 		SYSDATE)
 	</insert>
 
@@ -637,7 +646,18 @@
 		AND workshopId =
 		#{workshopId}
 		AND
-		participantStatus = 1
+		participantStatus IN (1, 2)
+		AND isAttended = 'N'
+	</update>
+
+	<update id="reApplyWorkshop" parameterType="com.sp.app.model.Workshop">
+		UPDATE participant
+		SET participantStatus = 2,
+		isAttended = 'N',
+		appliedDate = SYSDATE
+		WHERE memberId = #{memberId}
+		AND workshopId = #{workshopId}
+		AND participantStatus = 0
 	</update>
 
 	<!-- 참여자 목록 -->
@@ -722,7 +742,7 @@
 				AND wr.workshopId = #{workshopId}
 			</if>
 		</where>
-		ORDER BY wr.regDate DESC
+		ORDER BY wr.regDate DESC, wr.workshopReviewId DESC
 		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS
 		ONLY
 	</select>
@@ -769,6 +789,7 @@
 		<choose>
         <when test="mode == 'applied'">
             AND pt.isAttended = 'N'
+            AND pt.participantStatus IN (1,2)
             <if test="onlyFuture">
                 AND w.scheduleDate >= SYSDATE
             </if>
@@ -795,11 +816,10 @@
 		JOIN workshop w ON
 		pt.workshopId = w.workshopId
 		WHERE pt.memberId = #{memberId}
-		AND
-		pt.participantStatus = 1
 		<choose>
 			<when test="mode == 'applied'">
 				AND pt.isAttended = 'N'
+				AND pt.participantStatus IN (1, 2)
 				<if test="onlyFuture == true">
 					AND w.scheduleDate >= SYSDATE
 				</if>

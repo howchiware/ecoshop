@@ -78,7 +78,7 @@
 							<c:otherwise>
 								<c:forEach var="c" items="${categoryList}" varStatus="st">
 									<tr>
-										<td class="text-center">${st.count}</td>
+										<td class="text-center">${(page - 1) * size + st.index + 1}</td>
 										<td class="text-center"><c:out value="${c.categoryName}" /></td>
 
 										<td class="text-center"><select
@@ -121,8 +121,6 @@
 					<c:out value="${paging}" escapeXml="false" />
 				</div>
 			</c:if>
-
-
 		</div>
 	</main>
 

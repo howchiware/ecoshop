@@ -12,38 +12,8 @@
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssWorkshop/workshop.css">
 <style>
-* {
-	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
-	box-sizing: border-box;
-}
-
-@font-face {
-	font-family: 'Pretendard';
-	src:
-		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-		format('woff');
-	font-style: normal;
-}
-
-body {
-	background-color: #f7f6f3;
-	color: #333;
-	margin: 0;
-}
-
-.main-container {
-	font-size: 15px;
-}
-
-.outside {
-	background: #fff;
-	border: 1px solid #dee2e6;
-	border-radius: 8px;
-	padding: 20px;
-	margin-bottom: 20px;
-}
-
 .table {
 	background: #fff;
 }
@@ -61,44 +31,6 @@ body {
 
 .table .btn {
 	margin: 0 2px;
-}
-
-.btn-manage {
-	background: #fff;
-	border: 1px solid #000;
-	border-radius: 4px;
-	padding: 3px 10px;
-	color: #000;
-	font-size: 0.9rem;
-	transition: background .2s, color .2s;
-	cursor: pointer;
-}
-
-.btn-submit {
-	background: #000;
-	color: #fff;
-	border: 1px solid #000;
-	border-radius: 4px;
-	padding: 3px 10px;
-	font-size: 0.9rem;
-	transition: background .2s, color .2s;
-	cursor: pointer;
-}
-
-.badge-done {
-	background: #e8f5e9;
-	color: #1b5e20;
-	padding: 4px 8px;
-	border-radius: 999px;
-	font-size: 12px;
-}
-
-.badge-pending {
-	background: #fff7ed;
-	color: #b45309;
-	padding: 4px 8px;
-	border-radius: 999px;
-	font-size: 12px;
 }
 
 .text-muted {
@@ -136,7 +68,8 @@ body {
 					<table class="table table-sm align-middle">
 						<thead>
 							<tr>
-								<th style="width: 15%;" class="text-center">참여자명</th>
+								<th style="width: 5%;" class="text-center">번호</th>
+								<th style="width: 10%;" class="text-center">참여자명</th>
 								<th style="width: 40%;">워크샵명</th>
 								<th style="width: 10%;" class="text-center">포인트</th>
 								<th style="width: 10%;" class="text-center">상태</th>
@@ -148,13 +81,14 @@ body {
 							<c:choose>
 								<c:when test="${empty rows}">
 									<tr>
-										<td colspan="5" class="text-center text-muted py-4">표시할
+										<td colspan="6" class="text-center text-muted py-4">표시할
 											데이터가 없습니다.</td>
 									</tr>
 								</c:when>
 								<c:otherwise>
-									<c:forEach var="r" items="${rows}">
+									<c:forEach var="r" items="${rows}" varStatus="st">
 										<tr>
+											<td class="text-center">${(page - 1) * size + st.index + 1}</td>
 											<td class="text-center"><c:out value="${r.memberName}" /></td>
 											<td class="text-center"><c:out
 													value="${r.workshopTitle}" /></td>
@@ -207,11 +141,11 @@ body {
 				</div>
 			</div>
 
-			<nav aria-label="페이지네이션">
-				<ul class="pagination justify-content-center">
-					<li class="page-item active"><span class="page-link">${page}</span></li>
-				</ul>
-			</nav>
+			<c:if test="${total > 0}">
+				<div class="page-navigation">
+					<c:out value="${paging}" escapeXml="false" />
+				</div>
+			</c:if>
 
 		</div>
 	</main>
