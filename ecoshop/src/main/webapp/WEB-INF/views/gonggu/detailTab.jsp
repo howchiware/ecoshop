@@ -69,36 +69,26 @@
 	    </div>
 	
 	    <div class="image-grid">
-	        <div>
-	            <a href="#">
-	                <img src="${pageContext.request.contextPath}/dist/images/Group 303.png" class="image-photo" alt="">
-	            </a>
-	        </div>
-	        <div>
-	            <a href="#">
-	                <img src="${pageContext.request.contextPath}/dist/images/Group 303.png" class="image-photo" alt="">
-	            </a>
-	        </div>
-	        <div>
-	            <a href="#">
-	                <img src="${pageContext.request.contextPath}/dist/images/Group 303.png" class="image-photo" alt="">
-	            </a>
-	        </div>
-	        <div>
-	            <a href="#">
-	                <img src="${pageContext.request.contextPath}/dist/images/Group 303.png" class="image-photo" alt="">
-	            </a>
-	        </div>
-	        <div>
-	            <a href="#">
-	                <img src="${pageContext.request.contextPath}/dist/images/Group 303.png" class="image-photo" alt="">
-	                <button type="button" class="moreBtn">더보기 &gt;</button>
-	            </a>
-	        </div>
+	    	<c:forEach var="vo" items="${imgList}" varStatus="status" begin="0" end="4">
+	    		<c:if test="${status.index < 4}">
+			        <div class="img-div reviewImgView-div" data-gongguOrDerDetailId="${vo.gongguOrDerDetailId}">
+		                <img src="${pageContext.request.contextPath}/uploads/review/${vo.reviewImg}" class="image-photo" alt="" style="height: 210px;">
+			        </div>
+	    		</c:if>
+	    		<c:if test="${status.index == 4}">
+	    		<div class="item-box">
+				    <div class="image">
+				      <img src="${pageContext.request.contextPath}/uploads/review/${vo.reviewImg}" alt="" class="image-photo" style="height: 210px;">
+				    </div>
+				    <div class="img-div moreBtn" data-productCode="${dto.productCode}">
+				      <p>더보기</p>
+				    </div>
+				 </div>
+				</c:if>
+	    	</c:forEach>
 	    </div>
-	
 	    <div class="row mt-3 reviewSort-area">
-	        <div class="col">
+	        <div class="col onlyPhotoReview" id="onlyPhotoReview">
 	            <i class="bi bi-image"></i> <span>포토 구매평만 보기</span>
 	        </div>
 	        <div class="col-auto text-end">
@@ -261,8 +251,6 @@
 	
 </div>
 
-<!-- 리뷰쓰기 -->
-
 <!-- 상품리뷰 대화상자 -->
 <div class="modal fade" id="reviewDialogModal" tabindex="-1" 
 		data-bs-backdrop="static" data-bs-keyboard="false"
@@ -380,5 +368,24 @@
 			</div>			
 		</div>	
 			
+	</div>
+</div>
+
+<!-- 상품리뷰 사진 모달 -->
+<div class="modal fade" id="imgViewDialogModal" tabindex="-1" 
+		data-bs-backdrop="static" data-bs-keyboard="false"
+		aria-labelledby="imgViewDialogModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="imgViewDialogModalLabel">리뷰 사진 보기</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" id="reviewImgModal">
+				<div class="row reviewImg-row" id="reviewImgModal-row">
+				</div>			
+			</div>			
+		</div>	
+
 	</div>
 </div>

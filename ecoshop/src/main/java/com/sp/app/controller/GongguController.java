@@ -19,7 +19,10 @@ import com.sp.app.common.PaginateUtil;
 import com.sp.app.model.GongguOrder;
 import com.sp.app.model.GongguProduct;
 import com.sp.app.model.GongguProductDeliveryRefundInfo;
+import com.sp.app.model.GongguReview;
+import com.sp.app.model.ProductReview;
 import com.sp.app.model.SessionInfo;
+import com.sp.app.service.GongguProductReviewService;
 import com.sp.app.service.GongguService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,7 +38,8 @@ public class GongguController {
 	private final PaginateUtil paginateUtil;
 	private final CategoryManageService categoryManageService;
 	private final GongguService gongguService;
-
+	private final GongguProductReviewService gongguReviewService;
+	
 	@GetMapping("list")
 	public String gongguList(
 			@RequestParam(name = "categoryId", defaultValue = "0") long categoryId,
@@ -134,38 +138,36 @@ public class GongguController {
 			listPhoto.add(0, mainThumbnail);
 
 			GongguProductDeliveryRefundInfo deliveryRefundInfo = gongguService.listDeliveryRefundInfo();
-			List<GongguProductDeliveryRefundInfo> deliveryFeeList = gongguService.listDeliveryFee();
+			List<GongguProductDeliveryRefundInfo> deliveryFee = gongguService.listDeliveryFee();
 
 			int participantCount = gongguService.getParticipantCount(gongguProductId);
 			int limitCount = dto.getLimitCount();
 			int remainCount = limitCount - participantCount;
+			
+			Map<String, Object> orderMap = new HashMap<String, Object>();
+			List<GongguOrder> didIBuyProduct = null;
 
-			List<GongguOrder> didIBuyThis = null;
-			boolean leaveReview = false;
 			if (info != null) {
-				Map<String, Object> orderMap = new HashMap<>();
 				orderMap.put("memberId", info.getMemberId());
 				orderMap.put("gongguProductId", gongguProductId);
-				didIBuyThis = gongguService.didIBuyProduct(orderMap);
-				
-				if (didIBuyThis != null && !didIBuyThis.isEmpty()) {
-				    for (GongguOrder order : didIBuyThis) {
-				        if ("구매확정".equals(order.getOrderState())) { 
-				            leaveReview = true;
-				            break;
-				        }
-				    }
-				}
+				didIBuyProduct = gongguService.didIBuyProduct(orderMap);
 			}
-
+			boolean leaveReview = false;
+			if(didIBuyProduct != null && didIBuyProduct.size() > 0) {
+				leaveReview = true;
+			}
+			
+			List<GongguReview> imgList = gongguReviewService.imgList(gongguProductId);
+				
 			model.addAttribute("dto", dto);
+			model.addAttribute("imgList", imgList);
 			model.addAttribute("listPhoto", listPhoto);
 			model.addAttribute("deliveryRefundInfo", deliveryRefundInfo);
-			model.addAttribute("deliveryFeeList", deliveryFeeList);
+			model.addAttribute("deliveryFee", deliveryFee);
 			model.addAttribute("participantCount", participantCount);
 			model.addAttribute("limitCount", limitCount);
 			model.addAttribute("remainCount", remainCount);
-			model.addAttribute("didIBuyThis", didIBuyThis);
+			model.addAttribute("didIBuyProduct", didIBuyProduct);
 			model.addAttribute("leaveReview", leaveReview);
 
 			return "gonggu/gongguProductInfo"; 

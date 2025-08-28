@@ -15,6 +15,28 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css_gonggu/gongguProductInfo.css"> 
+<style type="text/css">
+  .item-box{
+    position: relative;
+  }
+  
+  .moreBtn{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    display: table;
+    background: rgb(199 199 199 / 70%);
+    color: #fff;
+  }
+  .moreBtn > p{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 15px;
+  }
+</style>
 
 </head>
 <body>
@@ -27,27 +49,20 @@
 	<div class="section" style="background: #fff">
 		<div class="container">
 
-			<div class="row gy-4" >
+		<div class="row gy-4" >
 	
-				<div class="col-md-12">
-					<div class="row">
-						<div class="col-md-6 p-2 pe-5">
-							<div class="row gx-1 p-1">
-								<div class="col border rounded lg-img p-0">
-									<img id="main-product-image" class="w-100 h-100 rounded" 
-									     src="${pageContext.request.contextPath}/uploads/gonggu/${dto.gongguThumbnail}" 
-									     alt="${dto.gongguProductName} 대표 이미지">
-								</div>
+			<div class="col-md-12">
+				<div class="row">
+					<div class="col-md-6 p-2 pe-5">
+						<div class="row gx-1 p-1">
+							<div class="col border rounded lg-img p-0">
+								<img class="w-100 h-100 rounded" src="${pageContext.request.contextPath}/uploads/gonggu/${dto.gongguThumbnail}">   
 							</div>
-							<div class="sm-img-container">
-								<div class="sm-img">
-									<img src="${pageContext.request.contextPath}/uploads/gonggu/${dto.gongguThumbnail}" 
-									     alt="${dto.gongguProductName} 썸네일">
-								</div>
-
-								<c:forEach var="photo" items="${listPhoto}" varStatus="loop">
-									<div class="sm-img">
-										<img src="${pageContext.request.contextPath}/uploads/gonggu/${photo.detailPhoto}">
+							</div>	
+							<div class="row gx-1 mt-2 p-1">
+								<c:forEach var="vo" items="${listPhoto}">
+									<div class="col-md-auto sm-img">
+										<img class="border rounded" src="${pageContext.request.contextPath}/uploads/gonggu/${vo.photoName}">
 									</div>
 								</c:forEach>
 							</div>
