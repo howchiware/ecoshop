@@ -130,10 +130,10 @@
 		<div class="modal-dialog modal-lg modal-dialog-centered">
 			<div class="modal-content">
 				<form method="post" action="${ctx}/admin/workshop/faq/write">
-					<!-- <div class="modal-header">
+					<div class="modal-header">
 						<h5 class="modal-title fw-bold">FAQ 등록</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-					</div> -->
+					</div>
 					<div class="modal-body">
 						<input type="hidden" name="faqId" id="faqId">
 						<div class="mb-3">

@@ -13,7 +13,8 @@
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
 	rel="stylesheet">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssWorkshop/workshop.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/dist/cssWorkshop/workshop.css">
 
 <style>
 .table {
@@ -92,7 +93,7 @@
 											<button type="button" class="btn-manage"
 												data-bs-toggle="modal" data-bs-target="#categoryModal"
 												data-id="${c.categoryId}" data-name="${c.categoryName}"
-												data-active="${c.isActive}">수정</button>
+												data-active="${c.isActive != null ? c.isActive : 1}">수정</button>
 
 											<form method="post"
 												action="${ctx}/admin/workshop/category/delete"
@@ -123,8 +124,6 @@
 			</c:if>
 		</div>
 	</main>
-
-	<script>
 
 	<div class="modal fade" id="categoryModal" tabindex="-1"
 		aria-hidden="true">
@@ -161,15 +160,15 @@
 		</div>
 	</div>
 
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 	<script>
   const categoryModal = document.getElementById('categoryModal');
   categoryModal.addEventListener('show.bs.modal', function (event) {
     const button = event.relatedTarget;
     const categoryId = button ? button.getAttribute('data-id') : null;
     const categoryName = button ? button.getAttribute('data-name') : '';
-    const isActive = button ? (button.getAttribute('data-active') ?? '1') : '1';
+    const isActive = button ? button.getAttribute('data-active') : '1';
 
     const modalTitle = categoryModal.querySelector('.modal-title');
     const form = categoryModal.querySelector('form');
@@ -227,8 +226,6 @@
     }
   });
 </script>
-
-
 
 </body>
 </html>

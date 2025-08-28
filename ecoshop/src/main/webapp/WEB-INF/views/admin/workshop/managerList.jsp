@@ -206,7 +206,7 @@ select.form-select {
 		if (mode === 'write') {
 			modalTitle.innerText = "담당자 등록";
 			submitBtn.innerText = "등록";
-			submitBtn.className = "btn btn-success";
+			submitBtn.className = "btn-manage";
 			form.action = "${ctx}/admin/workshop/manager/write";
 			document.getElementById("managerId").value = '';
 			document.getElementById("name").value = '';
@@ -216,7 +216,7 @@ select.form-select {
 		} else {
 			modalTitle.innerText = "담당자 수정";
 			submitBtn.innerText = "수정";
-			submitBtn.className = "btn btn-primary";
+			submitBtn.className = "btn-manage";
 			form.action = "${ctx}/admin/workshop/manager/update";
 			document.getElementById("managerId").value = id;
 			document.getElementById("name").value = name;
