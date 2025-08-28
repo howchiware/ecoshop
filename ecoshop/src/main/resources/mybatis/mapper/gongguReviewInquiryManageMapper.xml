@@ -62,7 +62,7 @@
 	
 	<update id="updateAnswer" parameterType="com.sp.app.admin.model.GongguReviewManage">
 		UPDATE gongguReview SET answer = #{answer}, answerDate = SYSDATE, answerId = #{answerId}
-		WHERE gongguOrderDetailId = #{gongguOrderDetailId}
+		WHERE gongguOrderDetailId = #{gongguOrderDetailId}  
 	</update>
 	
 	<select id="answerNameFindById" parameterType="Long" resultType="String">
@@ -78,4 +78,7 @@
 	<delete id="deleteReview" parameterType="Long">
 		DELETE FROM gongguReview WHERE gongguOrderDetailId = #{gongguOrderDetailId}
 	</delete>
+
+
+	
 </mapper>

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sp.app.admin.mapper.GongguReviewInquiryManageMapper;
 import com.sp.app.admin.model.GongguInquiryManage;
@@ -63,6 +65,7 @@ public class GongguReviewInquiryServiceImpl implements GongguReviewInquiryManage
 		return list;  
 	}
 
+	@Transactional
 	@Override
 	public void updateAnswer(GongguReviewManage dto) {
 		try {
@@ -74,7 +77,7 @@ public class GongguReviewInquiryServiceImpl implements GongguReviewInquiryManage
 
 	@Override
 	public String answerNameFindById(long answerId) {
-String name = null;
+		String name = null;
 		
 		try {
 			name = gongguReviewInquiryManageMapper.answerNameFindById(answerId);
@@ -85,22 +88,25 @@ String name = null;
 		return name;
 	}
 
+	@Transactional
 	@Override
-	public void deleteAnswer(long gongguReviewId) {
+	public void deleteAnswer(long gongguOrderDetailId) {
 		try {
-			gongguReviewInquiryManageMapper.deleteAnswer(gongguReviewId);
+			gongguReviewInquiryManageMapper.deleteAnswer(gongguOrderDetailId);
 		} catch (Exception e) {
 			log.info("gongguDeleteAnswer: ", e);
 		}
 	}
 
+	@Transactional
 	@Override
-	public void deleteReview(long gongguReviewId) {
+	public void deleteReview(long gongguOrderDetailId) {
 		try {
-			gongguReviewInquiryManageMapper.deleteReview(gongguReviewId);
+			gongguReviewInquiryManageMapper.deleteReview(gongguOrderDetailId);
 		} catch (Exception e) {
 			log.info("gongguDeleteInquiry: ", e);
 		}
 	}
+	
 	
 }

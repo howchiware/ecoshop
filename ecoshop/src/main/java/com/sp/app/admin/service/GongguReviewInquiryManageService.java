@@ -15,6 +15,7 @@ public interface GongguReviewInquiryManageService {
 	public void updateAnswer(GongguReviewManage dto);
 	public String answerNameFindById(long answerId);
 	
-	public void deleteAnswer(long gongguReviewId);
-	public void deleteReview(long gongguReviewId);
+	public void deleteAnswer(long gongguOrderDetailId);
+	public void deleteReview(long gongguOrderDetailId);
+
 }

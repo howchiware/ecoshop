@@ -19,6 +19,7 @@ public interface GongguReviewInquiryManageMapper {
 	public void updateAnswer(GongguReviewManage dto);
 	public String answerNameFindById(long answerId);
 	
-	public void deleteAnswer(long reviewId);
-	public void deleteReview(long reviewId);
+	public void deleteAnswer(long gongguorderDetailId);
+	public void deleteReview(long gongguorderDetailId);
+	
 }

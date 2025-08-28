@@ -50,19 +50,19 @@ $(function(){
 		}
 		
 		// name 넣어주기
-		const gongguReviewId = $(this).attr('data-gongguReviewId');
+		const gongguOrderDetailId = $(this).attr('data-gongguOrderDetailId');
 		const answerId = $(this).attr('data-managerId');
 		const answerName = $(this).attr('data-managerName');
-		console.log(gongguReviewId);
+		console.log(gongguOrderDetailId);
 		console.log(answerId);
 		console.log(answerName);
 		
 		let inputTag1 = document.createElement("input");
 				
-		inputTag1.classList.add('gongguReviewIdInput');
+		inputTag1.classList.add('gongguOrderDetailIdIdInput');
 		inputTag1.setAttribute('type', 'hidden');
-		inputTag1.setAttribute('name', 'gongguReviewId');
-		inputTag1.value = gongguReviewId;
+		inputTag1.setAttribute('name', 'gongguOrderDetailId');
+		inputTag1.value = gongguOrderDetailId;
 		
 		let inputTag2 = document.createElement("input");
 				
@@ -131,19 +131,19 @@ $(function(){
 		btnArea.append(btnTag2);
 		
 		// name 넣어주기
-		const gongguReviewId = $(this).attr('data-gongguReviewId');
+		const gongguOrderDetailId = $(this).attr('data-gongguOrderDetailId');
 		const answerId = $(this).attr('data-managerId');
 		const answerName = $(this).attr('data-managerName');
-		console.log(gongguReviewId);
+		console.log(gongguOrderDetailId);
 		console.log(answerId);
 		console.log(answerName);
 		
 		let inputTag1 = document.createElement("input");
 				
-		inputTag1.classList.add('gongguReviewIdInput');
+		inputTag1.classList.add('gongguOrderDetailIdIdInput');
 		inputTag1.setAttribute('type', 'hidden');
-		inputTag1.setAttribute('name', 'gongguReviewId');
-		inputTag1.value = gongguReviewId;
+		inputTag1.setAttribute('name', 'gongguOrderDetailId');
+		inputTag1.value = gongguOrderDetailId;
 		
 		let inputTag2 = document.createElement("input");
 				
@@ -213,26 +213,26 @@ $(function(){
 $(function(){
 	// 공구 답변 삭제
 	$('div#content-area').on('click', 'button.removeAnswer', function(){
-		let gongguReviewId = $(this).attr('data-gongguReviewId');
+		let gongguOrderDetailId = $(this).attr('data-gongguOrderDetailId');
 		
 		if(! confirm('해당 문의에 대한 답변을 삭제하시겠습니까 ?')){
 			return false;
 		}
 
-		location.href = 'deleteAnswer?gongguReviewId=' + gongguReviewId;
+		location.href = 'deleteAnswer?gongguOrderDetailId=' + gongguOrderDetailId;
 	});
 })
 
 $(function(){
 	// 공구 리뷰 삭제
 	$('div#content-area').on('click', 'button.deleteReview', function(){
-		let gongguReviewId = $(this).attr('data-gongguReviewId');
+		let gongguOrderDetailId = $(this).attr('data-gongguOrderDetailId');
 
 		if(! confirm('해당 문의를 삭제하시겠습니까 ?')){
 			return false;
 		}
 
-		location.href = 'deleteReview?gongguReviewId=' + gongguReviewId;
+		location.href = 'deleteReview?gongguOrderDetailId=' + gongguOrderDetailId;
 	});
 });
 

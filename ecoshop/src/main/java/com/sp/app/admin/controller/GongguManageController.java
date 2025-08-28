@@ -336,7 +336,7 @@ public class GongguManageController {
 	        for(GongguReviewManage dto : reviewList) {
 	        	if(dto.getAnswer() != null) {
 	        		String answerName = gongguReviewInquiryManageService.answerNameFindById(dto.getAnswerId());
-	        		dto.setAnswerName(answerName);        		
+	        		dto.setAnswerName(answerName);
 	        	}
 	        }
         }
@@ -376,7 +376,9 @@ public class GongguManageController {
 	}
 	
     @PostMapping("writeAnswer")
-    public String writeAnswer(GongguReviewManage dto,
+    public String writeReviewAnswer(
+    		@RequestParam(value="answerId", required = false) Long answerId,
+    		GongguReviewManage dto,
     		Model model) {
     	try {
     		gongguReviewInquiryManageService.updateAnswer(dto);
@@ -388,12 +390,12 @@ public class GongguManageController {
     }
 
     @GetMapping("deleteAnswer")
-    public String deleteAnswer(@RequestParam(name="gongguReviewId") long gongguReviewId,
+    public String deleteAnswer(@RequestParam(name="gongguOrderDetailId") long gongguOrderDetailId,
     		Model model,
     		HttpServletRequest req) {
     	try {
         	
-    		gongguReviewInquiryManageService.deleteAnswer(gongguReviewId);        		
+    		gongguReviewInquiryManageService.deleteAnswer(gongguOrderDetailId);        		
         	
     	} catch (Exception e) {
     		log.info("deleteAnswer : ", e);
@@ -403,12 +405,12 @@ public class GongguManageController {
     }
     
     @GetMapping("deleteReview")
-    public String deleteReview(@RequestParam(name="gongguReviewId") long gongguReviewId,
+    public String deleteReview(@RequestParam(name="gongguOrderDetailId") long gongguOrderDetailId,
     		Model model,
     		HttpServletRequest req) {
     	try {
     		
-    		gongguReviewInquiryManageService.deleteReview(gongguReviewId);        		
+    		gongguReviewInquiryManageService.deleteReview(gongguOrderDetailId);        		
     		
     	} catch (Exception e) {
     		log.info("deleteReview : ", e);

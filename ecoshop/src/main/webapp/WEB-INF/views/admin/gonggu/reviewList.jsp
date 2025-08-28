@@ -9,7 +9,7 @@
 			<tr class="border-bottom">
 				<th width="140">상품</th>
 				<th>내용</th>
-				<th width="100">평점</th>
+				<th width="140">평점</th>
 				<th width="100">작성자</th>
 				<th width="140">일시</th>
 				<th width="140">상태</th>
@@ -19,6 +19,7 @@
 		<tbody>
 			<c:if test="${not empty reviewList}">
 				<c:forEach var="dto" items="${reviewList}">
+					<input type="hidden" name="gongguOrderDetailId" value="${dto.gongguOrderDetailId}" />
 					<tr class="border-bottom reviewTr">
 						<td>${dto.gongguProductName}</td>
 						<td>${dto.content}</td>
@@ -37,7 +38,7 @@
 	                        </c:choose>
 	                    </td>
 						<td>
-                            <button type="button" class="small-btn deleteReview" data-gongguReviewId="${dto.gongguReviewId}">삭제</button>
+                            <button type="button" class="small-btn deleteReview" data-gongguOrderDetailId="${dto.gongguOrderDetailId}">삭제</button>
 	                    </td>
 					</tr>
 					<tr class="reviewDetailTr d-none">
@@ -77,11 +78,11 @@
 														</div>
 														<div>
 															<button type="button" class="small-btn updateAnswer"
-																data-gongguReviewId="${dto.gongguReviewId}"
+																data-gongguOrderDetailId="${dto.gongguOrderDetailId}"
 																data-managerId="${managerId}"
 																data-managerName="${managerName}">수정</button>
 															<button type="button" class="small-btn removeAnswer"
-																data-gongguReviewId="${dto.gongguReviewId}">삭제</button>
+																data-gongguOrderDetailId="${dto.gongguOrderDetailId}">삭제</button>
 														</div>
 													</div>
 												</div>
@@ -90,7 +91,7 @@
 												<div class="reviewDetailAnswerAdd"
 													id="reviewDetailAnswerAdd">
 													<button type="button" class="small-btn addAnswer"
-														data-gongguReviewId="${dto.gongguReviewId}"
+														data-gongguOrderDetailId="${dto.gongguOrderDetailId}"
 														data-managerId="${managerId}"
 														data-managerName="${managerName}">등록</button>
 												</div>
