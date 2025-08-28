@@ -107,8 +107,8 @@ public class AdvertisementManageServiceImpl implements AdvertisementManageServic
 	        // 로그 남기기
 	        AdvertisementManage logDto = new AdvertisementManage();
 	        logDto.setAdvertisingId(dto.getAdvertisingId());
-	        logDto.setOldStatus(beforeDto.getStatus());           
-	        logDto.setNewStatus(dto.getStatus());                
+	        logDto.setOldStatus(beforeDto.getInquiryType());           
+	        logDto.setNewStatus(dto.getInquiryType());                
 	        logDto.setOldPosting(beforeDto.getPostingStatus());  
 	        logDto.setNewPosting(dto.getPostingStatus());        
 
@@ -118,6 +118,30 @@ public class AdvertisementManageServiceImpl implements AdvertisementManageServic
 	        log.info("updateAdvertisement : ", e);
 	        throw e;
 	    }
+	}
+
+	@Override
+	public List<AdvertisementManage> listStatus(Map<String, Object> map) {
+		List<AdvertisementManage> list = null;
+		
+		try {
+			list = mapper.listStatus(map);
+		} catch (Exception e) {
+			log.info("listStatus : " , e);
+		}
+		return list;
+	}
+
+	@Override
+	public int statusdataCount(Map<String, Object> map) {
+		int result = 0;
+		
+		try {
+			result = mapper.statusdataCount(map);
+		} catch (Exception e) {
+			log.info("statusdataCount : " , e);
+		}
+		return result;
 	}
 
 }

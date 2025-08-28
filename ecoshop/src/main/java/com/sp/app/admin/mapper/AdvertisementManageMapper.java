@@ -22,7 +22,11 @@ public interface AdvertisementManageMapper {
 	public void deleteAdvertisement(long advertisingId) throws SQLException;
 	
 	public int dataCount(Map<String, Object> map);
+	public int statusdataCount(Map<String, Object> map);
+	
 	public List<AdvertisementManage> listAdvertisement(Map<String, Object>map);
+	
+	public List<AdvertisementManage> listStatus(Map<String, Object>map);
 	
 	public AdvertisementManage findById(long advertisingId);
 	public AdvertisementManage findByFileId(long advertisingFileNum);

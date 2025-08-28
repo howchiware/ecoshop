@@ -92,6 +92,36 @@
 		VALUES(advertisingStatus_seq.NEXTVAL, #{advertisingId}, SYSDATE , #{oldStatus}, #{newStatus}, #{oldPosting}, #{newPosting})
 	</insert>
 	
+	<!-- 광고 상태 리스트 -->
+	<select id="listStatus" parameterType="map" resultType="com.sp.app.admin.model.AdvertisementManage">
+	    SELECT statuslogId, advertisingId, TO_CHAR(changeDate, 'YYYY-MM-DD') AS changeDate, oldStatus, newStatus, oldPosting, newPosting
+	    FROM advertisingStatus
+	    <where>
+        <if test="kwd != null and kwd != ''">
+            <choose>
+                <when test="schType == 'advertisingId'">
+                    AND advertisingId LIKE '%' || #{kwd} || '%'
+                </when>
+                <when test="schType == 'changeDate'">
+                    AND TO_CHAR(changeDate, 'YYYY-MM-DD') LIKE '%' || #{kwd} || '%'
+                </when>
+            </choose>
+        </if>
+    </where>
+	    ORDER BY statuslogId DESC
+	    OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+	
+	<select id="statusdataCount" parameterType="map" resultType="Integer">
+        SELECT COUNT(*)
+        FROM advertisingStatus
+        <where>
+            <if test="kwd != null and kwd != ''">
+                <include refid="where-list"/>
+            </if>
+        </where>
+    </select>
+	
 	
 	<!-- 상세보기 -->
 	<select id="findById" parameterType="Long" resultType="com.sp.app.admin.model.AdvertisementManage">

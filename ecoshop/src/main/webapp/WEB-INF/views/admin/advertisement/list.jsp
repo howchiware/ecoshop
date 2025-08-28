@@ -130,8 +130,11 @@ body.modal-open { overflow: hidden; padding-right: 0 !important; }
           <li>
 	        <button id="btnApplication" type="button" class="btn-accent" onclick="applicationForm()">신청목록</button>
 	      </li>
+	      <li>
+	      	<button type="button" class="btn btn-outline-secondary btn-sm" onclick="openStatusModal()">상태이력 보기</button>
+	      </li>
         </ul>
-
+        
         <!-- 흰색 박스 -->
         <div class="section">
           <div class="tab-content pt-3" id="nav-tabContent"></div>
@@ -159,6 +162,19 @@ body.modal-open { overflow: hidden; padding-right: 0 !important; }
       <div class="modal-body p-2"></div>
     </div>
   </div> 	
+</div>
+
+<!-- 상태 변경 이력 모달 -->
+<div class="modal fade" id="statusModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="statusModalLabel">상태 변경 이력</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-2"></div>
+    </div>
+  </div>
 </div>
   
   
@@ -216,6 +232,21 @@ body.modal-open { overflow: hidden; padding-right: 0 !important; }
     });
 }
  
+ // 상태 페이징
+ function listStatusPage(page) {
+	    const f = document.advertisementSearchForm;
+
+	    //f.role.value = 3;  
+
+	    let url = '${pageContext.request.contextPath}/admin/advertisement/status';
+	    let params = $('form[name=advertisementSearchForm]').serialize();
+	    params += '&pageNo=' + page;
+
+	    ajaxRequest(url, 'get', params, 'text', function(data){
+	        $('#statusModal .modal-body').html(data);
+	    });
+	}
+ 
 //초기화
  function resetList() {
  	const $tab = $('button[role="tab"].active');
@@ -244,6 +275,22 @@ function applicationForm(){
     ajaxRequest(url, 'get', params, 'text', function(data){
         $('#myDialogModal .modal-body').html(data);
         $('#myDialogModal').modal("show");
+    });
+}
+ 
+// 상태 목록
+function openStatusModal(page){
+    $('#statusModalLabel').text('신청 목록');
+
+    const f = document.advertisementSearchForm;
+    //f.role.value = 3;
+
+    let url = '${pageContext.request.contextPath}/admin/advertisement/status';
+    let params = $('form[name=advertisementSearchForm]').serialize();
+
+    ajaxRequest(url, 'get', params, 'text', function(data){
+        $('#statusModal .modal-body').html(data);
+        $('#statusModal').modal("show");
     });
 }
 
@@ -324,7 +371,7 @@ $(document).on('show.bs.collapse', 'tr.collapse', function (e) {
 	
 	let url = '${pageContext.request.contextPath}/admin/advertisement/updateAdvertisement';
 	let params = $('#advertisementUpdateForm').serialize();
-	alert(params);
+	//alert(params);
 	const fn = function(data){
 		listAdvertisement(page);
 	};
@@ -347,6 +394,33 @@ $(document).on('show.bs.collapse', 'tr.collapse', function (e) {
 	
 	listAdvertisement(1);
 }
+  // 상태 검색
+ function searchStatusModal() {
+	    const f = document.advertisementSearchForm;
+	    f.schType.value = $('#searchType').val();
+	    f.kwd.value = $('#keyword').val();
+	    listStatusPage(1);
+	}
+ 
+ function searchStatusList() {
+	    const f = document.advertisementSearchForm;
+
+	    f.schType.value = $('#searchTypeStatus').val();
+	    f.kwd.value = $('#keywordStatus').val();
+
+	    openStatusModal(1); 
+	}
+ 
+ function resetStatusSearch() {
+	    $('#searchTypeStatus').val('oldStatus');  
+	    $('#keywordStatus').val('');
+
+	    const f = document.advertisementSearchForm;
+	    f.schType.value = 'oldStatus';
+	    f.kwd.value = '';
+
+	    openStatusModal(1); 
+	}
 
   
  </script>

@@ -265,10 +265,63 @@ import lombok.extern.slf4j.Slf4j;
 				
 				String errorMessage = "<script>alert('파일 다운로드가 불가능 합니다 !!!');history.back();</script>";
 
-				return ResponseEntity.status(HttpStatus.NOT_FOUND) // 404 상태 코드 반환
+				return ResponseEntity.status(HttpStatus.NOT_FOUND) 
 						.contentType(MediaType.valueOf("text/html;charset=UTF-8"))
-						.body(errorMessage); // 에러 메시지 반환
+						.body(errorMessage);
 			}
+		 
+		 @GetMapping("status")
+			public String status(
+					@RequestParam(name = "pageNo", defaultValue = "1") int current_page,
+					@RequestParam(name = "schType", defaultValue = "") String schType,
+					@RequestParam(name = "kwd", required = false) String kwd,
+					Model model,
+					HttpServletRequest req) throws Exception{
+				try {
+					int size = 5;
+					int total_page = 1; 
+		            int statusdataCount = 0;
+		            
+		            Map<String, Object> map = new HashMap<>();
+		            map.put("schType", schType);
+		            map.put("kwd", kwd);
+		            
+		            statusdataCount = service.statusdataCount(map);
+		            
+		            if (statusdataCount > 0) {
+		                total_page = paginateUtil.pageCount(statusdataCount, size);
+		            }
+		
+		            kwd = myUtil.decodeUrl(kwd);
+		            
+		            current_page = Math.min(current_page, total_page);
+		            if (current_page < 1) current_page = 1;
+		            
+					int offset = (current_page - 1) * size;
+		            if (offset < 0) offset = 0;
+		
+		            map.put("offset", offset); 
+		            map.put("size", size);  
+		            map.put("kwd", kwd);
+		            
+		            List<AdvertisementManage> listStatus = service.listStatus(map);
+		            
+		            String paging = paginateUtil.pagingMethod(current_page, total_page, "listStatusPage");
+    
+		            model.addAttribute("listStatus",listStatus);
+		            model.addAttribute("pageNo", current_page);
+		            model.addAttribute("paging", paging);
+		            model.addAttribute("total_page", total_page);
+		            model.addAttribute("schTypeStatus", schType);
+		            model.addAttribute("kwdStatus", kwd);
+				} catch (Exception e) {
+					log.info("advertisementManage : ", e);
+				}
+				return "admin/advertisement/status";
+			}
+
+
+		 
 		 
 	
 	}
