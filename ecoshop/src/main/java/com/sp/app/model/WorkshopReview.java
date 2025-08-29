@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class WorkshopReview {
-
 	private String writerName;
 	private Long workshopReviewId;
 	private String reviewContent;

@@ -260,15 +260,44 @@ public class WorkshopController {
 	public Map<String, Object> workshopFaqList(@RequestParam(name = "page", defaultValue = "1") int currentPage,
 			@RequestParam(name = "workshopId", required = false) Long workshopId) throws Exception {
 
+		if(workshopId == null) {
+			return Map.of("list", List.of(), "page", 1, "size", 10, "totalPage", 1, "dataCount", 0);
+		}
+		
 		Long programId = service.findProgramIdByWorkshopId(workshopId);
+		if(programId == null) {
+			return Map.of("list", List.of(), "page", 1, "size", 10, "totalPage", 1, "dataCount", 0);
+		}
+		
+		final int size = 10;
 
 		// 목록 조회
-		Map<String, Object> map = new HashMap<>();
-		map.put("programId", programId);
+		Map<String, Object> cmap = new HashMap<>();
+		cmap.put("programId", programId);
+		int dataCount = service.faqDataCount(cmap);
+		
+		int totalPage = (dataCount + size - 1) / size;
+	    if (totalPage == 0) totalPage = 1;
+	    if (currentPage > totalPage) currentPage = totalPage;
 
+	    int offset = (currentPage - 1) * size;
+	    if (offset < 0) offset = 0;
+
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("programId", programId);
+	    map.put("offset", offset);
+	    map.put("size", size);
+	    
 		List<WorkshopFaq> list = service.listFaq(map);
 
-		return Map.of("list", list, "page", currentPage);
+		Map<String, Object> result = new HashMap<>();
+		result.put("list", list);
+		result.put("currentPage", currentPage);
+		result.put("size", size);
+		result.put("totalPage", totalPage);
+		result.put("dataCount", dataCount);
+		
+		return result;
 	}
 
 	// 후기 목록

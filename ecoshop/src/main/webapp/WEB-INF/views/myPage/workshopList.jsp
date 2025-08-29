@@ -218,6 +218,49 @@
 	transform: translateY(-50%);
 }
 
+.state-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 6px 10px; /* .state와 동일한 패딩 */
+	border-radius: 999px; /* pill */
+	font-size: 12px;
+	font-weight: 700; /* .state와 동일 굵기/크기 */
+	color: #111;
+	background: #fff; /* 모노톤 */
+	border: 1px solid #111;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.state-btn:hover {
+	background: #111;
+	color: #fff;
+}
+
+.ws-right {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 8px;
+}
+
+.ws-right form {
+	display: inline;
+	margin: 0;
+}
+
+.status-inline {
+	margin-left: 6px;
+	font-size: 12px;
+	color: var(--muted);
+	font-weight: 600;
+}
+
+.meta-item {
+	padding-bottom: 0.5rem;
+}
+
 @media ( max-width : 480px) {
 	.ws-meta .meta-item {
 		padding-right: 0;
@@ -228,6 +271,15 @@
 	}
 }
 </style>
+
+<c:if test="${mode=='applied'}">
+	<style>
+.ws-right .state {
+	display: none !important;
+}
+</style>
+</c:if>
+
 </head>
 <body>
 
@@ -284,10 +336,24 @@
 											<div class="ws-body">
 												<div
 													class="ws-meta d-flex flex-wrap align-items-center small text-muted">
-													<span class="meta-item">신청 <fmt:formatDate
+													<span class="meta-item"> 신청일 <fmt:formatDate
 															value="${row.appliedDate}" pattern="yyyy-MM-dd HH:mm" />
+														<c:if test="${mode=='applied'}">
+															<span class="status-inline"> <c:choose>
+																	<c:when test="${row.isAttended == 'Y'}"> · 참석</c:when>
+																	<c:when
+																		test="${row.participantStatus == 1 or row.participantStatus eq '1'}"> · 확정</c:when>
+																	<c:when
+																		test="${row.participantStatus == 2 or row.participantStatus eq '2'}"> · 대기</c:when>
+																	<c:when
+																		test="${row.participantStatus == 0 or row.participantStatus eq '0'}"> · 신청</c:when>
+																	<c:otherwise> · 취소됨</c:otherwise>
+																</c:choose>
+															</span>
+														</c:if>
 													</span>
 												</div>
+
 
 												<div class="ws-title">
 													<a
@@ -296,7 +362,7 @@
 												<div
 													class="ws-meta d-flex flex-wrap align-items-center small text-muted">
 													<span class="meta-item"> <fmt:formatDate
-															value="${row.scheduleDate}" pattern="yyyy-MM-dd HH:mm" />
+															value="${row.scheduleDate}" pattern="yyyy-MM-dd" />
 													</span>
 
 													<c:if test="${not empty row.categoryName}">
@@ -315,13 +381,30 @@
 														<span class="state state-attended">참석</span>
 													</c:when>
 
-													<c:when test="${row.participantStatus == 1}">
-														<span class="state state-confirm">확정</span>
+													<c:when
+														test="${row.participantStatus == 1 or row.participantStatus eq '1'}">
+														<form action="${ctx}/workshop/apply/cancel" method="post"
+															onsubmit="return confirm('정말 신청을 취소하시겠습니까?');">
+															<input type="hidden" name="workshopId"
+																value="${row.workshopId}" />
+															<button type="submit" class="state-btn">신청 취소</button>
+
+														</form>
 													</c:when>
 
-													<c:when test="${row.participantStatus == 2}">
+
+													<c:when
+														test="${row.participantStatus == 2 or row.participantStatus eq '2'}">
 														<span class="state state-wait">대기</span>
+														<form action="${ctx}/workshop/apply/cancel" method="post"
+															onsubmit="return confirm('정말 신청을 취소하시겠습니까?');"
+															style="display: inline">
+															<input type="hidden" name="workshopId"
+																value="${row.workshopId}" />
+															<button type="submit" class="state-btn">신청 취소</button>
+														</form>
 													</c:when>
+
 
 													<c:otherwise>
 														<span class="state state-cancel">취소</span>

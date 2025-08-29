@@ -22,7 +22,7 @@
 
 	<update id="categoryActive" parameterType="map">
 		UPDATE programCategory
-		SET is_active = #{active}
+		SET is_active = #{isActive}
 		WHERE categoryId = #{categoryId}
 	</update>
 
@@ -34,7 +34,7 @@
 	<select id="listCategory" parameterType="map"
 		resultType="com.sp.app.model.Workshop">
 		SELECT categoryId, categoryName, NVL(is_active, 1) AS
-		active
+		isActive
 		FROM programCategory
 		ORDER BY
 		categoryId DESC
@@ -474,7 +474,8 @@
 		programFaq
 		WHERE programId = #{programId}
 		ORDER BY regDate DESC, faqId DESC
-		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+		OFFSET #{offset, jdbcType=INTEGER} ROWS 
+		FETCH NEXT #{size, jdbcType=INTEGER} ROWS ONLY
 	</select>
 
 	<insert id="insertFaq"
@@ -534,10 +535,12 @@
 
 	<select id="listUserReview" parameterType="map"
 		resultType="com.sp.app.model.WorkshopReview">
-		SELECT w.workshopReviewId, w.participantId,
-		w.reviewContent,
-		w.regDate, TO_CHAR(w.regDate, 'YYYY-MM-DD') AS
-		regDateStr, w.workshopId,
+		SELECT w.workshopReviewId AS workshopReviewId, 
+		w.participantId AS participantId,
+		COALESCE(DBMS_LOB.SUBSTR(w.reviewContent, 4000, 1), '') AS reviewContent,
+		w.regDate AS regDate, 
+		TO_CHAR(w.regDate, 'YYYY-MM-DD') AS regDateStr, 
+		w.workshopId AS workshopId,
 		m.name AS writerName
 		FROM workshopReview w
 		JOIN participant p ON w.participantId = p.participantId
@@ -545,8 +548,8 @@
 		member2 m ON p.memberId = m.memberId
 		WHERE w.workshopId = #{workshopId}
 		ORDER BY w.regDate DESC
-		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS
-		ONLY
+		OFFSET #{offset, jdbcType=INTEGER} ROWS
+		FETCH NEXT #{size, jdbcType=INTEGER} ROWS ONLY
 	</select>
 
 	<insert id="insertReview"

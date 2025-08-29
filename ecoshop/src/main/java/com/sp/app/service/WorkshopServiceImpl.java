@@ -83,11 +83,11 @@ public class WorkshopServiceImpl implements WorkshopService {
 	}
 
 	@Override
-	public void categoryActive(Long categoryId, Integer active) {
+	public void categoryActive(Long categoryId, Integer isActive) {
 		try {
 			Map<String, Object> map = new HashMap<>();
 			map.put("categoryId", categoryId);
-			map.put("active", active);
+			map.put("isActive", isActive);
 
 			mapper.categoryActive(map);
 		} catch (Exception e) {

@@ -18,67 +18,22 @@
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssWorkshop/workshop.css">
 
 <style type="text/css">
-* {
-	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
-	box-sizing: border-box;
-}
-
-@font-face {
-	font-family: 'Pretendard';
-	src:
-		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-		format('woff');
-	font-style: normal;
-}
-
-body {
-	background-color: #f7f6f3;
-	color: #333;
-	margin: 0;
-}
-
-.main-container {
-	font-size: 0.95rem;
-}
-
-.btn-primary {
-	background: #fff;
-	border: 1px solid #000;
-	border-radius: 4px;
-	padding: 3px 10px;
-	color: #000;
-	font-size: 0.9rem;
-	transition: background 0.2s, color 0.2s;
-	cursor: pointer;
-	height: 30px;
-	width: 51px;
-}
-
-.outside {
-	background: #fff;
-	border: 1px solid #dee2e6;
-	border-radius: 8px;
-	padding: 20px 40px;
-	margin-bottom: 20px;
-}
-
 .section-title {
   font-size: 1rem;
   font-weight: 700;
-  margin: 48px 0 20px;        /* 위쪽 48px, 아래쪽 20px */
-  padding-top: 14px;          /* 선과 제목 사이 간격 */
+  margin: 48px 0 20px;      
+  padding-top: 14px;      
   border-top: 1px solid #dee2e6;
 }
 
-/* 첫 번째 섹션은 선 제거 */
 .outside .section-title:first-of-type {
   border-top: none;
   padding-top: 0;
   margin-top: 0;
 }
-
 
 .mb-3 {
 	padding-bottom: 10px;
@@ -225,10 +180,10 @@ body {
 						<div class="col-sm-10 offset-sm-5">
 							<c:choose>
 								<c:when test="${mode eq 'update'}">
-									<button type="submit" class="btn-primary">수정</button>
+									<button type="submit" class="btn-search">수정</button>
 								</c:when>
 								<c:otherwise>
-									<button type="submit" class="btn-primary">등록</button>
+									<button type="submit" class="btn-search">등록</button>
 								</c:otherwise>
 							</c:choose>
 						</div>

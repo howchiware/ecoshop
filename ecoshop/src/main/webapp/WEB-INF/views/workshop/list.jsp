@@ -71,6 +71,11 @@
 .form-select {
 	width: 11rem;
 }
+
+label[for="onlyRecruiting"]{
+
+}
+
 </style>
 </head>
 <body>
@@ -115,17 +120,11 @@
 				</select>
 			</div>
 
-			<div class="col-sm-4 col-md-3 form-check mt-4">
+			<div class="col-auto ms-auto mt-4">
 				<input class="form-check-input" type="checkbox" id="onlyRecruiting"
 					name="onlyRecruiting" value="true"
 					<c:if test="${onlyRecruiting}">checked</c:if>> <label
 					class="form-check-label" for="onlyRecruiting">모집 중만 보기</label>
-			</div>
-
-
-			<div class="col-sm-12 col-md-3">
-				<input type="hidden" name="page" value="1">
-				<button class="btn btn-dark w-50 mt-2 mt-md-0" type="submit">검색</button>
 			</div>
 		</form>
 
