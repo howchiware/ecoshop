@@ -30,49 +30,56 @@
 
   <!-- 스페셜 목록(더보기/키셋) -->
   <select id="listSpecialMore" parameterType="map" resultType="com.sp.app.model.Challenge">
-    SELECT
-      c.challengeId, c.title, c.description, c.thumbnail,
-      c.rewardPoints,
-      TO_CHAR(c.regDate,'YYYY-MM-DD HH24:MI:SS') AS challengeRegDate,
-      c.challengeType,
-      TO_CHAR(s.startDate,'YYYY-MM-DD') AS startDate,
-      TO_CHAR(s.endDate,'YYYY-MM-DD')   AS endDate,
-      s.requireDays,
-      s.status AS specialStatus
-    FROM challenge c
-    JOIN specialChallenge s ON s.challengeId = c.challengeId
-    WHERE c.challengeType = 'SPECIAL'
-      AND s.status IN (0, 1)
-      AND (SYSDATE BETWEEN s.startDate AND s.endDate OR SYSDATE &lt; s.startDate)
+  SELECT
+    c.challengeId                                AS challengeId,
+    c.title                                      AS title,
+    c.description                                AS description,
+    c.thumbnail                                  AS thumbnail,
+    c.rewardPoints                               AS rewardPoints,
+    TO_CHAR(c.regDate, 'YYYY-MM-DD HH24:MI:SS')  AS challengeRegDate,
+    c.challengeType                              AS challengeType,
+    TO_CHAR(s.startDate, 'YYYY-MM-DD')           AS startDate,
+    TO_CHAR(s.endDate,   'YYYY-MM-DD')           AS endDate,
+    s.requireDays                                AS requireDays,
+    s.status                                     AS specialStatus
+  FROM challenge c
+  JOIN specialChallenge s
+    ON s.challengeId = c.challengeId
+  WHERE c.challengeType = 'SPECIAL'
+    AND s.status IN (0, 1)
+    AND (SYSDATE BETWEEN s.startDate AND s.endDate OR SYSDATE &lt; s.startDate)
 
-    <choose>
-      <when test="sort == 'CLOSE_DATE'">
-        <if test="lastEndDate != null and lastEndDate != ''">
-          AND (
-            s.endDate &gt; TO_DATE(#{lastEndDate}, 'YYYY-MM-DD')
-            OR (s.endDate = TO_DATE(#{lastEndDate}, 'YYYY-MM-DD') AND c.challengeId &gt; #{lastId})
-          )
-        </if>
-        ORDER BY s.endDate ASC NULLS LAST, c.challengeId ASC
-      </when>
+  <choose>
+    <!-- 종료일 빠른 순 -->
+    <when test="sort == 'CLOSE_DATE'">
+      <if test="lastEndDate != null and lastEndDate != ''">
+        AND (
+          s.endDate &gt; TO_DATE(#{lastEndDate}, 'YYYY-MM-DD')
+          OR (s.endDate = TO_DATE(#{lastEndDate}, 'YYYY-MM-DD') AND c.challengeId &gt; #{lastId})
+        )
+      </if>
+      ORDER BY s.endDate ASC NULLS LAST, c.challengeId ASC
+    </when>
 
-      <when test="sort == 'POPULAR'">
-        <if test="lastId != null">
-          AND c.challengeId &lt; #{lastId}
-        </if>
-        ORDER BY c.rewardPoints DESC, c.challengeId DESC
-      </when>
+    <!-- 인기순(예: 포인트 DESC) -->
+    <when test="sort == 'POPULAR'">
+      <if test="lastId != null">
+        AND c.challengeId &lt; #{lastId}
+      </if>
+      ORDER BY c.rewardPoints DESC, c.challengeId DESC
+    </when>
 
-      <otherwise>
-        <if test="lastId != null">
-          AND c.challengeId &lt; #{lastId}
-        </if>
-        ORDER BY c.challengeId DESC
-      </otherwise>
-    </choose>
+    <!-- 기본: 최신순 -->
+    <otherwise>
+      <if test="lastId != null">
+        AND c.challengeId &lt; #{lastId}
+      </if>
+      ORDER BY c.challengeId DESC
+    </otherwise>
+  </choose>
 
-    FETCH FIRST #{size} ROWS ONLY
-  </select>
+  FETCH FIRST #{size} ROWS ONLY
+</select>
 
   <!-- 상세 보기 -->
   <select id="findDailyDetail" parameterType="long" resultType="com.sp.app.model.Challenge">
@@ -491,5 +498,59 @@
 	  ORDER BY photoId
 	</select>
   
+  	<!-- 번들 피드: 참여(1~3일 세트)=카드 1장 -->
+<select id="listSpecialBundlesPaged" parameterType="map" resultType="com.sp.app.model.Challenge">
+  WITH P_PUB AS (
+    SELECT p.participationId, p.postId, p.dayNumber, p.regDate
+    FROM certificationPost p
+    WHERE p.dayNumber IS NOT NULL AND p.isPublic='Y' AND p.approvalStatus=1
+  ),
+  THUMB AS (
+    SELECT participationId, MAX(regDate) AS lastPublicAt FROM P_PUB GROUP BY participationId
+  ),
+  THUMB_POST AS (
+    SELECT t.participationId, pp.postId
+    FROM THUMB t JOIN P_PUB pp ON pp.participationId=t.participationId AND pp.regDate=t.lastPublicAt
+  ),
+  AGG AS (
+    SELECT cp.participationId, cp.memberId, cp.challengeId,
+           COUNT(pp.postId) AS publicCount, MAX(pp.regDate) AS lastPublicAt
+    FROM challengeParticipation cp JOIN P_PUB pp ON pp.participationId=cp.participationId
+    GROUP BY cp.participationId, cp.memberId, cp.challengeId
+  )
+  SELECT agg.participationId, agg.memberId, agg.challengeId,
+         agg.publicCount AS approvedDays,
+         TO_CHAR(agg.lastPublicAt,'YYYY-MM-DD HH24:MI:SS') AS postRegDate,
+         c.title, c.challengeType, NVL(m.nickname,m.name) AS memberName,
+         (SELECT ph.photoUrl FROM certificationPhoto ph WHERE ph.postId=tp.postId FETCH FIRST 1 ROWS ONLY) AS photoUrl
+  FROM AGG agg
+  JOIN challenge c ON c.challengeId=agg.challengeId
+  JOIN member2   m ON m.memberId=agg.memberId
+  LEFT JOIN THUMB_POST tp ON tp.participationId=agg.participationId
+  WHERE agg.publicCount >= 1
+    AND (agg.publicCount=3 OR SYSDATE &lt;= (TRUNC(agg.lastPublicAt)+1+(10/24)))  
+  <choose>
+    <when test="sort == 'PROGRESS'">ORDER BY agg.publicCount DESC, agg.lastPublicAt DESC</when>
+    <otherwise>ORDER BY agg.lastPublicAt DESC</otherwise>
+  </choose>
+  OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+</select>
+
+<!-- 스레드: 1~3일차 공개+승인 글 리스트 -->
+<select id="listPublicThreadByParticipation" parameterType="long" resultType="com.sp.app.model.Challenge">
+  SELECT p.postId, p.dayNumber, p.isPublic, p.approvalStatus,
+         TO_CHAR(p.regDate,'YYYY-MM-DD HH24:MI:SS') AS postRegDate,
+         cp.participationId, cp.challengeId, c.title, NVL(m.nickname,m.name) AS memberName,
+         (SELECT photoUrl FROM certificationPhoto ph WHERE ph.postId=p.postId FETCH FIRST 1 ROWS ONLY) AS photoUrl,
+         p.content
+  FROM certificationPost p
+  JOIN challengeParticipation cp ON cp.participationId=p.participationId
+  JOIN challenge c ON c.challengeId=cp.challengeId
+  JOIN member2 m ON m.memberId=cp.memberId
+  WHERE p.participationId=#{participationId}
+    AND p.dayNumber IS NOT NULL AND p.isPublic='Y' AND p.approvalStatus=1
+  ORDER BY p.dayNumber ASC, p.regDate ASC
+</select>
+  	
   
 </mapper>

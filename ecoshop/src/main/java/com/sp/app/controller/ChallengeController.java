@@ -39,21 +39,78 @@ public class ChallengeController {
 	@GetMapping("list")
 	public String list(@RequestParam(name = "weekday", required = false) Integer weekday,
 			@RequestParam(name = "size", required = false) Integer size,
-			@RequestParam(name = "sort", defaultValue = "CLOSE_DATE") String sort, Model model) {
+			@RequestParam(name = "sort", defaultValue = "CLOSE_DATE") String sort, 
+			Model model, HttpSession session) {
+
 		try {
 			List<Challenge> weekly = service.listDailyAll();
 
 			int javaDow = java.time.LocalDate.now().getDayOfWeek().getValue();
-			int todayDow0to6 = javaDow % 7;
-			int targetWeekday = (weekday != null ? weekday : todayDow0to6);
+			int realTodayIdx0to6 = javaDow % 7;
+			int targetWeekday = (weekday != null ? weekday : realTodayIdx0to6);
 
 			Challenge today = service.getDailyByWeekday(targetWeekday);
 
 			List<Challenge> special = service.listSpecialMore(null, size, sort, null);
 
+			// 스페셜 상태/디데이
+			java.time.LocalDate todayDate = java.time.LocalDate.now();
+			java.util.Map<Long, String> statusMap = new java.util.HashMap<>();
+			java.util.Map<Long, Integer> ddayMap = new java.util.HashMap<>();
+			for (Challenge s : special) {
+				if (!"SPECIAL".equals(s.getChallengeType()))
+					continue;
+				if (s.getChallengeId() == null)
+					continue;
+
+				String startStr = s.getStartDate();
+				String endStr = s.getEndDate();
+				String st = "OPEN";
+
+				if (startStr == null || startStr.isBlank() || endStr == null || endStr.isBlank()) {
+					st = "OPEN";
+				} else {
+					java.time.LocalDate start = java.time.LocalDate.parse(startStr);
+					java.time.LocalDate end = java.time.LocalDate.parse(endStr);
+					if (todayDate.isBefore(start)) {
+						st = "UPCOMING";
+						ddayMap.put(s.getChallengeId(),
+								(int) java.time.temporal.ChronoUnit.DAYS.between(todayDate, start));
+					} else if (todayDate.isAfter(end)) {
+						st = "CLOSED";
+					} else {
+						st = "OPEN";
+					}
+				}
+				statusMap.put(s.getChallengeId(), st);
+			}
+
+			// 로그인 여부 + 오늘 데일리 참여여부
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			boolean isLogin = (info != null);
+			boolean alreadyDailyJoined = false;
+			if (isLogin && today != null && today.getChallengeId() != null) {
+				alreadyDailyJoined = service.countTodayDailyJoin(info.getMemberId(), today.getChallengeId()) > 0;
+			}
+			model.addAttribute("isLogin", isLogin);
+			model.addAttribute("alreadyDailyJoined", alreadyDailyJoined);
+
+			// 내가 참가중인 챌린지 ID
+			java.util.List<Long> activeIdList = java.util.List.of();
+			if (isLogin) {
+				java.util.Set<Long> set = new java.util.HashSet<>();
+				for (Challenge c : service.listMyChallenges(info.getMemberId())) {
+					set.add(c.getChallengeId());
+				}
+				activeIdList = new java.util.ArrayList<>(set);
+			}
+
 			model.addAttribute("weekly", weekly);
 			model.addAttribute("today", today);
 			model.addAttribute("list", special);
+			model.addAttribute("statusMap", statusMap);
+			model.addAttribute("ddayMap", ddayMap);
+			model.addAttribute("activeIdList", activeIdList);
 
 			model.addAttribute("targetWeekday", targetWeekday);
 			model.addAttribute("size", (size == null ? 6 : size));
@@ -91,11 +148,23 @@ public class ChallengeController {
 
 			model.addAttribute("dto", dto);
 
-			// 스페셜이면 다음 일차 계산해서 JSP로 전달
-			SessionInfo info = (SessionInfo) session.getAttribute("member");
-			if (info != null && "SPECIAL".equals(dto.getChallengeType())) {
-				Integer nextDay = service.getNextSpecialDay(challengeId, info.getMemberId());
-				model.addAttribute("nextDay", nextDay); // null = 모두 완료
+			java.time.LocalDate today = java.time.LocalDate.now();
+
+			if ("SPECIAL".equals(dto.getChallengeType())) {
+				java.time.LocalDate start = java.time.LocalDate.parse(dto.getStartDate());
+				java.time.LocalDate end = java.time.LocalDate.parse(dto.getEndDate());
+				String status = today.isBefore(start) ? "UPCOMING" : (today.isAfter(end) ? "CLOSED" : "OPEN");
+				model.addAttribute("status", status);
+
+				SessionInfo info = (SessionInfo) session.getAttribute("member");
+				if (info != null) {
+					Integer nextDay = service.getNextSpecialDay(challengeId, info.getMemberId());
+					model.addAttribute("nextDay", nextDay);
+				}
+			} else { // DAILY
+				int idx0to6 = today.getDayOfWeek().getValue() % 7;
+				boolean dailyPlayable = (dto.getWeekday() != null && dto.getWeekday() == idx0to6);
+				model.addAttribute("dailyPlayable", dailyPlayable);
 			}
 			return "challenge/article";
 		} catch (Exception e) {
@@ -108,22 +177,21 @@ public class ChallengeController {
 	@GetMapping("join/daily/{challengeId}")
 	public String dailyJoinForm(@PathVariable("challengeId") long challengeId, Model model, HttpSession session) {
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		if (info == null) {
+		if (info == null)
 			return "redirect:/member/login";
-		}
+		Challenge dto = service.findDailyDetail(challengeId);
+		if (dto == null)
+			return "redirect:/challenge/list";
 
-		try {
-			Challenge dto = service.findDailyDetail(challengeId);
-			if (dto == null) {
-				return "redirect:/challenge/list";
-			}
+		boolean alreadyJoined = service.countTodayDailyJoin(info.getMemberId(), challengeId) > 0;
 
-			model.addAttribute("dto", dto);
-			model.addAttribute("submitAction", "/challenge/dailySubmit");
-		} catch (Exception e) {
-			log.info("dailyJoinForm :", e);
-		}
+		int today0to6 = java.time.LocalDate.now().getDayOfWeek().getValue() % 7;
+		boolean dailyPlayable = (dto.getWeekday() != null && dto.getWeekday() == today0to6);
 
+		model.addAttribute("dto", dto);
+		model.addAttribute("submitAction", "/challenge/dailySubmit");
+		model.addAttribute("alreadyJoined", alreadyJoined);
+		model.addAttribute("dailyPlayable", dailyPlayable);
 		return "challenge/join";
 	}
 
@@ -139,11 +207,21 @@ public class ChallengeController {
 		try {
 			dto.setMemberId(info.getMemberId());
 			dto.setChallengeType("DAILY");
+
+			// 서비스 내부에서:
+			// - 오늘 요일 검증(해당 요일 아니면 IllegalStateException)
+			// - 당일 중복 참여 검증(중복이면 IllegalStateException)
+			// - 저장 및 포인트 지급
 			service.submitDailyChallenge(dto, photoFile);
+
 			reAttr.addFlashAttribute("message", "챌린지 참여가 완료되었습니다. 포인트가 지급됩니다.");
+		} catch (IllegalStateException dup) {
+			// ex) "오늘은 이 데일리 챌린지 참여일이 아닙니다.", "오늘은 이미 참여한 챌린지입니다." 등
+			log.warn("dailySubmit validation: {}", dup.getMessage());
+			reAttr.addFlashAttribute("message", dup.getMessage());
 		} catch (Exception e) {
-			log.info("dailySubmit : ", e);
-			reAttr.addFlashAttribute("message", "챌린지 참여에 실패했습니다. 다시 시도해주세요.");
+			log.error("dailySubmit error", e);
+			reAttr.addFlashAttribute("message", "오류가 발생했습니다. 다시 시도해주세요.");
 		}
 		return "redirect:/challenge/list";
 	}
@@ -178,9 +256,8 @@ public class ChallengeController {
 	public String specialSubmit(Challenge dto, @RequestParam("photoFile") MultipartFile photoFile,
 			@RequestParam(name = "dayNumber") Integer dayNumber, HttpSession session, RedirectAttributes reAttr) {
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		if (info == null) {
+		if (info == null)
 			return "redirect:/member/login";
-		}
 
 		try {
 			dto.setMemberId(info.getMemberId());
@@ -192,8 +269,9 @@ public class ChallengeController {
 			service.submitSpecialDay(dto, photoFile);
 
 			reAttr.addFlashAttribute("message", dayNumber + "일차 인증이 등록되었습니다. 관리자 승인을 기다려주세요.");
+		} catch (IllegalStateException ie) {
+			reAttr.addFlashAttribute("message", ie.getMessage()); // ← "챌린지 기간이 아닙니다."
 		} catch (Exception e) {
-			log.info("specialSubmit :", e);
 			reAttr.addFlashAttribute("message", "스페셜 챌린지 제출에 실패했습니다. 다시 시도해주세요.");
 		}
 		return "redirect:/challenge/detail/" + dto.getChallengeId();
@@ -235,106 +313,106 @@ public class ChallengeController {
 	}
 
 	@GetMapping("mypage/list")
-	public String mypageChallengeList(
-	        HttpSession session,
-	        Model model,
-	        HttpServletRequest req,
-	        @RequestParam(name="page", defaultValue="1") int page,
-	        @RequestParam(name="size", defaultValue="10") int size) {
+	public String mypageChallengeList(HttpSession session, Model model, HttpServletRequest req,
+			@RequestParam(name = "page", defaultValue = "1") int page,
+			@RequestParam(name = "size", defaultValue = "10") int size) {
 
-	    SessionInfo info = (SessionInfo) session.getAttribute("member");
-	    if (info == null) return "redirect:/member/login";
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null)
+			return "redirect:/member/login";
 
-	    int dataCount = service.countMyChallenges(info.getMemberId());
-	    int total_page = paginateUtil.pageCount(dataCount, size);
-	    if (total_page == 0) total_page = 1;
-	    if (page > total_page) page = total_page;
-	    if (page < 1) page = 1;
+		int dataCount = service.countMyChallenges(info.getMemberId());
+		int total_page = paginateUtil.pageCount(dataCount, size);
+		if (total_page == 0)
+			total_page = 1;
+		if (page > total_page)
+			page = total_page;
+		if (page < 1)
+			page = 1;
 
-	    int offset = (page - 1) * size;
+		int offset = (page - 1) * size;
 
-	    List<Challenge> list = service.listMyChallengesPaged(info.getMemberId(), offset, size);
+		List<Challenge> list = service.listMyChallengesPaged(info.getMemberId(), offset, size);
 
-	    String listUrl = req.getContextPath() + "/challenge/mypage/list";
-	    String paging  = paginateUtil.pagingUrl(page, total_page, listUrl);
+		String listUrl = req.getContextPath() + "/challenge/mypage/list";
+		String paging = paginateUtil.pagingUrl(page, total_page, listUrl);
 
-	    model.addAttribute("list", list);
-	    model.addAttribute("page", page);
-	    model.addAttribute("size", size);
-	    model.addAttribute("dataCount", dataCount);
-	    model.addAttribute("paging", paging);
-	    
-	    model.addAttribute("tab", "list"); // 탭 활성화
+		model.addAttribute("list", list);
+		model.addAttribute("page", page);
+		model.addAttribute("size", size);
+		model.addAttribute("dataCount", dataCount);
+		model.addAttribute("paging", paging);
 
-	    return "myPage/challengeList";
+		model.addAttribute("tab", "list"); // 탭 활성화
+
+		return "myPage/challengeList";
 	}
-	
+
 	// 마이페이지 공개전환
 	@PostMapping("post/visibility")
 	@ResponseBody
-	public Map<String,Object> toggleVisibility(
-									@RequestParam("postId") long postId,
-                                    @RequestParam("isPublic") String isPublic,
-                                    HttpSession session) {
-	    SessionInfo info = (SessionInfo) session.getAttribute("member");
-	    if (info == null) return Map.of("ok", false, "msg", "로그인이 필요합니다.");
-	    if(!"Y".equals(isPublic) && !"N".equals(isPublic)) {
-	    	return Map.of("ok", false, "msg", "잘못된 요청입니다.");
-	    }
-	    try {
-	        int n = service.updatePostVisibility(postId, info.getMemberId(), isPublic);
-	        return Map.of("ok", n==1);
-	    } catch (Exception e) {
-	        return Map.of("ok", false, "msg", e.getMessage());
-	    }
-	}
-	
-	@GetMapping("mypage/specialPosts")
-	public String mySpecialPosts(
-							HttpSession session,
-							Model model,
-							HttpServletRequest req,
-							@RequestParam(name = "page", defaultValue = "1") int page,
-							@RequestParam(name = "size", defaultValue = "12") int size,
-							@RequestParam(name = "challengeId", required = false) Long challengeId,
-							@RequestParam(name = "kwd", required = false) String kwd) {
-		
+	public Map<String, Object> toggleVisibility(@RequestParam("postId") long postId,
+			@RequestParam("isPublic") String isPublic, HttpSession session) {
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		if(info == null) return "redirect:/member/login";
-		
+		if (info == null)
+			return Map.of("ok", false, "msg", "로그인이 필요합니다.");
+		if (!"Y".equals(isPublic) && !"N".equals(isPublic)) {
+			return Map.of("ok", false, "msg", "잘못된 요청입니다.");
+		}
+		try {
+			int n = service.updatePostVisibility(postId, info.getMemberId(), isPublic);
+			return Map.of("ok", n == 1);
+		} catch (Exception e) {
+			return Map.of("ok", false, "msg", e.getMessage());
+		}
+	}
+
+	@GetMapping("mypage/specialPosts")
+	public String mySpecialPosts(HttpSession session, Model model, HttpServletRequest req,
+			@RequestParam(name = "page", defaultValue = "1") int page,
+			@RequestParam(name = "size", defaultValue = "12") int size,
+			@RequestParam(name = "challengeId", required = false) Long challengeId,
+			@RequestParam(name = "kwd", required = false) String kwd) {
+
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null)
+			return "redirect:/member/login";
+
 		int dataCount = service.countMySpecialPosts(info.getMemberId(), challengeId, kwd);
 		int total_page = paginateUtil.pageCount(dataCount, size);
-		if(total_page == 0) total_page = 1;
-		if(page > total_page) page = total_page;
-		if(page < 1) page = 1;
-		
+		if (total_page == 0)
+			total_page = 1;
+		if (page > total_page)
+			page = total_page;
+		if (page < 1)
+			page = 1;
+
 		int offset = (page - 1) * size;
-		
+
 		List<Challenge> list = service.listMySpecialPostsPaged(info.getMemberId(), challengeId, offset, size, kwd);
-		
+
 		// 페이징 URL
-		
-		StringBuilder base = new StringBuilder(req.getContextPath())
-				.append("/challenge/mypage/specialPosts?size=").append(size);
-		if(challengeId != null) base.append("&challengeId=").append(challengeId);
-		if(kwd != null && !kwd.isBlank())
-			base.append("&kwd=").append(myUtil.encodeUrl(kwd)); 
+
+		StringBuilder base = new StringBuilder(req.getContextPath()).append("/challenge/mypage/specialPosts?size=")
+				.append(size);
+		if (challengeId != null)
+			base.append("&challengeId=").append(challengeId);
+		if (kwd != null && !kwd.isBlank())
+			base.append("&kwd=").append(myUtil.encodeUrl(kwd));
 		String paging = paginateUtil.pagingUrl(page, total_page, base.toString());
-		
-		model.addAttribute("list",list);
-		model.addAttribute("page",page);
-		model.addAttribute("size",size);
-		model.addAttribute("dataCount",dataCount);
-		model.addAttribute("paging",paging);
-		model.addAttribute("kwd",kwd);
-		model.addAttribute("challengeId",challengeId);
-		
+
+		model.addAttribute("list", list);
+		model.addAttribute("page", page);
+		model.addAttribute("size", size);
+		model.addAttribute("dataCount", dataCount);
+		model.addAttribute("paging", paging);
+		model.addAttribute("kwd", kwd);
+		model.addAttribute("challengeId", challengeId);
+
 		model.addAttribute("tab", "posts"); // 탭 활성화
-		
+
 		return "myPage/specialPosts";
-				
+
 	}
-	
-	
 
 }

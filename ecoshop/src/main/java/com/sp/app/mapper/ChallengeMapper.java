@@ -126,7 +126,12 @@ public interface ChallengeMapper {
     public Challenge findPublicSpecialPost(@Param("postId") long postId) throws Exception;
     public List<String> listPostPhotos(@Param("postId") long postId) throws Exception;
     
-    
+    public List<Challenge> listSpecialBundlesPaged(@Param("offset") int offset,
+            @Param("size") int size,
+            @Param("sort") String sort) throws Exception;
+
+    public List<Challenge> listPublicThreadByParticipation(@Param("participationId") long participationId) throws Exception;
+
 }
 	
 

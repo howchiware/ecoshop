@@ -8,28 +8,46 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>관리자 - 챌린지 ${mode=='update'?'수정':'등록'}</title>
-  <link rel="stylesheet" href="<c:url value='/dist/css/main2.css'/>" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+<meta charset="UTF-8">
+<title>관리자 - 챌린지 ${mode=='update'?'수정':'등록'}</title>
+<link rel="stylesheet" href="<c:url value='/dist/css/main2.css'/>" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+
+  <!-- JS -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="<c:url value='/dist/js/util-jquery.js'/>"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  
+  
   <style>
-    .page-wrap{max-width:1200px; margin:0 auto;}
-    .card{border-radius:14px}
-    .thumb-preview{width:100%; aspect-ratio:16/9; border:1px dashed #e5e7eb; border-radius:12px; background:#f8fafc center/cover no-repeat;}
-    .section-title{font-weight:800; font-size:1.05rem}
-    .weekday-badges .badge{cursor:pointer; font-weight:700}
-    .weekday-badges .badge.active{background:#0d6efd!important}
-    .form-text small{color:#64748b}
-    .sticky-actions{position:sticky; bottom:0; z-index:5; background:#fff; padding:12px 0; border-top:1px solid #eef2f7}
+/* .page-wrap{max-width:1200px; margin:0 auto;} */
+.card{border-radius:14px}
+.thumb-preview{width:100%; aspect-ratio:16/9; border:1px dashed #e5e7eb; border-radius:12px; background:#f8fafc center/cover no-repeat;}
+.section-title{font-weight:800; font-size:1.05rem}
+.weekday-badges .badge{cursor:pointer; font-weight:700}
+.weekday-badges .badge.active{background:#0d6efd!important}
+.form-text small{color:#64748b}
+.sticky-actions{position:sticky; bottom:0; z-index:5; background:#fff; padding:12px 0; border-top:1px solid #eef2f7}
+
+/* 관리자페이지 공통 부분 */  
+.admin-main-container { display:flex; }
+.admin-sidebar { width:250px; flex-shrink:0; }
+.admin-content { flex-grow:1; margin-left:20px; } 
+  
   </style>
 </head>
 <body>
+
 <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
 
-<div class="container my-4 page-wrap">
+<div class="container my-4 admin-main-container">
+ <div class="admin-sidebar">
   <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp"/>
-
+ </div>	
   <!-- 헤더 -->
+  
+ <div class="admin-content"> 
   <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
       <h3 class="mb-1">${mode=='update'?'챌린지 수정':'챌린지 등록'}</h3>
@@ -190,6 +208,7 @@
       </div>
     </div>
   </form>
+ </div>
 </div>
 
 <script>
@@ -273,5 +292,7 @@
     }
   });
 </script>
+
+<jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp"/>
 </body>
 </html>

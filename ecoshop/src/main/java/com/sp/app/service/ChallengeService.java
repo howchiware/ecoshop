@@ -61,6 +61,9 @@ public interface ChallengeService {
     public Challenge findPublicSpecialPost(long postId);
     public List<String> listPostPhotos(long postId);
     
+    public List<Challenge> listSpecialBundlesPaged(int offset, int size, String sort);
+    public List<Challenge> listPublicThreadByParticipation(long participationId);
+
     
     
 }
