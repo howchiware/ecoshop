@@ -155,6 +155,17 @@ table.search-list {
 .addBtn:hover {
 	background: #b3b4b5;
 }
+
+.btn-accent, .btn-default, .btn-productStock {
+	transition: color 0.3s ease-in-out,
+	border 0.3s ease-in-out;
+}
+
+.btn-accent:hover, .btn-default:hover, .btn-productStock:hover {
+	
+	color: #b3b4b5;
+  	border: 1px solid #b3b4b5 !important;
+}
 </style>
 </head>
 <body>
