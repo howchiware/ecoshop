@@ -56,7 +56,7 @@
 </header>
 
 <main class="container my-5">
-  <!-- 공통 헤더 -->
+  <!-- 헤더 -->
   <jsp:include page="/WEB-INF/views/layout/freeHeader.jsp"/>
 
   <!-- 검색 / 정렬 바 -->
@@ -76,7 +76,7 @@
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
     <c:forEach var="d" items="${list}">
       <div class="col">
-  <div class="card h-100 shadow-sm position-relative"><%-- position-relative 필요 --%>
+  <div class="card h-100 shadow-sm position-relative">
     <c:choose>
       <c:when test="${not empty d.photoUrl}">
         <img class="card-img-top" src="${pageContext.request.contextPath}/uploads/challenge/${d.photoUrl}" alt="photo">

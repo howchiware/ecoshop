@@ -8,7 +8,7 @@
             <a class="nav-link active" href="${pageContext.request.contextPath}/free/dairyList">일상 이야기</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="${pageContext.request.contextPath}/free/challengeList">챌린지톡</a>
+            <a class="nav-link" href="${pageContext.request.contextPath}/free/challengeBundles">챌린지톡</a>
         </li>
     </ul>
 </div>
