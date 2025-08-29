@@ -74,7 +74,7 @@
 		WHERE gongguProductId = #{gongguProductId} AND showReview = 1 AND block = 0
 	</select>
 	
-	<select id="listReviewOnlyPhoto" parameterType="map" resultType="com.sp.app.model.ProductReview">
+	<select id="listReviewOnlyPhoto" parameterType="map" resultType="com.sp.app.model.GongguReview">
 		SELECT pr.gongguOrderDetailId, pr.memberId, pr.gongguProductId, m2.name, rate, 
 			content, showReview, regDate, answer, answerId, 
 			answerDate, block, reviewImg

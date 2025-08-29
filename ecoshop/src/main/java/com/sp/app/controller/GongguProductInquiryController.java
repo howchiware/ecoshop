@@ -147,7 +147,7 @@ public class GongguProductInquiryController {
 	}
 
 	// AJAX - JSON : 마이페이지 - 내 Q&A
-	@GetMapping("gongguList")
+	@GetMapping("inquiryList")
 	public Map<String, ?> list2(
 			@RequestParam(name = "pageNo", defaultValue = "1") int current_page,
 			HttpSession session) throws Exception {
@@ -175,7 +175,7 @@ public class GongguProductInquiryController {
 
 			List<GongguProductInquiry> list = service.listMyGongguInquiry(map);
 			
-			String paging = paginateUtil.pagingMethod(current_page, total_page, "listQuestion");
+			String paging = paginateUtil.pagingMethod(current_page, total_page, "inquiryList");
 			
 			model.put("list", list);
 			model.put("dataCount", dataCount);

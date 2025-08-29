@@ -14,7 +14,6 @@ import com.sp.app.mapper.GongguReviewMapper;
 import com.sp.app.model.GongguReview;
 import com.sp.app.model.GongguReviewHelpful;
 import com.sp.app.model.GongguSummary;
-import com.sp.app.model.ProductReview;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
