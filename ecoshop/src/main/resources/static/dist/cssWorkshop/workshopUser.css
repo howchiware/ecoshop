@@ -1,0 +1,213 @@
+* {
+	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
+	box-sizing: border-box;
+}
+
+@font-face {
+	font-family: 'Pretendard-Regular';
+	src:
+		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+		format('woff');
+	font-style: normal;
+}
+
+body {
+	background-color: #f7f6f3;
+	color: #333;
+	margin: 0;
+}
+
+.workshop-main-img {
+	width: 100%;
+	aspect-ratio: 4/3;
+	object-fit: cover;
+	border-radius: 4px;
+	background: #f8f9fa
+}
+
+.review-item, .faq-item {
+	border-bottom: 1px solid #e9ecef;
+	padding: 1rem 0;
+}
+
+.review-item {
+  padding-top: 2px;   /* 위쪽만 줄이기 */
+  padding-right: 0;   /* 다른 방향은 그대로 두려면 생략 가능 */
+  padding-bottom: 0;
+  padding-left: 0;
+}
+
+.review-item .content.text-body {
+	margin-top: 1rem;
+   margin-bottom: 2rem;   
+}
+
+
+.form-floating {
+	margin-bottom: 3px;
+}
+
+
+#reviews .review-item {
+	color: #212529;
+}
+
+#reviews .review-item .content {
+	white-space: pre-wrap;
+}
+
+.accordion-custom .accordion-item {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+
+.accordion-custom .accordion-button {
+  background-color: #f8f9fa;
+  color: #212529;
+  font-weight: 600;
+  border-bottom: 1px solid #e9ecef;
+  transition: background-color 0.3s;
+}
+
+.accordion-custom .accordion-button:not(.collapsed) {
+  background-color: #e9ecef;
+  color: #198754;
+}
+
+.accordion-custom .accordion-button:focus {
+  box-shadow: none;
+}
+
+.accordion-collapse {
+  transition: all 0.3s ease;
+}
+
+.accordion-button:focus {
+    box-shadow: none;   /* 파란 그림자 제거 */
+    outline: none;      /* 외곽선 제거 */
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #f8f9fa; /* 원하는 배경색 */
+    color: #212529;            /* 글자 색 */
+}
+
+/* 포커스 시 파란색 제거 */
+.accordion-button:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+.accordion-button {
+    background-color: #f8f9fa;  
+    color: #212529;  
+}
+
+#faq .mark-q {
+	color: #212529;
+    font-weight: 700;
+    margin-right: 0.5rem;
+	margin-right: .5rem;
+}
+
+#faq .mark-a {
+	color: #198754;
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+.accordion .accordion-body .text-body {
+	background-color: f8f9fa;
+    color: #212529;
+    line-height: 1.5;
+}
+
+
+.btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.simple-panel {
+	width: 500px;
+	padding-left: 50px;
+}
+
+.simple-title {
+	border-top: 1px solid rgb(222, 226, 230);
+	padding-top: 2rem;
+	font-size: 1.4rem;
+	font-weight: 800;
+	margin-bottom: 2rem;
+}
+
+.simple-hero {
+	display: flex;
+	align-items: baseline;
+	gap: .5rem;
+	margin-bottom: .75rem;
+}
+
+.simple-hero .hero-main {
+	font-size: 1.25rem;
+	font-weight: 700;
+	color: #212529;
+}
+
+.simple-hero .hero-sub {
+	color: #868e96;
+	font-size: .95rem;
+}
+
+.simple-meta .rowline {
+	display: flex;
+	justify-content: space-between;
+	gap: 3rem;
+	padding: .6rem 0;
+}
+
+.simple-meta .k {
+	color: #9097a1;
+	font-size: 15px;
+}
+
+.simple-meta .v {
+	color: #212529;
+	font-size: 15px;
+	font-weight: 500;
+	text-align: right;
+}
+
+.simple-actions {
+	display: flex;
+	gap: .5rem;
+	margin-top: 1rem;
+	justify-content: flex-end;
+}
+
+.simple-actions .btn {
+	height: 48px;
+	font-weight: 600;
+	margin-top: 1rem;
+	background: #315e4e;
+}
+
+.btn-apply {
+    background-color: #315e4e; 
+    border-color: #315e4e;    
+    color: #fff;             
+}
+
+.btn-apply:hover {
+    background-color: #27473a; /* 호버 시 색상 */
+    border-color: #27473a;
+}
+
+
+.form-select {
+	height: 48px;
+	margin-top: .75rem;
+}

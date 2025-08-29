@@ -7,136 +7,13 @@
 <head>
 <meta charset="UTF-8">
 <title><c:out value="${dto.workshopTitle}" /></title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/dist/css/home.css"
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css"
 	type="text/css">
-<style>
-.workshop-main-img {
-	width: 100%;
-	aspect-ratio: 4/3;
-	object-fit: cover;
-	border-radius: 4px;
-	background: #f8f9fa
-}
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssWorkshop/workshopUser.css">
+<style type="text/css">
 
-.review-item, .faq-item {
-	border-bottom: 1px solid #e9ecef;
-	padding: 1rem 0
-}
-
-#reviews .review-item {
-	color: #212529;
-}
-
-#reviews .review-item .content {
-	white-space: pre-wrap;
-}
-
-#faq .accordion-item {
-	border: 1px solid #e9ecef;
-	border-radius: .375rem;
-	overflow: hidden;
-}
-
-#faq .accordion-item+.accordion-item {
-	margin-top: .5rem;
-}
-
-#faq .accordion-button:not(.collapsed) {
-	background: #f8f9fa;
-}
-
-#faq .accordion-button:focus {
-	box-shadow: none;
-}
-
-#faq .mark-q {
-	font-weight: 700;
-	margin-right: .5rem;
-	color: #212529;
-}
-
-#faq .mark-a {
-	font-weight: 700;
-	margin-right: .5rem;
-	color: #198754;
-}
-
-.btn {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.simple-panel {
-	max-width: 520px;
-	margin-left: auto;
-}
-
-.simple-title {
-	font-size: 1.5rem;
-	font-weight: 800;
-	margin: 1rem 0 1.2rem;
-}
-
-.simple-hero {
-	display: flex;
-	align-items: baseline;
-	gap: .5rem;
-	margin-bottom: .75rem;
-}
-
-.simple-hero .hero-main {
-	font-size: 1.25rem;
-	font-weight: 700;
-	color: #212529;
-}
-
-.simple-hero .hero-sub {
-	color: #868e96;
-	font-size: .95rem;
-}
-
-.simple-meta .rowline {
-	display: flex;
-	justify-content: space-between;
-	gap: 1rem;
-	padding: .6rem 0;
-}
-
-.simple-meta .k {
-	color: #9097a1;
-}
-
-.simple-meta .v {
-	color: #212529;
-	font-weight: 500;
-	text-align: right;
-}
-
-.simple-actions {
-	display: flex;
-	gap: .5rem;
-	margin-top: 1rem;
-	justify-content: flex-end;
-}
-
-.simple-actions .btn {
-	height: 48px;
-	font-weight: 600;
-	margin-top: 1rem;
-	background: #315e4e;
-}
-
-.form-select {
-	height: 48px;
-	margin-top: .75rem;
-}
 </style>
-
 </head>
 <body>
 	<c:set var="now" value="<%=new java.util.Date()%>" />
@@ -169,13 +46,13 @@
 			</c:otherwise>
 		</c:choose>
 
-		<div class="row g-4 mb-4">
+		<div class="row g-1 mb-4">
 			<div class="col-md-6">
 				<img src="${mainImg}" alt="<c:out value='${dto.workshopTitle}'/>"
 					class="workshop-main-img"
 					onerror="if(this.src.indexOf('noimage.png')===-1)this.src='${pageContext.request.contextPath}/dist/images/noimage.png'">
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-5">
 				<div class="simple-panel">
 
 					<h2 class="simple-title">
@@ -189,7 +66,7 @@
 								<c:choose>
 									<c:when test="${not empty dto.scheduleDate}">
 										<fmt:formatDate value="${dto.scheduleDate}"
-											pattern="yyyy.MM.dd (E)" />
+											pattern="yyyy.MM.dd (E) HH:mm" />
 									</c:when>
 									<c:otherwise>-</c:otherwise>
 								</c:choose>
@@ -235,7 +112,7 @@
 						<c:choose>
 							<c:when test="${alreadyApplied}">
 								<button type="button"
-									class="btn btn-outline-secondary w-50 text-white"
+									class="btn btn-outline-secondary w-100 text-white"
 									style="opacity: 1" disabled>신청 완료</button>
 							</c:when>
 
@@ -246,7 +123,7 @@
 							</c:when>
 
 							<c:otherwise>
-								<a href="${applyUrl}" class="btn btn-dark w-50">지금 신청하기</a>
+								<a href="${applyUrl}" class="btn btn-dark w-100">지금 신청하기</a>
 							</c:otherwise>
 						</c:choose>
 					</div>
@@ -258,17 +135,17 @@
 		<ul class="nav nav-tabs nav-justified mt-3" id="workshopTabs"
 			role="tablist">
 			<li class="nav-item"><button class="nav-link active"
-					data-bs-toggle="tab" data-bs-target="#intro" type="button">워크샵
+					data-bs-toggle="tab" data-bs-target="#intro" type="button" style="font-weight: 600;">워크샵
 					소개</button></li>
 			<li class="nav-item"><button class="nav-link"
-					data-bs-toggle="tab" data-bs-target="#reviews" type="button">후기</button></li>
+					data-bs-toggle="tab" data-bs-target="#reviews" type="button" style="font-weight: 600;">후기</button></li>
 			<li class="nav-item"><button class="nav-link"
-					data-bs-toggle="tab" data-bs-target="#faq" type="button">FAQ</button></li>
+					data-bs-toggle="tab" data-bs-target="#faq" type="button" style="font-weight: 600;">FAQ</button></li>
 		</ul>
 
 		<div class="tab-content border border-top-0 p-3">
 			<div class="tab-pane fade show active" id="intro">
-				<div class="mb-3">
+				<div class="mb-3 mt-3">
 					<c:out value="${dto.workshopContent}" escapeXml="false" />
 				</div>
 				<div class="row g-3">
@@ -295,7 +172,7 @@
 			</div>
 
 			<div class="tab-pane fade" id="reviews">
-				<div class="mb-3">
+				<div class="mb-1">
 					<div class="form-floating">
 						<textarea id="reviewContent" class="form-control"
 							style="height: 100px" placeholder="후기를 남겨주세요."></textarea>

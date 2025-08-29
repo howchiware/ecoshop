@@ -72,10 +72,13 @@
 	width: 11rem;
 }
 
-label[for="onlyRecruiting"]{
-
+label[for="onlyRecruiting"] {
+	
 }
 
+.form-select {
+	margin-right: 4px;
+}
 </style>
 </head>
 <body>
@@ -86,7 +89,7 @@ label[for="onlyRecruiting"]{
 
 	<header class="border-bottom">
 		<div class="container py-3">
-			<h2 class="m-0">워크샵</h2>
+			<h4 class="m-0" style="font-size: 22px;">워크샵</h4>
 		</div>
 	</header>
 
@@ -97,27 +100,25 @@ label[for="onlyRecruiting"]{
 		<form id="filterForm" class="row g-2 align-items-end mb-4"
 			method="get" action="${listAction}">
 
-			<div class="col-sm-2 col-md-2 pe-0">
+			<div class="col-sm-2 col-md-2">
 				<!-- <label class="form-label">카테고리</label> -->
-				<select class="form-select" name="categoryId">
-					<option value="">전체</option>
-					<c:forEach var="cvo" items="${category}">
-						<option value="${cvo.categoryId}"
-							<c:if test="${categoryId == cvo.categoryId}">selected</c:if>>
-							<c:out value="${cvo.categoryName}" />
-						</option>
-					</c:forEach>
-				</select>
-			</div>
+				<div class="d-flex">
+					<select class="form-select me-2" name="categoryId">
+						<option value="">전체</option>
+						<c:forEach var="cvo" items="${category}">
+							<option value="${cvo.categoryId}"
+								<c:if test="${categoryId == cvo.categoryId}">selected</c:if>>
+								<c:out value="${cvo.categoryName}" />
+							</option>
+						</c:forEach>
+					</select> <select class="form-select" name="sort">
+						<option value="latest"
+							<c:if test="${sort=='latest'}">selected</c:if>>최신순</option>
+						<option value="deadline"
+							<c:if test="${sort=='deadline'}">selected</c:if>>마감 임박순</option>
+					</select>
+				</div>
 
-			<div class="col-sm-2 col-md-2 pe-0">
-				<!-- <label class="form-label">정렬</label> -->
-				<select class="form-select" name="sort">
-					<option value="latest"
-						<c:if test="${sort=='latest'}">selected</c:if>>최신순</option>
-					<option value="deadline"
-						<c:if test="${sort=='deadline'}">selected</c:if>>마감 임박순</option>
-				</select>
 			</div>
 
 			<div class="col-auto ms-auto mt-4">

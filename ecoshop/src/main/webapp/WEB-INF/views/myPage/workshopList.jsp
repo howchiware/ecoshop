@@ -115,7 +115,7 @@
 	font-weight: 700;
 	font-size: 16px;
 	line-height: 1.2;
-	margin-bottom: 4px;
+	margin-bottom: 10px;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -141,6 +141,11 @@
 .ws-right {
 	text-align: right;
 	min-width: 92px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 8px;
+	padding-right: 12px;
 }
 
 .state {
@@ -236,13 +241,6 @@
 .state-btn:hover {
 	background: #111;
 	color: #fff;
-}
-
-.ws-right {
-	display: flex;
-	align-items: center;
-	justify-content: flex-end;
-	gap: 8px;
 }
 
 .ws-right form {

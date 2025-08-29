@@ -8,10 +8,11 @@
 <title>프로그램 신청</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssWorkshop/workshopUser.css">
 
 <style>
 .page-wrap {
-	background: #f6f7f8;
+	background: #f7f6f3;
 	min-height: 100vh;
 }
 
@@ -24,7 +25,12 @@
 .section-title {
 	font-weight: 700;
 	font-size: 1.25rem;
-	margin-top: 20px;
+	margin-top: 30px;
+}
+
+.text-muted {
+padding-bottom: 10px;
+font-size: 14px;
 }
 
 .section-card .section-title {
@@ -63,6 +69,11 @@
 .req {
 	color: #dc3545;
 }
+
+.form-label {
+font-weight: 600;
+font-size: 15px;
+}
 </style>
 </head>
 <body class="page-wrap">
@@ -73,7 +84,7 @@
 
 	<header class="border-bottom bg-white">
 		<div class="container py-3">
-			<p class="m-0" style="font-size: 1.2rem;">워크샵 > 신청</p>
+			<p class="m-0" style="font-size: 1rem; font-weight: 600;">워크샵 > 신청</p>
 		</div>
 	</header>
 
