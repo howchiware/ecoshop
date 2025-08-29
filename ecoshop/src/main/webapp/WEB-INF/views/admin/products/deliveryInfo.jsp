@@ -82,12 +82,55 @@ select, input {
 	margin: -2px;
 }
 
-button {
+.locationAddBtn, .feeAddBtn, .udBtn {
 	background: #fff;
-	border: 1px solid black;
-	color: black;
-	padding: 3px;
+	border: 1px solid #777;
+	border-radius: 4px !important;
+	padding: 3px 10px;
+	transition: color 0.3s ease-in-out,
+				border 0.3s ease-in-out;
 }
+
+.udBtn {
+	padding: 7px 14px;
+}
+
+.locationAddBtn {
+	padding: 0px 2px;
+	border: none;
+	background: silver;
+	color: #fff;
+}
+
+.locationAddBtn:hover {
+	color: black;
+}
+
+.feeAddBtn:hover, .udBtn:hover {
+	
+	color: #b3b4b5;
+  	border: 1px solid #b3b4b5 !important;
+}
+
+.saveInfo {
+  /*background: linear-gradient(to bottom, #efeeee, #dcdcdc);*/
+  background: #efeeee;
+  border: none;
+  border-radius: 4px !important;
+  padding: 9px 16px;
+  transition: background 0.3s ease-in-out;
+  /*box-shadow: 3px 3px 6px #b8b8b8,
+              -3px -3px 6px #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;*/
+}
+
+.saveInfo:hover {
+	background: #b3b4b5;
+}
+
+
+
 
 .btn-area {
 margin-top: 30px;
@@ -206,9 +249,10 @@ textarea[name=deliveryInfo], textarea[name=refundInfo] {
 										<div class="input-area">
 											<table class="input-table">
 												<tr>
-													<td>배송비</td>
-													<td colspan="2">
-														<input type="text" id="deliveryFee"> 원
+													<td>배송 지역</td>
+													<td>
+														<input type="text" id="deliveryLocationAdd">
+														<button type="button" class="locationAddBtn" onclick="locationAdd();"><i class="bi bi-plus"></i></button>
 													</td>
 												</tr>
 												<tr>
@@ -224,15 +268,10 @@ textarea[name=deliveryInfo], textarea[name=refundInfo] {
 													</td>
 												</tr>
 												<tr>
-													<td>배송 지역</td>
-													<td>
-														<input type="text" id="deliveryLocationAdd">
+													<td>배송비</td>
+													<td colspan="2">
+														<input type="text" id="deliveryFee"> 원
 													</td>
-													<td>
-														<button type="button" class="locationAddBtn" onclick="locationAdd();">추가</button>
-													</td>
-												</tr>
-												<tr>
 													<td>
 														<button type="button" class="feeAddBtn" onclick="feeAdd();">추가</button>
 													</td>

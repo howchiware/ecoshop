@@ -68,7 +68,7 @@ font-weight: 500;
 }
 
 .search-list {
-	border: 1px solid black;
+	border: 1px solid #777;
 }
 
 .search-list td {
@@ -76,13 +76,13 @@ font-weight: 500;
 }
 
 .search-list tbody, td, tfoot, th, thead, tr {
-  border-color: black;
+  border-color: #777;
   border-style: solid;
   border-width: 0;
 }
 
 td.select-title-area {
-border-right: 1px solid black;
+border-right: 1px solid #777;
 }
 
 select, input {
@@ -92,7 +92,7 @@ select, input {
 
 button {
 	background: #fff;
-	border: 1px solid black;
+	border: 1px solid #777;
 	color: black;
 	padding: 3px;
 }
@@ -118,13 +118,13 @@ text-align: center;
 
 button {
 	background: #fff;
-	border: 1px solid black;
+	border: 1px solid #777;
 	border-radius: 4px !important;
 	padding: 3px 10px;
 }
 
 table.search-list {
-	border: 1px solid black;
+	border: 1px solid #777;
 }
 
 .product-list {
@@ -156,12 +156,12 @@ table.search-list {
 	background: #b3b4b5;
 }
 
-.btn-accent, .btn-default, .btn-productStock {
+.btn-accent, .btn-default, .btn-productStock, .updateBtn {
 	transition: color 0.3s ease-in-out,
 	border 0.3s ease-in-out;
 }
 
-.btn-accent:hover, .btn-default:hover, .btn-productStock:hover {
+.btn-accent:hover, .btn-default:hover, .btn-productStock:hover, .updateBtn:hover {
 	
 	color: #b3b4b5;
   	border: 1px solid #b3b4b5 !important;
@@ -252,7 +252,7 @@ table.search-list {
 									</table>
 	
 									<div class="btn-area">
-										<button class="btn-accent" type="button" onclick="searchList();" style="background: #fff; border: 1px solid black; border-radius: 4px; padding: 3px 10px;">조회</button>
+										<button class="btn-accent" type="button" onclick="searchList();" style="background: #fff; border: 1px solid #777; border-radius: 4px; padding: 3px 10px;">조회</button>
 										<button class="btn-accent" type="reset" onclick="location.href='${pageContext.request.contextPath}/admin/products/listProduct';">초기화</button>
 										<!-- 
 										<input type="hidden" name="size" value="${size}">
@@ -350,7 +350,7 @@ table.search-list {
 													<c:param name="page" value="${page}"/>
 												</c:url>
 												<button type="button" class="btn-productStock" data-productId="${dto.productId}" data-productCode="${dto.productCode}" data-optionCount="${dto.optionCount}">재고</button>
-												<button type="button" onclick="location.href='${updateUrl}';">수정</button>
+												<button type="button" class="updateBtn" onclick="location.href='${updateUrl}';">수정</button>
 											</td>
 										</tr>
 										<tr class="text-center">
