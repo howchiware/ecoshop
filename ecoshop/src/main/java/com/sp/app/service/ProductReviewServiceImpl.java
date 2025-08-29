@@ -268,6 +268,28 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 			log.info("imgList : ", e);
 		}
 		return imgList;
+	}
+
+	@Override
+	public ProductReview findReviewById(long reviewId) {
+		ProductReview dto = null;
+		try {
+			dto = mapper.findReviewById(reviewId);
+			
+			if(dto.getReviewImg() != null) {
+				dto.setListReviewImg(dto.getReviewImg().split(","));
+			}
+			dto.setName(myUtil.nameMasking(dto.getName()));
+			
+			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+			
+			if(dto.getAnswer() != null) {
+				dto.setAnswer(dto.getAnswer().replaceAll("\n", "<br>"));
+			}
+		} catch (Exception e) {
+			log.info("imgList : ", e);
+		}
+		return dto;
 	}	
 
 }

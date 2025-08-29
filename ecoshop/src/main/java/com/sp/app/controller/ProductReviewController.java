@@ -342,4 +342,22 @@ public class ProductReviewController {
 		model.put("state", state);
 		return model;
 	}
+	
+	@GetMapping("updateReview")
+	public Map<String, ?> updateReview(
+			@RequestParam(name = "reviewId", defaultValue = "1") int reviewId,
+			HttpSession session) throws Exception {
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+
+		try {
+			
+			ProductReview dto = service.findReviewById(reviewId);			
+			
+			model.put("dto", dto);
+		} catch (Exception e) {
+		}
+		
+		return model;
+	}
 }

@@ -13,7 +13,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script type="text/javascript" src="${pageContext.request.contextPath}/dist/vendor/jquery/js/jquery.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/paginate.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin_paginate.css">
 
 <style type="text/css">
 
@@ -101,19 +101,59 @@ button {
 margin-top: 30px;
 text-align: center;
 }
-
+/*
 .btn-accent {
 	background: silver;
 	border: none;
 	color: black; 
 }
-
+*/
 #productStockDialogModal {
 	z-index: 10000;
 }
 
 .main-container {
 	z-index: 100;
+}
+
+button {
+	background: #fff;
+	border: 1px solid black;
+	border-radius: 4px !important;
+	padding: 3px 10px;
+}
+
+table.search-list {
+	border: 1px solid black;
+}
+
+.product-list {
+	margin-bottom : 50px !important;
+}
+
+.product-list tr {
+	border-bottom: 1px solid #dee2e6;
+}
+
+.product-list tr th {
+	background: #fcfcfc;
+	vertical-align: middle;
+}
+
+.addBtn {
+  /*background: linear-gradient(to bottom, #efeeee, #dcdcdc);*/
+  background: #efeeee;
+  border: none;
+  padding: 8px 10px;
+  transition: background 0.3s ease-in-out;
+  /*box-shadow: 3px 3px 6px #b8b8b8,
+              -3px -3px 6px #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;*/
+}
+
+.addBtn:hover {
+	background: #b3b4b5;
 }
 </style>
 </head>
@@ -123,7 +163,7 @@ text-align: center;
 	<jsp:include page="/WEB-INF/views/admin/layout/header.jsp"/>
 </header>
 
-<main class="main-container">
+<main class="main-container" style="z-index: 100">
 	<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp"/>
 
 	<div class="right-PANEL">
@@ -236,32 +276,34 @@ text-align: center;
 							<div class="row mb-2">
 								<div class="col-md-6 align-self-center">
 									<span class="small-title">전체</span> <span class="dataCount">${dataCount}건 조회</span>
+								</div>
+							</div>
+							
+							<form name="productManageForm" method="post">
+							<div class="row mb-2" style="padding: 5px 0 5px;/* border-top:1px solid #dee2e6; margin: 0px; background: #fcfcfc*/">
+								<div class="col-md-6 align-self-center">
+									<button type="button" class="btn-default product-deleteCheck" onclick="deleteProductSelect();">선택삭제</button>
 								</div>	
 								<div class="col-md-6 align-self-center text-end">
 									<button type="button" class="addBtn" onclick="location.href='${pageContext.request.contextPath}/admin/products/write';">상품 등록</button>
 								</div>
 							</div>
-							
-							<form name="productManageForm" method="post">
-							<div style="padding: 5px 0 5px; border-top:1px solid #dee2e6; margin: 0px; background: #fcfcfc">
-								<button type="button" class="btn-default product-deleteCheck" onclick="deleteProductSelect();">선택삭제</button>
-							</div>
 							<table class="table product-list">
 								<thead>
-									<tr class="table-light border-top text-center">
+									<tr class="border-top text-center">
 										<th width="35" rowspan="2">
 											<input type="checkbox" class="form-check-input product-chkAll" name="chkAll">
 										</th>
 										<th rowspan="2" width="30">상품코드</th>
 										<th rowspan="2" width="70">상품사진</th>
-										<th width="80">카테고리</th>
-										<th width="80">최초 등록일</th>
+										<th width="80" style="border-bottom: hidden;">카테고리</th>
+										<th width="80" style="border-bottom: hidden;">최초 등록일</th>
 										<th rowspan="2" width="70">판매가</th>
 										<th rowspan="2" width="50">재고 수량</th>
 										<th rowspan="2" width="50">진열</th>
 										<th rowspan="2" width="70">관리</th>
 									</tr>
-									<tr class="table-light border-top text-center">
+									<tr class="border-top text-center">
 										<th width="80">상품명</th>
 										<th width="80">최근 수정일</th>
 									</tr>
@@ -277,8 +319,8 @@ text-align: center;
 											<td rowspan="2" width="55">
 												<img class="border rounded" width="50" height="50" src="${pageContext.request.contextPath}/uploads/products/${dto.thumbnail}">
 											</td>
-											<td>${dto.categoryName}</td>
-											<td>${dto.reg_date}</td>
+											<td style="border-bottom: hidden;">${dto.categoryName}</td>
+											<td style="border-bottom: hidden;">${dto.reg_date}</td>
 											<td rowspan="2">${dto.price} 원</td>
 											<td rowspan="2">2</td>
 											<td rowspan="2">
@@ -300,7 +342,7 @@ text-align: center;
 												<button type="button" onclick="location.href='${updateUrl}';">수정</button>
 											</td>
 										</tr>
-										<tr>
+										<tr class="text-center">
 											<td>
 												${dto.productName}
 											</td>

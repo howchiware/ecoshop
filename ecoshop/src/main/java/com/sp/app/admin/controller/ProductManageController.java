@@ -134,7 +134,7 @@ public class ProductManageController {
 			
 			listUrl += "?" + query;
 			
-			String paging = paginateUtil.paging(current_page, total_page, listUrl);
+			String paging = paginateUtil.pagingUrl(current_page, total_page, listUrl);
 			
 			model.addAttribute("listCategory", listCategory);
 			model.addAttribute("listProduct", listProduct);

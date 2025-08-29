@@ -224,4 +224,18 @@
 		JOIN productReview pr ON prd.reviewId = pr.reviewId
 		WHERE productCode = #{productCode}
 	</select>
+	
+	<select id="findReviewById" parameterType="long" resultType="com.sp.app.model.ProductReview">
+		SELECT pr.reviewId, pr.memberId, pr.productCode, m2.name, rate, 
+			content, showReview, regDate, answer, answerId, 
+			answerDate, block, reviewImg
+		FROM productReview pr
+		JOIN member2 m2 ON pr.memberId = m2.memberId
+		LEFT OUTER JOIN (
+			SELECT reviewId, LISTAGG(reviewImg, ',') WITHIN GROUP(ORDER BY reviewId) reviewImg
+			FROM productReviewDetail
+			GROUP BY reviewId
+		) rd ON pr.reviewId = rd.reviewId
+		WHERE rd.reviewId = #{reviewId}
+	</select>
 </mapper>

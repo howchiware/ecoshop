@@ -69,9 +69,9 @@ body {
 }
 
 .subtitle {
-	background-color: #cccccc;
-	color: #ffffff;
-	padding: 1rem 1.5rem;
+	/*background-color: #cccccc;*/
+	color: #555;
+	padding: 1.5rem 0rem 0.8rem 0rem;
 	border-radius: 8px 8px 0 0;
 	font-weight: 600;
 }
@@ -182,15 +182,23 @@ body {
 
 .submit-btn {
 	display: block;
-	width: 200px;
-	margin: 30px auto 0;
+	width: 210px;
+	margin: 30px auto 7px;
 	padding: 15px;
-	background-color: #343a40;
+	background-color:#b3b4b5;
 	color: #fff;
 	border: none;
 	border-radius: 5px;
 	font-weight: 600;
 	cursor: pointer;
+}
+
+.submit-btn:hover {
+	background: #88898b;
+}
+
+.btn-default:hover {
+	border: 1px solid #88898b;
 }
 
 .deadLine {
@@ -208,7 +216,7 @@ body {
 }
 
 .title {
-	padding-bottom: 10px;
+	/*padding-bottom: 10px;*/
 }
 #editor {
   min-height: 300px;
@@ -222,6 +230,12 @@ body {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: left;
+}
+button {
+	background: #fff;
+	border: 1px solid black;
+	border-radius: 4px !important;
+	padding: 3px 10px;
 }
 
 
@@ -237,259 +251,261 @@ body {
 		<jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
 
 		<div class="right-PANEL">
-			<div class="pb-2">
-				<h4 class="title">${mode=='update'?'상품 수정':'상품 등록'}</h4>
+			<div class="title">
+				<h3>${mode=='update'?'상품 수정':'상품 등록'}</h3>
 			</div>
 			<hr>
 
 			<div class="outside">
 				<form method="post" name="productForm" enctype="multipart/form-data">
-					<div class="title">카테고리</div>
-					<div class="card-body">
-						<table class="form-table">
-							<tr>
-								<th>카테고리</th>
-								<td>
-									<select name="categoryId" class="st">
-										<option value="">::카테고리 선택::</option>
-										<c:forEach var="vo" items="${listCategory}">
-											<option value="${vo.categoryId}" ${dto.categoryId==vo.categoryId?"selected":""}>${vo.categoryName}</option>
-										</c:forEach>
-									</select>
-								</td>
-							</tr>
-						</table>
-					</div>
-
-					<div class="title">기본정보</div>
-					<div class="card-body">
-						<table class="form-table">
-							<tr>
-								<th>상품명</th>
-								<td><input type="text" name="productName"
-									placeholder="상품명을 입력하세요" value="${dto.productName}"></td>
-							</tr>
-							<tr>
-								<th>상품 사진</th>
-								<td>
-									<div>상품 대표 이미지</div>
-									<div class="photo">
-										<label for="thumbnailFile" class="me-2" tabindex="0" title="이미지 업로드"> 
-										<span class="image-viewer"></span> 
-										<input type="file" name="thumbnailFile" id="thumbnailFile" hidden="" accept="image/png, image/jpeg">
-										</label>
-									</div>
-									<div style="margin-top: 20px;">추가 사진</div>
-									<div class="additionalPhotos">
-										<!-- 
-										<div class="mb-3">
-											<label for="formFileSm" class="form-label"></label> <input
-												class="form-control form-control-sm" id="formFileSm"
-												type="file">
-										</div>
-										<div class="mb-3">
-											<label for="formFileSm" class="form-label"></label> <input
-												class="form-control form-control-sm" id="formFileSm"
-												type="file">
-										</div>
-										<div class="mb-3">
-											<label for="formFileSm" class="form-label"></label> <input
-												class="form-control form-control-sm" id="formFileSm"
-												type="file">
-										</div>
-										-->
-										<div class="preview-session">
-											<label for="addFiles" class="me-2" tabindex="0" title="이미지 업로드">
-												<img class="image-upload-btn" src="${pageContext.request.contextPath}/dist/images/add_photo.png">
-												<input type="file" name="addFiles" id="addFiles" hidden="" multiple accept="image/png, image/jpeg">
+					<div style="margin: 30px;">
+						<div class="subtitle">카테고리</div>
+						<div class="card-body">
+							<table class="form-table">
+								<tr>
+									<th>카테고리</th>
+									<td>
+										<select name="categoryId" class="st">
+											<option value="">::카테고리 선택::</option>
+											<c:forEach var="vo" items="${listCategory}">
+												<option value="${vo.categoryId}" ${dto.categoryId==vo.categoryId?"selected":""}>${vo.categoryName}</option>
+											</c:forEach>
+										</select>
+									</td>
+								</tr>
+							</table>
+						</div>
+	
+						<div class="subtitle">기본정보</div>
+						<div class="card-body">
+							<table class="form-table">
+								<tr>
+									<th>상품명</th>
+									<td><input type="text" name="productName"
+										placeholder="상품명을 입력하세요" value="${dto.productName}"></td>
+								</tr>
+								<tr>
+									<th>상품 사진</th>
+									<td>
+										<div>상품 대표 이미지</div>
+										<div class="photo">
+											<label for="thumbnailFile" class="me-2" tabindex="0" title="이미지 업로드"> 
+											<span class="image-viewer"></span> 
+											<input type="file" name="thumbnailFile" id="thumbnailFile" hidden="" accept="image/png, image/jpeg">
 											</label>
-											<div class="image-upload-list">
-												<!-- 클래스 -> image-item:새로추가된이미지, image-uploaded:수정에서 등록된이미지 -->
-												<!-- 수정일때 등록된 이미지 -->
-												<c:forEach var="vo" items="${listPhoto}">
-													<img class="image-uploaded" src="${pageContext.request.contextPath}/uploads/products/${vo.photoName}"
-														data-fileNum="${vo.productPhotoNum}" data-filename="${vo.photoName}">
-												</c:forEach>
+										</div>
+										<div style="margin-top: 20px;">추가 사진</div>
+										<div class="additionalPhotos">
+											<!-- 
+											<div class="mb-3">
+												<label for="formFileSm" class="form-label"></label> <input
+													class="form-control form-control-sm" id="formFileSm"
+													type="file">
+											</div>
+											<div class="mb-3">
+												<label for="formFileSm" class="form-label"></label> <input
+													class="form-control form-control-sm" id="formFileSm"
+													type="file">
+											</div>
+											<div class="mb-3">
+												<label for="formFileSm" class="form-label"></label> <input
+													class="form-control form-control-sm" id="formFileSm"
+													type="file">
+											</div>
+											-->
+											<div class="preview-session">
+												<label for="addFiles" class="me-2" tabindex="0" title="이미지 업로드">
+													<img class="image-upload-btn" src="${pageContext.request.contextPath}/dist/images/add_photo.png">
+													<input type="file" name="addFiles" id="addFiles" hidden="" multiple accept="image/png, image/jpeg">
+												</label>
+												<div class="image-upload-list">
+													<!-- 클래스 -> image-item:새로추가된이미지, image-uploaded:수정에서 등록된이미지 -->
+													<!-- 수정일때 등록된 이미지 -->
+													<c:forEach var="vo" items="${listPhoto}">
+														<img class="image-uploaded" src="${pageContext.request.contextPath}/uploads/products/${vo.photoName}"
+															data-fileNum="${vo.productPhotoNum}" data-filename="${vo.photoName}">
+													</c:forEach>
+												</div>
+											</div>
+											
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th>상품 소개글</th>
+									<td><textarea name="content" rows="4"
+											placeholder="상품 소개글을 입력하세요" style="resize: none">${dto.content}</textarea></td>
+								</tr>
+							</table>
+						</div>
+	
+						<div class="subtitle">가격</div>
+						<div class="card-body">
+							<table class="form-table">
+								<tr>
+									<th>판매가</th>
+									<td>
+										<div class="input-flex">
+											<input type="text" name="price"
+												placeholder="판매가를 입력하세요" value="${dto.price}" pattern="[^\d]*"> <span>원</span>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+						
+						<div class="subtitle">적립금</div>
+						<div class="card-body">
+							<table class="form-table">
+								<tr>
+									<th>적립금</th>
+									<td>
+										<div class="row">
+											<div class="col-md-6">
+												<input type="text" name="point" class="form-control" value="${dto.point}"  pattern="[^\d]*">
 											</div>
 										</div>
-										
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<th>상품 소개글</th>
-								<td><textarea name="content" rows="4"
-										placeholder="상품 소개글을 입력하세요" style="resize: none">${dto.content}</textarea></td>
-							</tr>
-						</table>
-					</div>
-
-					<div class="title">가격</div>
-					<div class="card-body">
-						<table class="form-table">
-							<tr>
-								<th>판매가</th>
-								<td>
-									<div class="input-flex">
-										<input type="text" name="price"
-											placeholder="판매가를 입력하세요" value="${dto.price}" pattern="[^\d]*"> <span>원</span>
-									</div>
-								</td>
-							</tr>
-						</table>
-					</div>
-					
-					<div class="title">적립금</div>
-					<div class="card-body">
-						<table class="form-table">
-							<tr>
-								<th>적립금</th>
-								<td>
-									<div class="row">
-										<div class="col-md-6">
-											<input type="text" name="point" class="form-control" value="${dto.point}"  pattern="[^\d]*">
+									</td>
+								</tr>
+							</table>
+						</div>
+						
+						<div class="subtitle">상품옵션</div>
+						<div class="card-body">
+							<table class="form-table">
+								<tr>
+									<th>상품옵션</th>
+									<td>
+										<div class="row">
+											<div class="col-md-6">
+												<select name="optionCount" class="form-select" ${dto.userBought == 1 ? "disabled":""} ${dto.totalStock > 0 ? "disabled":""}>
+													<option value="2" ${dto.optionCount==2?"selected":""}>옵션 둘</option>
+													<option value="1" ${dto.optionCount==1?"selected":""}>옵션 하나</option>
+													<option value="0" ${dto.optionCount==0?"selected":""}>옵션 없음</option>
+												</select>
+											</div>
 										</div>
-									</div>
-								</td>
-							</tr>
-						</table>
-					</div>
-					
-					<div class="title">상품옵션</div>
-					<div class="card-body">
-						<table class="form-table">
-							<tr>
-								<th>상품옵션</th>
-								<td>
-									<div class="row">
-										<div class="col-md-6">
-											<select name="optionCount" class="form-select" ${dto.userBought == 1 ? "disabled":""} ${dto.totalStock > 0 ? "disabled":""}>
-												<option value="2" ${dto.optionCount==2?"selected":""}>옵션 둘</option>
-												<option value="1" ${dto.optionCount==1?"selected":""}>옵션 하나</option>
-												<option value="0" ${dto.optionCount==0?"selected":""}>옵션 없음</option>
-											</select>
-										</div>
-									</div>
-									<small class="form-control-plaintext help-block">상품 재고가 존재하면 옵션 변경은 불가능합니다.</small>
-								</td>
-							</tr>
-
-							<tr class="product-option-1">
-								<th>옵션 1</th>
-								<td>
-									<div class="mb-2">
-										<input type="text" name="optionName" class="form-control" style="width: 250px;" placeholder="옵션명" value="${dto.optionName}">
-										<c:if test="${mode=='update'}">
-											<input type="hidden" name="optionNum" value="${empty dto.optionNum ? 0 : dto.optionNum}">
-										</c:if>
-									</div>
-									<div class="row option-area">
-										<div class="col-auto pe-0 d-flex flex-row optionValue-area">
-											<c:forEach var="vo" items="${listOptionDetail}">
-												<div class="input-group pe-1">
-													<input type="text" name="optionValues" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" value="${vo.optionValue}">
-													<input type="hidden" name="optionDetailNums" value="${vo.optionDetailNum}">
-													<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus"></i>
-												</div>
-											</c:forEach>
-											<c:if test="${empty listOptionDetail || listOptionDetail.size() < 1}">
-												<div class="input-group pe-1">
-													<input type="text" name="optionValues" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값">
-													<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus"></i>
-												</div>
+										<small class="form-control-plaintext help-block">상품 재고가 존재하면 옵션 변경은 불가능합니다.</small>
+									</td>
+								</tr>
+	
+								<tr class="product-option-1">
+									<th>옵션 1</th>
+									<td>
+										<div class="mb-2">
+											<input type="text" name="optionName" class="form-control" style="width: 250px;" placeholder="옵션명" value="${dto.optionName}">
+											<c:if test="${mode=='update'}">
+												<input type="hidden" name="optionNum" value="${empty dto.optionNum ? 0 : dto.optionNum}">
 											</c:if>
 										</div>
-										<div class="col-auto">
-											<button type="button" class="btn-default btnOptionAdd">추가</button>
+										<div class="row option-area">
+											<div class="col-auto pe-0 d-flex flex-row optionValue-area">
+												<c:forEach var="vo" items="${listOptionDetail}">
+													<div class="input-group pe-1">
+														<input type="text" name="optionValues" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" value="${vo.optionValue}">
+														<input type="hidden" name="optionDetailNums" value="${vo.optionDetailNum}">
+														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus"></i>
+													</div>
+												</c:forEach>
+												<c:if test="${empty listOptionDetail || listOptionDetail.size() < 1}">
+													<div class="input-group pe-1">
+														<input type="text" name="optionValues" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값">
+														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus"></i>
+													</div>
+												</c:if>
+											</div>
+											<div class="col-auto">
+												<button type="button" class="btn-default btnOptionAdd">추가</button>
+											</div>
 										</div>
-									</div>
-									<small class="form-control-plaintext help-block">판매 상품이 존재하면 옵션은 삭제 되지 않습니다.</small>
-								</td>
-							</tr>
-
-							<tr class="product-option-2">
-								<th>옵션 2</th>
-								<td>
-									<div class="mb-2">
-										<input type="text" name="optionName2" style="width: 250px;" class="form-control" placeholder="옵션명" value="${dto.optionName2}">
-										<c:if test="${mode=='update'}">
-											<input type="hidden" name="optionNum2" value="${empty dto.optionNum2 ? 0 : dto.optionNum2}">
-										</c:if>
-									</div>
-									<div class="row option-area2">
-										<div class="col-auto pe-0 d-flex flex-row optionValue-area2">
-											<c:forEach var="vo" items="${listOptionDetail2}">
-												<div class="input-group pe-1">
-													<input type="text" name="optionValues2" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" value="${vo.optionValue}">
-													<input type="hidden" name="optionDetailNum2" value="${vo.optionDetailNum}">
-													<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus2"></i>
-												</div>
-											</c:forEach>
-											<c:if test="${empty listOptionDetail2 || listOptionDetail2.size() < 1}">
-												<div class="input-group pe-1">
-													<input type="text" name="optionValues2" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값">
-													<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus2"></i>
-												</div>
+										<small class="form-control-plaintext help-block">판매 상품이 존재하면 옵션은 삭제 되지 않습니다.</small>
+									</td>
+								</tr>
+	
+								<tr class="product-option-2">
+									<th>옵션 2</th>
+									<td>
+										<div class="mb-2">
+											<input type="text" name="optionName2" style="width: 250px;" class="form-control" placeholder="옵션명" value="${dto.optionName2}">
+											<c:if test="${mode=='update'}">
+												<input type="hidden" name="optionNum2" value="${empty dto.optionNum2 ? 0 : dto.optionNum2}">
 											</c:if>
 										</div>
-										<div class="col-auto">
-											<button type="button" class="btn-default btnOptionAdd2">추가</button>
+										<div class="row option-area2">
+											<div class="col-auto pe-0 d-flex flex-row optionValue-area2">
+												<c:forEach var="vo" items="${listOptionDetail2}">
+													<div class="input-group pe-1">
+														<input type="text" name="optionValues2" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" value="${vo.optionValue}">
+														<input type="hidden" name="optionDetailNum2" value="${vo.optionDetailNum}">
+														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus2"></i>
+													</div>
+												</c:forEach>
+												<c:if test="${empty listOptionDetail2 || listOptionDetail2.size() < 1}">
+													<div class="input-group pe-1">
+														<input type="text" name="optionValues2" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값">
+														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus2"></i>
+													</div>
+												</c:if>
+											</div>
+											<div class="col-auto">
+												<button type="button" class="btn-default btnOptionAdd2">추가</button>
+											</div>
 										</div>
-									</div>
-									<small class="form-control-plaintext help-block">판매 상품이 존재하면 옵션은 삭제 되지 않습니다.</small>
-								</td>
-							</tr>
-						</table>
-					</div>
-
-					<div class="title">상품진열</div>
-					<div class="card-body">
-						<table class="form-table">
-							<tr>
-								<th>상품진열</th>
-								<td>
-									<div class="py-2" style="display: inline-flex;">
-										<input type="radio" class="form-check-input" name="productShow" id="productShow1" value="1" ${dto.productShow==1 ? "checked":"" }>
-										<label for="productShow1" class="form-check-label">상품진열</label>
-										&nbsp;&nbsp;
-										<input type="radio" class="form-check-input" name="productShow" id="productShow2" value="0" ${dto.productShow==0 ? "checked":"" }>
-										<label for="productShow2" class="form-check-label">진열안함</label>
-									</div>
-								</td>
-							</tr>
-						</table>
-					</div>
-
-					<div class="title">상품 상세정보</div>
-					<div class="card-body">
-						<table class="form-table">
-							<tr>
-								<th>상품 상세 내용</th>
-								<td>
-									<div id="editor">${dto.detailInfo}</div> <input type="hidden"
-									name="detailInfo">
-								</td>
-							</tr>
-						</table>
-					</div>
-					<div class="text-center">
-						<c:url var="url" value="/admin/products/listProduct">
-							<c:if test="${not empty page}">
-								<c:param name="page" value="${page}"/>
+										<small class="form-control-plaintext help-block">판매 상품이 존재하면 옵션은 삭제 되지 않습니다.</small>
+									</td>
+								</tr>
+							</table>
+						</div>
+	
+						<div class="subtitle">상품진열</div>
+						<div class="card-body">
+							<table class="form-table">
+								<tr>
+									<th>상품진열</th>
+									<td>
+										<div class="py-2" style="display: inline-flex;">
+											<input type="radio" class="form-check-input" name="productShow" id="productShow1" value="1" ${dto.productShow==1 ? "checked":"" }>
+											<label for="productShow1" class="form-check-label">상품진열</label>
+											&nbsp;&nbsp;
+											<input type="radio" class="form-check-input" name="productShow" id="productShow2" value="0" ${dto.productShow==0 ? "checked":"" }>
+											<label for="productShow2" class="form-check-label">진열안함</label>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+	
+						<div class="subtitle">상품 상세정보</div>
+						<div class="card-body">
+							<table class="form-table">
+								<tr>
+									<th>상품 상세 내용</th>
+									<td>
+										<div id="editor">${dto.detailInfo}</div> <input type="hidden"
+										name="detailInfo">
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="text-center">
+							<c:url var="url" value="/admin/products/listProduct">
+								<c:if test="${not empty page}">
+									<c:param name="page" value="${page}"/>
+								</c:if>
+							</c:url>							
+							<button type="button" class="btn-accent btn-md submit-btn" onclick="sendOk();">${mode=='update'?'수정완료':'등록완료'}</button>
+							<button type="reset" class="btn-default btn-md">다시입력</button>
+							<button type="button" class="btn-default btn-md" onclick="location.href='${url}';">${mode=='update'?'수정취소':'등록취소'}</button>
+							<c:if test="${mode=='update'}">
+								<input type="hidden" name="productCode" value="${dto.productCode}">
+								<input type="hidden" name="productId" value="${dto.productId}">
+								<input type="hidden" name="thumbnail" value="${dto.thumbnail}">
+								<input type="hidden" name="page" value="${page}">
+								
+								<input type="hidden" name="prevOptionNum" value="${empty dto.optionNum ? 0 : dto.optionNum}">
+								<input type="hidden" name="prevOptionNum2" value="${empty dto.optionNum2 ? 0 : dto.optionNum2}">
 							</c:if>
-						</c:url>							
-						<button type="button" class="btn-accent btn-md submit-btn" onclick="sendOk();">${mode=='update'?'수정완료':'등록완료'}</button>
-						<button type="reset" class="btn-default btn-md">다시입력</button>
-						<button type="button" class="btn-default btn-md" onclick="location.href='${url}';">${mode=='update'?'수정취소':'등록취소'}</button>
-						<c:if test="${mode=='update'}">
-							<input type="hidden" name="productCode" value="${dto.productCode}">
-							<input type="hidden" name="productId" value="${dto.productId}">
-							<input type="hidden" name="thumbnail" value="${dto.thumbnail}">
-							<input type="hidden" name="page" value="${page}">
-							
-							<input type="hidden" name="prevOptionNum" value="${empty dto.optionNum ? 0 : dto.optionNum}">
-							<input type="hidden" name="prevOptionNum2" value="${empty dto.optionNum2 ? 0 : dto.optionNum2}">
-						</c:if>
+						</div>
 					</div>
 				</form>
 			</div>

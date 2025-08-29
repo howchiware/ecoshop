@@ -15,6 +15,7 @@ public interface ProductReviewService {
 	public void insertReview(ProductReview dto, String uploadPath) throws Exception;
 	public void deleteReview(long reviewId, String uploadPath) throws Exception;
 	public ProductReview viewReviewDetail(long reviewId);
+	public ProductReview findReviewById(long reviewId);
 	
 	public void deleteReviewHelpful(ReviewHelpful dto);
 	public void insertReviewHelpful(ReviewHelpful dto);

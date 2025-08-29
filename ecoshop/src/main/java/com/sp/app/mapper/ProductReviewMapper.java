@@ -20,6 +20,7 @@ public interface ProductReviewMapper {
 	public void insertReview(ProductReview dto) throws Exception;
 	public void insertReviewPhoto(ProductReview dto) throws Exception;
 	public ProductReview viewReviewDetail(long reviewId);
+	public ProductReview findReviewById(long reviewId);
 	
 	public void deleteReviewHelpful(ReviewHelpful dto);
 	public void insertReviewHelpful(ReviewHelpful dto);
