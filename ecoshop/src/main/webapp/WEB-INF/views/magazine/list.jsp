@@ -239,8 +239,7 @@
              <label for="schType" class="form-label">검색 조건</label> 
              <select id="schType" name="schType" class="form-select">
              <option value="subject" ${schType=="subject"?"selected":""}>제목</option>
-                 <option value="content" ${schType=="content"?"selected":""}>내용</option>
-                 
+                 <option value="content" ${schType=="content"?"selected":""}>내용</option>  
              </select>
          </div>
          <div class="col-md-4">

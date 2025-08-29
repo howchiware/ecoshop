@@ -16,6 +16,83 @@
     .card-header h3 { font-weight: 700; }
     .card-body img { max-width: 100%; border-radius: 8px; margin-bottom: 1rem; }
     .card-body p { white-space: pre-wrap; line-height: 1.8; }
+    .btn-like-wrapper {
+    text-align: center;
+    padding: 1rem 0 2.5rem 0;
+}
+
+.btnSendTipBoardLike {
+    background: #f1f3f5;
+    border: 1px solid #dee2e6;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+    color: #868e96;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.btnSendTipBoardLike:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.btnSendTipBoardLike .bi-heart-fill {
+    color: #e64980;
+}
+
+#tipLikeCount {
+    font-size: 0.8rem;
+    display: block;
+    margin-top: -5px;
+    font-weight: normal;
+}
+
+.button-group {
+	margin-top: 2.5rem;
+}
+.actions-left .btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #495057;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.actions-left .btn-action:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.actions-left .btn-action.delete {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.actions-left .btn-action.asnwer {
+    color: #28a745;
+    border-color: #28a745;
+}
+
+
+.actions-left .btn-action.delete:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
 </style>
 </head>
 <body>
@@ -35,10 +112,11 @@
         <div class="card-body">
 		    <c:out value="${dto.content}" escapeXml="false"/>
 		</div>
-		<div>
-			<div class="text-center p-3" style="border-bottom: none;">
-				<button type="button" class="btn-default btnSendTipBoardLike" title="좋아요"><i class="bi ${isUserLiked ? 'bi-heart-fill text-danger' : 'bi-heart' }"></i>&nbsp;&nbsp;<span id="tipLikeCount">${dto.tipLikeCount}</span></button>
-			</div>
+		<div class="btn-like-wrapper">
+			<button type="button" class="btn-default btnSendTipBoardLike" title="좋아요">
+				<i class="bi ${isUserLiked ? 'bi-heart-fill text-danger' : 'bi-heart' }"></i>
+				<span id="tipLikeCount">${dto.tipLikeCount}</span>
+			</button>
 		</div>
     </div>
 
@@ -63,18 +141,18 @@
         </div>
     </div>
     
-    <div class="row button-group">
-        <div class="col-md-6">
-                        <button type="button" class="btn-default" onclick="location.href='${pageContext.request.contextPath}/tipBoard/reply?tipId=${dto.tipId}&page=${page}&size=${size}';">답변</button>
-            <c:if test="${sessionScope.member.memberId == dto.memberId}">
-                <button type="button" class="btn btn-default" onclick="location.href='${pageContext.request.contextPath}/tipBoard/update?tipId=${dto.tipId}&${query}';">수정</button>
-                <button type="button" class="btn btn-outline-danger" onclick="deleteOk();">삭제</button>
-            </c:if>
-        </div>
-        <div class="col-md-6 text-end">
-            <button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/tipBoard/list?${query}';">목록</button>
-        </div>
+    <div class="article-actions">
+    <div class="actions-left">
+        <button type="button" class="btn-action asnwer" onclick="location.href='${pageContext.request.contextPath}/tipBoard/reply?tipId=${dto.tipId}&page=${page}&size=${size}';">답변</button>
+        <c:if test="${sessionScope.member.memberId == dto.memberId}">
+            <button type="button" class="btn-action " onclick="location.href='${pageContext.request.contextPath}/tipBoard/update?tipId=${dto.tipId}&${query}';">수정</button>
+            <button type="button" class="btn-action delete" onclick="deleteOk();">삭제</button>
+        </c:if>
     </div>
+    <div class="actions-right">
+        <button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/tipBoard/list?${query}';">목록</button>
+    </div>
+</div>
     
    
     
@@ -82,7 +160,7 @@
 <c:if test="${sessionScope.member.memberId==dto.memberId||sessionScope.member.userLevel>50}">
 	<script type="text/javascript">
 		function deleteOk() {
-		    if(confirm('게시글을 삭제 하시 겠습니까 ? ')) {
+		    if(confirm('이 게시글을 삭제하면 하위 답변들도 모두 삭제됩니다.\n정말 삭제하시겠습니까?')) {
 			    let params = 'tipId=${dto.tipId}&${query}';
 			    let url = '${pageContext.request.contextPath}/tipBoard/delete?' + params;
 		    	location.href = url;
@@ -104,7 +182,7 @@ $(function(){
 		const $i = $(this).find('i');
 		let userLiked = $i.hasClass('bi-heart-fill');
 		
-		let msg = userLiked ? '게시글 공감을 취소하시겠습니까 ? ' : '게시글에 공감하십니까 ?';
+		let msg = userLiked ? '게시글 공감을 취소하시겠습니까?' : '게시글에 공감하십니까?';
 		if(! confirm( msg )) {
 			return false;
 		}

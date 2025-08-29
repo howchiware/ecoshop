@@ -12,6 +12,24 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/dairyArticle.css" type="text/css">
 <style>
+
+.tip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #315e4e;
+}
+
+.tip-header h2 {
+    margin: 0;
+}
+
+.tip-subtitle {
+    color: #555;
+    font-size: 1rem;
+}
 .new-text {
     display: inline-block;
     margin-left: 6px;
@@ -23,57 +41,89 @@
     border-radius: 12px;
     animation: blink 1.5s infinite;
 }
-.page-navigation {
-    display: flex;
-    justify-content: center; /* 가운데 정렬 */
-    margin-top: 20px;
-}
-
-.page-navigation ul.pagination {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.page-navigation ul.pagination li {
-    margin: 0 4px; /* 페이지 간 간격 */
-}
-
-.page-navigation ul.pagination li a {
-    display: block;
-    padding: 6px 12px;
-    text-decoration: none;
-    color: #495057;
+.page-navigation .pagination .page-link {
+    color: #555;
+    border-radius: 6px;
+    margin: 0 3px;
     border: 1px solid #dee2e6;
-    border-radius: 4px;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
 }
 
-.page-navigation ul.pagination li a:hover {
-    background-color: #0d6efd;
+.page-navigation .pagination .page-link:hover {
+    background-color: #e9ecef;
+    color: #315e4e;
+}
+
+.page-navigation .pagination .page-item.active .page-link {
+    background-color: #315e4e;
+    border-color: #315e4e;
     color: #fff;
-    border-color: #0d6efd;
+    box-shadow: 0 2px 5px rgba(49, 94, 78, 0.3);
 }
 
-.page-navigation ul.pagination li.active a {
-    background-color: #0d6efd;
-    color: #fff;
-    border-color: #0d6efd;
-    font-weight: 600;
+.paginate {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+    gap: 4px;
+    font-size: 0.9rem;
 }
 
-.page-navigation ul.pagination li.disabled a {
-    color: #6c757d;
-    pointer-events: none;
-    background-color: #fff;
-    border-color: #dee2e6;
+.paginate a,
+.paginate span {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #d2e4d9;
+    border-radius: 40%;
+    background-color: #ffffff;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.paginate a:hover {
+    background-color: #f1f8f3;
+    border-color: #28a745;
+    color: #28a745;
+}
+
+.paginate span {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: default;
 }
 
 @keyframes blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.6; }
-}	
+}
+
+.search-form {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2.5rem;
+    border: 1px solid #e9ecef;
+}
+.bottom-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2.5rem;
+}
+.reply-title .bi-arrow-return-right {
+    margin-right: 2px;
+    color: #888;
+}
 </style>
 </head>
 <body>
@@ -82,7 +132,10 @@
     </header>
 
 <main class="container my-5">
-	<h2 class="mb-4 fw-bold">제로웨이스트 팁</h2>
+	<div class="tip-header">
+	    <h2 class="fw-bold">제로웨이스트 팁</h2>
+	    <span class="tip-subtitle">환경을 사랑하는 우리들의 이야기, 소소한 팁을 나눠주세요.</span>
+    </div>
 	
 	<form name="searchForm" class="search-form row g-3 align-items-end" method="get">
          <div class="col-md-3">
@@ -115,15 +168,12 @@
 			<c:forEach var="dto" items="${list}" varStatus="status">
 				<tr>
 					<td class="text-center">${dataCount - (page-1) * size - status.index}</td>
-					<td class="left" style="padding-left: 30px;">
-						<c:forEach var="n" begin="1" end="${dto.depth}">&nbsp;&nbsp;</c:forEach>
-						<c:if test="${dto.depth!=0}">└&nbsp;</c:if>
-						<a href="${articleUrl}&tipId=${dto.tipId}" class="text-reset">${dto.subject}</a>
-						<!--  
-						<c:if test="${dto.gap < 1}">
-							<span class="new-text">New</span>
-						</c:if>
-						-->
+					<td class="left reply-title" style="padding-left: 30px;">
+					    <c:forEach var="n" begin="1" end="${dto.depth}">&nbsp;&nbsp;&nbsp;&nbsp;</c:forEach> <%-- 간격 조절 --%>
+					    <c:if test="${dto.depth != 0}">
+					        <i class="bi bi-arrow-return-right"></i>
+					    </c:if>
+					    <a href="${articleUrl}&tipId=${dto.tipId}" class="text-reset text-decoration-none">${dto.subject}</a>
 					</td>
 					<td class="text-center">${dto.name}</td>
 					<td class="text-center">${dto.regDate}</td>
@@ -133,16 +183,28 @@
 		</tbody>
 	</table>
 	
-	<div class="table-bottom-controls">
-         <div class="align-self-center">
-             <button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/tipBoard/write';">글 작성</button>
-         </div>
-         <div class="page-navigation">
-             ${dataCount == 0 ? "" : paging}
-         </div>
-     </div>
+	<c:if test="${empty list}">
+		<div class="text-center py-5">등록된 게시글이 없습니다.</div>
+	</c:if>
 
-</main>
+	<div class="bottom-controls">
+		<div class="control-section">
+			<button type="button" class="btn btn-secondary" onclick="location.href='${pageContext.request.contextPath}/tipBoard/list';">새로고침</button>
+		</div>
+
+		<div class="control-section">
+			<div class="page-navigation">${dataCount == 0 ? "" : paging}</div>
+		</div>
+
+		<div class="align-self-center">
+			<button type="button" class="btn btn-primary"
+				onclick="location.href='${pageContext.request.contextPath}/tipBoard/write';">팁
+				작성</button>
+		</div>
+	</div>
+
+
+	</main>
 
     <footer>
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp"/>
