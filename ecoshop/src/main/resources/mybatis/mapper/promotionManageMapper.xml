@@ -4,9 +4,8 @@
 <mapper namespace="com.sp.app.admin.mapper.PromotionManageMapper">
 	<!-- 등록 -->
 	<insert id="insertPromotionManage" parameterType="com.sp.app.admin.model.PromotionManage">
-		INSERT INTO promotion(promotionId , memberId ,advertisingId , subject, imageFilename, regDate, postingStatus)
-		VALUES (promotion_seq.NEXTVAL, #{memberId}, #{advertisingId, jdbcType=INTEGER}, #{subject},  
-			#{imageFilename}, SYSDATE, 1)
+		INSERT INTO promotion(promotionId , memberId, subject, imageFilename, regDate, postingStatus)
+		VALUES (promotion_seq.NEXTVAL, #{memberId}, #{subject},  #{imageFilename}, SYSDATE, 1)
 	</insert>
 	
 	<sql id="where-list">
@@ -27,7 +26,7 @@
 	
 	
 	<select id="listPromotionManage" parameterType="map" resultType="com.sp.app.admin.model.PromotionManage">
-		SELECT promotionId, p.memberId, m.name, advertisingId, subject, imageFilename, TO_CHAR(regDate, 'YYYY-MM-DD'), postingStatus
+		SELECT promotionId, p.memberId, m.name, subject, imageFilename, TO_CHAR(regDate, 'YYYY-MM-DD'), postingStatus
 		FROM promotion p
 		JOIN member2 m ON p.memberId = m.memberId
 		<where>
@@ -39,9 +38,18 @@
 		ORDER BY promotionId DESC
 		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
+		
+	<select id="listAdvertisementManage" parameterType="map" resultType="com.sp.app.admin.model.PromotionManage">
+		SELECT advertisingId, username, subject, content, TO_CHAR(regDate, 'YYYY-MM-DD') regDate, inquiryType, status,
+		 postingStatus, email, tel, TO_CHAR(adverStart, 'YYYY-MM-DD') adverStart, TO_CHAR(adverEnd , 'YYYY-MM-DD') adverEnd
+		 FROM advertising
+		 WHERE postingStatus = 0 AND status = 5
+	    ORDER BY regDate DESC
+	    OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
 	
 	<select id="findById" parameterType="Long" resultType="com.sp.app.admin.model.PromotionManage">
-		SELECT promotionId, p.memberId, m.name, advertisingId, subject, imageFilename, regDate, 'yyyy-mm-dd', postingStatus
+		SELECT promotionId, p.memberId, m.name, subject, imageFilename, TO_CHAR(regDate, 'YYYY-MM-DD') regDate, postingStatus
 		FROM promotion p
 		JOIN member2 m ON p.memberId = m.memberId
 		WHERE promotionId = #{promotionId} AND postingStatus = 1
