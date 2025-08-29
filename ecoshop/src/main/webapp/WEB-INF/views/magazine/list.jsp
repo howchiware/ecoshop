@@ -15,42 +15,211 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/dairyArticle.css" type="text/css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=sync" />
 <style>
+.magazine-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #315e4e;
+}
+
+.magazine-header h2 {
+    margin: 0;
+}
+
+.magazine-subtitle {
+    color: #555;
+    font-size: 1rem;
+}
+
 .card-magazine {
     display: flex;
-    gap: 50px;
-    padding: 20px;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
     border: 1px solid #dee2e6;
     border-radius: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 1rem;
     background-color: #fff;
 }
+
 .card-magazine img {
-    width: 540px;
-    height: 200px;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
     object-fit: cover;
     border-radius: 4px;
 }
+
 .card-magazine-body {
     flex: 1;
 }
+
 .card-magazine-title {
-    font-size: 28px;
+    font-size: 1.5rem;
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-bottom: 0.75rem;
 }
+
 .card-magazine-summary {
-    font-size: 18px;
+    font-size: 1rem;
     color: #555;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 3; 
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
 }
-.page-navigation {
+
+.card-magazine .text-muted {
+    font-size: 0.875rem;
+    margin-top: 1.5rem;
+}
+
+.search-form {
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.search-form .col-md-3,
+.search-form .col-md-4,
+.search-form .col-auto {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .magazine-header {
+        align-items: baseline;
+    }
+    
+    .card-magazine {
+        flex-direction: row;
+        gap: 2rem;
+        padding: 1.25rem;
+    }
+    
+    .card-magazine img {
+        width: 350px;
+        height: 100%;
+    }
+
+    .card-magazine-title {
+        font-size: 1.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .card-magazine-summary {
+        font-size: 1.125rem;
+    }
+    
+    .search-form {
+        flex-direction: row;
+    }
+    .search-form .col-md-3 {
+        width: 25%;
+    }
+    .search-form .col-md-4 {
+        width: 33.33%;
+    }
+    .search-form .col-auto {
+        width: auto;
+    }
+}
+.search-form {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2.5rem;
+    border: 1px solid #e9ecef;
+}
+.page-navigation .pagination .page-link {
+    color: #555;
+    border-radius: 6px;
+    margin: 0 3px;
+    border: 1px solid #dee2e6;
+    transition: all 0.2s ease;
+}
+
+.page-navigation .pagination .page-link:hover {
+    background-color: #e9ecef;
+    color: #315e4e;
+}
+
+.page-navigation .pagination .page-item.active .page-link {
+    background-color: #315e4e;
+    border-color: #315e4e;
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(49, 94, 78, 0.3);
+}
+
+.paginate {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    align-items: center;
+    width: 100%;
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+    gap: 4px;
+    font-size: 0.9rem;
+}
+
+.paginate a,
+.paginate span {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #d2e4d9;
+    border-radius: 40%;
+    background-color: #ffffff;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.paginate a:hover {
+    background-color: #f1f8f3;
+    border-color: #28a745;
+    color: #28a745;
+}
+
+.paginate span {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: default;
+}
+.bottom-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2.5rem;
+}
+
+.control-section {
+    flex: 1;
+}
+
+.control-section:nth-child(2) {
+    display: flex;
+    justify-content: center;
+}
+
+.control-section:nth-child(3) {
+    text-align: right;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
 }
 </style>
 </head>
@@ -59,9 +228,11 @@
     <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 </header>
 
-<main class="container my-5">    
-    <h2 class="mb-4 fw-bold">매거진</h2>
-    
+<main class="container my-5">   
+	<div class="magazine-header">
+	    <h2 class="fw-bold">에코모아 매거진</h2>
+	    <span class="magazine-subtitle">주간 에코모아 매거진! 놓치지 말고 확인하세요!</span>
+    </div>
     <!-- 검색 폼 -->
     <form name="searchForm" class="search-form row g-3 align-items-end mb-4" method="get">
          <div class="col-md-3">
@@ -99,7 +270,7 @@
                         <img src="${pageContext.request.contextPath}/uploads/magazine/${item.originalFilename}">
                     </c:when>
                     <c:otherwise>
-                        <img src="${pageContext.request.contextPath}/dist/images/default_thumb.jpg" class="guide-thumb" alt="기본 이미지">
+                        <img src="${pageContext.request.contextPath}/dist/images/noimage.png" class="guide-thumb" alt="기본 이미지">
                     </c:otherwise>
                 </c:choose>
             </div>
@@ -123,18 +294,22 @@
         <div class="text-center py-5">등록된 게시글이 없습니다.</div>
     </c:if>
 
-    <!-- 글 작성 + 페이지 네비게이션 -->
-    <div class="d-flex justify-content-between align-items-center mt-4">
-    	<c:if test="${sessionScope.member.userLevel >= 51}">
-        	<button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/magazine/write';">글 작성</button>
-        </c:if>
-        <div class="page-navigation">
-            ${dataCount == 0 ? "" : paging}
+    <div class="bottom-controls">
+        <div class="control-section">
+            <button type="button" class="btn btn-secondary" onclick="location.href='${pageContext.request.contextPath}/magazine/list';">새로고침</button>
         </div>
-    </div>
-    
-    <div class="col-auto">
-       <a href="${pageContext.request.contextPath}/magazine/list">새로고침</a>
+
+        <div class="control-section">
+            <div class="page-navigation">
+                ${dataCount == 0 ? "" : paging}
+            </div>
+        </div>
+
+        <div class="control-section">
+            <c:if test="${sessionScope.member.userLevel >= 51}">
+                <button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/magazine/write';">매거진 작성</button>
+            </c:if>
+        </div>
     </div>
 
 </main>

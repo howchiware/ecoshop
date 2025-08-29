@@ -10,8 +10,10 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/free.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/dairyArticle.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssmagazine/magazineArticle.css" type="text/css">
+<style type="text/css">
+
+</style>
 </head>
 <body>
 	<header>
@@ -19,7 +21,7 @@
 	</header>
 
 	<main class="container my-5">
-		<h2 class="mb-4 fw-bold">매거진</h2>
+		<h2 class="mb-4 fw-bold">에코모아 매거진</h2>
 		<div class="card mt-4 article-card">
 			<div class="card-header">
 				<h3>${dto.subject}</h3>
@@ -64,17 +66,17 @@
 
 		<div class="article-actions">
 		    <div class="actions-left">
-		        <c:choose>
-		            <c:when test="${sessionScope.member.memberId==dto.memberId}">
-		                <button type="button" class="btn btn-default" onclick="location.href='${pageContext.request.contextPath}/magazine/update?magazineId=${dto.magazineId}&${query}';">수정</button>
-		            </c:when>
-		        </c:choose>
-		        <c:choose>
-		            <c:when test="${sessionScope.member.memberId==dto.memberId || sessionScope.member.userLevel>50}">
-		                <button type="button" class="btn-default" onclick="deleteOk();">삭제</button>
-		            </c:when>
-		        </c:choose>
-		    </div>
+			    <c:if test="${sessionScope.member.memberId == dto.memberId}">
+			        <button type="button" class="btn-action" onclick="location.href='${pageContext.request.contextPath}/magazine/update?magazineId=${dto.magazineId}&${query}';">
+			            <span>수정</span>
+			        </button>
+			    </c:if>
+			    <c:if test="${sessionScope.member.memberId == dto.memberId || sessionScope.member.userLevel > 50}">
+			        <button type="button" class="btn-action delete" onclick="deleteOk();">
+			            <span>삭제</span>
+			        </button>
+			    </c:if>
+			</div>
 		
 		    <div class="actions-right">
 		        <button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/magazine/list?${query}';">목록</button>

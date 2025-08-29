@@ -12,6 +12,7 @@
 .board-title a {
     color: inherit;
     text-decoration: none; 
+    font-size: 32px;
 }
 
 .board-title a:hover {

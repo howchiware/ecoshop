@@ -24,7 +24,7 @@
 <main class="container my-5">
 	
 	<div class="page-header">
-		<h2>${mode=='update'?'매거진 수정':'매거진 등록'}</h2>
+		<h2>${mode=='update'?'에코모아 매거진 수정':'에코모아 매거진 등록'}</h2>
 	</div>
 
 	<form name="dairyForm" class="write-form" method="post" enctype="multipart/form-data">
@@ -46,7 +46,8 @@
 		
 		<div class="mb-5">
 		  	<div class="preview-session">
-				<label for="selectFile" class="me-2" tabindex="0" title="표지 업로드">
+				<label for="selectFile" class="me-2 form-label" tabindex="0" title="표지 업로드">
+					썸네일 등록
 					<span class="image-viewer"></span>
 					<input type="file" name="selectFile" id="selectFile" hidden="" accept="image/png, image/jpeg">
 				</label>

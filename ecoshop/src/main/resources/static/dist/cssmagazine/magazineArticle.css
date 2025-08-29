@@ -461,7 +461,7 @@ main.container {
     padding: 1rem 0 2.5rem 0;
 }
 
-.btnSendFreeLike {
+.btnSendMagazineLike {
     background: #f1f3f5;
     border: 1px solid #dee2e6;
     border-radius: 50%;
@@ -477,22 +477,21 @@ main.container {
     cursor: pointer;
 }
 
-.btnSendFreeLike:hover {
+.btnSendMagazineLike:hover {
     transform: translateY(-3px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.btnSendFreeLike .bi-heart-fill {
+.btnSendMagazineLike .bi-heart-fill {
     color: #e64980;
 }
 
-#freeLikeCount {
-	font-size: 0.8rem;
+#magazineLikeCount {
+    font-size: 0.8rem;
     display: block;
     margin-top: -5px;
     font-weight: normal;
 }
-
 .actions-left .btn-action {
     display: inline-flex;
     align-items: center;

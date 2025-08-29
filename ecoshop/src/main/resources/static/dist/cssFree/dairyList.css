@@ -92,6 +92,23 @@ main.container {
     margin-left: auto;
 }
 
+
+
+.btn-primary {
+    background-color: #315e4e;
+    border-color: #315e4e;
+    border-radius: 6px;
+    padding: 0.5rem 1.25rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+    background-color: #234d3c;
+    border-color: #234d3c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(49, 94, 78, 0.25);
+}
+
 .page-navigation .pagination .page-link {
     color: #555;
     border-radius: 6px;
@@ -110,21 +127,6 @@ main.container {
     border-color: #315e4e;
     color: #fff;
     box-shadow: 0 2px 5px rgba(49, 94, 78, 0.3);
-}
-
-.btn-primary {
-    background-color: #315e4e;
-    border-color: #315e4e;
-    border-radius: 6px;
-    padding: 0.5rem 1.25rem;
-    transition: all 0.2s ease-in-out;
-}
-
-.btn-primary:hover {
-    background-color: #234d3c;
-    border-color: #234d3c;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(49, 94, 78, 0.25);
 }
 
 .paginate {
