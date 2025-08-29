@@ -112,7 +112,10 @@
 								<tr>
 								    <td class="col-md-2 bg-light">문의유형</td>
 								    <td>
-								        <input type="text" name="inquiryType" class="form-control" rows="10" placeholder="내용 입력">${dto.inquiryType}
+								        <select name="inquiryType" class="form-control">
+								            <option value="1" ${dto.inquiryType == 1 ? 'selected' : ''}>메인</option>
+								            <option value="2" ${dto.inquiryType == 2 ? 'selected' : ''}>개인페이지</option>
+								        </select>
 								    </td>
 								</tr>
 								

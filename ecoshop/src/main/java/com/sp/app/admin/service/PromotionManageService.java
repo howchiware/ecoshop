@@ -3,13 +3,17 @@ package com.sp.app.admin.service;
 import java.util.List;
 import java.util.Map;
 
+import com.sp.app.admin.model.AdvertisementManage;
 import com.sp.app.admin.model.PromotionManage;
 
 public interface PromotionManageService {
 	
 	public void insertPromotionManage(PromotionManage dto, String uploadPath) throws Exception;
 	public int dataCount(Map<String, Object> map);
+	public int dataCountAdvertisement(Map<String, Object> map);
 	public List<PromotionManage> listPromotionManage(Map<String, Object> map);
+	
+	public List<AdvertisementManage> listAdvertisement(Map<String, Object> map);
 	
 	public PromotionManage findById(long promotionId);
 	public PromotionManage findByPrev(Map<String, Object> map);

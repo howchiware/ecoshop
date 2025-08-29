@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import com.sp.app.admin.mapper.PromotionManageMapper;
+import com.sp.app.admin.model.AdvertisementManage;
 import com.sp.app.admin.model.PromotionManage;
 
 @Service
@@ -140,6 +141,32 @@ public class PromotionManageServiceImpl implements PromotionManageService{
 	public boolean deleteUploadFile(String uploadPath, String filename) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public List<AdvertisementManage> listAdvertisement(Map<String, Object> map) {
+		List<AdvertisementManage> list = null;
+
+		try {
+			list = mapper.listAdvertisementManages(map);
+		} catch (Exception e) {
+			log.info("listAdvertisement : ", e);
+		}
+
+		return list;
+	}
+
+	@Override
+	public int dataCountAdvertisement(Map<String, Object> map) {
+		int result = 0;
+
+		try {
+			result = mapper.dataCountAdvertisement(map);
+		} catch (Exception e) {
+			log.info("dataCountAdvertisement : ", e);
+		}
+
+		return result;
 	}
 
 

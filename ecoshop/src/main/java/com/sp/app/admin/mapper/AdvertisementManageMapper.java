@@ -17,7 +17,7 @@ public interface AdvertisementManageMapper {
 	
 	public void updateAdvertisement(AdvertisementManage dto) throws SQLException;
 	
-	public void updateStatus(AdvertisementManage dto, Map<String, Object> map) throws Exception;
+	public void updateStatus(Map<String, Object> map) throws Exception;
 	
 	public void deleteAdvertisement(long advertisingId) throws SQLException;
 	

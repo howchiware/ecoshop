@@ -140,8 +140,7 @@
 				</div>
 			</div>
 		</div>
-	</section>
-	<!-- 광고 섹션 -->
+	</section> 
 	<!-- 
 	<section class="py-5">
 	  <div class="container">
@@ -172,8 +171,8 @@
 	
 	          <c:if test="${empty listPromotionManage}">
 	            <div class="carousel-item active h-100">
-	              <img src="${pageContext.request.contextPath}/dist/promotion/bg.png"
-	                   class="d-block w-100 h-100" style="object-fit: cover;" alt="기본 배너">
+	              <img src="${pageContext.request.contextPath}/uploads/promotion/bg.png"
+	                   class="d-block w-100 h-100" style="object-fit: cover;" alt="기본 배너"> 
 	            </div>
 	          </c:if>
 	        </div>
@@ -191,7 +190,7 @@
 	    </div>
 	  </div>
 	</section>
-		 -->
+	 -->
 	<footer>
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 	</footer>

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.sp.app.admin.model.AdvertisementManage;
 import com.sp.app.admin.model.PromotionManage;
 
 @Mapper
@@ -18,6 +19,8 @@ public interface PromotionManageMapper {
 	
 	public int dataCount(Map<String, Object> map);
 	public List<PromotionManage> listPromotionManage(Map<String, Object> map);
+	public int dataCountAdvertisement(Map<String, Object> map);
+	public List<AdvertisementManage> listAdvertisementManages(Map<String, Object> map);
 	
 	public PromotionManage findById(Long promotionId);
 	public PromotionManage findByPrev(Map<String, Object> map);

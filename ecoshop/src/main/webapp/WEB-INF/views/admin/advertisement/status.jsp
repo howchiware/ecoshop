@@ -34,28 +34,28 @@
         <c:choose>
             <c:when test="${row.oldStatus == 1}">메인</c:when>
             <c:when test="${row.oldStatus == 2}">개인페이지</c:when>
-            <c:otherwise><td>${row.oldStatus}</td></c:otherwise>
+            <c:otherwise>${row.oldStatus}</c:otherwise>
         </c:choose>
     </td>
     <td>
         <c:choose>
             <c:when test="${row.newStatus == 1}">메인</c:when>
             <c:when test="${row.newStatus == 2}">개인페이지</c:when>
-            <c:otherwise><td>${row.newStatus}</td></c:otherwise>
+            <c:otherwise>${row.newStatus}</c:otherwise>
         </c:choose>
     </td>
          <td>
         <c:choose>
             <c:when test="${row.oldPosting == 1}">비공개</c:when>
             <c:when test="${row.oldPosting == 0}">공개</c:when>
-            <c:otherwise><td>${row.oldPosting}</td></c:otherwise>
+            <c:otherwise>${row.oldPosting}</c:otherwise>
         </c:choose>
     </td>
     <td>
         <c:choose>
             <c:when test="${row.newPosting == 1}">비공개</c:when>
             <c:when test="${row.newPosting == 0}">공개</c:when>
-            <c:otherwise><td>${row.newPosting}</td></c:otherwise>
+            <c:otherwise>${row.newPosting}</c:otherwise>
         </c:choose>
     </td>
       </tr>

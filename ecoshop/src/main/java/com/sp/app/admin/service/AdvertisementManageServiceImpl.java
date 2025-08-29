@@ -46,7 +46,7 @@ public class AdvertisementManageServiceImpl implements AdvertisementManageServic
 	@Override
 	public void updateStatus(Map<String, Object> map) throws Exception {
 		try {
-			mapper.updateStatus(null, map);
+			mapper.updateStatus(map);
 		} catch (Exception e) {
 			log.info("updateStatus : ", e);
 			
