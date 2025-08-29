@@ -5,7 +5,7 @@
 
 	<sql id="where-list">
 		( INSTR(subject, #{kwd}) &gt; 0
-		OR INSTR(question, #{kwd}) &gt; 0
+		OR INSTR(m2.name, #{kwd}) &gt; 0
 		OR INSTR(LOWER(categoryName), LOWER(#{kwd})) &gt; 0)
 	</sql>
 

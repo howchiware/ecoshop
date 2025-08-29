@@ -16,13 +16,11 @@ html {
 
 body {
 	background-color: var(--color-bg);
+	color: #363636;
 }
 
 .right-panel {
-	padding: 30px !important;
-}
-
-* {
+	padding: 30px !important; * {
 	font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
 	box-sizing: border-box;
 	color: #363636 !important;
@@ -30,9 +28,7 @@ body {
 
 @font-face {
 	font-family: 'Pretendard-Regular';
-	src:
-		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-		format('woff');
+	src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
 	font-style: normal;
 }
 
@@ -76,7 +72,7 @@ body {
 
 .my-btn {
 	background: #fff;
-	border: 1px solid black !important;
+	border: 1px solid #777 !important;
 	border-radius: 4px;
 	padding: 3px 10px
 }
@@ -138,8 +134,6 @@ body.modal-open {
 	justify-content: center;
 	min-height: 100vh;
 }
-
-
 
 .main-container {
 	display: flex;
@@ -236,7 +230,7 @@ body.modal-open {
 }
 
 .table {
-	border-top: 2px solid var(--color-primary);
+	border-top: 2px solid var(--color-border);
 }
 
 .table thead th {
@@ -276,7 +270,7 @@ body.modal-open {
 .page-navigation {
 	flex-grow: 1;
 	display: flex;
-	justify-content: center; 
+	justify-content: center;
 }
 
 .action-buttons {
@@ -328,51 +322,4 @@ body.modal-open {
 	line-height: 1.5;
 	color: #363636;
 }
-
-
-
-
-
-
-
-
-
-
-
-/* 페이징 */
-.page-navigation {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: 6px;
-	flex-wrap: wrap;
-}
-
-.page-navigation a, .page-navigation strong, .page-navigation span {
-	background: #fff;
-	border-radius: 4px;
-	padding: 3px 10px;
-	color: #363636;
-	font-weight: 500;
-	text-decoration: none;
-	cursor: pointer;
-	transition: all 0.2s ease;
-}
-
-.page-navigation a:hover {
-	background: #e0e0e0;
-	border-color: #999;
-}
-
-.page-navigation .disabled {
-	background: #f8f8f8;
-	border-color: #ddd;
-	color: #aaa;
-	cursor: not-allowed;
-}
-
-.page-navigation strong, .page-navigation span {
-	background: #ccc;
-	border-color: #999;
-	color: #333;
 }

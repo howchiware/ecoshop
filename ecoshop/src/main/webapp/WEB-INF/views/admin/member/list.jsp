@@ -12,7 +12,6 @@
 		</select> <input type="text" id="keyword" name="kwd" value="${kwd}" class="form-control">
 		<button type="button" class="my-btn" onclick="searchList()">조회</button>
 	</div>
-
 </div>
 <span class="dataCount">총 ${dataCount}명(${pageNo}/${total_page} 페이지)</span>
 <div class="col-md-3 text-end">&nbsp;</div>
@@ -58,5 +57,5 @@
 		</c:if>
 	</div>
 <!-- 페이징 -->
-<div class="page-navigation">${dataCount == 0 ? "등록된 자료가 없습니다." : paging}
+<div style="padding-top: 10px;" class="page-navigation">${dataCount == 0 ? "등록된 자료가 없습니다." : paging}
 </div>

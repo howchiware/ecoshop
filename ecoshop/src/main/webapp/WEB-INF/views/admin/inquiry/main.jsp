@@ -10,6 +10,7 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssInquiry/inquiry.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin_paginate.css">
 </head>
 <body>
 

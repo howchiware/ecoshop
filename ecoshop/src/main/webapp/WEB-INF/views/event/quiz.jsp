@@ -78,7 +78,7 @@
         </script>
     </c:when>
     <c:otherwise>
-        </c:otherwise>
+    </c:otherwise>
 </c:choose>
 <script src="${pageContext.request.contextPath}/dist/jsEvent/quiz.js"></script>
 </body>

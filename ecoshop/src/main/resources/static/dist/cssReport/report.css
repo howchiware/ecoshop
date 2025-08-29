@@ -1,6 +1,7 @@
 #reportHandledDialogModal, #postsDialogModal {
 	z-index: 9999;
 }
+
 .modal-backdrop {
 	z-index: 9998 !important;
 }
@@ -112,42 +113,4 @@ textarea.form-control {
 
 .modal {
 	z-index: 9999 !important;
-}
-/* 페이징 */
-.page-navigation {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: 6px;
-	flex-wrap: wrap;
-	margin-bottom: 10px;
-}
-
-.page-navigation a, .page-navigation strong, .page-navigation span {
-	background: #fff;
-	border-radius: 4px;
-	padding: 3px 10px;
-	color: #363636;
-	font-weight: 500;
-	text-decoration: none;
-	cursor: pointer;
-	transition: all 0.2s ease;
-}
-
-.page-navigation a:hover {
-	background: #e0e0e0;
-	border-color: #999;
-}
-
-.page-navigation .disabled {
-	background: #f8f8f8;
-	border-color: #ddd;
-	color: #aaa;
-	cursor: not-allowed;
-}
-
-.page-navigation strong, .page-navigation span {
-	background: #ccc;
-	border-color: #999;
-	color: #333;
 }

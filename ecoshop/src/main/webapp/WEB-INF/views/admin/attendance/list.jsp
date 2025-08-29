@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssAttendance/attendance.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin_paginate.css">
 </head>
 <body>
 
@@ -131,7 +132,7 @@
 					</tbody>
 				</table>
 
-				<div class="page-navigation">${paging}</div>
+				<div style="padding-top: 10px;" class="page-navigation">${paging}</div>
 			</div>
 		</div>
 	</main>

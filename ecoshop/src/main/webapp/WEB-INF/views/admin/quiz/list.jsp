@@ -10,6 +10,7 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssQuiz/quiz.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin_paginate.css">
 </head>
 <body>
 
@@ -110,7 +111,6 @@
 		</div>
 	</main>
 
-<script src="${pageContext.request.contextPath}/dist/jsInquiry/inquiry.js"></script>
-	
+
 </body>
 </html>

@@ -10,20 +10,20 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssAdmin/member.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin_paginate.css">
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
-<jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp"/>
 <main class="main-container">
   <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
 
-  <div class="container">
+  <div class="right-panel">
   	<div class="title">
 		<h3>회원 | 직원 관리</h3>
 	</div>
 	<hr>
   
-    <div class="row">
+    <div class="board-container row">
       <div class="col">
         
         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -69,6 +69,7 @@
 
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
 $(function(){

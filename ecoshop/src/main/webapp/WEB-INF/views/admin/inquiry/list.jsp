@@ -52,6 +52,6 @@
     </tbody>
 </table>
 
-<div class="page-navigation">
+<div style="padding-top: 20px;" class="page-navigation">
   ${dataCount == 0 ? "" : paging}
 </div>

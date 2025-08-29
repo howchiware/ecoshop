@@ -41,7 +41,7 @@
 	</tbody>					
 </table>
 
-<div class="page-navigation">
+<div style="padding: 20px;" class="page-navigation">
 	${dataCount == 0 ? "등록된 자료가 없습니다." : paging}
 </div>
 		
