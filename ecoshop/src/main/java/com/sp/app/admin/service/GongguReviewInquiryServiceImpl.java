@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sp.app.admin.mapper.GongguReviewInquiryManageMapper;
 import com.sp.app.admin.model.GongguInquiryManage;

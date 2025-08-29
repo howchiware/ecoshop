@@ -26,7 +26,7 @@ public interface GongguManageMapper {
 	public GongguManage findByCategory(long categoryId);
 	public List<GongguManage> listCategory();
 	
-	// 공동구매 사진 관련 메서드 이름 변경
+	// 공동구매 사진
 	public void insertGongguProductPhoto(GongguManage dto) throws SQLException;
 	public List<GongguManage> listGongguProductPhoto(long gongguProductId);
 	public void deleteGongguProductPhoto(long gongguProductId) throws SQLException;
@@ -42,7 +42,7 @@ public interface GongguManageMapper {
 	public void updateOnlyOriginalPrice(Map<String, Object> map);
 	public GongguPackageManage findPacById(long packageNum);
 	
-	// 공동구매 배송정책 관련 메서드 이름 변경
+	// 공동구매 배송정책 
 	public GongguProductDeliveryRefundInfoManage listGongguDeliveryRefundInfo();
 	public List<GongguProductDeliveryRefundInfoManage> listGongguDeliveryFee();
 	public void insertGongguDeliveryFee(Map<String, Object> map);

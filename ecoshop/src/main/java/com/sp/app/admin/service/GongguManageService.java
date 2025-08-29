@@ -8,7 +8,6 @@ import com.sp.app.admin.model.GongguManage;
 import com.sp.app.admin.model.GongguPackageManage;
 import com.sp.app.admin.model.GongguProductDeliveryRefundInfoManage;
 import com.sp.app.admin.model.ProductManage;
-import com.sp.app.model.GongguProductDeliveryRefundInfo;
 
 public interface GongguManageService {
 	// 공동구매 상품등록

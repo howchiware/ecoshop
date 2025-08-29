@@ -9,7 +9,7 @@
 			<h5 class="nav-section-title">마이쇼핑</h5>
 			<ul class="list-unstyled">
 				<li><a href="${pageContext.request.contextPath}/productsOrder/paymentList">온라인샵 주문/배송 내역</a></li>
-				<li><a href="${pageContext.request.contextPath}/">공동구매 주문/배송 내역</a></li>
+				<li><a href="${pageContext.request.contextPath}/gongguOrder/gongguPayment">공동구매 주문/배송 내역</a></li>
 				<li><a href="${pageContext.request.contextPath}/review/review" data-view="reviewNInquiry">상품 리뷰/문의</a></li>
 				<li><a href="${pageContext.request.contextPath}/myShopping/productLike" data-view="likes">찜한 상품</a></li>
 				<li><a href="${pageContext.request.contextPath}/myShopping/recentProduct" data-view="recentView">최근 본 상품</a></li>
