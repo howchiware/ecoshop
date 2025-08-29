@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css_product/productReview.css">
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css_product/productAdminInquiry.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/paginate.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin_paginate.css">
 
 </head>
 <body>

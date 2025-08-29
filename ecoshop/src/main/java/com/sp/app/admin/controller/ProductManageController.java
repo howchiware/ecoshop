@@ -492,8 +492,8 @@ public class ProductManageController {
 		        	}
 		        }
 	        }
-	        
-	        String paging = paginateUtil.pagingMethod(current_page, total_page, "listReview");
+
+	        String paging = paginateUtil.pagingFunc(current_page, total_page, "listReview");
 	        
 	        model.addAttribute("reviewList", reviewList);
 	        model.addAttribute("productName", productName);
@@ -557,7 +557,7 @@ public class ProductManageController {
 		        }
 	        }
 	        
-	        String paging = paginateUtil.pagingMethod(current_page, total_page, "listInquiry");
+	        String paging = paginateUtil.pagingFunc(current_page, total_page, "listInquiry");
 	        
 	        model.addAttribute("inquiryList", inquiryList);
 	        model.addAttribute("productName", productName);

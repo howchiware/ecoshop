@@ -57,7 +57,7 @@
 										<div class="reviewDetailContent">
 											<p class="content">${dto.content}</p>
 										</div>
-										<div class="">
+										<div class="border-bottom " style="padding-left: 50px; padding-bottom: 10px;">
 											<c:if test="${not empty dto.listReviewImg}">
 												<div class="row gx-1 mt-2 mb-1 p-1">
 													<c:forEach var="vo" items="${dto.listReviewImg}">
@@ -70,7 +70,6 @@
 									    </div>
 										<c:choose>
 											<c:when test="${dto.status eq 1}">
-												<hr class="reviewDivider">
 												<div class="reviewDetailAnswer">
 													<img src="/dist/images/person.png" class="answer-icon">
 													<div class="reviewDetailNDC">

@@ -79,7 +79,6 @@ font-weight: 500;
 }
 
 .search-list tbody, td, tfoot, th, thead, tr {
-  border-color: black;
   border-style: solid;
   border-width: 0;
 }
@@ -95,9 +94,19 @@ select, input {
 
 button {
 	background: #fff;
-	border: 1px solid black;
+	border: 1px solid #777;
 	color: black;
-	padding: 3px;
+	padding: 3px 6px;
+}
+
+.btn-default {
+	transition: color 0.3s ease-in-out,
+	border 0.3s ease-in-out;
+}
+
+.btn-default:hover {
+	color: #b3b4b5;
+  	border: 1px solid #b3b4b5 !important;
 }
 
 .btn-area {

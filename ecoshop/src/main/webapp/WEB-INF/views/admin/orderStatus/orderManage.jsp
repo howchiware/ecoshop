@@ -15,7 +15,7 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/board.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/paginate.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin_paginate.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/dist/vendor/jquery/js/jquery.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
 <style type="text/css">
@@ -90,14 +90,24 @@ select, input {
 
 button {
 	background: #fff;
-	border: 1px solid black;
+	border: 1px solid #777;
 	color: black;
 	padding: 3px;
 }
 
+.btn-default {
+	transition: color 0.3s ease-in-out,
+	border 0.3s ease-in-out;
+}
+
+.btn-default:hover {
+	color: #b3b4b5;
+  	border: 1px solid #b3b4b5 !important;
+}
+
 .btn-area {
-margin-top: 30px;
-text-align: center;
+	margin-top: 30px;
+	text-align: center;
 }
 
 .btn-accent {
@@ -105,6 +115,24 @@ text-align: center;
 	border: none;
 	color: black; 
 }
+
+.board-list {
+	margin-bottom: 50px !important;	
+}
+
+.board-list tr > th {
+	border-top: 1px solid #dee2e6;	
+}
+
+.hover-cursor {
+	cursor: pointer;
+}
+
+.btn-default {
+	padding: 3px 6px;
+	border: 1px solid #777;
+}
+
 
 </style>
 </head>
@@ -124,7 +152,7 @@ text-align: center;
 		<hr>
 
 		<div class="outside">
-			<div class="section p-5" data-aos="fade-up" data-aos-delay="200" style="padding-top:0px">
+			<div class="section" data-aos="fade-up" data-aos-delay="200" style="padding-top:0px">
 				<div class="section-body p-5">
 					<div class="row gy-4 m-0">
 						<div class="col-lg-12 p-2 m-2" data-aos="fade-up" data-aos-delay="200">
@@ -174,11 +202,8 @@ text-align: center;
 								${dataCount==0 ? "등록된 주문정보가 없습니다." : paging}
 							</div>
 							
-							<div class="row mt-3">
-								<div class="col-md-3">
-									<button type="button" class="btn-default" onclick="location.href='${pageContext.request.contextPath}/admin/order/orderManage/${itemId}';" title="새로고침"><i class="bi bi-arrow-clockwise"></i></button>
-								</div>
-								<div class="col-md-6 text-center">
+							<div class="row mt-5">
+								<div class="text-center">
 									<form name="searchForm" class="form-search">
 										<select name="schType">
 											<option value="orderId" ${schType=="orderId"?"selected":""}>주문번호</option>
@@ -188,7 +213,8 @@ text-align: center;
 											<option value="name" ${schType=="name"?"selected":""}>주문자</option>
 											<option value="orderDate" ${schType=="orderDate"?"selected":""}>주문일자</option>
 										</select>
-										<input type="text" name="kwd" value="${kwd}">
+										<input type="text" name="kwd" value="${kwd}" style="padding: 2px;">
+										<button type="button" class="btn-default" onclick="location.href='${pageContext.request.contextPath}/admin/order/orderManage/${itemId}';" title="새로고침"><i class="bi bi-arrow-clockwise"></i></button>
 										<button type="button" class="btn-default" onclick="searchList();"><i class="bi bi-search"></i></button>
 									</form>
 								</div>

@@ -65,10 +65,10 @@ select, input {
 }
 
 button {
-	background: #fff;
-	border: 1px solid black;
-	color: black;
-	padding: 3px;
+	background: #fff; 
+	border: 1px solid #777; 
+	border-radius: 4px; 
+	padding: 3px 10px;
 }
 
 .btn-area {
@@ -102,11 +102,12 @@ text-align: center;
 .input-table td:first-child {
 	width: 150px;
 	text-align: center;
-	background: #F8F9FA;
+	background: #fcfcfc;
 }
 
 .category-input {
 	margin: 4px 7px;
+	border: 1px solid #cecece;
 }
 
 .addCategory {
@@ -115,7 +116,17 @@ text-align: center;
 }
 
 .addCategoryBtn {
-	padding: 3px 13px;
+	background: #fff;
+	border: 1px solid #777;
+	border-radius: 4px !important;
+	padding: 3px 10px;
+	transition: color 0.3s ease-in-out,
+				border 0.3s ease-in-out;
+}
+
+.addCategoryBtn:hover {
+	color: #b3b4b5;
+  	border: 1px solid #b3b4b5 !important;
 }
 
 .hr-vertical {
@@ -139,6 +150,14 @@ text-align: center;
 	font-size: 20px;
 }
 
+.span-icon:hover {
+	cursor: pointer !important;
+}
+
+.form-control:disabled, .form-select:disabled {
+	background: #f5f5f5 !important;
+	opacity: 1;
+}
 
 </style>
 </head>
@@ -207,7 +226,7 @@ text-align: center;
 								
 								<div class="input-area">
 									<table class="table table-bordered input-table2" style="width: 550px;">
-										<thead class="table-light">
+										<thead style="background: #fcfcfc;">
 											<tr align="center">
 												<th width="170">카테고리</th>
 												<th width="120">활성화 여부</th>

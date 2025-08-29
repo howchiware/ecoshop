@@ -28,6 +28,7 @@ body {
 	background-color: #fff;
 	border-radius: 8px;
 	padding: 20px;
+	padding-bottom: 30px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
@@ -105,7 +106,7 @@ body {
   .review-detailInfo{text-align: left; padding: 0px 50px;}
   
   .reviewDetailHeader{display: inline-flex; align-items: center;}
-  .reviewDetailAnswer{display: inline-flex; align-items: top; margin-top: 10px}
+  .reviewDetailAnswer{display: inline-flex; align-items: top; margin-top: 10px; margin-left: 10px;}
   
   p.reviewDetailName{margin: 5px; font-size: 11px;  text-align: left; color: black;}
   p.reviewDetailDate{margin: 5px; font-size: 11px;  text-align: left; padding-left: 5px;}  
@@ -116,15 +117,89 @@ body {
   div.reviewDetailTD{display: inline-flex;}
   div.reviewDetailAnswerND{display: inline-flex; font-size: 11px;}
   div.reviewDetailAnswerContent{font-size: 11px;}
-  div.reviewDetailContent{padding: 15px 10px;}
+  div.reviewDetailContent{padding: 10px 50px;}
   
   hr.reviewDivider{margin: 5px 0px;}
-
-
 
 .reviewImg {
 	width: 150px;
     height: 150px;
     cursor: pointer;
     object-fit: cover;
+}
+
+.btn-outline-secondary {
+	border: 1px solid #d6d6d6 !important;
+	border-radius: 0px !important;
+}
+
+.board-list {
+	margin-bottom: 50px !important;
+}
+
+button {
+	background: #fff;
+	border: 1px solid #777;
+	color: black;
+	padding: 3px 6px;
+	border-radius: 4px !important;
+}
+
+.small-btn {
+	transition: color 0.3s ease-in-out,
+	border 0.3s ease-in-out;
+}
+
+.deleteReview:hover, .reviewRemoveAnswer:hover, .deleteInquiry:hover, .removeAnswer:hover {
+	color: red;
+  	border: 1px solid red !important;
+}
+
+.reviewUpdateAnswer:hover {
+	color: #b3b4b5;
+  	border: 1px solid #b3b4b5 !important;
+}
+
+
+.reviewAddAnswer, .addAnswer {
+  /*background: linear-gradient(to bottom, #efeeee, #dcdcdc);*/
+  background: #efeeee;
+  border: none;
+  transition: background 0.3s ease-in-out;
+  /*box-shadow: 3px 3px 6px #b8b8b8,
+              -3px -3px 6px #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;*/
+}
+
+.reviewAddAnswer:hover, .addAnswer:hover {
+	background: #b3b4b5;
+}
+
+.reviewDetailAnswerAdd {
+	display: flex;
+	align-items: flex-start;
+	padding: 10px;
+}
+
+.answerTA {
+	border: 1px solid #777;
+	margin-right: 10px;
+	width: 500px;
+	height: 100px;
+}
+
+.reviewDetailName, .reviewDetailDate, .reviewDetailAnswerName, .reviewDetailAnswerDate {
+	font-size: 13px !important;
+}
+
+.review-detailInfo {
+	margin: 10px !important;
+	padding: 10px !important;
+	border: 1px solid #dee2e6;
+	border-radius: 5px;
+}
+
+.answerP {
+	font-size: 13px !important;
 }
