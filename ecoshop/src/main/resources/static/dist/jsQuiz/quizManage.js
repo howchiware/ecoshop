@@ -34,6 +34,6 @@ function isValidDateString(dateString) {
 	        return;
 	    }
 	    
-	    f.action = CONTEXT_PATH + '/admin/quiz/${mode}';
+	    f.action = CONTEXT_PATH + '/admin/quiz/' + MODE;
 	    f.submit();
 	} 

@@ -20,6 +20,7 @@
 			<div class="page-title">
 			    <h3>퀴즈 상세 정보</h3>
 			</div>
+			<hr>
 
             <div class="content">
                 <div class="quiz-card">

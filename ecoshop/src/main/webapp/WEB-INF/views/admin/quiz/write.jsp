@@ -19,8 +19,8 @@
         <div class="right-panel">
 			<div class="page-title">
 			    <h3>${mode == "update" ? "오늘의 퀴즈 수정" : "오늘의 퀴즈 등록"}</h3>
-
 			</div>
+			<hr>
 
             <div class="content">
                 <form name="quizForm" method="post">
@@ -85,6 +85,7 @@
 	
 	<script type="text/javascript">
 		const CONTEXT_PATH = '${pageContext.request.contextPath}';
+		const MODE = '${mode}';
 	</script>
 	<script src="${pageContext.request.contextPath}/dist/jsQuiz/quizManage.js"></script>
 
