@@ -85,7 +85,6 @@ public class ChallengeController {
 				statusMap.put(s.getChallengeId(), st);
 			}
 
-			// 로그인 여부 + 오늘 데일리 참여여부
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
 			boolean isLogin = (info != null);
 			boolean alreadyDailyJoined = false;
@@ -95,7 +94,7 @@ public class ChallengeController {
 			model.addAttribute("isLogin", isLogin);
 			model.addAttribute("alreadyDailyJoined", alreadyDailyJoined);
 
-			// 내가 참가중인 챌린지 ID
+			
 			java.util.List<Long> activeIdList = java.util.List.of();
 			if (isLogin) {
 				java.util.Set<Long> set = new java.util.HashSet<>();
@@ -208,10 +207,7 @@ public class ChallengeController {
 			dto.setMemberId(info.getMemberId());
 			dto.setChallengeType("DAILY");
 
-			// 서비스 내부에서:
-			// - 오늘 요일 검증(해당 요일 아니면 IllegalStateException)
-			// - 당일 중복 참여 검증(중복이면 IllegalStateException)
-			// - 저장 및 포인트 지급
+			
 			service.submitDailyChallenge(dto, photoFile);
 
 			reAttr.addFlashAttribute("message", "챌린지 참여가 완료되었습니다. 포인트가 지급됩니다.");
@@ -226,7 +222,7 @@ public class ChallengeController {
 		return "redirect:/challenge/list";
 	}
 
-	// 스페셜 챌린지 참가 페이지 (GET) — 1일차 기본
+	// 스페셜 챌린지 참가) — 1일차 기본
 	@GetMapping("join/special/{challengeId}")
 	public String specialJoinForm(@PathVariable("challengeId") long challengeId,
 			@RequestParam(name = "day", required = false, defaultValue = "1") Integer day, Model model,
@@ -270,7 +266,7 @@ public class ChallengeController {
 
 			reAttr.addFlashAttribute("message", dayNumber + "일차 인증이 등록되었습니다. 관리자 승인을 기다려주세요.");
 		} catch (IllegalStateException ie) {
-			reAttr.addFlashAttribute("message", ie.getMessage()); // ← "챌린지 기간이 아닙니다."
+			reAttr.addFlashAttribute("message", ie.getMessage());
 		} catch (Exception e) {
 			reAttr.addFlashAttribute("message", "스페셜 챌린지 제출에 실패했습니다. 다시 시도해주세요.");
 		}
@@ -422,7 +418,7 @@ public class ChallengeController {
 	    int idx0to6 = java.time.LocalDate.now().getDayOfWeek().getValue() % 7; // 0:일 ~ 6:토
 	    Challenge today = service.getDailyByWeekday(idx0to6);
 
-	    // 당신말대로 매일 요일별 챌린지가 있으니 null일 가능성은 거의 없지만, 방어 로직
+	   
 	    if (today == null || today.getChallengeId() == null) {
 	        return "redirect:/challenge/list?weekday=" + idx0to6;
 	    }
