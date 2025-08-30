@@ -31,8 +31,8 @@ body {
 }
 
 .review-item {
-  padding-top: 2px;   /* 위쪽만 줄이기 */
-  padding-right: 0;   /* 다른 방향은 그대로 두려면 생략 가능 */
+  padding-top: 2px;   
+  padding-right: 0;  
   padding-bottom: 0;
   padding-left: 0;
 }
@@ -85,16 +85,15 @@ body {
 }
 
 .accordion-button:focus {
-    box-shadow: none;   /* 파란 그림자 제거 */
-    outline: none;      /* 외곽선 제거 */
+    box-shadow: none;   
+    outline: none;     
 }
 
 .accordion-button:not(.collapsed) {
-    background-color: #f8f9fa; /* 원하는 배경색 */
-    color: #212529;            /* 글자 색 */
+    background-color: #f8f9fa; 
+    color: #212529;           
 }
 
-/* 포커스 시 파란색 제거 */
 .accordion-button:focus {
     box-shadow: none;
     outline: none;
@@ -113,7 +112,7 @@ body {
 }
 
 #faq .mark-a {
-	color: #198754;
+	color: #212529;
     font-weight: 600;
     margin-right: 0.5rem;
 }
@@ -202,7 +201,7 @@ body {
 }
 
 .btn-apply:hover {
-    background-color: #27473a; /* 호버 시 색상 */
+    background-color: #27473a;
     border-color: #27473a;
 }
 
@@ -211,3 +210,46 @@ body {
 	height: 48px;
 	margin-top: .75rem;
 }
+
+/* 하얀 카드 래퍼 */
+.detail-card{
+  background:#fff;
+  border:1px solid #e9ecef;
+  border-radius:16px;
+  padding:20px 20px 16px;
+  box-shadow:0 8px 24px rgba(0,0,0,.06);
+}
+
+/* 데스크톱에서 상단 고정(원하면 top 값 조정) */
+@media (min-width: 992px){
+  .detail-card{ top:88px; }
+}
+
+
+/* 패널 자체 좌측 패딩/폭 정리(카드가 패딩을 갖게) */
+.detail-card .simple-panel{
+  width:auto;
+  max-width:none;
+  padding-left:0;
+  margin-left:0;
+}
+
+/* 카드 안 타이틀/액션 리듬 보정 */
+.detail-card .simple-title{ border-top:0; padding-top:0; margin:0 0 1.5rem; }
+.detail-card .simple-actions{
+  margin-top:1.5rem;
+  padding-top:1rem;
+  border-top:1px solid #e9ecef;
+}
+
+/* 버튼 위로 뜨던 마진/색 충돌 정리 */
+.simple-actions .btn{ margin-top:0; height:48px; font-weight:700; }
+.simple-actions .btn.btn-dark{
+  background:#315e4e !important; border-color:#111 !important; color:#fff !important;
+}
+.simple-actions .btn.btn-secondary{
+  background:#adb5bd !important; border-color:#adb5bd !important; color:#fff !important;
+}
+.simple-actions .btn:disabled{ opacity:1; cursor:default; }
+
+

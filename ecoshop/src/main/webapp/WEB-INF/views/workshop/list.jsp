@@ -72,13 +72,21 @@
 	width: 11rem;
 }
 
-label[for="onlyRecruiting"] {
-	
-}
-
 .form-select {
 	margin-right: 4px;
 }
+
+.page-subtitle{
+  margin-top:.5rem;
+  color:#6c757d;     
+  font-size:.9rem;
+  line-height:1.45;
+  max-width:720px;   
+}
+@media (max-width:576px){
+  .page-subtitle{ font-size:.9rem; }
+}
+
 </style>
 </head>
 <body>
@@ -90,8 +98,10 @@ label[for="onlyRecruiting"] {
 	<header class="border-bottom">
 		<div class="container py-3">
 			<h4 class="m-0" style="font-size: 22px;">워크샵</h4>
+			<p class="page-subtitle mb-0">지속 가능한 일상을 위한 로컬 체험·라이프스타일 클래스를 한곳에 모아, 누구나 간편하게 신청하고 참여할 수 있어요.</p>
 		</div>
 	</header>
+
 
 	<main class="container py-4">
 		<c:url var="defaultImg" value="/dist/images/noimage.png" />

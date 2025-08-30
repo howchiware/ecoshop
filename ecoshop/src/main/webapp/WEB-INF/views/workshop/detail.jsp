@@ -52,7 +52,8 @@
 					class="workshop-main-img"
 					onerror="if(this.src.indexOf('noimage.png')===-1)this.src='${pageContext.request.contextPath}/dist/images/noimage.png'">
 			</div>
-			<div class="col-md-5">
+			<div class="col-md-5 ps-md-4">
+			<div class="detail-card">
 				<div class="simple-panel">
 
 					<h2 class="simple-title">
@@ -130,6 +131,7 @@
 				</div>
 			</div>
 		</div>
+	</div>
 
 
 		<ul class="nav nav-tabs nav-justified mt-3" id="workshopTabs"

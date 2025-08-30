@@ -102,15 +102,20 @@
       <a href="#"> 프로그램 관리 > </a>
       <ul class="submenu">
       	<li><a href="/admin/workshop/category/manage"> 카테고리 관리 </a></li>
-      	<li><a href="/admin/workshop/program/list"> 프로그램 관리 </a></li>
+      	<li><a href="/admin/workshop/program/list"> 프로그램 등록  </a></li>
       </ul>
     </li>
     <li>
-      <a href="#"> 워크샵 운영 > </a>
+      <a href="#"> 운영 관리 > </a>
       <ul class="submenu">
-        <li><a href="/admin/workshop/manager/list"> 담당자 관리</a></li>
         <li><a href="/admin/workshop/list"> 워크샵 관리</a></li>
+        <li><a href="/admin/workshop/manager/list"> 담당자 관리</a></li>
         <li><a href="/admin/workshop/participant/list"> 참여자 관리</a></li>
+      </ul>
+   </li>
+   <li>
+      <a href="#"> 운영 지원 > </a>
+      <ul class="submenu">
         <li><a href="/admin/workshop/faq/manage"> FAQ 관리</a></li>
         <li><a href="/admin/workshop/points"> 포인트 지급</a></li>
       </ul>
