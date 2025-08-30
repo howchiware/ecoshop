@@ -93,7 +93,7 @@ public class GongguOrderController {
 			// 배송비
 			List<GongguProductDeliveryRefundInfo> listDeliveryFee = gongguService.listDeliveryFee();	
 			if(!listDeliveryFee.isEmpty()) {
-                deliveryCharge = totalAmount >= 30000 ? 0 : listDeliveryFee.get(0).getDeliveryFee();
+                deliveryCharge = listDeliveryFee.get(0).getDeliveryFee();
            }
 
 			// 결제할 금액(상품 총금액 + 배송비)

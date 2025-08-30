@@ -62,7 +62,7 @@
 							<div class="row gx-1 mt-2 p-1">
 								<c:forEach var="vo" items="${listPhoto}">
 									<div class="col-md-auto sm-img">
-										<img class="border rounded" src="${pageContext.request.contextPath}/uploads/gonggu/${vo.photoName}">
+										<img class="border rounded" src="${pageContext.request.contextPath}/uploads/gonggu/${vo.detailPhoto}">
 									</div>
 								</c:forEach>
 							</div>
@@ -102,20 +102,9 @@
 											<tr>
 												<td>배송비</td>
 												<td>
-													<c:choose>
-														<c:when test="${!empty deliveryFeeList}">
-															<c:forEach var="fee" items="${deliveryFeeList}" varStatus="status">
-																<fmt:formatNumber value="${fee.deliveryFee}"/>원
-																<c:if test="${fee.deliveryLocation != null && fee.deliveryLocation != ''}">
-																	(${fee.deliveryLocation})
-																</c:if>
-																<br>
-															</c:forEach>
-														</c:when>
-														<c:otherwise>
-															배송비 정보 없음
-														</c:otherwise>
-													</c:choose>
+													<c:forEach var="vo" items="${deliveryFee}">
+														${vo.deliveryLocation} : ${vo.deliveryFee}원<br>
+													</c:forEach>
 												</td>
 											<tr>
 												<td><span class="fw-semibold text-primary">${participantCount}명 참여 / ${limitCount}명</span></td>

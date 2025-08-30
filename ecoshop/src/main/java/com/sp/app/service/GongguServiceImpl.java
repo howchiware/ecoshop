@@ -159,6 +159,45 @@ public class GongguServiceImpl implements GongguService {
     public String findDetailInfoById(long gongguProductId) throws Exception {
         return gongguMapper.findDetailInfoById(gongguProductId);
     }
+    
+    @Override
+	public List<GongguProduct> listAllProducts() throws Exception {
+		List<GongguProduct> list = null;
+		try {
+			list = gongguMapper.listAllProducts();
+			
+		} catch (Exception e) {
+			log.info("listAllProducts :", e);
+		}
+		
+		return list;
+	}
+	
+	@Override
+	public List<GongguProduct> listFiveProducts() throws Exception {
+		List<GongguProduct> list = null;
+		try {
+			list = gongguMapper.listFiveProducts();
+			
+		} catch (Exception e) {
+			log.info("listFiveProducts :", e);
+		}
+		
+		return list;
+	}
+	
+	@Override
+	public List<GongguProduct> listTwoProducts() throws Exception {
+		List<GongguProduct> list = null;
+		try {
+			list = gongguMapper.listTwoProducts();
+			
+		} catch (Exception e) {
+			log.info("listThreeProducts :", e);
+		}
+		
+		return list;
+	}
 
 
 }

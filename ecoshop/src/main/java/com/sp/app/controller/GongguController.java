@@ -20,7 +20,6 @@ import com.sp.app.model.GongguOrder;
 import com.sp.app.model.GongguProduct;
 import com.sp.app.model.GongguProductDeliveryRefundInfo;
 import com.sp.app.model.GongguReview;
-import com.sp.app.model.ProductReview;
 import com.sp.app.model.SessionInfo;
 import com.sp.app.service.GongguProductReviewService;
 import com.sp.app.service.GongguService;
@@ -101,7 +100,14 @@ public class GongguController {
 			model.addAttribute("size", size);
 			model.addAttribute("total_page", total_page);
 			model.addAttribute("paging", paging);
-
+			
+			if (! listCategory.isEmpty()) {
+		        List<GongguProduct> listProduct = gongguService.listAllProducts();
+		        List<GongguProduct> listFiveProduct = gongguService.listFiveProducts();
+		        
+		        model.addAttribute("listProduct", listProduct);
+		        model.addAttribute("listFiveProduct", listFiveProduct);
+		    }
 		} catch (Exception e) {
 			log.error("gongguList: ", e);
 			throw e;

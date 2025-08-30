@@ -2,240 +2,258 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.mapper.GongguMapper">
 	<select id="listGongguProducts" parameterType="map" resultType="com.sp.app.model.GongguProduct">
-	    SELECT
-	        g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
-	        g.startDate, g.endDate, g.limitCount, g.regDate,
-	        g.originalPrice, g.sale, g.productShow, g.content, 
-	        g.categoryId,
-	        cm.categoryName,
-	        NVL(COUNT(DISTINCT gpl.memberId), 0) AS likeCount,
-	        NVL(COUNT(DISTINCT gr.gongguOrderDetailId), 0) AS reviewCount,
-	        NVL(AVG(gr.rate), 0) AS rate,
-            (g.originalPrice - (g.originalPrice * g.sale / 100)) AS gongguPrice,
-	        <if test="memberId != null">
-	        	(SELECT COUNT(gpl2.memberId) FROM gongguProductLike gpl2 WHERE gpl2.gongguProductId = g.gongguProductId AND gpl2.memberId = #{memberId}) AS userWish
-	        </if>
-	        <if test="memberId == null">
-	        	0 AS userWish
-	        </if>
-	    FROM gongguProduct g
-	    LEFT JOIN productCategory cm ON g.categoryId = cm.categoryId
-	    LEFT JOIN gongguProductLike gpl ON g.gongguProductId = gpl.gongguProductId
-	    LEFT JOIN gongguReview gr ON g.gongguProductId = gr.gongguProductId
-	    WHERE g.productShow = 1
-	    <if test="categoryId != null and categoryId != 0">
-	        AND g.categoryId = #{categoryId}
-	    </if>
-	    GROUP BY g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
-	        g.startDate, g.endDate, g.limitCount, g.regDate,
-	        g.originalPrice, g.sale, g.productShow, g.categoryId,
-	        g.content, 
-	        cm.categoryName
-	    ORDER BY
-	        <choose>
-	            <when test="sortBy == 1">likeCount DESC</when>
-	            <when test="sortBy == 2">reviewCount DESC</when>
-	            <when test="sortBy == 3">endDate ASC</when>
-	            <otherwise>g.regDate DESC</otherwise>
-	        </choose>
-	    <if test="offset != null and size != null">
-	        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
-	    </if>
-	</select>
-	
-	<select id="listPackageByCategoryId" parameterType="Long" resultType="com.sp.app.model.GongguProduct">
-	    SELECT
-	        g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
-	        g.startDate, g.endDate, g.limitCount, g.regDate,
-	        g.sale, g.productShow, g.categoryId,
-	        NVL(SUM(p.price), 0) AS originalPrice
-	    FROM gongguProduct g
-	    LEFT OUTER JOIN gongguPackage p ON g.gongguProductId = p.gongguProductId
-	    WHERE g.categoryId = #{categoryId} AND g.productShow = 1
-	    GROUP BY g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
-	        g.startDate, g.endDate, g.limitCount, g.regDate,
-	        g.sale, g.productShow, g.categoryId
-	</select>
-	
-    <select id="dataCount" parameterType="map" resultType="int">
-        SELECT COUNT(gongguProductId)
-        FROM gongguProduct
-        WHERE productShow = 1
-        <if test="categoryId != null and categoryId != 0">
-            AND categoryId = #{categoryId}
-        </if>
-    </select>
-
-	<select id="findById" parameterType="map" resultType="com.sp.app.model.GongguProduct">
-    SELECT
-        g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
-        g.originalPrice, g.sale, g.content, g.limitCount, g.regDate, g.updateDate, g.productShow,
-        g.startDate, g.endDate,
-        (g.originalPrice - (g.originalPrice * g.sale / 100)) AS gongguPrice,
-        cm.categoryName,
-        NVL(COUNT(DISTINCT gpl.memberId), 0) AS likeCount,
-        NVL(AVG(gr.rate), 0) AS rate,
-        <if test="memberId != null">
-            (SELECT COUNT(gpl2.memberId) FROM gongguProductLike gpl2 WHERE gpl2.gongguProductId = g.gongguProductId AND gpl2.memberId = #{memberId}) AS userWish
-        </if>
-        <if test="memberId == null">
-            0 AS userWish
-        </if>
-	    FROM gongguProduct g
-	    LEFT JOIN productCategory cm ON g.categoryId = cm.categoryId
-	    LEFT JOIN gongguProductLike gpl ON g.gongguProductId = gpl.gongguProductId
-	    LEFT JOIN gongguReview gr ON g.gongguProductId = gr.gongguProductId
-	    WHERE g.gongguProductId = #{gongguProductId}
-	    GROUP BY g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
-	        g.startDate, g.endDate, g.limitCount, g.regDate,
-	        g.originalPrice, g.sale, g.productShow, g.categoryId,
-	        g.content,
-	        cm.categoryName, g.updateDate
+		SELECT g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
+		g.startDate, g.endDate, g.limitCount, g.regDate,
+		g.originalPrice, g.sale, g.productShow, g.content,
+		g.categoryId,
+		cm.categoryName,
+		NVL(COUNT(DISTINCT gpl.memberId), 0) AS likeCount,
+		NVL(COUNT(DISTINCT gr.gongguOrderDetailId), 0) AS reviewCount,
+		NVL(AVG(gr.rate), 0) AS rate,
+		(g.originalPrice - (g.originalPrice * g.sale / 100)) AS gongguPrice,
+		<if test="memberId != null">
+			(SELECT COUNT(gpl2.memberId) FROM gongguProductLike gpl2 WHERE
+			gpl2.gongguProductId = g.gongguProductId AND gpl2.memberId =
+			#{memberId}) AS userWish
+		</if>
+		<if test="memberId == null">
+			0 AS userWish
+		</if>
+		FROM gongguProduct g
+		LEFT JOIN productCategory cm ON g.categoryId = cm.categoryId
+		LEFT JOIN gongguProductLike gpl ON g.gongguProductId = gpl.gongguProductId
+		LEFT JOIN gongguReview gr ON g.gongguProductId = gr.gongguProductId
+		WHERE g.productShow = 1
+		<if test="categoryId != null and categoryId != 0">
+			AND g.categoryId = #{categoryId}
+		</if>
+		GROUP BY g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
+		g.startDate, g.endDate, g.limitCount, g.regDate,
+		g.originalPrice, g.sale, g.productShow, g.categoryId,
+		g.content,
+		cm.categoryName
+		ORDER BY
+		<choose>
+			<when test="sortBy == 1">likeCount DESC</when>
+			<when test="sortBy == 2">reviewCount DESC</when>
+			<when test="sortBy == 3">endDate ASC</when>
+			<otherwise>g.regDate DESC</otherwise>
+		</choose>
+		<if test="offset != null and size != null">
+			OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+		</if>
 	</select>
 
-	<select id="findDetailInfoById" parameterType="long" resultType="string">
-    	SELECT detailInfo 
-    	FROM gongguProduct 
-    	WHERE gongguProductId = #{gongguProductId}
+	<select id="listPackageByCategoryId" parameterType="Long"
+		resultType="com.sp.app.model.GongguProduct">
+		SELECT
+		g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
+		g.startDate, g.endDate, g.limitCount, g.regDate,
+		g.sale, g.productShow, g.categoryId,
+		NVL(SUM(p.price), 0) AS originalPrice
+		FROM gongguProduct g
+		LEFT OUTER JOIN gongguPackage p ON g.gongguProductId = p.gongguProductId
+		WHERE g.categoryId = #{categoryId} AND g.productShow = 1
+		GROUP BY g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
+		g.startDate, g.endDate, g.limitCount, g.regDate,
+		g.sale, g.productShow, g.categoryId
 	</select>
 
-    <select id="listGongguProductPhoto" parameterType="Long" resultType="com.sp.app.model.GongguProduct">
-        SELECT
-            gongguProductDetailId,
-            gongguProductId,
-            detailPhoto
-        FROM gongguProductDetail
-        WHERE gongguProductId = #{gongguProductId}
-    </select>
-    
-	<select id="listDeliveryRefundInfo" resultType="com.sp.app.model.GongguProductDeliveryRefundInfo">
-	    SELECT deliveryInfo, refundInfo
-	    FROM gongguDeliveryRefundInfo
+	<select id="dataCount" parameterType="map" resultType="int">
+		SELECT COUNT(gongguProductId)
+		FROM gongguProduct
+		WHERE productShow = 1
+		<if test="categoryId != null and categoryId != 0">
+			AND categoryId = #{categoryId}
+		</if>
 	</select>
 
-	<select id="listDeliveryFee" resultType="com.sp.app.model.GongguProductDeliveryRefundInfo">
-	    SELECT fee AS deliveryFee, deliveryLocation
-	    FROM gongguDeliveryFee
+	<select id="findById" parameterType="map"
+		resultType="com.sp.app.model.GongguProduct">
+		SELECT
+		g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
+		g.originalPrice, g.sale, g.content, g.limitCount, g.regDate, g.updateDate,
+		g.productShow,
+		g.startDate, g.endDate,
+		(g.originalPrice - (g.originalPrice * g.sale / 100)) AS gongguPrice,
+		cm.categoryName,
+		NVL(COUNT(DISTINCT gpl.memberId), 0) AS likeCount,
+		NVL(AVG(gr.rate), 0) AS rate,
+		<if test="memberId != null">
+			(SELECT COUNT(gpl2.memberId) FROM gongguProductLike gpl2 WHERE
+			gpl2.gongguProductId = g.gongguProductId AND gpl2.memberId =
+			#{memberId}) AS userWish
+		</if>
+		<if test="memberId == null">
+			0 AS userWish
+		</if>
+		FROM gongguProduct g
+		LEFT JOIN productCategory cm ON g.categoryId = cm.categoryId
+		LEFT JOIN gongguProductLike gpl ON g.gongguProductId = gpl.gongguProductId
+		LEFT JOIN gongguReview gr ON g.gongguProductId = gr.gongguProductId
+		WHERE g.gongguProductId = #{gongguProductId}
+		GROUP BY g.gongguProductId, g.gongguProductName, g.gongguThumbnail,
+		g.startDate, g.endDate, g.limitCount, g.regDate,
+		g.originalPrice, g.sale, g.productShow, g.categoryId,
+		g.content,
+		cm.categoryName, g.updateDate
 	</select>
-    
-    <select id="getParticipantCount" parameterType="Long" resultType="int">
-        SELECT COUNT(DISTINCT god.orderId)
-        FROM gongguOrderDetail god
-        JOIN productOrder po ON god.orderId = po.orderId
-        WHERE god.gongguProductId = #{gongguProductId} AND po.orderState = 1
-    </select>
-    
-    <select id="didIBuyProduct" parameterType="map" resultType="com.sp.app.model.GongguOrder">
-        SELECT
-            god.gongguOrderDetailId,
-            god.gongguProductId,
-            god.orderId,
-            god.cnt,
-            god.userDelete,
-            god.price AS price, 
-            god.detailState,
-            po.memberId AS memberId,
-            po.orderDate AS orderDate,
-            po.totalAmount AS totalAmount,
-            (po.totalAmount + po.deliveryCharge) AS payment,
-            po.orderState AS orderState,
-            po.deliveryCharge AS deliveryCharge,
-            (god.price * god.cnt) AS productMoney, 
-            (gp.originalPrice - (gp.originalPrice * gp.sale / 100)) AS salePrice, 
-    
-            dd.recipientName,
-            dd.tel,
-            dd.zip,
-            dd.addr1,
-            dd.addr2,
-            dd.pickup,
-            dd.accessInfo,
-            dd.passcode,
-            dd.requestMemo,
 
-            p.payMethod AS payMethod,                               
-            p.imp_uid,
-            p.cardName,
-            p.cardNumber,
-            p.applyNum,
-            p.applyDate,
+	<select id="findDetailInfoById" parameterType="long"
+		resultType="string">
+		SELECT detailInfo
+		FROM gongguProduct
+		WHERE gongguProductId = #{gongguProductId}
+	</select>
 
-            gp.gongguProductName,
-            gp.gongguThumbnail,
-            gp.originalPrice AS originalPrice, 
-            gp.sale AS sale 
-        FROM gongguOrderDetail god
-        JOIN productOrder po ON god.orderId = po.orderId
-        JOIN gongguProduct gp ON god.gongguProductId = gp.gongguProductId
-        LEFT JOIN deliveryDestination dd ON po.orderId = dd.orderId
-        LEFT JOIN payment p ON po.orderId = p.orderId
-        WHERE god.gongguProductId = #{gongguProductId} AND po.memberId = #{memberId}
-    </select>  
+	<select id="listGongguProductPhoto" parameterType="Long"
+		resultType="com.sp.app.model.GongguProduct">
+		SELECT
+		gongguProductDetailId,
+		gongguProductId,
+		detailPhoto
+		FROM gongguProductDetail
+		WHERE gongguProductId = #{gongguProductId}
+	</select>
 
-    <select id="listAllProducts" resultType="com.sp.app.model.GongguProduct">
-        SELECT gongguProductId, categoryId, gongguProductName, gongguPrice, gongguThumbnail, sale, regDate, 
-        		productShow, updateDate, content, detailInfo
-        FROM gongguProduct
-    </select>
-    
-    <select id="listFiveProducts" resultType="com.sp.app.model.GongguProduct">
-        SELECT gongguProductId, categoryId, gongguProductName, gongguPrice, gongguThumbnail, sale, regDate,
-        		productShow, updateDate, content, detailInfo, NVL(gongguOrderCount, 0) gongguOrderCount
-        FROM gongguProduct p
-		LEFT OUTER JOIN (
-            SELECT gongguProductId, NVL(COUNT(*), 0) gongguOrderCount
-			FROM gongguOrderDetail
-			GROUP BY gongguProductId) od ON p.gongguProductId = od.gongguProductId
-        ORDER BY orderCount DESC
-        OFFSET 0 ROWS FETCH FIRST 5 ROWS ONLY
-    </select>
-    
-    <select id="listThreeProducts" resultType="com.sp.app.model.GongguProduct">
-        SELECT gongguProductId, categoryId, gongguProductName, gongguPrice, gongguThumbnail, sale, regDate,
-        		productShow, updateDate, content, detailInfo, NVL(gongguOrderCount, 0) gongguOrderCount
-        FROM product p
-		LEFT OUTER JOIN (
-            SELECT gongguProductId, NVL(COUNT(*), 0) gongguOrderCount
-			FROM gongguOrderDetail
-			GROUP BY gongguProductId) od ON p.gongguProductId = od.gongguProductId
-        ORDER BY orderCount DESC
-        OFFSET 0 ROWS FETCH FIRST 3 ROWS ONLY
-    </select>
-    
-    <!--
-    <select id="findById" parameterType="Long" resultType="com.sp.app.model.GongguProduct">
-		SELECT p.gongguProductId, p.categoryId, p.productShow, categoryName, 
-		    gongguProductName, gongguPrice, gongguThumbnail, p.content, p.detailInfo, p.regDate, 
-			NVL(rate, 0) rate, NVL(gongguReviewCount, 0) gongguReviewCount,
-			NVL(gongguInquiryCount, 0) gongguInquiryCount
+	<select id="listDeliveryRefundInfo"
+		resultType="com.sp.app.model.GongguProductDeliveryRefundInfo">
+		SELECT deliveryInfo, refundInfo
+		FROM gongguDeliveryRefundInfo
+	</select>
+
+	<select id="listDeliveryFee"
+		resultType="com.sp.app.model.GongguProductDeliveryRefundInfo">
+		SELECT fee AS deliveryFee, deliveryLocation
+		FROM gongguDeliveryFee
+	</select>
+
+	<select id="getParticipantCount" parameterType="Long"
+		resultType="int">
+		SELECT COUNT(DISTINCT god.orderId)
+		FROM gongguOrderDetail god
+		JOIN productOrder po ON god.orderId = po.orderId
+		WHERE god.gongguProductId = #{gongguProductId} AND po.orderState = 1
+	</select>
+
+	<select id="didIBuyProduct" parameterType="map"
+		resultType="com.sp.app.model.GongguOrder">
+		SELECT
+		god.gongguOrderDetailId,
+		god.gongguProductId,
+		god.orderId,
+		god.cnt,
+		god.userDelete,
+		god.price AS price,
+		god.detailState,
+		po.memberId AS memberId,
+		po.orderDate AS orderDate,
+		po.totalAmount AS totalAmount,
+		(po.totalAmount + po.deliveryCharge) AS payment,
+		po.orderState AS orderState,
+		po.deliveryCharge AS deliveryCharge,
+		(god.price * god.cnt) AS productMoney,
+		(gp.originalPrice - (gp.originalPrice * gp.sale / 100)) AS salePrice,
+
+		dd.recipientName,
+		dd.tel,
+		dd.zip,
+		dd.addr1,
+		dd.addr2,
+		dd.pickup,
+		dd.accessInfo,
+		dd.passcode,
+		dd.requestMemo,
+
+		p.payMethod AS payMethod,
+		p.imp_uid,
+		p.cardName,
+		p.cardNumber,
+		p.applyNum,
+		p.applyDate,
+
+		gp.gongguProductName,
+		gp.gongguThumbnail,
+		gp.originalPrice AS originalPrice,
+		gp.sale AS sale
+		FROM gongguOrderDetail god
+		JOIN productOrder po ON god.orderId = po.orderId
+		JOIN gongguProduct gp ON god.gongguProductId = gp.gongguProductId
+		LEFT JOIN deliveryDestination dd ON po.orderId = dd.orderId
+		LEFT JOIN payment p ON po.orderId = p.orderId
+		WHERE god.gongguProductId = #{gongguProductId} AND po.memberId =
+		#{memberId}
+	</select>
+
+	<select id="listAllProducts"
+		resultType="com.sp.app.model.GongguProduct">
+		SELECT gongguProductId, categoryId, gongguProductName, gongguPrice,
+		gongguThumbnail, sale, regDate,
+		productShow, updateDate, content, detailInfo
+		FROM gongguProduct
+	</select>
+
+	<select id="listFiveProducts"
+		resultType="com.sp.app.model.GongguProduct">
+		SELECT p.gongguProductId, p.categoryId, p.gongguProductName,
+		(p.originalPrice * (1 - p.sale / 100)) AS gongguPrice, p.gongguThumbnail,
+		p.sale, p.regDate, p.productShow, p.updateDate, p.content, p.detailInfo,
+		NVL(od.gongguOrderCount, 0) AS gongguOrderCount
 		FROM gongguProduct p
-		JOIN productCategory c ON p.categoryId = c.categoryId
 		LEFT OUTER JOIN (
-			SELECT gongguProductId, ROUND(AVG(rate), 1) rate, COUNT(*) gongguReviewCount
-			FROM gongguReview
-			WHERE showReview = 1
-			GROUP BY gongguProductId
-		) t ON p.gongguProductId = t.gongguProductId
-		LEFT OUTER JOIN (
-			SELECT gongguProductId, COUNT(*) gongguInquiryCount
-			FROM gongguInquiry
-			WHERE showQuestion = 1
-			GROUP BY gongguProductId
-		) q ON p.gongguProductId = q.gongguProductId
-		LEFT OUTER JOIN (
-			SELECT gongguProductId, COUNT(*) gongguSaleCount
-			FROM gongguOrderDetail
-			GROUP BY gongguProductId
-		) pc ON p.gongguProductId = pc.gongguProductId
-		WHERE p.productShow = 1 AND p.gongguProductId = #{gongguProductId}
-		FETCH FIRST 1 ROWS ONLY
-    </select>
-    -->
-    <!-- 카테고리 -->
-	<select id="findByCategoryId" parameterType="Long" resultType="com.sp.app.model.GongguProduct">
+		SELECT gongguProductId, COUNT(*) AS gongguOrderCount
+		FROM gongguOrderDetail
+		GROUP BY gongguProductId
+		) od ON p.gongguProductId = od.gongguProductId
+		ORDER BY gongguOrderCount DESC
+		OFFSET 0 ROWS FETCH FIRST 5 ROWS ONLY
+	</select>
+
+	<select id="listTwoProducts" resultType="com.sp.app.model.GongguProduct">
+    SELECT 
+        p.gongguProductId, 
+        p.categoryId, 
+        p.gongguProductName,
+        (p.originalPrice - (p.originalPrice * p.sale / 100)) AS gongguPrice,
+        p.gongguThumbnail, 
+        p.sale, 
+        p.endDate,
+        p.productShow, 
+        p.updateDate, 
+        p.content, 
+        p.detailInfo, 
+        NVL(od.gongguOrderCount, 0) AS gongguOrderCount
+    FROM gongguProduct p
+    LEFT OUTER JOIN (
+        SELECT gongguProductId, NVL(COUNT(*), 0) AS gongguOrderCount
+        FROM gongguOrderDetail
+        GROUP BY gongguProductId
+    ) od ON p.gongguProductId = od.gongguProductId
+    ORDER BY p.endDate ASC
+    OFFSET 0 ROWS FETCH FIRST 3 ROWS ONLY
+</select>
+
+	<!-- <select id="findById" parameterType="Long" resultType="com.sp.app.model.GongguProduct"> 
+		SELECT p.gongguProductId, p.categoryId, p.productShow, categoryName, gongguProductName, 
+		gongguPrice, gongguThumbnail, p.content, p.detailInfo, p.regDate, NVL(rate, 
+		0) rate, NVL(gongguReviewCount, 0) gongguReviewCount, NVL(gongguInquiryCount, 
+		0) gongguInquiryCount FROM gongguProduct p JOIN productCategory c ON p.categoryId 
+		= c.categoryId LEFT OUTER JOIN ( SELECT gongguProductId, ROUND(AVG(rate), 
+		1) rate, COUNT(*) gongguReviewCount FROM gongguReview WHERE showReview = 
+		1 GROUP BY gongguProductId ) t ON p.gongguProductId = t.gongguProductId LEFT 
+		OUTER JOIN ( SELECT gongguProductId, COUNT(*) gongguInquiryCount FROM gongguInquiry 
+		WHERE showQuestion = 1 GROUP BY gongguProductId ) q ON p.gongguProductId 
+		= q.gongguProductId LEFT OUTER JOIN ( SELECT gongguProductId, COUNT(*) gongguSaleCount 
+		FROM gongguOrderDetail GROUP BY gongguProductId ) pc ON p.gongguProductId 
+		= pc.gongguProductId WHERE p.productShow = 1 AND p.gongguProductId = #{gongguProductId} 
+		FETCH FIRST 1 ROWS ONLY </select> -->
+	<!-- 카테고리 -->
+	<select id="findByCategoryId" parameterType="Long"
+		resultType="com.sp.app.model.GongguProduct">
 		SELECT categoryId, categoryName, enabled, orderNo
-		FROM productCategory
+		FROM
+		productCategory
 		WHERE categoryId = #{categoryId}
 	</select>
-    
+
 </mapper>

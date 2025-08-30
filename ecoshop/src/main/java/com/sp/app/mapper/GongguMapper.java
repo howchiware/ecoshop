@@ -8,11 +8,14 @@ import org.apache.ibatis.annotations.Mapper;
 import com.sp.app.model.GongguOrder;
 import com.sp.app.model.GongguProduct;
 import com.sp.app.model.GongguProductDeliveryRefundInfo;
-import com.sp.app.model.Product;
 
 
 @Mapper
 public interface GongguMapper {
+	public List<GongguProduct> listAllProducts() throws Exception;
+	public List<GongguProduct> listFiveProducts() throws Exception;
+	public List<GongguProduct> listTwoProducts() throws Exception;
+	
 	public List<GongguProduct> listGongguProducts(Map<String, Object> map);
 	List<GongguProduct> listPackageByCategoryId(long categoryId); 
     public int dataCount(Map<String, Object> map);
@@ -27,11 +30,8 @@ public interface GongguMapper {
     public int getParticipantCount(long gongguProductId);
     public List<GongguOrder> didIBuyProduct(Map<String, Object> map);
     
-	public List<Product> listAllProducts() throws Exception;
-	public List<Product> listFiveProducts() throws Exception;
-	public List<Product> listThreeProducts() throws Exception;
-	public Product findById(long productId) throws Exception;
-	public Product findByCategoryId(long categoryId);
+	public GongguProduct findById(long gongguProductId) throws Exception;
+	public GongguProduct findByCategoryId(long categoryId);
 
 	
 	

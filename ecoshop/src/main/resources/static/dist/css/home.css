@@ -219,3 +219,41 @@ footer {
 	text-align: center;
 	padding: 40px 0;
 }
+
+
+.gonggu-section .gonggu-flex-container {
+    display: flex;
+    align-items: flex-start; 
+    gap: 30px; 
+}
+
+.gonggu-section .gonggu-title-area {
+    flex: 0 0 250px; 
+}
+
+.gonggu-section .row.g-0 {
+    display: flex;
+    justify-content: flex-end;
+    gap: 30px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.gonggu-section .card-img-top {
+    height: 800px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.gonggu-section .col-gonggu-2 {
+    flex: 0 0 450px;
+    max-width: 420px;
+    padding: 0;
+}
+
+.section-subtitle {
+    font-size: 0.9rem;
+    color: #777; 
+    margin-top: -15px; 
+}
+

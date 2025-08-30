@@ -1,5 +1,6 @@
 package com.sp.app.model;
 
+import java.util.Date;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -24,8 +25,9 @@ public class GongguProduct {
     private long gongguPrice;
     private String regDate;
     private int limitCount;
-    private String startDate;
-    private String endDate;
+    private Date startDate;
+    private Date endDate;
+    private long remainingDays;
     private String updateDate;
     private String content;
     private String detailInfo; 

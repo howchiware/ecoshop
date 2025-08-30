@@ -26,6 +26,10 @@ public interface GongguService {
     public List<GongguOrder> didIBuyProduct(Map<String, Object> map) throws Exception;
     
     public String findDetailInfoById(long gongguProductId) throws Exception;
+    
+    public List<GongguProduct> listAllProducts() throws Exception;
+	public List<GongguProduct> listFiveProducts() throws Exception;
+	public List<GongguProduct> listTwoProducts() throws Exception;
 }
 
 

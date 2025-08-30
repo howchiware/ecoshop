@@ -272,4 +272,8 @@
         DELETE FROM gongguDeliveryFee
     </delete>
 
+	<insert id="insertGongguProductPhoto" parameterType="com.sp.app.admin.model.GongguManage"> 
+		INSERT INTO gongguProductDetail(gongguProductDetailId, gongguProductId, detailPhoto) 
+			VALUES(gongguProductDetail_seq.NEXTVAL, #{gongguProductId}, #{detailPhoto}) 
+	</insert>
 </mapper>

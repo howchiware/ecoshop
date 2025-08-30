@@ -47,6 +47,15 @@
 	margin-bottom: 30px;
 }
 
+.owl-carousel .item img {
+	width: 100%;
+	height: 100%;
+}
+
+.owl-carousel .owl-item.center .item img {
+	width: 100%;
+	height: 100%;
+}
 .owl-carousel .owl-item.center .item {
 	width: 450px;
 	height: 300px;
