@@ -96,7 +96,7 @@
 											</tr>
 											<tr>
 												<td>공동구매 기간</td>
-												<td>${dto.startDate} ~ ${dto.endDate}</td>
+												<td><fmt:formatDate pattern="yyyy-MM-dd" value="${dto.startDate}"/> ~ <fmt:formatDate pattern="yyyy-MM-dd" value="${dto.endDate}"/></td>
 											</tr>
 											
 											<tr>
