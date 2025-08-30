@@ -1,8 +1,12 @@
 package com.sp.app.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,8 +15,10 @@ import com.sp.app.admin.model.AdvertisementManage;
 import com.sp.app.admin.model.PromotionManage;
 import com.sp.app.admin.service.AdvertisementManageService;
 import com.sp.app.admin.service.PromotionManageService;
+import com.sp.app.model.GongguProduct;
 import com.sp.app.model.Product;
 import com.sp.app.model.Workshop;
+import com.sp.app.service.GongguService;
 import com.sp.app.service.ProductService;
 import com.sp.app.service.WorkshopService;
 
@@ -29,6 +35,7 @@ public class HomeController {
 	private final AdvertisementManageService advertisementManageService;
 	private final ProductService productService;
 	private final WorkshopService workshopService;
+	private final GongguService gongguService;
 	
 	@GetMapping("/")
 	public String MainPage(Model model) {
@@ -69,6 +76,26 @@ public class HomeController {
 			model.addAttribute("recruitingWorkshop", recruitingWorkshop);
 			model.addAttribute("mainWorkshop", mainWorkshop);
 		
+			// 공동구매
+			List<GongguProduct> gongguList = gongguService.listTwoProducts();
+			long nowTime = System.currentTimeMillis();
+	        for (GongguProduct product : gongguList) {
+	            Date endDate = product.getEndDate();
+	            if (endDate != null) {
+	                long endTime = endDate.getTime();
+	                long remainingTime = endTime - nowTime;
+	                if (remainingTime > 0) {
+	                    long remainingDays = TimeUnit.MILLISECONDS.toDays(remainingTime);
+	                    product.setRemainingDays(remainingDays);
+	                } else {
+	                    product.setRemainingDays(-1); 
+	                }
+	            } else {
+	                product.setRemainingDays(-1); 
+	            }
+	        }
+			model.addAttribute("gongguList", gongguList);
+			
 		} catch (Exception e) {
 			
 		}

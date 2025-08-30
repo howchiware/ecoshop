@@ -58,27 +58,45 @@
 	</section>
 
 	<!-- 공동구매 Section -->
-	<section class="section py-5">
-		<div class="container">
-			<h2 class="section-title text-start mb-4">함께 사서 더 저렴하게</h2>
-			<div class="card border-0 shadow-sm groupbuy-card">
-				<div class="row g-0 align-items-center" style="height: 220px;">
-					<!-- 이미지 -->
-					<div class="col-md-5 h-100">
-						<img src="https://source.unsplash.com/1000x600/?eco,groupbuy"
-							class="img-fluid w-100 h-100" style="object-fit: cover;"
-							alt="공동구매">
-					</div>
-					<!-- 텍스트 -->
-					<div
-						class="col-md-7 p-4 d-flex flex-column justify-content-center h-100">
-						<h5 class="card-title fs-4 fw-bold">제로 웨이스트 패키지</h5>
-						<p class="card-text text-muted mb-0">대나무 칫솔, 천연 밀랍 랩, 리필형
-							주방세제, 휴대용 빨대까지 제로웨이스트 필수 구성</p>
-					</div>
-				</div>
-			</div>
-		</div>
+	<section class="section gonggu-section">
+    <div class="container">
+        <div class="d-flex gonggu-flex-container">
+            <div class="gonggu-title-area">
+                <h2 class="section-title text-start mb-4">함께 사서 더 저렴하게</h2>
+                <p class="section-subtitle">친환경 상품으로 지구를 지켜요</p>
+            </div>
+            <div class="row g-0 flex-grow-1">
+                <c:forEach var="dto" items="${gongguList}" end="1">
+                    <div class="col-gonggu-2">
+                        <div class="card card-hover border-0 shadow-sm"
+                             onClick="location.href='${pageContext.request.contextPath}/gonggu/${dto.gongguProductId}'">
+                            <img alt="상품 이미지" class="card-img-top"
+                                 src="${pageContext.request.contextPath}/uploads/gonggu/${dto.gongguThumbnail}" />
+                            <div class="card-body">
+                                <h5 class="card-title">${dto.gongguProductName}</h5>
+                                <p class="card-text">${dto.content}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+								    <small class="text-muted">
+								        <c:choose>
+								            <c:when test="${dto.remainingDays > 5}">
+								                <span class="text-secondary fw-bold me-2">진행중</span> 남은 시간: ${dto.remainingDays}일
+								            </c:when>
+								            <c:when test="${dto.remainingDays < 5}">
+								                <span class="text-danger fw-bold me-2">마감 임박!</span> 남은 시간: ${dto.remainingDays}일
+								            </c:when>
+								            <c:otherwise>
+								                <span class="text-dark-subtle fw-bold me-2">마감</span> 마감되었습니다.
+								            </c:otherwise>
+								        </c:choose>
+								    </small>
+								</div>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </div>
+    </div>
 	</section>
 
 	<!-- 감성 콘텐츠 카드 Section -->

@@ -16,6 +16,19 @@
 
 <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/quill-resize-module@2.0.4/dist/resize.css" rel="stylesheet">
+<style type="text/css">
+.preview-session {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px; 
+}
+
+.image-upload-list {
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 10px; 
+}
+</style>
 </head>
 <body>
 	<header>
