@@ -20,6 +20,9 @@ public class Workshop {
 	private Date regDate;
 	private Date updDate;
 
+	private String managerName;
+	private String managerDept;
+
 	private Long managerId;
 	private String name;
 	private String tel;

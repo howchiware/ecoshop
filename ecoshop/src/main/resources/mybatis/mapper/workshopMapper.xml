@@ -38,7 +38,8 @@
 		FROM programCategory
 		ORDER BY
 		categoryId DESC
-		OFFSET #{offset} ROWS
+		OFFSET #{offset}
+		ROWS
 		FETCH NEXT #{size} ROWS ONLY
 	</select>
 
@@ -143,7 +144,8 @@
 	<select id="listManager" parameterType="map"
 		resultType="com.sp.app.model.Workshop">
 		SELECT m.managerId, m.name, m.tel, m.email, m.department
-		FROM workshopManager m
+		FROM
+		workshopManager m
 		<where>
 			<include refid="where-list-manager" />
 		</where>
@@ -163,7 +165,8 @@
 					AND LOWER(m.name) LIKE '%' || LOWER(#{kwd}) || '%'
 				</when>
 				<when test="schType == 'department'">
-					AND LOWER(m.department) LIKE '%' || LOWER(#{kwd}) || '%'
+					AND LOWER(m.department) LIKE '%' || LOWER(#{kwd}) ||
+					'%'
 				</when>
 				<when test="schType == 'email'">
 					AND LOWER(m.email) LIKE '%' || LOWER(#{kwd}) || '%'
@@ -174,9 +177,12 @@
 				<otherwise>
 					AND (
 					LOWER(m.name) LIKE '%' || LOWER(#{kwd}) || '%'
-					OR LOWER(m.department) LIKE '%' || LOWER(#{kwd}) || '%'
-					OR LOWER(m.email) LIKE '%' || LOWER(#{kwd}) || '%'
-					OR m.tel LIKE '%' || #{kwd} || '%'
+					OR
+					LOWER(m.department) LIKE '%' || LOWER(#{kwd}) || '%'
+					OR
+					LOWER(m.email) LIKE '%' || LOWER(#{kwd}) || '%'
+					OR m.tel LIKE '%' ||
+					#{kwd} || '%'
 					)
 				</otherwise>
 			</choose>
@@ -298,18 +304,17 @@
 		parameterType="com.sp.app.model.Workshop">
 		UPDATE workshop
 		SET workshopTitle = #{workshopTitle},
-		scheduleDate = #{scheduleDate,
-		jdbcType=TIMESTAMP}, applyDeadline =
-		#{applyDeadline,
-		jdbcType=TIMESTAMP},
+		scheduleDate = #{scheduleDate, jdbcType=TIMESTAMP},
+		applyDeadline = #{applyDeadline, jdbcType=TIMESTAMP},
 		location = #{location},
-		workshopStatus = #{workshopStatus}, capacity =
-		#{capacity},
-		thumbnailPath = #{thumbnailPath},
+		workshopStatus = #{workshopStatus},
+		capacity = #{capacity},
+		thumbnailPath = #{thumbnailPath, jdbcType=VARCHAR}, 
 		workshopContent = #{workshopContent},
 		updDate = SYSDATE
 		WHERE workshopId = #{workshopId}
 	</update>
+
 
 	<delete id="deleteWorkshop" parameterType="Long">
 		DELETE FROM workshop
@@ -452,17 +457,25 @@
 	<!-- 워크샵 상세 -->
 	<select id="findWorkshopDetail" parameterType="long"
 		resultType="com.sp.app.model.Workshop">
-		SELECT w.workshopId, w.workshopTitle, w.scheduleDate,
+		SELECT w.workshopId,
+		w.workshopTitle,
+		w.scheduleDate,
 		w.applyDeadline,
 		w.location,
-		w.workshopStatus, w.capacity,
+		w.workshopStatus,
+		w.capacity,
 		w.workshopContent,
-		w.thumbnailPath, pc.categoryName
+		w.thumbnailPath,
+		pc.categoryName,
+		m.name AS
+		managerName,
+		m.department AS managerDept
 		FROM workshop w
-		JOIN
-		program p ON w.programId = p.programId
-		JOIN programCategory pc ON
-		p.categoryId = pc.categoryId
+		JOIN program p
+		ON w.programId = p.programId
+		JOIN programCategory pc ON p.categoryId =
+		pc.categoryId
+		LEFT JOIN workshopManager m ON w.managerId = m.managerId
 		WHERE w.workshopId = #{value}
 	</select>
 
@@ -473,9 +486,11 @@
 		FROM
 		programFaq
 		WHERE programId = #{programId}
-		ORDER BY regDate DESC, faqId DESC
-		OFFSET #{offset, jdbcType=INTEGER} ROWS 
-		FETCH NEXT #{size, jdbcType=INTEGER} ROWS ONLY
+		ORDER BY regDate DESC, faqId
+		DESC
+		OFFSET #{offset, jdbcType=INTEGER} ROWS
+		FETCH NEXT #{size,
+		jdbcType=INTEGER} ROWS ONLY
 	</select>
 
 	<insert id="insertFaq"
@@ -499,10 +514,10 @@
 		DELETE FROM programFaq
 		WHERE faqId = #{faqId}
 	</delete>
-	
-	<select id="faqDataCount" parameterType="map"
-		resultType="int">
-		SELECT NVL(COUNT(*), 0)
+
+	<select id="faqDataCount" parameterType="map" resultType="int">
+		SELECT
+		NVL(COUNT(*), 0)
 		FROM programFaq
 		WHERE programId = #{programId}
 	</select>
@@ -535,21 +550,30 @@
 
 	<select id="listUserReview" parameterType="map"
 		resultType="com.sp.app.model.WorkshopReview">
-		SELECT w.workshopReviewId AS workshopReviewId, 
+		SELECT w.workshopReviewId AS workshopReviewId,
 		w.participantId AS participantId,
-		COALESCE(DBMS_LOB.SUBSTR(w.reviewContent, 4000, 1), '') AS reviewContent,
-		w.regDate AS regDate, 
-		TO_CHAR(w.regDate, 'YYYY-MM-DD') AS regDateStr, 
+		COALESCE(DBMS_LOB.SUBSTR(w.reviewContent, 4000, 1), '') AS
+		reviewContent,
+		w.regDate AS regDate,
+		TO_CHAR(w.regDate, 'YYYY-MM-DD') AS
+		regDateStr,
 		w.workshopId AS workshopId,
 		m.name AS writerName
-		FROM workshopReview w
-		JOIN participant p ON w.participantId = p.participantId
+		FROM
+		workshopReview w
+		JOIN
+		participant p ON w.participantId = p.participantId
 		LEFT JOIN
-		member2 m ON p.memberId = m.memberId
-		WHERE w.workshopId = #{workshopId}
-		ORDER BY w.regDate DESC
-		OFFSET #{offset, jdbcType=INTEGER} ROWS
-		FETCH NEXT #{size, jdbcType=INTEGER} ROWS ONLY
+		member2 m
+		ON p.memberId = m.memberId
+		WHERE w.workshopId =
+		#{workshopId}
+		ORDER BY
+		w.regDate DESC
+		OFFSET #{offset, jdbcType=INTEGER}
+		ROWS
+		FETCH NEXT
+		#{size, jdbcType=INTEGER} ROWS ONLY
 	</select>
 
 	<insert id="insertReview"
@@ -653,13 +677,16 @@
 		AND isAttended = 'N'
 	</update>
 
-	<update id="reApplyWorkshop" parameterType="com.sp.app.model.Workshop">
+	<update id="reApplyWorkshop"
+		parameterType="com.sp.app.model.Workshop">
 		UPDATE participant
 		SET participantStatus = 2,
-		isAttended = 'N',
+		isAttended =
+		'N',
 		appliedDate = SYSDATE
 		WHERE memberId = #{memberId}
-		AND workshopId = #{workshopId}
+		AND workshopId =
+		#{workshopId}
 		AND participantStatus = 0
 	</update>
 
@@ -674,7 +701,7 @@
 		#{workshopId}
 		ORDER BY p.appliedDate ASC
 	</select>
-	
+
 	<select id="ParticipantDataCount" parameterType="map"
 		resultType="int">
 		SELECT NVL(COUNT(*), 0)
@@ -746,7 +773,8 @@
 			</if>
 		</where>
 		ORDER BY wr.regDate DESC, wr.workshopReviewId DESC
-		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS
+		OFFSET #{offset}
+		ROWS FETCH NEXT #{size} ROWS
 		ONLY
 	</select>
 
@@ -783,29 +811,33 @@
 		programTitle,
 		pc.categoryName AS categoryName, pt.appliedDate AS
 		appliedDate, pt.participantStatus AS participantStatus,
-		pt.isAttended AS isAttended
+		pt.isAttended
+		AS isAttended
 		FROM participant pt
-		JOIN workshop w ON pt.workshopId = w.workshopId
+		JOIN workshop w ON pt.workshopId =
+		w.workshopId
 		JOIN program p ON w.programId = p.programId
-		JOIN programCategory pc ON pc.categoryId = p.categoryId
-		WHERE pt.memberId = #{memberId}
+		JOIN
+		programCategory pc ON pc.categoryId = p.categoryId
+		WHERE pt.memberId =
+		#{memberId}
 		<choose>
-        <when test="mode == 'applied'">
-            AND pt.isAttended = 'N'
-            AND pt.participantStatus IN (1,2)
-            <if test="onlyFuture">
-                AND w.scheduleDate >= SYSDATE
-            </if>
-        </when>
-        <when test="mode == 'attended'">
-            AND pt.isAttended = 'Y'
-        </when>
-        <when test="mode == 'waiting'">
-            AND pt.participantStatus = 2
-        </when>
-        <when test="mode == 'canceled'">
-            AND pt.participantStatus = 0
-        </when>
+			<when test="mode == 'applied'">
+				AND pt.isAttended = 'N'
+				AND pt.participantStatus IN (1,2)
+				<if test="onlyFuture">
+					AND w.scheduleDate >= SYSDATE
+				</if>
+			</when>
+			<when test="mode == 'attended'">
+				AND pt.isAttended = 'Y'
+			</when>
+			<when test="mode == 'waiting'">
+				AND pt.participantStatus = 2
+			</when>
+			<when test="mode == 'canceled'">
+				AND pt.participantStatus = 0
+			</when>
 		</choose>
 		ORDER BY w.scheduleDate DESC
 		OFFSET #{offset} ROWS FETCH NEXT #{size}

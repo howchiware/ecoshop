@@ -6,9 +6,14 @@
 <head>
 <meta charset="UTF-8">
 <title>프로그램 신청</title>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssWorkshop/workshopUser.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/dist/css/home.css"
+	type="text/css">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/dist/cssWorkshop/workshopUser.css">
 
 <style>
 .page-wrap {
@@ -26,15 +31,16 @@
 	font-weight: 700;
 	font-size: 1.25rem;
 	margin-top: 30px;
+	margin-bottom: 30px;
 }
 
 .text-muted {
-padding-bottom: 10px;
-font-size: 14px;
+	padding-bottom: 10px;
+	font-size: 14px;
 }
 
 .section-card .section-title {
-    margin-top: 0;
+	margin-top: 0;
 }
 
 .kv dt {
@@ -71,9 +77,15 @@ font-size: 14px;
 }
 
 .form-label {
-font-weight: 600;
-font-size: 15px;
+	font-weight: 600;
+	font-size: 15px;
 }
+
+.kv.row.gy-1 {
+  row-gap: 2px !important; /* gy-1의 4px 대신 2px */
+  margin-bottom: 0 !important; /* 필요시 dd 아래 여백 제거 */
+}
+
 </style>
 </head>
 <body class="page-wrap">
@@ -84,7 +96,8 @@ font-size: 15px;
 
 	<header class="border-bottom bg-white">
 		<div class="container py-3">
-			<p class="m-0" style="font-size: 1rem; font-weight: 600;">워크샵 > 신청</p>
+			<p class="m-0" style="font-size: 1rem; font-weight: 600;">워크샵 >
+				신청</p>
 		</div>
 	</header>
 
@@ -100,8 +113,8 @@ font-size: 15px;
 
 		<div class="row g-4">
 			<div class="col-lg-7">
-				<div class="section-card p-4 mb-4">
-					<div class="d-flex justify-content-between align-items-center mb-3">
+				<div class="section-card p-4 mb-3">
+					<div class="d-flex justify-content-between align-items-center" style="line-height:1.2;">
 						<div>
 							<div class="text-muted">워크샵 정보</div>
 							<div class="section-title">
@@ -110,7 +123,7 @@ font-size: 15px;
 						</div>
 					</div>
 
-					<dl class="kv row gy-2">
+					<dl class="kv row gy-1">
 						<dt class="col-3 col-sm-2">일시</dt>
 						<dd class="col-9 col-sm-10">
 							<c:choose>
@@ -126,6 +139,20 @@ font-size: 15px;
 						<dd class="col-9 col-sm-10">
 							<c:out value="${ws.location}" default="-" />
 						</dd>
+
+						<dt class="col-3 col-sm-2">담당자</dt>
+						<dd class="col-9 col-sm-10">
+							<c:choose>
+								<c:when test="${not empty ws.managerName}">
+									<c:out value="${ws.managerName}" />
+									<c:if test="${not empty ws.managerDept}">
+        (<c:out value="${ws.managerDept}" />)
+      </c:if>
+								</c:when>
+								<c:otherwise>-</c:otherwise>
+							</c:choose>
+						</dd>
+
 
 						<dt class="col-3 col-sm-2">정원</dt>
 						<dd class="col-9 col-sm-10">
@@ -152,19 +179,21 @@ font-size: 15px;
 					</div>
 
 					<div class="mb-3">
-						<label class="form-label">이름<span class="req"> *</span></label> 
-						<input type="text" class="form-control" name="name" value="${member.name}" readonly>
-						<input type="hidden" name="memberId" value="${loginMember.memberId}">
+						<label class="form-label">이름<span class="req"> *</span></label> <input
+							type="text" class="form-control" name="name"
+							value="${member.name}" readonly> <input type="hidden"
+							name="memberId" value="${loginMember.memberId}">
 					</div>
 
 					<div class="mb-3">
-						<label class="form-label">휴대폰 번호<span class="req"> *</span></label> 
-						<input type="tel" class="form-control" name="tel" value="${member.tel}">
+						<label class="form-label">휴대폰 번호<span class="req">
+								*</span></label> <input type="tel" class="form-control" name="tel"
+							value="${member.tel}">
 					</div>
 
 					<div class="mb-4">
-						<label class="form-label">이메일</label> 
-						<input type="email" class="form-control" name="email" value="${member.email}">
+						<label class="form-label">이메일</label> <input type="email"
+							class="form-control" name="email" value="${member.email}">
 					</div>
 
 					<div class="d-lg-none mb-3">
@@ -208,7 +237,8 @@ font-size: 15px;
 								for="agreePenalty"> 취소/패널티 안내 확인 <span class="req">(필수)</span>
 							</label>
 						</div>
-						<div class="small text-muted mt-2">무단 불참 시 향후 3개월 동안 신청이 제한됩니다.</div>
+						<div class="small text-muted mt-2">무단 불참 시 향후 3개월 동안 신청이
+							제한됩니다.</div>
 					</div>
 
 					<div class="mt-4 d-none d-lg-block">
