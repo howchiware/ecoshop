@@ -5,7 +5,8 @@
 	<!-- 등록 -->
 	<insert id="insertPromotionManage" parameterType="com.sp.app.admin.model.PromotionManage">
 		INSERT INTO promotion(promotionId , memberId, subject, imageFilename, regDate, postingStatus)
-		VALUES (promotion_seq.NEXTVAL, #{memberId}, #{subject},  #{imageFilename}, SYSDATE, 1)
+		VALUES (promotion_seq.NEXTVAL, #{memberId}, #{subject},  
+			#{imageFilename}, SYSDATE, 1)
 	</insert>
 	
 	<sql id="where-list">
@@ -16,13 +17,12 @@
 		SELECT NVL(COUNT(*), 0)
 		FROM promotion p
 		JOIN member2 m ON p.memberId = m.memberId
-		Where postingStatus = 1		
-	</select>
-	
-	<select id="dataCountAdvertisement" parameterType="map" resultType="Integer">
-	    SELECT NVL(COUNT(*), 0)
-	    FROM advertising 
-	    WHERE postingStatus = 0 AND status = 5
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list"/>
+			</if>
+			AND postingStatus = 1
+		</where>		
 	</select>
 	
 	
@@ -39,23 +39,9 @@
 		ORDER BY promotionId DESC
 		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
-		
-	<select id="listAdvertisementManages" parameterType="map" resultType="com.sp.app.admin.model.AdvertisementManage">
-		SELECT a.advertisingId, a.username, a.subject, a.content,
-		       TO_CHAR(a.regDate, 'YYYY-MM-DD') regDate, a.inquiryType, a.status,
-		       a.postingStatus, a.email, a.tel,
-		       TO_CHAR(a.adverStart, 'YYYY-MM-DD') adverStart,
-		       TO_CHAR(a.adverEnd , 'YYYY-MM-DD') adverEnd,
-		       f.advertisingFileNum, f.saveFilename, f.originalFilename, f.fileSize
-		FROM advertising a
-		LEFT JOIN advertisingFile f ON a.advertisingId = f.advertisingId
-		WHERE a.postingStatus = 0 AND a.status = 5
-		ORDER BY a.regDate DESC
-		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
-	</select>
 	
 	<select id="findById" parameterType="Long" resultType="com.sp.app.admin.model.PromotionManage">
-		SELECT promotionId, p.memberId, m.name, subject, imageFilename, TO_CHAR(regDate, 'YYYY-MM-DD') regDate, postingStatus
+		SELECT promotionId, p.memberId, m.name, subject, imageFilename, regDate, 'yyyy-mm-dd', postingStatus
 		FROM promotion p
 		JOIN member2 m ON p.memberId = m.memberId
 		WHERE promotionId = #{promotionId} AND postingStatus = 1

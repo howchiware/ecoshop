@@ -7,7 +7,7 @@
 	
 	<insert id="insertAdvertisement" parameterType="com.sp.app.model.Advertisement">
 		INSERT INTO advertising(advertisingId, username, subject, content, regDate, inquiryType, status, postingStatus, email, tel, adverStart, adverEnd)
-		VALUES(#{advertisingId}, #{username}, #{subject}, #{content}, SYSDATE, #{inquiryType}, 3 , 0 , #{email}, #{tel}, #{adverStart}, #{adverEnd})
+		VALUES(#{advertisingId}, #{username}, #{subject}, #{content}, SYSDATE, #{inquiryType}, 3 , 1 , #{email}, #{tel}, #{adverStart}, #{adverEnd})
 	</insert>
 	
 	<insert id="insertAdvertisementFile" parameterType="com.sp.app.model.Advertisement">

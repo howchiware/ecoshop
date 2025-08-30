@@ -47,6 +47,7 @@
 									<input type="text" name="subject" class="form-control" maxlength="100"  value="${dto.subject}">
 								</td>
 							</tr>
+							
 
 							<tr>
 								<td class="col-md-2 bg-light">이 름</td>

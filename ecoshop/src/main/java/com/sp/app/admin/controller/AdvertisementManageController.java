@@ -71,6 +71,18 @@ import lombok.extern.slf4j.Slf4j;
 			return "admin/advertisement/list";
 		}
 		
+		@GetMapping("mainBanner")
+		public String mainBanner(Model model) {
+		    Map<String, Object> map = new HashMap<>();
+		    map.put("postingStatus", 0);
+		    map.put("status", 5);
+		    map.put("inquiryType", 1);
+
+		    List<AdvertisementManage> bannerList = service.listMainBanner(map);
+		    model.addAttribute("bannerList", bannerList);
+		    return "admin/advertisement/mainBanner";
+		}
+		
 		// 신청
 		@GetMapping("result")
 	    public String handleHome(
@@ -190,21 +202,20 @@ import lombok.extern.slf4j.Slf4j;
 		public Map<String, Object> updateStatus(
 		        @RequestParam("advertisingId") long advertisingId,
 		        @RequestParam("status") int status) {
-	
+
 		    Map<String, Object> result = new HashMap<>();
 		    try {
 		        Map<String, Object> map = new HashMap<>();
 		        map.put("advertisingId", advertisingId);
 		        map.put("status", status);
-	
+
 		        service.updateStatus(map);
-	
+
 		        result.put("success", true);
 		    } catch (Exception e) {
 		        result.put("success", false);
 		        result.put("message", e.getMessage());
 		    }
-	
 		    return result;
 		}
 		
@@ -278,7 +289,7 @@ import lombok.extern.slf4j.Slf4j;
 					Model model,
 					HttpServletRequest req) throws Exception{
 				try {
-					int size = 5;
+					int size = 10;
 					int total_page = 1; 
 		            int statusdataCount = 0;
 		            

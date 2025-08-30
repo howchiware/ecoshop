@@ -89,6 +89,8 @@ table.member-info td:first-child {
 }
 
 
+
+
 </style>
 
 <!-- 광고 상세보기 -->
@@ -155,13 +157,19 @@ table.member-info td:first-child {
         </c:if>
 </table>
 
+
 <div class="btn-row">
   <div class="right-btns">
-    <button type="button" class="btn-default" onclick="updateAdvertisement();">수정</button>
+    <c:if test="${dto.status == 5}">
+      <button type="button" class="btn-default" onclick="updateAdvertisement();">
+        수정
+      </button>
+    </c:if>
   </div>
 </div>
 
 <div class="modal fade" data-bs-backdrop="static" id="advertisementUpdateDialogModal" tabindex="-1" aria-labelledby="advertisementUpdateDialogModalLabel" aria-hidden="true">
+	
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -184,8 +192,8 @@ table.member-info td:first-child {
 							<td class="bg-light">게시여부</td>
 							<td>
 								<select name="postingStatus" class="form-select" style="width: 95%;">
-									<option value="1" ${dto.postingStatus == 1 ? "selected" : ""}>공개</option>
-									<option value="0" ${dto.postingStatus == 0 ? "selected" : ""}>비공개</option>
+									<option value="0" ${dto.postingStatus == 0 ? "selected" : ""}>공개</option>
+									<option value="1" ${dto.postingStatus == 1 ? "selected" : ""}>비공개</option>
 								</select>
 							</td>
 						</tr>

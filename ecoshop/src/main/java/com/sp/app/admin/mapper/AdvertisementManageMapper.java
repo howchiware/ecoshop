@@ -33,4 +33,6 @@ public interface AdvertisementManageMapper {
 	
 	public List<AdvertisementManage>listAdvertisementFile(long advertisingId);
 	
+	public List<AdvertisementManage> listMainBanner (Map<String, Object>map);
+	
 }

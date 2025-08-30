@@ -23,4 +23,6 @@ public interface AdvertisementManageService {
 	public AdvertisementManage findByFileId(long advertisingFileNum);
 	
 	public List<AdvertisementManage> listAdvertisementFile(long advertisingId);
+	
+	public List<AdvertisementManage> listMainBanner (Map<String, Object>map);
 }

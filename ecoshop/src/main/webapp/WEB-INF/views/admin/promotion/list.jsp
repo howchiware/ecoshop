@@ -192,87 +192,91 @@
 		<div class="container photo-section" data-aos="fade-up" data-aos-delay="100">
 			<div class="row justify-content-center">
 				<div class="col-md-10 my-1 p-2">
-					<div class="data-info">
-		        		<span class="small-title">글목록</span> <span class="dataCount">${dataCountAdvertisement}개(${page}/${total_page} 페이지)</span>
-		      		</div>
+				<div class="data-info">
+		        <span class="small-title">글목록</span> <span class="dataCount">${dataCount}개(${page}/${total_page} 페이지)</span>
+		      </div>
 				
 						<div class="col-md-8 text-end">
 							<button type="button" class="btn-accent btn-md" onclick="location.href='${pageContext.request.contextPath}/admin/promotion/write';">사진올리기</button>
 						</div>
 					</div>
-					
+				
 					<div class="row gy-4 mb-3">
-    <c:forEach var="dto" items="${listAd}" varStatus="status">
-        <div class="col-lg-4 col-md-9">
-            <div class="photo-content h-100">
-                <c:choose>
-                    <c:when test="${not empty dto.saveFilename}">
-                        <img src="${pageContext.request.contextPath}/uploads/advertisement/${dto.saveFilename}"
-                             class="img-fluid border rounded w-100"
-                             style="height: 235px;" alt="">
-                    </c:when>
-                    <c:otherwise>
-                        <img src="${pageContext.request.contextPath}/uploads/promotion/bg.png"
-                             class="img-fluid border rounded w-100"
-                             style="height: 235px;" alt="no image">
-                    </c:otherwise>
-                </c:choose>
-                <div class="photo-info">
-                    <p><label>${dto.subject}</label></p>
-                </div>
-            </div>
-        </div>
-    </c:forEach>
-</div>
-<div class="page-navigation">
-    ${dataCountAd == 0 ? "등록된 광고가 없습니다." : pagingAd}
-</div>
-
-<hr class="my-4">
-
-<!-- 프로모션 목록 -->
-<h3>프로모션 목록</h3>
-<div class="row gy-4 mb-3">
-    <c:forEach var="dto" items="${listPr}" varStatus="status">
-        <div class="col-lg-4 col-md-9">
-            <div class="photo-content h-100">
-                <img src="${pageContext.request.contextPath}/uploads/promotion/${dto.imageFilename}"
-                     class="img-fluid border rounded w-100" style="height: 235px;" alt="">
-                <div class="photo-info">
-                    <p><label>${dto.subject}</label></p>
-                    <div class="mt-2">
-                        <c:choose>
-                            <c:when test="${sessionScope.member.memberId==dto.memberId}">
-                                <button type="button" class="btn btn-sm btn-outline-primary"
-                                        onclick="location.href='${pageContext.request.contextPath}/admin/promotion/update?promotionId=${dto.promotionId}&page=${page}';">
-                                    수정
-                                </button>
-                            </c:when>
-                            <c:otherwise>
-                                <button type="button" class="btn btn-sm btn-outline-secondary" disabled>수정</button>
-                            </c:otherwise>
-                        </c:choose>
-
-                        <c:choose>
-                            <c:when test="${sessionScope.member.memberId==dto.memberId || sessionScope.member.userLevel>50}">
-                                <button type="button" class="btn btn-sm btn-outline-danger"
-                                        onclick="deleteOk('${dto.promotionId}', '${dto.imageFilename}')">
-                                    삭제
-                                </button>
-                            </c:when>
-                            <c:otherwise>
-                                <button type="button" class="btn btn-sm btn-outline-secondary" disabled>삭제</button>
-                            </c:otherwise>
-                        </c:choose>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </c:forEach>
-</div>
-<div class="page-navigation">
-    ${dataCountPr == 0 ? "등록된 프로모션이 없습니다." : pagingPr}
-</div>
+						<c:forEach var="dto" items="${list}" varStatus="status">
+							<div class="col-lg-4 col-md-9">
+								<div class="photo-content h-100">
+									<img src="${pageContext.request.contextPath}/uploads/promotion/${dto.imageFilename}" class="img-fluid border rounded w-100" style="height: 235px;" alt="">
+									<div class="photo-info">
+										<p><label>${dto.subject}</label></p>
+										  <div class="mt-2">
+									        <c:choose>
+									            <c:when test="${sessionScope.member.memberId==dto.memberId}">
+									                <button type="button" class="btn btn-sm btn-outline-primary"
+									                        onclick="location.href='${pageContext.request.contextPath}/admin/promotion/update?promotionId=${dto.promotionId}&page=${page}';">
+									                    수정
+									                </button>
+									            </c:when>
+									            <c:otherwise>
+									                <button type="button" class="btn btn-sm btn-outline-secondary" disabled>수정</button>
+									            </c:otherwise>
+									        </c:choose>
+									
+									        <c:choose>
+									            <c:when test="${sessionScope.member.memberId==dto.memberId || sessionScope.member.userLevel>50}">
+									                <button type="button" class="btn btn-sm btn-outline-danger"
+									                        onclick="deleteOk('${dto.promotionId}', '${dto.imageFilename}')">
+									                    삭제
+									                </button>
+									            </c:when>
+									            <c:otherwise>
+									                <button type="button" class="btn btn-sm btn-outline-secondary" disabled>삭제</button>
+									            </c:otherwise>
+									        </c:choose>
+									    </div>
+									</div> 	
+								</div>
+								
+								<div id="inline-content-${dto.promotionId}" class="d-none">
+									<div class="inline-inner">
+										<h4 class="text-center mb-3">${dto.subject}</h4>
+										<div class="row g-3">
+											<div class="col-md-12 border-top"></div>
+											<div class="col-md-6 text-end">
+												작성일 : ${dto.regDate}
+											</div>
+											<div class="col-md-12 border-top"></div>
+											<div class="col-md-12 border-top"></div>
+											<div class="col-md-6">
+												<c:choose>
+													<c:when test="${sessionScope.member.memberId==dto.memberId}">
+														<button type="button" class="btn-default" onclick="location.href='${pageContext.request.contextPath}/admin/promotion/update?num=${dto.promotionId}&page=${page}';">수정</button>											</c:when>
+													<c:otherwise>
+														<button type="button" class="btn-default" disabled>수정</button>
+													</c:otherwise>
+												</c:choose>
+												
+												<c:choose>
+													<c:when test="${sessionScope.member.memberId==dto.memberId || sessionScope.member.userLevel>50}">
+														<button type="button" class="btn-default" onclick="deleteOk('${dto.promotionId}', '${dto.imageFilename}')">삭제</button>
+													</c:when>
+													<c:otherwise>
+														<button type="button" class="btn-default" disabled>삭제</button>
+													</c:otherwise>
+												</c:choose>
+											</div>
+											<div class="col-md-6 text-end">
+												<button type="button" class="gtrigger-close btn-accent">닫기</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</c:forEach>
+					</div>
+					
+					<div class="page-navigation">
+						${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+					</div>
 			
 				</div>
 			</div>

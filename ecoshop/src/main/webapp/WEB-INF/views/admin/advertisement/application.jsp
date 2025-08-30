@@ -1,15 +1,20 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
-    <!-- 신청 목록 -->
-  
-	<span class="dataCount">${dataCount}개(${pageNo}/${total_page} 페이지)</span>
-		<div class="col-md-3 text-end">
-			&nbsp;
-		</div>
 
-   <table class="table table-hover board-list">
-	  <thead class="table-light">
+<style>
+.hover-cursor {
+  cursor: pointer;
+}
+
+</style>
+
+<!-- 신청 목록 -->
+<span class="dataCount">${dataCount}개(${pageNo}/${total_page} 페이지)</span>
+	<div class="col-md-3 text-end">&nbsp;</div>
+
+<table class="table board-list">
+	  <thead class="table-light" style="text-align: center;">
 	    <tr>
 	      <th>번호</th>
 	      <th>이름</th>
@@ -21,16 +26,16 @@
 	  </thead>
 	  <tbody>
 	    <c:forEach var="dto" items="${list}" varStatus="status">
-	      <tr class="hover-cursor" 
+	      <tr  align="center" class="hover-cursor" 
 	          data-bs-toggle="collapse" 	
 	          data-bs-target="#collapse-${dto.advertisingId}" 
 	          aria-expanded="false" 
 	          aria-controls="collapse-${dto.advertisingId}">
-	        <td>${dataCount - ((page-1) * size + status.index)}</td>
-	        <td>${dto.username}</td>
-	        <td>${dto.subject}</td>
-	        <td>${dto.regDate}</td>
-	        <td>
+	        <td align="center">${dataCount - ((page-1) * size + status.index)}</td>
+	        <td align="center">${dto.username}</td>
+	        <td align="center">${dto.subject}</td>
+	        <td align="center">${dto.regDate}</td>
+	        <td align="center">
 			    <c:choose>
 			        <c:when test="${dto.inquiryType == 1}">
 			            메인
@@ -45,9 +50,9 @@
 			</td>
 	        <td>
 	          <button type="button" class="btn btn-success btn-sm"
-	                  onclick="event.stopPropagation(); updateStatus('${dto.advertisingId}', 5)">✔</button>
+	                  onclick="event.stopPropagation(); updateStatus('${dto.advertisingId}', 5)">승인</button>
 	          <button type="button" class="btn btn-danger btn-sm"
-	                  onclick="event.stopPropagation(); updateStatus('${dto.advertisingId}', 4)">✖</button>
+	                  onclick="event.stopPropagation(); updateStatus('${dto.advertisingId}', 4)">반려</button>
 	        </td>
 	      </tr>
 	      <!-- 상세 영역 -->

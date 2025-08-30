@@ -11,7 +11,6 @@
             <when test="schType == 'username'">
                 INSTR(username, #{kwd}) &gt;= 1
             </when>
-            <!-- 안전하지 않은 ${schType} 직접 사용 제거 -->
             <otherwise>
                 INSTR(${schType}, #{kwd}) &gt;= 1
             </otherwise>
@@ -42,10 +41,24 @@
 				</otherwise>
             </choose>
     </where>
-    ORDER BY regDate DESC
+    ORDER BY regDate, inquiryType DESC
     OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 	
+	<!-- 메인 배너용 광고 리스트 -->
+	<select id="listMainBanner" resultType="com.sp.app.admin.model.AdvertisementManage">
+	    SELECT a.advertisingId, a.subject, f.saveFilename AS imageFilename
+	    FROM advertising a
+	    JOIN advertisingFile f ON a.advertisingId = f.advertisingId
+	    WHERE a.postingStatus = #{postingStatus}
+	      AND a.status = #{status}
+	      AND a.inquiryType = #{inquiryType}
+	      AND (
+	            LOWER(f.saveFilename) LIKE '%.jpg'
+	         OR LOWER(f.saveFilename) LIKE '%.jpeg'
+	         OR LOWER(f.saveFilename) LIKE '%.png'
+	      )
+	</select>
 	
 	<!-- 카운트 -->
 	<select id="dataCount" parameterType="map" resultType="Integer">
@@ -76,6 +89,7 @@
     <update id="updateStatus" parameterType="map">
 	    UPDATE advertising
 	    SET status = #{status}
+	    postingStatus = #{postingStatus}
 	    WHERE advertisingId = #{advertisingId}
 	</update>
 	

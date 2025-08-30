@@ -296,7 +296,7 @@ function openStatusModal(page){
 
  // 상태 변경
 function updateStatus(advertisingId, status, page = 1) {
-    if(!confirm("정말로 상태를 변경하시겠습니까?")) return;
+    if(!confirm("상태를 변경하시겠습니까?")) return;
 
     let url = '${pageContext.request.contextPath}/admin/advertisement/updateStatus';
     let params = { advertisingId: advertisingId, status: status };

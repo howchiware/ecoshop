@@ -98,13 +98,10 @@ public class AdvertisementManageServiceImpl implements AdvertisementManageServic
 	@Override
 	public void updateAdvertisement(AdvertisementManage dto) throws Exception {
 	    try {
-	        // 기존 데이터 조회
 	        AdvertisementManage beforeDto = mapper.findById(dto.getAdvertisingId());
 
-	        // 광고 업데이트
 	        mapper.updateAdvertisement(dto);
-
-	        // 로그 남기기
+ 
 	        AdvertisementManage logDto = new AdvertisementManage();
 	        logDto.setAdvertisingId(dto.getAdvertisingId());
 	        logDto.setOldStatus(beforeDto.getInquiryType());           
@@ -142,6 +139,11 @@ public class AdvertisementManageServiceImpl implements AdvertisementManageServic
 			log.info("statusdataCount : " , e);
 		}
 		return result;
+	}
+
+	@Override
+	public List<AdvertisementManage> listMainBanner(Map<String, Object> map) {
+		return mapper.listMainBanner(map);
 	}
 
 }

@@ -24,13 +24,13 @@
 		
     <table class="table table-hover board-list">
       <thead class="table-light">
-        <tr>
+        <tr style="text-align: center;">
 		  <th>번호</th>
 		  <th>이름</th>
           <th>제목</th>
           <th>가입일자</th>
           <th>문의유형</th>
-          <c:if test="${role == 2}">
+          <c:if test="${role != 2}">
           	<th>게시여부</th>
           </c:if>
         </tr>
@@ -38,7 +38,7 @@
       
       <tbody>
         <c:forEach var="dto" items="${list}" varStatus="status">
-          <tr class="hover-cursor" onclick="profile('${dto.advertisingId}', '${page}');"> 
+          <tr class="hover-cursor" onclick="profile('${dto.advertisingId}', '${page}');" style="text-align: center;"> 
             <td>${dataCount - (page) - status.index}</td>
             <td>${dto.username}</td>
             <td>${dto.subject}</td>
@@ -56,7 +56,7 @@
 			        </c:otherwise>
 			    </c:choose>
 			</td>
-            <c:if test="${role == 2}">
+            <c:if test="${role != 2}">
             	<td>
 				    <c:choose>
 				        <c:when test="${dto.postingStatus == 0}">

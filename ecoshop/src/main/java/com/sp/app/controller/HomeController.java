@@ -7,7 +7,9 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.sp.app.admin.model.AdvertisementManage;
 import com.sp.app.admin.model.PromotionManage;
+import com.sp.app.admin.service.AdvertisementManageService;
 import com.sp.app.admin.service.PromotionManageService;
 import com.sp.app.model.Product;
 import com.sp.app.model.Workshop;
@@ -24,12 +26,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HomeController {
 	private final PromotionManageService PromotionManageService;
+	private final AdvertisementManageService advertisementManageService;
 	private final ProductService productService;
 	private final WorkshopService workshopService;
 	
 	@GetMapping("/")
 	public String MainPage(Model model) {
 		try {
+			// 베너
+			Map<String, Object> bannerMap = new HashMap<>();
+			bannerMap.put("postingStatus", 0);
+			bannerMap.put("status", 5);
+			bannerMap.put("inquiryType", 1);
+
+			List<AdvertisementManage> bannerList = advertisementManageService.listMainBanner(bannerMap);
+			model.addAttribute("bannerList", bannerList);
+			
 			// 베스트 상품
 			Map<String, Object> map = new HashMap<>();
 			map.put("offset", 0);

@@ -14,7 +14,7 @@
 
 <table class="table table-bordered table-sm">
   <thead>
-    <tr>
+    <tr style="text-align: center;">
       <th>로그ID</th>
       <th>광고ID</th>
       <th>변경일</th>
@@ -24,7 +24,7 @@
       <th>변경 게시</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody style="text-align: center">
     <c:forEach var="row" items="${listStatus}">
       <tr>
         <td>${row.statuslogId}</td>
