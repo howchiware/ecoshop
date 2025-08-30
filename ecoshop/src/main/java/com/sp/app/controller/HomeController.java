@@ -18,6 +18,8 @@ import com.sp.app.admin.service.PromotionManageService;
 import com.sp.app.model.GongguProduct;
 import com.sp.app.model.Product;
 import com.sp.app.model.Workshop;
+import com.sp.app.model.Challenge;
+import com.sp.app.service.ChallengeService;
 import com.sp.app.service.GongguService;
 import com.sp.app.service.ProductService;
 import com.sp.app.service.WorkshopService;
@@ -36,6 +38,7 @@ public class HomeController {
 	private final ProductService productService;
 	private final WorkshopService workshopService;
 	private final GongguService gongguService;
+	private final ChallengeService challengeService;
 	
 	@GetMapping("/")
 	public String MainPage(Model model) {
@@ -96,10 +99,14 @@ public class HomeController {
 	        }
 			model.addAttribute("gongguList", gongguList);
 			
-		} catch (Exception e) {
-			
-		}
-		return "main/home";
-	}
+			 // 데일리 챌린지
+            int todayIdx0to6 = java.time.LocalDate.now().getDayOfWeek().getValue() % 7; // 0:일 ~ 6:토
+            Challenge todayDaily = challengeService.getDailyByWeekday(todayIdx0to6);
+            model.addAttribute("todayDaily", todayDaily);
 
+        } catch (Exception e) {
+            
+        }
+        return "main/home";
+    }
 }

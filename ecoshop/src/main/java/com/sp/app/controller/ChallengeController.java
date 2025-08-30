@@ -414,5 +414,20 @@ public class ChallengeController {
 		return "myPage/specialPosts";
 
 	}
+	
+	
+	// 홈 화면 
+	@GetMapping("today")
+	public String redirectTodayDaily() {
+	    int idx0to6 = java.time.LocalDate.now().getDayOfWeek().getValue() % 7; // 0:일 ~ 6:토
+	    Challenge today = service.getDailyByWeekday(idx0to6);
+
+	    // 당신말대로 매일 요일별 챌린지가 있으니 null일 가능성은 거의 없지만, 방어 로직
+	    if (today == null || today.getChallengeId() == null) {
+	        return "redirect:/challenge/list?weekday=" + idx0to6;
+	    }
+	    return "redirect:/challenge/detail/" + today.getChallengeId();
+	}
+
 
 }
