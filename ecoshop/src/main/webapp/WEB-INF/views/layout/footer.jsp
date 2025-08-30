@@ -65,7 +65,7 @@
 
 .footer-info-dense p {
 	margin-bottom: 0.5rem;
-	line-height: 1.6;
+/* 	line-height: 1.6; */
 }
 
 .footer-info-dense span {
