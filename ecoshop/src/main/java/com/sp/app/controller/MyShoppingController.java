@@ -370,7 +370,7 @@ public class MyShoppingController {
 
 			String cp = req.getContextPath();
 			String query = "";
-			String listUrl = cp + "myShopping/myPoint";
+			String listUrl = cp + "/myShopping/myPoint";
 			if (! kwd.isBlank()) {
 				query = "schType=" + schType + "&kwd=" + myUtil.encodeUrl(kwd);
 				
