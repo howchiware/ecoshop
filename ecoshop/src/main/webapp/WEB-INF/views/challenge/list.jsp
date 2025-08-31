@@ -481,6 +481,7 @@
 	<script>
   const cp = "${cp}";
   const todayWeekday = ${empty targetWeekday ? -1 : targetWeekday};
+  const IS_LOGIN = ${isLogin ? 'true' : 'false'};
 
   // 요일 버튼 활성화 + 가운데 스크롤
   (function initWeekday(){
@@ -524,11 +525,25 @@
       if(!btn) return;
       const id = btn.dataset.challengeId;
       const st = btn.dataset.status || 'OPEN';
-      if (!id || st !== 'OPEN' || btn.disabled) {
+      
+      if (!id) return;
+
+      
+      if (!IS_LOGIN) {
+        alert('로그인이 필요합니다. 로그인 후 참가해 주세요.');
+        const returnURL = encodeURIComponent(location.pathname + location.search);
+        location.href = cp + "/member/login?returnURL=" + returnURL;
+        return;
+      }
+
+      // 상태 체크
+      if (st !== 'OPEN' || btn.disabled) {
         if (st === 'UPCOMING') alert('아직 시작 전인 챌린지예요. 시작일에 참여할 수 있어요!');
         else if (st === 'CLOSED') alert('종료된 챌린지예요.');
         return;
       }
+
+     
       location.href = cp + "/challenge/detail/" + id;
     });
   })();
