@@ -9,8 +9,11 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<style type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssAdmin/member.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin_paginate.css">
 
+<style type="text/css">
+<!-- 
 .content-box {
     margin-left: 220px; 
     padding: 20px;
@@ -55,24 +58,7 @@
     font-weight: 600;
 }
 
-/* --- 흰색 컨텐츠 박스 --- */
-.section {
-  border: 1px solid #e0e0e0;   
-  border-radius: 0 6px 6px 6px;
-  background: #fff;
-  padding: 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
 
-/* 페이지네이션 스타일 (기존 유지) */
-.page-navigation {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 6px;
-  margin: 20px 0;
-  font-family: 'Noto Sans KR', sans-serif;
-}
 
 .page-navigation a,
 .page-navigation span {
@@ -100,44 +86,46 @@
   color: #000;
 }
 
+.right{
+	padding: 30px !important;
+}
+
 
 .modal-backdrop { z-index: 9998 !important; }
 .modal { z-index: 9999 !important; }
 body.modal-open { overflow: hidden; padding-right: 0 !important; }
 </style>
+
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
 <jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp"/>
 <main class="main-container">
   <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
-
-  <div class="container">
-    <div class="row">
+  
+  <div class="right">
+  	<div class="title">
+		<h3>광고 목록</h3>
+	</div>
+	<hr>
+  <div class="board-container row">
       <div class="col">
         <!-- 탭 -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
             <button class="nav-link active" id="tab-1" role="tab" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" aria-selected="true" data-tab="1">
-              <i class="bi bi-person-fill"></i> 승인
+              승인
             </button>
           </li>
           <li class="nav-item" role="presentation">
             <button class="nav-link" id="tab-2" role="tab" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" aria-selected="false" data-tab="2">
-              <i class="bi bi-mortarboard-fill"></i> 반려
+              반려
             </button>
           </li>
-          <li>
-	        <button id="btnApplication" type="button" class="btn-accent" onclick="applicationForm()">신청목록</button>
-	      </li>
-	      <li>
-	      	<button type="button" class="btn btn-outline-secondary btn-sm" onclick="openStatusModal()">상태이력 보기</button>
-	      </li>
         </ul>
         
-        <!-- 흰색 박스 -->
         <div class="section">
-          <div class="tab-content pt-3" id="nav-tabContent"></div>
+          <div class="tab-content p-3" id="nav-tabContent"></div>
           
           <form name="advertisementSearchForm">
             <input type="hidden" name="schType">

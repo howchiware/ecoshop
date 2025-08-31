@@ -86,10 +86,10 @@
     </select>
     
     <!-- 상태 변경 -->
-    <update id="updateStatus" parameterType="map">
+	<update id="updateStatus" parameterType="map">
 	    UPDATE advertising
-	    SET status = #{status}
-	    postingStatus = #{postingStatus}
+	    SET status = #{status},
+	        postingStatus = #{postingStatus, jdbcType=VARCHAR} 
 	    WHERE advertisingId = #{advertisingId}
 	</update>
 	
