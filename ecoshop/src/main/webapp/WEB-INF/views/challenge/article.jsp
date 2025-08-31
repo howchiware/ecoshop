@@ -165,7 +165,7 @@ main { padding: clamp(16px, 2vw, 32px) 0 60px; }
               <div class="info-value">
                 <c:choose>
                   <c:when test="${dto.challengeType=='DAILY'}">사진 인증 또는 글 인증</c:when>
-                  <c:otherwise>연속 3일 인증</c:otherwise>
+                  <c:otherwise>연속 3일만 인정 / 하루 1회만 인증 등록 가능</c:otherwise>
                 </c:choose>
               </div>
             </div>
@@ -214,7 +214,6 @@ main { padding: clamp(16px, 2vw, 32px) 0 60px; }
         <a href="${cp}/challenge/list" class="btn btn-outline"><i class="bi bi-arrow-left"></i> 목록</a>
 
         <c:choose>
-         
           <c:when test="${dto.challengeType=='DAILY'}">
             <c:choose>
               <c:when test="${dailyPlayable}"><a class="btn-grad" href="${cp}/challenge/join/daily/${dto.challengeId}">챌린지 참여하기</a></c:when>
@@ -222,15 +221,29 @@ main { padding: clamp(16px, 2vw, 32px) 0 60px; }
             </c:choose>
           </c:when>
 
-          <c:otherwise>
-            <c:choose>
-              <c:when test="${status=='OPEN'}">
-                <a class="btn-grad" href="${cp}/challenge/join/special/${dto.challengeId}?day=${nextDay}">스페셜 챌린지 <c:out value="${empty nextDay ? 1 : nextDay}"/>일차 참여하기</a>
-              </c:when>
-              <c:when test="${status=='UPCOMING'}"><button class="btn-grad" disabled>시작 전입니다</button></c:when>
-              <c:otherwise><button class="btn-grad" disabled>종료된 챌린지</button></c:otherwise>
-            </c:choose>
-          </c:otherwise>
+			<c:otherwise>
+			  <c:choose>
+			    <c:when test="${status=='OPEN'}">
+			      <c:choose>
+			        <c:when test="${empty nextDay}">
+			          <button class="btn-grad" disabled>모든 일차 인증 완료</button>
+			        </c:when>
+			        <c:when test="${not empty canJoinToday and !canJoinToday}">
+			          <button class="btn-grad" disabled>
+			            스페셜 챌린지 <c:out value="${nextDay}"/>일차 참여하기 (오늘은 불가)
+			          </button>
+			        </c:when>
+			        <c:otherwise>
+			          <a class="btn-grad" href="${cp}/challenge/join/special/${dto.challengeId}?day=${nextDay}">
+			            스페셜 챌린지 <c:out value="${nextDay}"/>일차 참여하기
+			          </a>
+			        </c:otherwise>
+			      </c:choose>
+			    </c:when>
+			    <c:when test="${status=='UPCOMING'}"><button class="btn-grad" disabled>시작 전입니다</button></c:when>
+			    <c:otherwise><button class="btn-grad" disabled>종료된 챌린지</button></c:otherwise>
+			  </c:choose>
+			</c:otherwise>
         </c:choose>
       </div>
     </section>
@@ -246,7 +259,7 @@ main { padding: clamp(16px, 2vw, 32px) 0 60px; }
             <div class="d-flex align-items-center gap-2"><i class="bi bi-check-circle text-success"></i> 마감 시간: 밤 11시 59분</div>
           </c:when>
           <c:otherwise>
-            <div class="d-flex align-items-center gap-2 mb-2"><i class="bi bi-check-circle text-success"></i> 기간 내 3일 연속 인증</div>
+            <div class="d-flex align-items-center gap-2 mb-2"><i class="bi bi-check-circle text-success"></i> 기간 내 <strong>3일 연속</strong>인증(하루 1회만 가능)</div>
             <div class="d-flex align-items-center gap-2 mb-2"><i class="bi bi-check-circle text-success"></i> 3일차 완료 후 ‘인증 신청’ 제출</div>
             <div class="d-flex align-items-center gap-2"><i class="bi bi-check-circle text-success"></i> 관리자 승인 후 포인트 지급</div>
           </c:otherwise>
