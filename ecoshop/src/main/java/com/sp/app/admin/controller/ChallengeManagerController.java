@@ -84,7 +84,7 @@ public class ChallengeManagerController {
 			}
 
 			String listUrl = cp + "/admin/challengeManage/list" + (query.length() > 0 ? "?" + query : "");
-			String paging = paginateUtil.paging(current_page, Math.max(total_page, 1), listUrl);
+			String paging = paginateUtil.pagingUrl(current_page, Math.max(total_page, 1), listUrl);
 
 			model.addAttribute("list", list);
 			model.addAttribute("page", current_page);
@@ -274,65 +274,70 @@ public class ChallengeManagerController {
 		return q.toString();
 	}
 
+	
 	// 인증 목록
 	@GetMapping("certList")
 	public String certList(
-			@RequestParam(value = "page", defaultValue = "1") int currentPage,
-			@RequestParam(value = "keyword", required = false) String keyword,
-			@RequestParam(value = "type", defaultValue = "ALL") String type,
-			@RequestParam(value = "approvalStatus", required = false) Integer approvalStatus, 
-			Model model, HttpServletRequest req) {
+	        @RequestParam(value="page", defaultValue="1") int currentPage,
+	        @RequestParam(value="keyword", required=false) String keyword,
+	        @RequestParam(value="type", defaultValue="ALL") String type,
+	        @RequestParam(value="approvalStatus", required=false) Integer approvalStatus,
+	        Model model, HttpServletRequest req) {
 
-		int size = 10;
-		
-		
-		// 기본 필터 파라미터
-	    Map<String, Object> param = new HashMap<>();
+	    final int size = 10;
+
+	    // DAILY는 승인 개념 없음 → 상태 필터 무시
+	    boolean isDaily = "DAILY".equalsIgnoreCase(type);
+	    if (isDaily) approvalStatus = null;
+
+	    // 목록/페이징 파라미터
+	    Map<String,Object> param = new HashMap<>();
 	    param.put("keyword", keyword);
 	    param.put("type", type);
 	    param.put("approvalStatus", approvalStatus);
 
-	    // 요약 배지 카운트 
-	    Map<String, Object> p0 = new HashMap<>(param); p0.put("approvalStatus", 0);
-	    Map<String, Object> p1 = new HashMap<>(param); p1.put("approvalStatus", 1);
-	    Map<String, Object> p2 = new HashMap<>(param); p2.put("approvalStatus", 2);
-	    model.addAttribute("countPending",  service.countAdminCerts(p0));
-	    model.addAttribute("countApproved", service.countAdminCerts(p1));
-	    model.addAttribute("countRejected", service.countAdminCerts(p2));
-
-	    // 총 건수(현재 선택한 approvalStatus 필터 포함)
 	    int total = service.countAdminCerts(param);
 	    int totalPage = paginateUtil.pageCount(total, size);
 	    currentPage = Math.min(Math.max(currentPage, 1), Math.max(totalPage, 1));
 	    int offset = (currentPage - 1) * size;
 
-	    // 목록 조회용 페이지네이션 파라미터
 	    param.put("offset", offset);
 	    param.put("size", size);
 
 	    List<Challenge> list = service.listAdminCerts(param);
 
-	    // 페이징 링크용 
-	    String base = req.getContextPath() + "/admin/challengeManage/certList";
+	    // 요약칩: SPECIAL일 때만 사용 (JSP도 type=='SPECIAL'일 때만 출력)
+	    Map<String,Object> base = new HashMap<>();
+	    base.put("keyword", keyword);
+	    base.put("type", "SPECIAL");
+
+	    Map<String,Object> p0 = new HashMap<>(base); p0.put("approvalStatus", 0); // 대기
+	    Map<String,Object> p1 = new HashMap<>(base); p1.put("approvalStatus", 1); // 승인
+	    Map<String,Object> p2 = new HashMap<>(base); p2.put("approvalStatus", 2); // 반려
+
+	    model.addAttribute("countPending",  service.countAdminCerts(p0));
+	    model.addAttribute("countApproved", service.countAdminCerts(p1));
+	    model.addAttribute("countRejected", service.countAdminCerts(p2));
+
+	    // 페이징 URL
+	    String baseUrl = req.getContextPath() + "/admin/challengeManage/certList";
 	    StringBuilder qs = new StringBuilder();
 	    try {
 	        if (keyword != null && !keyword.isBlank()) {
 	            qs.append(qs.length()==0 ? "?" : "&")
-	              .append("keyword=")
-	              .append(myUtil.encodeUrl(keyword));
+	              .append("keyword=").append(myUtil.encodeUrl(keyword));
 	        }
 	    } catch (Exception ignore) {}
-	    if (type != null && !"ALL".equals(type)) {
+	    if (type != null && !"ALL".equalsIgnoreCase(type)) {
 	        qs.append(qs.length()==0 ? "?" : "&").append("type=").append(type);
 	    }
-	    if (approvalStatus != null) {
+	    if (approvalStatus != null && !isDaily) {
 	        qs.append(qs.length()==0 ? "?" : "&").append("approvalStatus=").append(approvalStatus);
 	    }
 
-	    String listUrl = base + (qs.length() > 0 ? qs.toString() : "");
-	    String paging = paginateUtil.paging(currentPage, Math.max(totalPage, 1), listUrl);
+	    String listUrl = baseUrl + (qs.length() > 0 ? qs.toString() : "");
+	    String paging = paginateUtil.pagingUrl(currentPage, Math.max(totalPage, 1), listUrl);
 
-	    
 	    model.addAttribute("list", list);
 	    model.addAttribute("paging", paging);
 	    model.addAttribute("keyword", keyword);
@@ -342,6 +347,7 @@ public class ChallengeManagerController {
 
 	    return "admin/challengeManage/certList";
 	}
+
 
 	// 승인
 	@PostMapping("cert/approve")
@@ -389,6 +395,54 @@ public class ChallengeManagerController {
 	    return redir.toString();
 	}
 	
-	
+	// 상세보기 (인증글)
+	@GetMapping("cert/detail")
+	public String certDetail(
+	        @RequestParam("postId") long postId,
+	        @RequestParam(value="page", defaultValue="1") int page,
+	        @RequestParam(value="keyword", required=false) String keyword,
+	        @RequestParam(value="type", defaultValue="ALL") String type,
+	        @RequestParam(value="approvalStatus", required=false) Integer approvalStatus,
+	        Model model, RedirectAttributes ra) {
+
+	    try {
+	        // 인증글/챌린지/회원 정보
+	        com.sp.app.model.Challenge dto = service.findCertDetail(postId);
+	        if (dto == null) {
+	            ra.addFlashAttribute("message", "데이터가 없습니다.");
+	            return buildCertListRedirect(page, keyword, type, approvalStatus);
+	        }
+
+	        // 사진 목록
+	        java.util.List<String> photos = service.listCertPhotos(postId);
+
+	        model.addAttribute("dto", dto);
+	        model.addAttribute("photos", photos);
+
+	        model.addAttribute("page", page);
+	        model.addAttribute("keyword", keyword);
+	        model.addAttribute("type", type);
+	        model.addAttribute("approvalStatus", approvalStatus);
+
+	        return "admin/challengeManage/certDetail";
+	    } catch (Exception e) {
+	        log.error("certDetail error postId={}", postId, e);
+	        ra.addFlashAttribute("message", "상세 조회에 실패했습니다.");
+	        return buildCertListRedirect(page, keyword, type, approvalStatus);
+	    }
+	}
+
+	private String buildCertListRedirect(int page, String keyword, String type, Integer approvalStatus) {
+	    StringBuilder redir = new StringBuilder("redirect:/admin/challengeManage/certList?page=").append(page);
+	    try {
+	        if (keyword != null && !keyword.isBlank()) {
+	            redir.append("&keyword=").append(myUtil.encodeUrl(keyword));
+	        }
+	    } catch (Exception ignore) {}
+	    if (type != null) redir.append("&type=").append(type);
+	    if (approvalStatus != null) redir.append("&approvalStatus=").append(approvalStatus);
+	    return redir.toString();
+	}
+
 
 }

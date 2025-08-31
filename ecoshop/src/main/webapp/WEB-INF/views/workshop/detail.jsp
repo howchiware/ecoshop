@@ -2,17 +2,22 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <title><c:out value="${dto.workshopTitle}" /></title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css"
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/dist/css/home.css"
 	type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssWorkshop/workshopUser.css">
-<style type="text/css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/dist/cssWorkshop/workshopUser.css">
 
+<style type="text/css">
 </style>
 </head>
 <body>
@@ -29,8 +34,8 @@
 
 	<main class="container py-4">
 
-		<c:set var="rawMain"
-			value="${(not empty photoList and fn:length(photoList)>0) ? photoList[0].workshopImagePath : ''}" />
+		<c:set var="rawMain" value="${dto.thumbnailPath}" />
+
 		<c:choose>
 			<c:when test="${empty rawMain}">
 				<c:set var="mainImg"
@@ -46,6 +51,7 @@
 			</c:otherwise>
 		</c:choose>
 
+
 		<div class="row g-1 mb-4">
 			<div class="col-md-6">
 				<img src="${mainImg}" alt="<c:out value='${dto.workshopTitle}'/>"
@@ -53,122 +59,139 @@
 					onerror="if(this.src.indexOf('noimage.png')===-1)this.src='${pageContext.request.contextPath}/dist/images/noimage.png'">
 			</div>
 			<div class="col-md-5 ps-md-4">
-			<div class="detail-card">
-				<div class="simple-panel">
+				<div class="detail-card">
+					<div class="simple-panel">
 
-					<h2 class="simple-title">
-						<c:out value="${dto.workshopTitle}" />
-					</h2>
+						<h2 class="simple-title">
+							<c:out value="${dto.workshopTitle}" />
+						</h2>
 
-					<div class="simple-meta">
-						<div class="rowline">
-							<div class="k">일정</div>
-							<div class="v">
-								<c:choose>
-									<c:when test="${not empty dto.scheduleDate}">
-										<fmt:formatDate value="${dto.scheduleDate}"
-											pattern="yyyy.MM.dd (E) HH:mm" />
-									</c:when>
-									<c:otherwise>-</c:otherwise>
-								</c:choose>
+						<div class="simple-meta">
+							<div class="rowline">
+								<div class="k">일정</div>
+								<div class="v">
+									<c:choose>
+										<c:when test="${not empty dto.scheduleDate}">
+											<fmt:formatDate value="${dto.scheduleDate}"
+												pattern="yyyy.MM.dd (E) HH:mm" />
+										</c:when>
+										<c:otherwise>-</c:otherwise>
+									</c:choose>
+								</div>
+							</div>
+
+							<div class="rowline">
+								<div class="k">장소</div>
+								<div class="v">
+									<c:out value="${dto.location}" />
+								</div>
+							</div>
+
+							<div class="rowline">
+								<div class="k">강사</div>
+								<div class="v">
+									<c:choose>
+										<c:when test="${not empty dto.managerName}">
+											<c:out value="${dto.managerName}" />
+											<c:if test="${not empty dto.managerDept}">
+          (<c:out value="${dto.managerDept}" />)
+        </c:if>
+										</c:when>
+										<c:otherwise>-</c:otherwise>
+									</c:choose>
+								</div>
+							</div>
+
+							<div class="rowline">
+								<div class="k">정원</div>
+								<div class="v">
+									<c:out value="${dto.capacity}" />
+									명
+								</div>
+							</div>
+							<div class="rowline">
+								<div class="k">참가비</div>
+								<div class="v">무료</div>
+							</div>
+							<div class="rowline">
+								<div class="k">모집 마감</div>
+								<div class="v">
+									<c:choose>
+										<c:when test="${not empty dto.applyDeadline}">
+											<fmt:formatDate value="${dto.applyDeadline}"
+												pattern="yyyy.MM.dd (E) HH:mm" />
+										</c:when>
+										<c:otherwise>-</c:otherwise>
+									</c:choose>
+								</div>
 							</div>
 						</div>
-						<div class="rowline">
-							<div class="k">장소</div>
-							<div class="v">
-								<c:out value="${dto.location}" />
-							</div>
-						</div>
-						<div class="rowline">
-							<div class="k">정원</div>
-							<div class="v">
-								<c:out value="${dto.capacity}" />
-								명
-							</div>
-						</div>
-						<div class="rowline">
-							<div class="k">참가비</div>
-							<div class="v">무료</div>
-						</div>
-						<div class="rowline">
-							<div class="k">모집 마감</div>
-							<div class="v">
-								<c:choose>
-									<c:when test="${not empty dto.applyDeadline}">
-										<fmt:formatDate value="${dto.applyDeadline}"
-											pattern="yyyy.MM.dd (E) HH:mm" />
-									</c:when>
-									<c:otherwise>-</c:otherwise>
-								</c:choose>
-							</div>
-						</div>
-					</div>
 
-					<!-- 버튼 -->
-					<div class="simple-actions">
-						<c:url var="applyUrl" value="/workshop/apply">
-							<c:param name="workshopId" value="${dto.workshopId}" />
-						</c:url>
+						<!-- 버튼 -->
+						<div class="simple-actions">
+							<c:url var="applyUrl" value="/workshop/apply">
+								<c:param name="workshopId" value="${dto.workshopId}" />
+							</c:url>
 
-						<c:choose>
-							<c:when test="${alreadyApplied}">
-								<button type="button"
-									class="btn btn-outline-secondary w-100 text-white"
-									style="opacity: 1" disabled>신청 완료</button>
-							</c:when>
+							<c:choose>
+								<c:when test="${alreadyApplied}">
+									<button type="button"
+										class="btn btn-outline-secondary w-100 text-white"
+										style="opacity: 1" disabled>신청 완료</button>
+								</c:when>
 
-							<c:when
-								test="${dto.workshopStatus == 0 || dto.workshopStatus == 2 || dto.applyDeadline.time lt now.time}">
-								<button type="button" class="btn btn-secondary w-100" disabled>신청
-									불가</button>
-							</c:when>
+								<c:when
+									test="${dto.workshopStatus == 0 || dto.workshopStatus == 2 || dto.applyDeadline.time lt now.time}">
+									<button type="button" class="btn btn-secondary w-100" disabled>신청
+										불가</button>
+								</c:when>
 
-							<c:otherwise>
-								<a href="${applyUrl}" class="btn btn-dark w-100">지금 신청하기</a>
-							</c:otherwise>
-						</c:choose>
+								<c:otherwise>
+									<a href="${applyUrl}" class="btn btn-dark w-100">지금 신청하기</a>
+								</c:otherwise>
+							</c:choose>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 
 
 		<ul class="nav nav-tabs nav-justified mt-3" id="workshopTabs"
 			role="tablist">
 			<li class="nav-item"><button class="nav-link active"
-					data-bs-toggle="tab" data-bs-target="#intro" type="button" style="font-weight: 600;">워크샵
-					소개</button></li>
+					data-bs-toggle="tab" data-bs-target="#intro" type="button"
+					style="font-weight: 600;">워크샵 소개</button></li>
 			<li class="nav-item"><button class="nav-link"
-					data-bs-toggle="tab" data-bs-target="#reviews" type="button" style="font-weight: 600;">후기</button></li>
+					data-bs-toggle="tab" data-bs-target="#reviews" type="button"
+					style="font-weight: 600;">후기</button></li>
 			<li class="nav-item"><button class="nav-link"
-					data-bs-toggle="tab" data-bs-target="#faq" type="button" style="font-weight: 600;">FAQ</button></li>
+					data-bs-toggle="tab" data-bs-target="#faq" type="button"
+					style="font-weight: 600;">FAQ</button></li>
 		</ul>
 
 		<div class="tab-content border border-top-0 p-3">
 			<div class="tab-pane fade show active" id="intro">
 				<div class="mb-3 mt-3">
-					<c:out value="${dto.workshopContent}" escapeXml="false" />
+					<pre style="white-space: pre-line;"> ${dto.workshopContent} </pre>
 				</div>
 				<div class="row g-3">
-					<c:forEach var="p" items="${photoList}" varStatus="st">
-						<c:if test="${st.index>0}">
-							<c:set var="rawPhoto" value='${p.workshopImagePath}' />
-							<c:choose>
-								<c:when
-									test="${fn:startsWith(rawPhoto,'http://') or fn:startsWith(rawPhoto,'https://') or fn:startsWith(rawPhoto,'/')}">
-									<c:set var="photoUrl" value='${rawPhoto}' />
-								</c:when>
-								<c:otherwise>
-									<c:set var="photoUrl"
-										value='${pageContext.request.contextPath}/uploads/workshop/${rawPhoto}' />
-								</c:otherwise>
-							</c:choose>
-							<div class="col-6 col-md-4">
-								<img src="${photoUrl}" class="img-fluid rounded"
-									onerror="if(this.src.indexOf('noimage.png')===-1)this.src='${pageContext.request.contextPath}/dist/images/noimage.png'">
-							</div>
-						</c:if>
+					<c:forEach var="p" items="${photoList}">
+						<c:set var="rawPhoto" value='${p.workshopImagePath}' />
+						<c:choose>
+							<c:when
+								test="${fn:startsWith(rawPhoto,'http://') or fn:startsWith(rawPhoto,'https://') or fn:startsWith(rawPhoto,'/')}">
+								<c:set var="photoUrl" value='${rawPhoto}' />
+							</c:when>
+							<c:otherwise>
+								<c:set var="photoUrl"
+									value='${pageContext.request.contextPath}/uploads/workshop/${rawPhoto}' />
+							</c:otherwise>
+						</c:choose>
+						<div class="col-6 col-md-4">
+							<img src="${photoUrl}" class="img-fluid rounded"
+								onerror="if(this.src.indexOf('noimage.png')===-1)this.src='${pageContext.request.contextPath}/dist/images/noimage.png'">
+						</div>
 					</c:forEach>
 				</div>
 			</div>

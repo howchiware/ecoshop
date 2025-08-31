@@ -49,4 +49,6 @@ public interface GongguManageMapper {
 	public void insertGongguDeliveryRefundInfo(GongguProductDeliveryRefundInfoManage dto);
 	public void updateGongguDeliveryRefundInfo(GongguProductDeliveryRefundInfoManage dto);
 	public void deleteGongguDeliveryFee();
+
+	public List<GongguManage> isBoughtByGongguProductId(long gongguProductId);
 }

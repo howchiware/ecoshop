@@ -244,7 +244,7 @@ public class GongguOrderStatusManageServiceImpl implements GongguOrderStatusMana
 			for(Map<String, Object> map : list) {
 				int detailState = ((BigDecimal) map.get("DETAILSTATE")).intValue(); 
 				detailStateInfo = OrderState.DETAILSTATEMANAGER[detailState];
-				map.put("DETALSTATEINFO", detailStateInfo);
+				map.put("DETAILSTATEINFO", detailStateInfo);
 			}
 		} catch (Exception e) {
 			log.info("listDetailStateInfo : ", e);

@@ -93,7 +93,7 @@
     <li>
       <a href="#"> 챌린지 인증 관리 > </a>
       <ul class="submenu">
-        <li><a href="${pageContext.request.contextPath}/admin/challengeManage/certList"> 스페셜 챌린지 인증</a></li>
+        <li><a href="${pageContext.request.contextPath}/admin/challengeManage/certList"> 챌린지 인증 목록</a></li>
       </ul>
     </li>
 

@@ -76,15 +76,35 @@
 	margin-right: 4px;
 }
 
-.page-subtitle{
-  margin-top:.5rem;
-  color:#6c757d;     
-  font-size:.9rem;
-  line-height:1.45;
-  max-width:720px;   
+.page-subtitle {
+	margin-top: .5rem;
+	color: #6c757d;
+	font-size: .9rem;
+	line-height: 1.45;
+	max-width: 720px;
 }
-@media (max-width:576px){
-  .page-subtitle{ font-size:.9rem; }
+
+@media ( max-width :576px) {
+	.page-subtitle {
+		font-size: .9rem;
+	}
+}
+.pagination .page-link {
+  border: 1px solid #dee2e6;
+  color: #495057;
+  font-weight: 500;
+  transition: all .15s ease;
+  margin-top: 25px;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #315e4e; 
+  border-color: #315e4e;
+  color: #fff;
+}
+
+.pagination .page-link.rounded-3 {
+  border-radius: 30rem;
 }
 
 </style>
@@ -98,7 +118,7 @@
 	<header class="border-bottom">
 		<div class="container py-3">
 			<h4 class="m-0" style="font-size: 22px;">워크샵</h4>
-			<p class="page-subtitle mb-0">지속 가능한 일상을 위한 로컬 체험·라이프스타일 클래스를 한곳에 모아, 누구나 간편하게 신청하고 참여할 수 있어요.</p>
+			<!-- <p class="page-subtitle mb-0">지속 가능한 일상을 위한 로컬 체험·라이프스타일 클래스를 한곳에 모아, 누구나 간편하게 신청하고 참여할 수 있어요.</p> -->
 		</div>
 	</header>
 
@@ -139,14 +159,12 @@
 			</div>
 		</form>
 
-		<!-- 결과 수 -->
 		<div class="d-flex justify-content-between align-items-center mb-3">
 			<div class="text-muted">
 				총 <strong>${dataCount}</strong>개
 			</div>
 		</div>
 
-		<!-- 카드 그리드 -->
 		<c:choose>
 			<c:when test="${empty list}">
 				<div class="text-center text-muted py-5">표시할 워크샵이 없습니다.</div>
@@ -244,7 +262,7 @@
 
 		<c:if test="${totalPage > 1}">
 			<nav class="mt-4" aria-label="pagination">
-				<ul class="pagination justify-content-center">
+				<ul class="pagination justify-content-center gap-1">
 
 					<c:url var="prevUrl" value="/workshop/list">
 						<c:param name="page" value="${page-1}" />
@@ -261,16 +279,31 @@
 					<li class="page-item <c:if test='${page <= 1}'>disabled</c:if>">
 						<c:choose>
 							<c:when test="${page <= 1}">
-								<span class="page-link" aria-disabled="true">이전</span>
+								<span class="page-link rounded-3 px-2 py-1" aria-disabled="true">&lsaquo;</span>
 							</c:when>
 							<c:otherwise>
-								<a class="page-link" href="${prevUrl}">이전</a>
+								<a class="page-link rounded-3 px-2 py-1" href="${prevUrl}">&lsaquo;</a>
 							</c:otherwise>
 						</c:choose>
 					</li>
 
-					<li class="page-item active" aria-current="page"><span
-						class="page-link">${page}</span></li>
+					<c:forEach var="i" begin="1" end="${totalPage}">
+						<c:url var="pageUrl" value="/workshop/list">
+							<c:param name="page" value="${i}" />
+							<c:if test="${not empty categoryId}">
+								<c:param name="categoryId" value="${categoryId}" />
+							</c:if>
+							<c:if test="${not empty sort}">
+								<c:param name="sort" value="${sort}" />
+							</c:if>
+							<c:if test="${onlyRecruiting}">
+								<c:param name="onlyRecruiting" value="true" />
+							</c:if>
+						</c:url>
+						<li class="page-item <c:if test='${page == i}'>active</c:if>">
+							<a class="page-link rounded-3 px-2 py-1" href="${pageUrl}">${i}</a>
+						</li>
+					</c:forEach>
 
 					<c:url var="nextUrl" value="/workshop/list">
 						<c:param name="page" value="${page+1}" />
@@ -288,10 +321,10 @@
 						class="page-item <c:if test='${page >= totalPage}'>disabled</c:if>">
 						<c:choose>
 							<c:when test="${page >= totalPage}">
-								<span class="page-link" aria-disabled="true">다음</span>
+								<span class="page-link rounded-3 px-2 py-1" aria-disabled="true">&rsaquo;</span>
 							</c:when>
 							<c:otherwise>
-								<a class="page-link" href="${nextUrl}">다음</a>
+								<a class="page-link rounded-3 px-2 py-1" href="${nextUrl}">&rsaquo;</a>
 							</c:otherwise>
 						</c:choose>
 					</li>
@@ -299,6 +332,7 @@
 				</ul>
 			</nav>
 		</c:if>
+
 
 	</main>
 	<footer>

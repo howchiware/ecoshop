@@ -54,6 +54,8 @@ public class GongguManage {
 	private int totalStock;
 	private long productId;
 	private String productName;
+	
+	private int userBought;
 
 
 }

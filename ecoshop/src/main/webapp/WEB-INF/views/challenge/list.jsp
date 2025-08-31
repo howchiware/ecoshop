@@ -212,13 +212,15 @@
 	border-radius: 12px;
 }
 
-
-.page-title:first-of-type { padding-top: 56px; }  
-@media (max-width: 575.98px){
-.page-title:first-of-type { padding-top: 36px; }
+.page-title:first-of-type {
+	padding-top: 56px;
 }
 
-
+@media ( max-width : 575.98px) {
+	.page-title:first-of-type {
+		padding-top: 36px;
+	}
+}
 </style>
 </head>
 <body>
@@ -231,7 +233,8 @@
 
 		<!-- Page Title - 데일리 -->
 		<div class="page-title">
-			<div class="container text-center align-items-center" data-aos="fade-up">
+			<div class="container text-center align-items-center"
+				data-aos="fade-up">
 				<h1>🎯 오늘의 챌린지</h1>
 				<p>데일리 챌린지 프로그램에 참여하고 목표에 달성해보세요!</p>
 				<div class="page-title-underline-accent"></div>
@@ -321,36 +324,33 @@
 								</div>
 
 								<div class="d-flex gap-2">
-									<a class="btn-ghost" href="${cp}/challenge/detail/${today.challengeId}">상세보기</a>
+									<a class="btn-ghost"
+										href="${cp}/challenge/detail/${today.challengeId}">상세보기</a>
 
 									<c:choose>
 										<c:when test="${!isLogin}">
 											<button id="btnDailyJoin" class="btn-primary-grad"
 												data-href="${cp}/member/login?returnURL=${pageContext.request.requestURI}">
-												로그인하고 참가하기
-											</button>
+												로그인하고 참가하기</button>
 										</c:when>
 
-										
+
 										<c:otherwise>
 											<c:choose>
 												<c:when test="${!canPlayDaily}">
 													<button id="btnDailyJoin" class="btn-primary-grad" disabled>
-													오늘만 참가 가능
-													</button>
+														오늘만 참가 가능</button>
 												</c:when>
 
 												<c:when test="${alreadyDailyJoined}">
 													<button id="btnDailyJoin" class="btn-primary-grad" disabled>
-														오늘은 이미 참여하셨습니다
-													</button>
+														오늘은 이미 참여하셨습니다</button>
 												</c:when>
 
 												<c:otherwise>
 													<button id="btnDailyJoin" class="btn-primary-grad"
 														data-href="${cp}/challenge/join/daily/${today.challengeId}">
-														지금 참가하기
-													</button>
+														지금 참가하기</button>
 												</c:otherwise>
 											</c:choose>
 										</c:otherwise>
@@ -359,9 +359,8 @@
 
 
 								<c:if test="${!isLogin}">
-									<div class="alert alert-warning mt-3" role="alert" style="border-radius: 12px;">
-										🔐 로그인 후 챌린지에 참가할 수 있습니다.
-									</div>
+									<div class="alert alert-warning mt-3" role="alert"
+										style="border-radius: 12px;">🔐 로그인 후 챌린지에 참가할 수 있습니다.</div>
 								</c:if>
 							</div>
 						</div>
@@ -369,13 +368,14 @@
 				</div>
 
 			</div>
-			
+
 		</div>
-		
+
 
 		<!-- Page Title - 스페셜 -->
 		<div class="page-title">
-			<div class="container text-center align-items-center mt-5" data-aos="fade-up">
+			<div class="container text-center align-items-center mt-5"
+				data-aos="fade-up">
 				<h1>🎯 스페셜 챌린지</h1>
 				<p>한 달 내 3일에 걸쳐 도전할 수 있는 스페셜 챌린지, 도전해 보세요!</p>
 				<div class="page-title-underline-accent"></div>
@@ -427,15 +427,32 @@
 													data-challenge-id="${s.challengeId}" data-status="UPCOMING"
 													disabled>시작 전</button>
 											</c:when>
+
 											<c:when test="${st eq 'CLOSED'}">
 												<button class="btn-primary-grad btn-join-special"
 													data-challenge-id="${s.challengeId}" data-status="CLOSED"
 													disabled>종료됨</button>
 											</c:when>
+
 											<c:otherwise>
-												<button class="btn-primary-grad btn-join-special"
-													data-challenge-id="${s.challengeId}" data-status="OPEN">지금
-													참가하기</button>
+
+												<c:choose>
+
+													<c:when
+														test="${isLogin and canJoinMap[s.challengeId] == false}">
+														<button class="btn-primary-grad btn-join-special"
+															data-challenge-id="${s.challengeId}" data-status="OPEN"
+															disabled title="오늘은 참여할 수 없어요(연속 3일 규칙/하루 1회)">
+															오늘은 참여 불가</button>
+													</c:when>
+
+
+													<c:otherwise>
+														<button class="btn-primary-grad btn-join-special"
+															data-challenge-id="${s.challengeId}" data-status="OPEN">
+															지금 참가하기</button>
+													</c:otherwise>
+												</c:choose>
 											</c:otherwise>
 										</c:choose>
 									</div>
@@ -464,6 +481,7 @@
 	<script>
   const cp = "${cp}";
   const todayWeekday = ${empty targetWeekday ? -1 : targetWeekday};
+  const IS_LOGIN = ${isLogin ? 'true' : 'false'};
 
   // 요일 버튼 활성화 + 가운데 스크롤
   (function initWeekday(){
@@ -507,11 +525,25 @@
       if(!btn) return;
       const id = btn.dataset.challengeId;
       const st = btn.dataset.status || 'OPEN';
-      if (!id || st !== 'OPEN' || btn.disabled) {
+      
+      if (!id) return;
+
+      
+      if (!IS_LOGIN) {
+        alert('로그인이 필요합니다. 로그인 후 참가해 주세요.');
+        const returnURL = encodeURIComponent(location.pathname + location.search);
+        location.href = cp + "/member/login?returnURL=" + returnURL;
+        return;
+      }
+
+      // 상태 체크
+      if (st !== 'OPEN' || btn.disabled) {
         if (st === 'UPCOMING') alert('아직 시작 전인 챌린지예요. 시작일에 참여할 수 있어요!');
         else if (st === 'CLOSED') alert('종료된 챌린지예요.');
         return;
       }
+
+     
       location.href = cp + "/challenge/detail/" + id;
     });
   })();

@@ -1,5 +1,6 @@
 package com.sp.app.admin.controller;
 
+import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.sp.app.admin.model.GongguInquiryManage;
 import com.sp.app.admin.model.GongguManage;
 import com.sp.app.admin.model.GongguPackageManage;
@@ -218,7 +220,7 @@ public class GongguManageController {
 	@GetMapping("update")
 	public String updateForm(
 			@RequestParam(name = "gongguProductId") long gongguProductId,
-			@RequestParam(name = "categoryId") long categoryId,
+			@RequestParam(name = "categoryId", defaultValue = "0") long categoryId,
 			@RequestParam(name = "page") String page,
 			Model model) throws Exception {
 		
@@ -227,6 +229,9 @@ public class GongguManageController {
 			 
 			GongguManage dto = Objects.requireNonNull(gongguManageService.findById(gongguProductId));
 			List<GongguManage> listFile = gongguManageService.listGongguProductPhoto(gongguProductId);
+			
+			int b = gongguManageService.isBoughtByGongguProductId(dto.getProductId());
+			dto.setUserBought(b);
 			
 			model.addAttribute("dto", dto);
 			model.addAttribute("page", page);	
@@ -242,7 +247,8 @@ public class GongguManageController {
 			log.error("updateForm : ", e);
 		}
 		
-		return "redirect:/admin/gonggu/listProduct?page=" + page;
+		String query = "categoryId=" + categoryId + "&page=" + page;
+		return "redirect:/admin/gonggu/listProduct?" + query;
 	}
 
 	@PostMapping("update")
@@ -293,15 +299,17 @@ public class GongguManageController {
     
 	@PostMapping("deleteFile")
 	@ResponseBody
-	public Map<String, Object> deleteFile(@RequestParam("fileNum") long fileNum) {
-	    Map<String, Object> model = new HashMap<>();
+	public Map<String, Object> deleteFile(@RequestParam(name = "ProductPhotoNum") long ProductPhotoNum, 
+			@RequestParam(name = "PhotoName") String PhotoName) throws Exception {
+			Map<String, Object> model = new HashMap<>();
 	    String state = "true";
 
 	    try {
-	        gongguManageService.deleteSingleGongguProductPhoto(fileNum, uploadPath);
+	    	String pathString = uploadPath + File.separator + PhotoName;
+			gongguManageService.deleteGongguProductPhoto(ProductPhotoNum, pathString);
+			
+			state = "true";
 	    } catch (Exception e) {
-	        state = "false";
-	        log.error("deleteFile : ", e);
 	    }
 
 	    model.put("state", state);
@@ -317,12 +325,18 @@ public class GongguManageController {
     @GetMapping(value = "reviewList")
     public String getProductReviewList(
     		@RequestParam(value = "gongguProductName", required = false) String gongguProductName, 
-    		@RequestParam(value = "kwd", required = false) String kwd, 
+    		@RequestParam(value = "kwd", required = false) String kwd,
+    		@RequestParam(name = "pageNo", defaultValue = "1") int current_page,
     		Model model, HttpServletRequest req) {
     	
+    	try {
+
     	HttpSession session = req.getSession();
     	SessionInfo info = (SessionInfo)session.getAttribute("member");
     	
+    	int size = 5;
+		int dataCount = 0;
+		
     	long managerId = info.getMemberId();
     	String managerName = info.getName();
     	
@@ -330,6 +344,17 @@ public class GongguManageController {
         map.put("gongguProductName", gongguProductName);
         map.put("kwd", kwd);
     	
+        dataCount = gongguReviewInquiryManageService.dataCountReview(map);
+		int total_page = paginateUtil.pageCount(dataCount, size);
+
+		current_page = Math.min(current_page, total_page);
+
+		int offset = (current_page - 1) * size;
+		if(offset < 0) offset = 0;
+		
+		map.put("offset", offset);
+		map.put("size", size);
+		
         List<GongguReviewManage> reviewList = gongguReviewInquiryManageService.searchReviews(map);
         
         if(reviewList != null) {
@@ -341,32 +366,85 @@ public class GongguManageController {
 	        }
         }
         
+        String paging = paginateUtil.paging(current_page, total_page, "listReview");
+        
         model.addAttribute("reviewList", reviewList);
         model.addAttribute("gongguProductName", gongguProductName);
         model.addAttribute("kwd", kwd);
         model.addAttribute("managerId", managerId);
         model.addAttribute("managerName", managerName);
+        model.addAttribute("dataCount", dataCount);
+		model.addAttribute("size", size);
+		model.addAttribute("pageNo", current_page);
+		model.addAttribute("paging", paging);
+		model.addAttribute("total_page", total_page);
         
+    } catch (Exception e) {
+    	log.info("getGongguProductReviewList : ", e);
+    }
         return "admin/gonggu/reviewList";
     }
     
     @GetMapping(value = "inquiryList")
     public String getInquiryList(
     		@RequestParam(value = "gongguProductName", required = false) String gongguProductName, 
-    		@RequestParam(value = "kwd", required = false) String kwd, 
-    		Model model) {
+    		@RequestParam(value = "kwd", required = false) String kwd,
+    		@RequestParam(name = "pageNo", defaultValue = "1") int current_page,
+    		Model model,
+            HttpServletRequest req) {
     	
-    	Map<String, Object> map = new HashMap<>();
-        map.put("gongguProductName", gongguProductName);
-        map.put("kwd", kwd);
-        
-        List<GongguInquiryManage> inquiryList = gongguReviewInquiryManageService.searchInquirys(map);
-        
-        model.addAttribute("inquiryList", inquiryList);
-        model.addAttribute("gongguProductName", gongguProductName);
-        model.addAttribute("kwd", kwd);
-        
-        return "admin/gonggu/inquiryList";
+    	try {		
+    		HttpSession session = req.getSession();
+        	SessionInfo info = (SessionInfo)session.getAttribute("member");
+        	
+        	int size = 5;
+    		int dataCount = 0;
+    		
+        	long managerId = info.getMemberId();
+        	String managerName = info.getName();
+        	
+	    	Map<String, Object> map = new HashMap<>();
+	        map.put("gongguProductName", gongguProductName);
+	        map.put("kwd", kwd);
+	        
+	        dataCount = gongguReviewInquiryManageService.dataCountReview(map);
+			int total_page = paginateUtil.pageCount(dataCount, size);
+    		
+			current_page = Math.min(current_page, total_page);
+			
+			int offset = (current_page - 1) * size;
+			if(offset < 0) offset = 0;
+	        
+	        map.put("offset", offset);
+	        map.put("size", size);
+	        
+	        List<GongguInquiryManage> inquiryList = gongguReviewInquiryManageService.searchInquirys(map);
+	        
+	        if(inquiryList != null) {
+		        for(GongguInquiryManage dto : inquiryList) {
+		        	if(dto.getAnswer() != null) {
+		        		String answerName = gongguReviewInquiryManageService.answerNameFindById(dto.getAnswerId());
+		        		dto.setAnswerName(answerName);        		
+		        	}
+		        }
+	        }
+	        
+	        String paging = paginateUtil.paging(current_page, total_page, "listInquiry");
+	        
+	        model.addAttribute("inquiryList", inquiryList);
+	        model.addAttribute("gongguProductName", gongguProductName);
+	        model.addAttribute("kwd", kwd);
+	        model.addAttribute("managerId", managerId);
+	        model.addAttribute("managerName", managerName);
+	        model.addAttribute("dataCount", dataCount);
+	        model.addAttribute("size", size);
+	        model.addAttribute("total_page", total_page);
+	        model.addAttribute("pageNo", current_page);
+	        model.addAttribute("paging", paging);
+    	} catch(Exception e) {
+    		log.info("getInquiryList : ", e);
+    	}
+	        return "admin/gonggu/inquiryList";
     }
     
 	@GetMapping("gongguReview")
@@ -375,8 +453,35 @@ public class GongguManageController {
 		return "admin/gonggu/gongguReview";
 	}
 	
+	@PostMapping("writeReviewAnswer")
+    public String writeReviewAnswer(GongguReviewManage dto,
+    		Model model) {
+    	try {
+    		gongguReviewInquiryManageService.updateReviewAnswer(dto);
+		} catch (Exception e) {
+			log.info("writeReviewAnswer : ", e);
+		}
+    	
+    	return "redirect:/admin/gonggu/gongguReview";
+    }
+	
+	 @GetMapping("deleteReviewAnswer")
+	    public String deleteReviewAnswer(@RequestParam(name="gongguOrderDetailId") long gongguOrderDetailId,
+	    		Model model,
+	    		HttpServletRequest req) {
+	    	try {
+	        	
+	    		gongguReviewInquiryManageService.deleteReviewAnswer(gongguOrderDetailId);        		
+	        	
+	    	} catch (Exception e) {
+	    		log.info("deleteReviewAnswer : ", e);
+	    	}
+	    	
+	    	return "redirect:/admin/gonggu/gongguReview";
+	    }
+	
     @PostMapping("writeAnswer")
-    public String writeAnswer(GongguReviewManage dto,
+    public String writeAnswer(GongguInquiryManage dto,
     		Model model) {
     	try {
     		gongguReviewInquiryManageService.updateAnswer(dto);
@@ -388,12 +493,12 @@ public class GongguManageController {
     }
 
     @GetMapping("deleteAnswer")
-    public String deleteAnswer(@RequestParam(name="gongguReviewId") long gongguReviewId,
+    public String deleteAnswer(@RequestParam(name="gongguInquiryId") long gongguInquiryId,
     		Model model,
     		HttpServletRequest req) {
     	try {
         	
-    		gongguReviewInquiryManageService.deleteAnswer(gongguReviewId);        		
+    		gongguReviewInquiryManageService.deleteAnswer(gongguInquiryId);        		
         	
     	} catch (Exception e) {
     		log.info("deleteAnswer : ", e);
@@ -417,6 +522,20 @@ public class GongguManageController {
     	return "redirect:/admin/gonggu/gongguReview";
     }
 
+    @GetMapping("deleteInquiry")
+    public String deleteInquiry(@RequestParam(name="gongguInquiryId") long gongguInquiryId,
+    		Model model,
+    		HttpServletRequest req) {
+    	try {
+    		
+    		gongguReviewInquiryManageService.deleteInquiry(gongguInquiryId);        		
+    		
+    	} catch (Exception e) {
+    		log.info("deleteInquiry : ", e);
+    	}
+    	
+    	return "redirect:/admin/gonggu/gongguReview";
+    }
     
     // 배송 정책 및 배송비
  	@GetMapping("deliveryWrite")
@@ -464,7 +583,6 @@ public class GongguManageController {
  	    return "redirect:/admin";
  	}
 
- 	// deliveryUpdateForm 메서드 (수정 후)
  	@PostMapping("deliveryUpdate")
  	public String deliveryUpdateForm(GongguProductDeliveryRefundInfoManage dto,
  	        @RequestParam(name = "deliveryLocation") List<String> deliveryLocation,

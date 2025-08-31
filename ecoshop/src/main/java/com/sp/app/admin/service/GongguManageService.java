@@ -28,7 +28,7 @@ public interface GongguManageService {
 	public void deleteGongguProductPhoto(long gongguProductId, String uploadPath) throws Exception;
 	public void insertGongguProductPhoto(GongguManage dto, String uploadPath) throws SQLException;
 	public boolean deleteUploadPhoto(String uploadPath, String detailPhoto);
-	public void deleteSingleGongguProductPhoto(long gongguProductDetailId, String uploadPath) throws Exception;
+	public void deleteSingleProductPhoto(long gongguProductDetailId, String uploadPath) throws Exception;
 	
 	// 패키지 상품등록
 	public void insertGongguPackage(GongguPackageManage dto) throws Exception;
@@ -46,4 +46,6 @@ public interface GongguManageService {
 	public void insertGongguDeliveryRefundInfo(GongguProductDeliveryRefundInfoManage dto);
 	public void updateGongguDeliveryRefundInfo(GongguProductDeliveryRefundInfoManage dto);
 	public void deleteGongguDeliveryFee();
+	
+	public int isBoughtByGongguProductId(long gongguProductId);
 }

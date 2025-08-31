@@ -28,7 +28,7 @@
     FETCH FIRST 1 ROWS ONLY
   </select>
 
-  <!-- 스페셜 목록(더보기/키셋) -->
+  <!-- 스페셜 목록 -->
   <select id="listSpecialMore" parameterType="map" resultType="com.sp.app.model.Challenge">
   SELECT
     c.challengeId                                AS challengeId,
@@ -61,7 +61,7 @@
       ORDER BY s.endDate ASC NULLS LAST, c.challengeId ASC
     </when>
 
-    <!-- 인기순(예: 포인트 DESC) -->
+   
     <when test="sort == 'POPULAR'">
       <if test="lastId != null">
         AND c.challengeId &lt; #{lastId}
@@ -111,7 +111,7 @@
     FETCH FIRST 1 ROWS ONLY
   </select>
 
-  <!-- 오늘 참여 여부(요일: 당일 1회 제한) -->
+  <!-- 오늘 참여 여부 -->
   <select id="countTodayDailyJoin" parameterType="map" resultType="int">
     SELECT NVL(COUNT(*),0)
     FROM challengeParticipation p
@@ -120,7 +120,7 @@
       AND TRUNC(p.participateDate) = TRUNC(SYSDATE)
   </select>
 
-  <!-- 시퀀스 -->
+ 
   <select id="nextParticipationId" resultType="long">
     SELECT participation_seq.NEXTVAL FROM dual
   </select>
@@ -152,7 +152,7 @@
     )
   </insert>
 
-  <!-- 참여 상태/취소일 갱신 : 넘겨준 필드만 SET -->
+ 
   <update id="updateParticipation" parameterType="com.sp.app.model.Challenge">
     UPDATE challengeParticipation
     <set>
@@ -166,9 +166,7 @@
     WHERE participationId = #{participationId}
   </update>
 
-  <!-- 인증 게시글 INSERT
-       - SPECIAL: dayNumber = 1~3
-       - DAILY  : dayNumber = NULL -->
+ 
   <insert id="insertCertificationPost" parameterType="com.sp.app.model.Challenge">
     INSERT INTO certificationPost (
       postId, participationId, dayNumber, content, regDate, approvalStatus, isPublic
@@ -190,7 +188,7 @@
     )
   </insert>
 
-  <!-- 인증 사진 INSERT (사진 있을 때만 호출) -->
+  
   <insert id="insertCertificationPhoto" parameterType="com.sp.app.model.Challenge">
     INSERT INTO certificationPhoto (photoId, postId, photoUrl, regDate)
     VALUES (#{photoId}, #{postId}, #{photoUrl}, SYSDATE)
@@ -211,9 +209,7 @@
     ORDER BY c.dayNumber
   </select>
 
-  <!-- 스페셜 제출용 추가 쿼리 -->
-
-  <!-- 진행/대기 중인 참여 1건 -->
+ 
   <!-- 스페셜인증 중 최종제출 이후 추가 업로드 차단 -->
   <select id="selectActiveParticipation" parameterType="map" resultType="com.sp.app.model.Challenge">
 	  SELECT participationId, challengeId, memberId,
@@ -222,7 +218,7 @@
 	  FROM challengeParticipation
 	  WHERE memberId = #{memberId}
 	    AND challengeId = #{challengeId}
-	    AND status IN (0)   <!-- 여기 0만 허용 -->
+	    AND status IN (0)  
 	  ORDER BY participateDate DESC
 	  FETCH FIRST 1 ROWS ONLY
   </select>
@@ -498,59 +494,95 @@
 	  ORDER BY photoId
 	</select>
   
-  	<!-- 번들 피드: 참여(1~3일 세트)=카드 1장 -->
-<select id="listSpecialBundlesPaged" parameterType="map" resultType="com.sp.app.model.Challenge">
-  WITH P_PUB AS (
-    SELECT p.participationId, p.postId, p.dayNumber, p.regDate
-    FROM certificationPost p
-    WHERE p.dayNumber IS NOT NULL AND p.isPublic='Y' AND p.approvalStatus=1
-  ),
-  THUMB AS (
-    SELECT participationId, MAX(regDate) AS lastPublicAt FROM P_PUB GROUP BY participationId
-  ),
-  THUMB_POST AS (
-    SELECT t.participationId, pp.postId
-    FROM THUMB t JOIN P_PUB pp ON pp.participationId=t.participationId AND pp.regDate=t.lastPublicAt
-  ),
-  AGG AS (
-    SELECT cp.participationId, cp.memberId, cp.challengeId,
-           COUNT(pp.postId) AS publicCount, MAX(pp.regDate) AS lastPublicAt
-    FROM challengeParticipation cp JOIN P_PUB pp ON pp.participationId=cp.participationId
-    GROUP BY cp.participationId, cp.memberId, cp.challengeId
-  )
-  SELECT agg.participationId, agg.memberId, agg.challengeId,
-         agg.publicCount AS approvedDays,
-         TO_CHAR(agg.lastPublicAt,'YYYY-MM-DD HH24:MI:SS') AS postRegDate,
-         c.title, c.challengeType, NVL(m.nickname,m.name) AS memberName,
-         (SELECT ph.photoUrl FROM certificationPhoto ph WHERE ph.postId=tp.postId FETCH FIRST 1 ROWS ONLY) AS photoUrl
-  FROM AGG agg
-  JOIN challenge c ON c.challengeId=agg.challengeId
-  JOIN member2   m ON m.memberId=agg.memberId
-  LEFT JOIN THUMB_POST tp ON tp.participationId=agg.participationId
-  WHERE agg.publicCount >= 1
-    AND (agg.publicCount=3 OR SYSDATE &lt;= (TRUNC(agg.lastPublicAt)+1+(10/24)))  
-  <choose>
-    <when test="sort == 'PROGRESS'">ORDER BY agg.publicCount DESC, agg.lastPublicAt DESC</when>
-    <otherwise>ORDER BY agg.lastPublicAt DESC</otherwise>
-  </choose>
-  OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
-</select>
+  	<!-- 1~3일차 카드 -->
+	<select id="listSpecialBundlesPaged" parameterType="map" resultType="com.sp.app.model.Challenge">
+	  WITH P_PUB AS (
+	    SELECT p.participationId, p.postId, p.dayNumber, p.regDate
+	    FROM certificationPost p
+	    WHERE p.dayNumber IS NOT NULL AND p.isPublic='Y' AND p.approvalStatus=1
+	  ),
+	  THUMB AS (
+	    SELECT participationId, MAX(regDate) AS lastPublicAt FROM P_PUB GROUP BY participationId
+	  ),
+	  THUMB_POST AS (
+	    SELECT t.participationId, pp.postId
+	    FROM THUMB t JOIN P_PUB pp ON pp.participationId=t.participationId AND pp.regDate=t.lastPublicAt
+	  ),
+	  AGG AS (
+	    SELECT cp.participationId, cp.memberId, cp.challengeId,
+	           COUNT(pp.postId) AS publicCount, MAX(pp.regDate) AS lastPublicAt
+	    FROM challengeParticipation cp JOIN P_PUB pp ON pp.participationId=cp.participationId
+	    GROUP BY cp.participationId, cp.memberId, cp.challengeId
+	  )
+	  SELECT agg.participationId, agg.memberId, agg.challengeId,
+	         agg.publicCount AS approvedDays,
+	         TO_CHAR(agg.lastPublicAt,'YYYY-MM-DD HH24:MI:SS') AS postRegDate,
+	         c.title, c.challengeType, NVL(m.nickname,m.name) AS memberName,
+	         (SELECT ph.photoUrl FROM certificationPhoto ph WHERE ph.postId=tp.postId FETCH FIRST 1 ROWS ONLY) AS photoUrl
+	  FROM AGG agg
+	  JOIN challenge c ON c.challengeId=agg.challengeId
+	  JOIN member2   m ON m.memberId=agg.memberId
+	  LEFT JOIN THUMB_POST tp ON tp.participationId=agg.participationId
+	  WHERE agg.publicCount >= 1
+	    AND (agg.publicCount=3 OR SYSDATE &lt;= (TRUNC(agg.lastPublicAt)+1+(10/24)))  
+	  <choose>
+	    <when test="sort == 'PROGRESS'">ORDER BY agg.publicCount DESC, agg.lastPublicAt DESC</when>
+	    <otherwise>ORDER BY agg.lastPublicAt DESC</otherwise>
+	  </choose>
+	  OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
 
-<!-- 스레드: 1~3일차 공개+승인 글 리스트 -->
-<select id="listPublicThreadByParticipation" parameterType="long" resultType="com.sp.app.model.Challenge">
-  SELECT p.postId, p.dayNumber, p.isPublic, p.approvalStatus,
-         TO_CHAR(p.regDate,'YYYY-MM-DD HH24:MI:SS') AS postRegDate,
-         cp.participationId, cp.challengeId, c.title, NVL(m.nickname,m.name) AS memberName,
-         (SELECT photoUrl FROM certificationPhoto ph WHERE ph.postId=p.postId FETCH FIRST 1 ROWS ONLY) AS photoUrl,
-         p.content
-  FROM certificationPost p
-  JOIN challengeParticipation cp ON cp.participationId=p.participationId
-  JOIN challenge c ON c.challengeId=cp.challengeId
-  JOIN member2 m ON m.memberId=cp.memberId
-  WHERE p.participationId=#{participationId}
-    AND p.dayNumber IS NOT NULL AND p.isPublic='Y' AND p.approvalStatus=1
-  ORDER BY p.dayNumber ASC, p.regDate ASC
-</select>
+
+	<select id="listPublicThreadByParticipation" parameterType="long" resultType="com.sp.app.model.Challenge">
+	  SELECT p.postId, p.dayNumber, p.isPublic, p.approvalStatus,
+	         TO_CHAR(p.regDate,'YYYY-MM-DD HH24:MI:SS') AS postRegDate,
+	         cp.participationId, cp.challengeId, c.title, NVL(m.nickname,m.name) AS memberName,
+	         (SELECT photoUrl FROM certificationPhoto ph WHERE ph.postId=p.postId FETCH FIRST 1 ROWS ONLY) AS photoUrl,
+	         p.content
+	  FROM certificationPost p
+	  JOIN challengeParticipation cp ON cp.participationId=p.participationId
+	  JOIN challenge c ON c.challengeId=cp.challengeId
+	  JOIN member2 m ON m.memberId=cp.memberId
+	  WHERE p.participationId=#{participationId}
+	    AND p.dayNumber IS NOT NULL AND p.isPublic='Y' AND p.approvalStatus=1
+	  ORDER BY p.dayNumber ASC, p.regDate ASC
+	</select>
+  	
+  	
+  <select id="countTodaySpecialCertByParticipation" parameterType="long" resultType="int">
+    SELECT NVL(COUNT(*), 0)
+    FROM certificationPost
+    WHERE participationId = #{participationId}
+      AND TRUNC(regDate) = TRUNC(SYSDATE)
+  </select>
+
+  
+  <select id="findPrevDayDate" parameterType="map" resultType="string">
+    SELECT TO_CHAR(TRUNC(regDate), 'YYYY-MM-DD')
+    FROM certificationPost
+    WHERE participationId = #{participationId}
+      AND dayNumber = #{prevDay}
+  </select>
+  
+	<select id="countTodaySpecialPost" parameterType="long" resultType="int">
+	  SELECT NVL(COUNT(*),0)
+	  FROM certificationPost
+	  WHERE participationId = #{participationId}
+	    AND TRUNC(regDate) = TRUNC(SYSDATE)
+	    AND dayNumber IS NOT NULL
+	</select>
+	
+	<select id="selectLastPostInfo" parameterType="long" resultType="map">
+	  SELECT 
+	    NVL(MAX(dayNumber),0) AS maxDay,
+	    TO_CHAR(MAX(regDate), 'YYYY-MM-DD') AS lastDate
+	  FROM certificationPost
+	  WHERE participationId = #{participationId}
+	    AND dayNumber IS NOT NULL
+	</select>
+  
+  
+  
   	
   
 </mapper>

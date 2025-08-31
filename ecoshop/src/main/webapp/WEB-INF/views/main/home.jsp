@@ -133,16 +133,19 @@
 					</c:if>
 				</div>
 				<div class="col-md-4">
-					<div class="ratio ratio-4x3">
-						<img alt="챌린지" class="card-img"
-							src="https://source.unsplash.com/600x400/?volunteer,environment" />
-						<div class="card-img-overlay d-flex align-items-end">
-							<div>
-								<h5 class="card-title">챌린지</h5>
-								<p class="card-text">오늘 할 수 있는 한 가지</p>
-							</div>
-						</div>
-					</div>
+				  <a href="${pageContext.request.contextPath}/challenge/detail/${todayDaily.challengeId}" class="text-decoration-none">
+				    <div class="ratio ratio-4x3">
+				      <img alt="챌린지" class="card-img"
+				           src="${pageContext.request.contextPath}/uploads/challenge/${todayDaily.thumbnail}"
+				           loading="lazy" decoding="async" />
+				      <div class="card-img-overlay d-flex align-items-end">
+				        <div>
+				          <h5 class="card-title">챌린지</h5>
+				          <p class="card-text">오늘 할 수 있는 한 가지</p>
+				        </div>
+				      </div>
+				    </div>
+				  </a>
 				</div>
 				<div class="col-md-4">
 					<div class="ratio ratio-4x3">

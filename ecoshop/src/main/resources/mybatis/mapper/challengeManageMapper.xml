@@ -120,10 +120,7 @@
       <if test="title != null">       title = #{title},</if>
       <if test="description != null"> description = #{description},</if>
 
-      <!-- 썸네일 처리
-           - 새 파일 업로드(파일명 세팅됨)일 때만 갱신
-           - 삭제 (removeThumbnail=true)면 NULL로 갱신
-           - 둘 다 아니면 기존 값 유지 -->
+     
       <if test="thumbnail != null">
         thumbnail = #{thumbnail},
       </if>
@@ -190,10 +187,10 @@
       AND p.approvalStatus = #{approvalStatus}
     </if>
 
-    <!-- SPECIAL + 대기(0)일 때 '마지막 일차'만 카운트 -->
-    <if test="type == 'SPECIAL' and approvalStatus != null and approvalStatus == 0">
-      AND p.dayNumber = NVL(s.requireDays, 3)
-    </if>
+	<!-- UI에서 요청할 때만 '마지막 일차' 제한 적용 -->
+	<if test="type == 'SPECIAL' and lastDayOnly == true">
+	  AND p.dayNumber = NVL(s.requireDays, 3)
+	</if>
 
     <!-- 키워드 -->
     <if test="keyword != null and keyword != ''">
@@ -254,10 +251,11 @@
       AND p.approvalStatus = #{approvalStatus}
     </if>
 
-    <!-- SPECIAL + 대기(0)일 때는 '마지막 일차'만 노출 -->
-    <if test="type == 'SPECIAL' and approvalStatus != null and approvalStatus == 0">
-      AND p.dayNumber = NVL(s.requireDays, 3)
-    </if>
+	<!-- UI에서 요청할 때만 '마지막 일차' 제한 적용 -->
+	<if test="type == 'SPECIAL' and lastDayOnly == true">
+	  AND p.dayNumber = NVL(s.requireDays, 3)
+	</if>
+
 
     <!-- 검색어 -->
     <if test="keyword != null and keyword != ''">
@@ -375,6 +373,17 @@
 	  WHERE postId = #{postId}
 	    AND classify = 1
 	</select>
+	
+	<!-- 1~3일차의 인증 날짜 -->
+  <select id="selectSpecialDayDates" parameterType="long" resultType="map">
+    SELECT dayNumber,
+           TO_CHAR(TRUNC(regDate), 'YYYY-MM-DD') AS dayDate
+      FROM certificationPost
+     WHERE participationId = #{participationId}
+       AND dayNumber IN (1,2,3)
+  </select>
+	
+	
 	  
 
 </mapper>

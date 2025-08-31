@@ -29,8 +29,8 @@ public class ChallengeServiceImpl implements ChallengeService {
 
 	/** Java DayOfWeek(1=MON..7=SUN) -> 0(SUN)..6(SAT) 변환 */
 	private int calcTodayDow() {
-		int dow = LocalDate.now().getDayOfWeek().getValue(); // 1~7 (MON..SUN)
-		return (dow == DayOfWeek.SUNDAY.getValue()) ? 0 : dow; // SUN->0, MON..SAT 그대로(1..6)
+		int dow = LocalDate.now().getDayOfWeek().getValue(); 
+		return (dow == DayOfWeek.SUNDAY.getValue()) ? 0 : dow; 
 	}
 
 	@Override
@@ -182,10 +182,10 @@ public class ChallengeServiceImpl implements ChallengeService {
 	@Transactional(rollbackFor = Exception.class)
 	public void submitDailyChallenge(Challenge dto, MultipartFile photoFile) throws Exception {
 		try {
-			// 0) 오늘이 해당 데일리 챌린지 요일인지 검증 (서버 가드)
+			// 0) 오늘이 해당 데일리 챌린지 요일인지 검증 
 	        Challenge dailyInfo = mapper.findDailyDetail(dto.getChallengeId());
 	        if (dailyInfo != null && dailyInfo.getWeekday() != null) {
-	            int todayDow0to6 = calcTodayDow(); // SUN=0, MON..SAT=1..6
+	            int todayDow0to6 = calcTodayDow(); 
 	            if (!dailyInfo.getWeekday().equals(todayDow0to6)) {
 	                throw new IllegalStateException("오늘은 이 데일리 챌린지 참여일이 아닙니다.");
 	            }
@@ -204,11 +204,11 @@ public class ChallengeServiceImpl implements ChallengeService {
 				dto.setPhotoUrl(saveFilename);
 			}
 
-			// 3. 참여 기록(challengeParticipation) 및 인증 게시글(certificationPost) 저장
+			// 3. 참여 기록 및 인증 게시글 저장
 			Long participationId = mapper.nextParticipationId();
 			dto.setParticipationId(participationId);
 
-			// 직접 매퍼 호출
+		
 			if (dto.getParticipationStatus() == null)
 				dto.setParticipationStatus(0);
 			mapper.insertParticipation(dto);
@@ -223,7 +223,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
 			mapper.insertCertificationPost(dto);
 
-			// 4. 인증 사진(certificationPhoto) 저장 (파일이 업로드된 경우에만)
+			// 4. 인증 사진(파일이 업로드된 경우에만)
 			if (saveFilename != null) {
 				Long photoId = mapper.nextPhotoId();
 				dto.setPhotoId(photoId);
@@ -268,11 +268,11 @@ public class ChallengeServiceImpl implements ChallengeService {
 	@Transactional(rollbackFor = Exception.class)
 	public void submitSpecialDay(Challenge dto, MultipartFile photoFile) throws Exception {
 		try {
-			// 입력 파라미터
+			
 			log.info("[SPECIAL] submit start - memberId={}, challengeId={}, dayNumber={}", dto.getMemberId(),
 					dto.getChallengeId(), dto.getDayNumber());
 
-			// 0) 입력검사
+			
 			if (dto.getContent() == null || dto.getContent().trim().length() < 20) {
 				throw new IllegalArgumentException("인증글은 20자 이상 작성해야 합니다.");
 			}
@@ -283,7 +283,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 				throw new IllegalArgumentException("dayNumber는 1~3 사이여야 합니다.");
 			}
 
-			// 1) 기간 체크
+			
 			Challenge sp = mapper.findSpecialDetail(dto.getChallengeId());
 			if (sp == null)
 				throw new IllegalStateException("해당 스페셜 챌린지가 존재하지 않습니다.");
@@ -295,9 +295,9 @@ public class ChallengeServiceImpl implements ChallengeService {
 				throw new IllegalStateException("챌린지 기간이 아닙니다.");
 			}
 
-			// 2) 참여 레코드(없으면 생성)
+			
 			Challenge activePart = mapper.selectActiveParticipation(dto.getMemberId(), dto.getChallengeId());
-			// 참여건
+			
 			log.info("[SPECIAL] active participation = {}",
 					(activePart == null ? "NONE" : activePart.getParticipationId()));
 
@@ -312,52 +312,75 @@ public class ChallengeServiceImpl implements ChallengeService {
 			} else {
 				dto.setParticipationId(activePart.getParticipationId());
 			}
+			
+			
+	        int todayCount = mapper.countTodaySpecialCertByParticipation(dto.getParticipationId());
+	        if (todayCount > 0) {
+	            throw new IllegalStateException("오늘은 이미 스페셜 인증을 등록하셨어요. 내일 다시 시도해 주세요.");
+	        }
+			
 
-			// 3) 순서/중복 방지
-			Integer maxDay = mapper.selectMaxDayNumber(dto.getParticipationId()); // null -> 0
-			int expectedNext = (maxDay == null ? 1 : (maxDay + 1));
-			int dup = mapper.existsPostByParticipationAndDay(dto.getParticipationId(), dto.getDayNumber());
+	    
+	        Integer maxDay = mapper.selectMaxDayNumber(dto.getParticipationId()); // null -> 0
+	        int expectedNext = (maxDay == null ? 1 : (maxDay + 1));
+	        int dup = mapper.existsPostByParticipationAndDay(dto.getParticipationId(), dto.getDayNumber());
+	        if (dto.getDayNumber() > expectedNext) {
+	            throw new IllegalStateException("이전 일차 인증부터 완료해야 합니다. 다음 예상 일차: " + expectedNext);
+	        }
+	        if (dup > 0) {
+	            throw new IllegalStateException(dto.getDayNumber() + "일차 인증은 이미 등록되었습니다.");
+	        }
 
-			// 순서/중복 체크
-			log.info("[SPECIAL] maxDay={}, expectedNext={}, dup={}", maxDay, expectedNext, dup);
+	       
+	        if (dto.getDayNumber() > 1) {
+	            String prev = mapper.findPrevDayDate(dto.getParticipationId(), dto.getDayNumber() - 1);
+	            if (prev != null) {
+	                java.time.LocalDate prevDate = java.time.LocalDate.parse(prev); // YYYY-MM-DD
+	                java.time.LocalDate todayDate = java.time.LocalDate.now();
+	                if (!todayDate.equals(prevDate.plusDays(1))) {
+	                    throw new IllegalStateException("연속 3일만 인정됩니다. "
+	                        + (dto.getDayNumber()-1) + "일차 다음날(" + prevDate.plusDays(1) + ")에만 등록할 수 있어요.");
+	                }
+	            } else {
+	               
+	                throw new IllegalStateException("이전 일차 인증부터 완료해야 합니다.");
+	            }
+	        }
 
-			if (dto.getDayNumber() > expectedNext) {
-				throw new IllegalStateException("이전 일차 인증부터 완료해야 합니다. 다음 예상 일차: " + expectedNext);
-			}
-			if (dup > 0) {
-				throw new IllegalStateException(dto.getDayNumber() + "일차 인증은 이미 등록되었습니다.");
-			}
+	        
+	        String saveFilename = null;
+	        if (photoFile != null && !photoFile.isEmpty()) {
+	            String challengePath = storageService.getRealPath("/uploads/challenge");
+	            saveFilename = storageService.uploadFileToServer(photoFile, challengePath);
+	            dto.setPhotoUrl(saveFilename);
+	        }
 
-			// 4) 파일 저장
-			String saveFilename = null;
-			if (photoFile != null && !photoFile.isEmpty()) {
-				String challengePath = storageService.getRealPath("/uploads/challenge");
-				saveFilename = storageService.uploadFileToServer(photoFile, challengePath);
-				dto.setPhotoUrl(saveFilename);
-			}
+	       
+	        int todayCountAfterUpload = mapper.countTodaySpecialCertByParticipation(dto.getParticipationId());
+	        if (todayCountAfterUpload > 0) {
+	            throw new IllegalStateException("오늘은 이미 스페셜 인증을 등록하셨어요. 내일 다시 시도해 주세요.");
+	        }
 
-			// 5) 인증글/사진 INSERT (대기)
-			Long postId = mapper.nextPostId();
-			dto.setPostId(postId);
-			dto.setApprovalStatus(0); // 대기
-			dto.setIsPublic("Y");
-			mapper.insertCertificationPost(dto);
+	       
+	        Long postId = mapper.nextPostId();
+	        dto.setPostId(postId);
+	        dto.setApprovalStatus(0);
+	        dto.setIsPublic("Y");
+	        mapper.insertCertificationPost(dto);
 
-			if (saveFilename != null) {
-				Long photoId = mapper.nextPhotoId();
-				dto.setPhotoId(photoId);
-				mapper.insertCertificationPhoto(dto);
-			}
+	        if (saveFilename != null) {
+	            Long photoId = mapper.nextPhotoId();
+	            dto.setPhotoId(photoId);
+	            mapper.insertCertificationPhoto(dto);
+	        }
 
-			// 저장 결과
-			log.info("[SPECIAL] saved postId={}, photoFile={}", postId, saveFilename);
+	        log.info("[SPECIAL] saved postId={}, photoFile={}", postId, saveFilename);
+	       
 
-			// 6) 상태는 진행 유지. 포인트는 관리자 승인 완료 시 별도 로직에서 지급.
-
-		} catch (Exception e) {
-			log.error("submitSpecialDay failed:", e);
-			throw e;
-		}
+	    } catch (Exception e) {
+	        log.error("submitSpecialDay failed:", e);
+	        throw e;
+	    }
 	}
 
 	@Override
@@ -380,22 +403,22 @@ public class ChallengeServiceImpl implements ChallengeService {
 	@Override
 	public Integer getNextSpecialDay(long challengeId, long memberId) {
 		try {
-			// 진행/대기 중 참여건(최근 1건)
+			
 			Challenge part = mapper.selectActiveParticipation(memberId, challengeId);
 			if (part == null)
-				return 1; // 아직 시작안했으면 1일차
+				return 1; 
 
 			Long participationId = part.getParticipationId();
 			Integer maxDay = mapper.selectMaxDayNumber(participationId); // null이면 0 취급
 			int doneMax = (maxDay == null ? 0 : maxDay);
 
 			if (doneMax >= 3)
-				return null; // 1~3일 모두 완료면 null, 아니면 다음 일차
+				return null;
 			return doneMax + 1;
 		} catch (Exception e) {
 			log.warn("getNextSpecialDay error", e);
 
-			return 1; // 1리틴
+			return 1; 
 
 		}
 
@@ -526,4 +549,41 @@ public class ChallengeServiceImpl implements ChallengeService {
 			return List.of();
 		}
 	}
+
+	@Override
+	public boolean canJoinSpecialToday(long challengeId, long memberId) {
+		try {
+	     
+	        Challenge sp = mapper.findSpecialDetail(challengeId);
+	        if (sp == null) return false;
+	        java.time.LocalDate today = java.time.LocalDate.now();
+	        java.time.LocalDate start = java.time.LocalDate.parse(sp.getStartDate());
+	        java.time.LocalDate end   = java.time.LocalDate.parse(sp.getEndDate());
+	        if (today.isBefore(start) || today.isAfter(end)) return false;
+
+	        
+	        Challenge part = mapper.selectActiveParticipation(memberId, challengeId);
+	        if (part != null) {
+	            int todayCnt = mapper.countTodaySpecialPost(part.getParticipationId());
+	            if (todayCnt > 0) return false;
+	        }
+
+	     
+	        if (part == null) return true;
+
+	        // 마지막 인증 날짜
+	        Map<String, Object> last = mapper.selectLastPostInfo(part.getParticipationId());
+	        if (last == null) return true;
+
+	        String lastDateStr = String.valueOf(last.get("LASTDATE")); // YYYY-MM-DD
+	        if (lastDateStr == null || lastDateStr.isBlank()) return true;
+
+	        java.time.LocalDate lastDate = java.time.LocalDate.parse(lastDateStr);
+	       
+	        return today.equals(lastDate.plusDays(1));
+	    } catch (Exception e) {
+	        log.warn("canJoinSpecialToday error", e);
+	        return false;
+	    }
+}
 }

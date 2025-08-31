@@ -214,6 +214,11 @@ main { padding: clamp(16px, 2vw, 32px) 0 60px; }
         e.preventDefault();
         return;
       }
+      
+      if (!confirm('스페셜은 하루 1회, 연속 3일만 인정됩니다. 오늘 제출하시겠어요?')) {
+          e.preventDefault();
+          return;
+        }
     }
   });
 </script>

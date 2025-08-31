@@ -70,7 +70,8 @@ public interface ChallengeManageMapper {
     // 스페셜 requireDays 조회 (없으면 3)
     public Integer selectRequireDaysByChallengeId(@Param("challengeId") long challengeId) throws SQLException;
     
-    
+    // 1~3일차 인증 날짜 조회용
+    public List<Map<String,Object>> selectSpecialDayDates(@Param("participationId") long participationId) throws SQLException; 
     
     
 }

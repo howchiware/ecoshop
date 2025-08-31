@@ -12,72 +12,33 @@
   <title>관리자 - 챌린지 목록</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="<c:url value='/dist/css/main2.css'/>" type="text/css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="<c:url value='/dist/css/main2.css'/>" type="text/css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="<c:url value='/dist/css/admin_paginate.css'/>">
 
-  <!-- JS -->
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="<c:url value='/dist/js/util-jquery.js'/>"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="<c:url value='/dist/js/util-jquery.js'/>"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <style>
-
+<style>
 :root{
-  --ink:#111827;
-  --muted:#64748b;
-  --bd:#e5e7eb;
-
- 
-  --pill-special-bg:#e5e7eb;  /* SPECIAL: 진한 회색 */
-  --pill-special-bd:#d1d5db;
-  --pill-special-ink:#111827;
-
-  --pill-daily-bg:#f3f4f6;    /* DAILY: 더 옅은 회색 */
-  --pill-daily-bd:#e5e7eb;
-  --pill-daily-ink:#374151;
+  --ink:#111827; --muted:#64748b; --bd:#e5e7eb;
+  --pill-special-bg:#e5e7eb; --pill-special-bd:#d1d5db; --pill-special-ink:#111827;
+  --pill-daily-bg:#f3f4f6;   --pill-daily-bd:#e5e7eb;   --pill-daily-ink:#374151;
 }
-
 .table thead th { white-space:nowrap; }
 .admin-main-container { display:flex; }
 .admin-sidebar { width:250px; flex-shrink:0; }
 .admin-content { flex-grow:1; margin-left:20px; }
 .thumb { width:72px; height:48px; object-fit:cover; border-radius:8px; border:1px solid #eaeef4; }
-.text-muted { color:var(--muted) !important; }
-
-/* 제목 링크: 검정 + 볼드 */
-.title-link{
-  color:var(--ink); font-weight:800; text-decoration:none;
-}
+.title-link{ color:var(--ink); font-weight:800; text-decoration:none; }
 .title-link:hover{ text-decoration:underline; }
-
-/* SPECIAL / DAILY 배지 */
-.pill{
-  display:inline-flex; align-items:center; justify-content:center;
-  height:28px; padding:0 12px; border-radius:9999px; font-weight:700; font-size:12px;
-}
+.pill{ display:inline-flex; align-items:center; justify-content:center; height:28px; padding:0 12px; border-radius:9999px; font-weight:700; font-size:12px; }
 .pill.special{ background:var(--pill-special-bg); color:var(--pill-special-ink); border:1px solid var(--pill-special-bd); }
 .pill.daily  { background:var(--pill-daily-bg);   color:var(--pill-daily-ink);   border:1px solid var(--pill-daily-bd); }
 
-/* 페이징 */
-.paging-wrap{
-  display:flex; justify-content:center; align-items:center;
-  gap:10px; margin:26px 0 10px; font-size:18px;
-}
-.paging-wrap a, .paging-wrap span{
-  display:inline-flex; align-items:center; justify-content:center;
-  min-width:44px; height:44px; padding:0 14px;
-  border:1px solid var(--bd); border-radius:10px;
-  background:#fff; color:#334155; text-decoration:none;
-  box-shadow:0 1px 2px rgba(0,0,0,.04);
-}
-.paging-wrap a:hover{ background:#f8fafc; }
-.paging-wrap .current,
-.paging-wrap span.current,
-.paging-wrap span:has(> b){
-  background:#0d6efd; border-color:#0d6efd; color:#fff; font-weight:700;
-}
-.paging-wrap a[rel="prev"], .paging-wrap a.prev,
-.paging-wrap a[rel="next"], .paging-wrap a.next{ padding:0 16px; min-width:48px; }
+
   </style>
 </head>
 <body>
@@ -145,7 +106,6 @@
         </thead>
         <tbody>
         <c:forEach var="d" items="${list}">
-          <!-- 썸네일 URL -->
           <c:choose>
             <c:when test="${not empty d.thumbnail}">
               <c:url var="thumbUrl" value="/uploads/challenge/${d.thumbnail}"/>
@@ -155,22 +115,14 @@
             </c:otherwise>
           </c:choose>
 
-          <!-- 상세 링크 -->
           <c:url var="articleLink" value="/admin/challengeManage/article">
             <c:param name="challengeId" value="${d.challengeId}"/>
             <c:param name="page" value="${page}"/>
-            <c:if test="${not empty kwd}">
-              <c:param name="kwd" value="${kwd}"/>
-            </c:if>
-            <c:if test="${not empty challengeType}">
-              <c:param name="challengeType" value="${challengeType}"/>
-            </c:if>
-            <c:if test="${weekday ne null}">
-              <c:param name="weekday" value="${weekday}"/>
-            </c:if>
+            <c:if test="${not empty kwd}"><c:param name="kwd" value="${kwd}"/></c:if>
+            <c:if test="${not empty challengeType}"><c:param name="challengeType" value="${challengeType}"/></c:if>
+            <c:if test="${weekday ne null}"><c:param name="weekday" value="${weekday}"/></c:if>
           </c:url>
 
-          <!-- 수정/삭제 링크 -->
           <c:url var="updateLink" value="/admin/challengeManage/update">
             <c:param name="challengeId" value="${d.challengeId}"/>
             <c:param name="page" value="${page}"/>
@@ -181,29 +133,18 @@
           </c:url>
 
           <tr>
+            <td><img class="thumb" src="${thumbUrl}" alt="thumb" onerror="this.onerror=null; this.src='${NOIMG}'"></td>
             <td>
-              <img class="thumb" src="${thumbUrl}" alt="thumb"
-                   onerror="this.onerror=null; this.src='${NOIMG}'">
-            </td>
-            <td>
-              <a href="${articleLink}" class="title-link">
-                <c:out value="${d.title}"/>
-              </a>
+              <a href="${articleLink}" class="title-link"><c:out value="${d.title}"/></a>
               <div class="text-muted small text-truncate" style="max-width:520px;">
                 <c:out value="${d.description}"/>
               </div>
             </td>
             <td>
               <c:choose>
-                <c:when test="${d.challengeType=='DAILY'}">
-                  <span class="pill daily">DAILY</span>
-                </c:when>
-                <c:when test="${d.challengeType=='SPECIAL'}">
-                  <span class="pill special">SPECIAL</span>
-                </c:when>
-                <c:otherwise>
-                  <span class="pill" style="background:#f8fafc;border:1px solid #e5e7eb;color:#64748b;">-</span>
-                </c:otherwise>
+                <c:when test="${d.challengeType=='DAILY'}"><span class="pill daily">DAILY</span></c:when>
+                <c:when test="${d.challengeType=='SPECIAL'}"><span class="pill special">SPECIAL</span></c:when>
+                <c:otherwise><span class="pill" style="background:#f8fafc;border:1px solid #e5e7eb;color:#64748b;">-</span></c:otherwise>
               </c:choose>
             </td>
             <td>
@@ -211,12 +152,9 @@
                 <c:when test="${d.challengeType=='DAILY'}">
                   <span class="badge bg-light text-dark">
                     <c:choose>
-                      <c:when test="${d.weekday==0}">일</c:when>
-                      <c:when test="${d.weekday==1}">월</c:when>
-                      <c:when test="${d.weekday==2}">화</c:when>
-                      <c:when test="${d.weekday==3}">수</c:when>
-                      <c:when test="${d.weekday==4}">목</c:when>
-                      <c:when test="${d.weekday==5}">금</c:when>
+                      <c:when test="${d.weekday==0}">일</c:when><c:when test="${d.weekday==1}">월</c:when>
+                      <c:when test="${d.weekday==2}">화</c:when><c:when test="${d.weekday==3}">수</c:when>
+                      <c:when test="${d.weekday==4}">목</c:when><c:when test="${d.weekday==5}">금</c:when>
                       <c:otherwise>토</c:otherwise>
                     </c:choose>
                   </span>
@@ -231,8 +169,7 @@
             <td><c:out value="${d.challengeRegDate}"/></td>
             <td>
               <a class="btn btn-sm btn-outline-secondary" href="${updateLink}">수정</a>
-              <a class="btn btn-sm btn-outline-danger" href="${deleteLink}"
-                 onclick="return confirm('삭제하시겠습니까?');">삭제</a>
+              <a class="btn btn-sm btn-outline-danger" href="${deleteLink}" onclick="return confirm('삭제하시겠습니까?');">삭제</a>
             </td>
           </tr>
         </c:forEach>
@@ -244,13 +181,15 @@
       </table>
     </div>
 
-    <!-- 페이징 -->
-    <div class="paging-wrap">
+    
+    <div class="page-navigation" aria-label="페이지 이동" style="margin-top:16px;">
       ${paging}
     </div>
   </div>
 </div>
 
 <jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp"/>
+
+
 </body>
 </html>

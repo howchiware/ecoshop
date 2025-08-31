@@ -15,6 +15,7 @@ public class GongguInquiryManage {
 	private String content;
 	private Date regDate;
 	private int status;
+	private String title;
 	
 	private Long memberId;
 	private String userName;
