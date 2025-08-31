@@ -64,7 +64,7 @@
             	COUNT(DECODE(detailState,4,1,10,1,11,1)) cancelRequestCount,
             	COUNT(DECODE(detailState,6,1,7,1)) exchangeRequestCount,
             	COUNT(DECODE(detailState,3,1,5,1,12,1)) detailCancelCount
-            FROM orderDetail
+            FROM gongguOrderDetail
             GROUP BY orderId
         ) od ON po.orderId = od.orderId
 		<where>
@@ -97,7 +97,7 @@
         LEFT OUTER JOIN (
             SELECT orderId, COUNT(*) totalOrderCount,
             	COUNT(DECODE(detailState,4,1,10,1,11,1)) cancelRequestCount
-            FROM orderDetail
+            FROM gongguOrderDetail
             GROUP BY orderId
         ) od ON po.orderId = od.orderId
 		WHERE po.orderId = #{orderId} AND classify = 2
@@ -203,12 +203,11 @@
 	</select>
 
 	<!-- 주문 상세 리스트 -->
-	<select id="listDetails" parameterType="map" resultType="com.sp.app.admin.model.GongguOrderManage">
+	<select id="listDetails" parameterType="map" resultType="com.sp.app.admin.model.GongguOrderDetailManage">
 		SELECT po.orderId, po.memberId, po.orderDate, po.totalAmount, po.payment,
 			po.deliveryCharge, po.orderState, po.orderStateDate, po.deliveryName, po.invoiceNumber,
 			od.gongguOrderDetailId, od.gongguProductId, od.productMoney, od.detailState, userId, 
-			NVL(m2.name,'손님') name, 
-			p.gongguProductName, 
+			NVL(m2.name,'손님') name, p.gongguProductName
 		FROM productOrder po
 		JOIN gongguOrderDetail od ON po.orderId = od.orderId
 		JOIN gongguProduct p ON od.gongguProductId = p.gongguProductId
@@ -232,7 +231,7 @@
 			po.deliveryCharge, po.orderState, po.orderStateDate, po.deliveryName, po.invoiceNumber,
 			od.gongguOrderDetailId, od.gongguProductId, od.price,
 			od.productMoney, od.detailState, userId,
-			NVL(m2.name,'손님') name, p.gongguProductName,
+			NVL(m2.name,'손님') name, p.gongguProductName
 		FROM productOrder po
 		JOIN gongguOrderDetail od ON po.orderId = od.orderId
 		JOIN gongguProduct p ON od.gongguProductId = p.gongguProductId
@@ -283,7 +282,7 @@
 	</select>
 	
 	<insert id="insertDetailStateInfo" parameterType="map">
-		INSERT INTO detailStateInfo(stateNum, gongguOrderDetailId, memberId, detailState, 
+		INSERT INTO detailStateInfo(gongguStateNum, gongguOrderDetailId, memberId, detailState, 
 			stateMemo, detailStateDate)
 		VALUES(detailState_seq.NEXTVAL, #{gongguOrderDetailId}, #{memberId}, 
 			#{detailState}, #{stateMemo,jdbcType=VARCHAR}, SYSDATE)
@@ -332,7 +331,7 @@
 	
 	<!-- 결제 정보 -->
 	<select id="findByPayDetail" parameterType="String" resultType="map">
-		SELECT orderId, imp_uid, payMethod, cardName, applyNum, applyDate, applyDate
+		SELECT orderId, imp_uid, payMethod, cardName, applyNum, applyDate
 		FROM payment
 		WHERE orderId = #{orderId}
 	</select>

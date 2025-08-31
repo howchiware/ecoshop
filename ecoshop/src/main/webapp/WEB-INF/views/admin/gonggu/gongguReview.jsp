@@ -12,7 +12,9 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css_gonggu/productReview.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css_gonggu/gongguReview.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css_gonggu/gongguAdminInquiry.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin_paginate.css">
 </head>
 <body>
 	<header>
@@ -57,5 +59,6 @@
 	<script src="${pageContext.request.contextPath}/dist/jsGonggu/sendAjaxRequest.js"></script>
 	<script src="${pageContext.request.contextPath}/dist/jsGonggu/showReviewTab.js"></script>
 	<script src="${pageContext.request.contextPath}/dist/jsGonggu/gongguAdminReview.js"></script>
+	<script src="${pageContext.request.contextPath}/dist/jsGonggu/gongguAdminInquiry.js"></script>
 </body>
 </html>

@@ -12,10 +12,19 @@ public interface GongguReviewInquiryManageService {
 	public List<GongguReviewManage> searchReviews(Map<String, Object> map);
 	public List<GongguInquiryManage> searchInquirys(Map<String, Object> map);
 	
-	public void updateAnswer(GongguReviewManage dto);
+	// 문의
+	public void updateAnswer(GongguInquiryManage dto);
 	public String answerNameFindById(long answerId);
+	public void deleteAnswer(long gongguInquiryId);
+	public void deleteInquiry(long gongguInquiryId);
 	
-	public void deleteAnswer(long gongguOrderDetailId);
+	// 리뷰
+	public String reviewAnswerNameFindById(long answerId);
+	public void deleteReviewAnswer(long gongguOrderDetailId);
 	public void deleteReview(long gongguOrderDetailId);
+	public void updateReviewAnswer(GongguReviewManage dto);
+	
+	public int dataCountReview(Map<String, Object> map);
+	public int dataCountInquiry(Map<String, Object> map);
 
 }

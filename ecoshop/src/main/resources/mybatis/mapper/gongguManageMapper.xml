@@ -35,14 +35,6 @@
 	    #{limitCount}, #{sale}, 0, #{detailInfo})
 	</insert>
 
-	<insert id="insertProductPhoto"
-		parameterType="com.sp.app.admin.model.GongguManage">
-		INSERT INTO gongguProductDetail(gongguProductDetailId,
-		gongguProductId, detailPhoto)
-		VALUES(gongguProductDetail_seq.NEXTVAL,
-		#{gongguProductId}, #{detailPhoto})
-	</insert>
-
 	<update id="updateProduct"
 		parameterType="com.sp.app.admin.model.GongguManage">
 		UPDATE gongguProduct SET gongguProductName = #{gongguProductName}, content = #{content},
@@ -276,4 +268,10 @@
 		INSERT INTO gongguProductDetail(gongguProductDetailId, gongguProductId, detailPhoto) 
 			VALUES(gongguProductDetail_seq.NEXTVAL, #{gongguProductId}, #{detailPhoto}) 
 	</insert>
+	
+	<select id="isBoughtByGongguProductId" parameterType="long" resultType="com.sp.app.admin.model.GongguManage">
+	    SELECT *
+	    FROM gongguOrderDetail
+	    WHERE gongguProductId = #{gongguProductId}
+	</select>
 </mapper>

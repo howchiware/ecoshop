@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sp.app.admin.mapper.GongguReviewInquiryManageMapper;
 import com.sp.app.admin.model.GongguInquiryManage;
 import com.sp.app.admin.model.GongguReviewManage;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,7 +65,7 @@ public class GongguReviewInquiryServiceImpl implements GongguReviewInquiryManage
 
 	@Transactional
 	@Override
-	public void updateAnswer(GongguReviewManage dto) {
+	public void updateAnswer(GongguInquiryManage dto) {
 		try {
 			gongguReviewInquiryManageMapper.updateAnswer(dto);
 		} catch (Exception e) {
@@ -89,9 +88,9 @@ public class GongguReviewInquiryServiceImpl implements GongguReviewInquiryManage
 
 	@Transactional
 	@Override
-	public void deleteAnswer(long gongguOrderDetailId) {
+	public void deleteAnswer(long gongguInquiryId) {
 		try {
-			gongguReviewInquiryManageMapper.deleteAnswer(gongguOrderDetailId);
+			gongguReviewInquiryManageMapper.deleteAnswer(gongguInquiryId);
 		} catch (Exception e) {
 			log.info("gongguDeleteAnswer: ", e);
 		}
@@ -106,6 +105,73 @@ public class GongguReviewInquiryServiceImpl implements GongguReviewInquiryManage
 			log.info("gongguDeleteInquiry: ", e);
 		}
 	}
+	
+	@Override
+	public int dataCountReview(Map<String, Object> map) {
+		int dataCountReview = 0;
+		
+		try {
+			dataCountReview = gongguReviewInquiryManageMapper.dataCountReview(map);
+		} catch (Exception e) {
+			log.info("dataCountReview : ", e);
+		}
+		
+		return dataCountReview;
+	}
+
+	@Override
+	public int dataCountInquiry(Map<String, Object> map) {
+		int dataCountInquiry = 0;
+		
+		try {
+			dataCountInquiry = gongguReviewInquiryManageMapper.dataCountInquiry(map);
+		} catch (Exception e) {
+			log.info("dataCountInquiry : ", e);
+		}
+		
+		return dataCountInquiry;
+	}
+
+	@Override
+	public void deleteInquiry(long gongguInquiryId) {
+		try {
+			gongguReviewInquiryManageMapper.deleteInquiry(gongguInquiryId);
+		} catch (Exception e) {
+			log.info("deleteInquiry: ", e);
+		}
+	}
+
+	@Override
+	public void updateReviewAnswer(GongguReviewManage dto) {
+		try {
+			gongguReviewInquiryManageMapper.updateReviewAnswer(dto);
+		} catch (Exception e) {
+			log.info("updateReviewAnswer: ", e);
+		}
+	}
+
+	@Override
+	public String reviewAnswerNameFindById(long answerId) {
+		String name = null;
+		
+		try {
+			name = gongguReviewInquiryManageMapper.reviewAnswerNameFindById(answerId);
+		} catch (Exception e) {
+			log.info("reviewAnswerNameFindById: ", e);
+		}
+		
+		return name;
+	}
+
+	@Override
+	public void deleteReviewAnswer(long gongguOrderDetailId) {
+		try {
+			gongguReviewInquiryManageMapper.deleteReviewAnswer(gongguOrderDetailId);
+		} catch (Exception e) {
+			log.info("gongguDeleteAnswer: ", e);
+		}
+	}
+
 	
 	
 }

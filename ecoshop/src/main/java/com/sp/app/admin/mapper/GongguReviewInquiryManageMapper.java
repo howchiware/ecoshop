@@ -16,10 +16,19 @@ public interface GongguReviewInquiryManageMapper {
 	public List<GongguReviewManage> findReviewsBySearch(Map<String, Object> map);
 	public List<GongguInquiryManage> findInquirysBySearch(Map<String, Object> map);
 	
-	public void updateAnswer(GongguReviewManage dto);
+	// 문의
+	public void updateAnswer(GongguInquiryManage dto);
 	public String answerNameFindById(long answerId);
-	
-	public void deleteAnswer(long gongguorderDetailId);
-	public void deleteReview(long gongguorderDetailId);
+	public void deleteAnswer(long gongguInquiryId);
+	public void deleteInquiry(long gongguInquiryId);
+		
+	// 리뷰
+	public void updateReviewAnswer(GongguReviewManage dto);
+	public String reviewAnswerNameFindById(long answerId);
+	public void deleteReviewAnswer(long gongguOrderDetailId);
+	public void deleteReview(long gongguOrderDetailId);
+		
+	public int dataCountReview(Map<String, Object> map);
+	public int dataCountInquiry(Map<String, Object> map);
 	
 }

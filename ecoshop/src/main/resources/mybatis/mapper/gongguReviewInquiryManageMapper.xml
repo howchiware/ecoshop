@@ -42,8 +42,8 @@
 	</select>
 	
 	<select id="findInquirysBySearch" parameterType="map" resultType="com.sp.app.admin.model.GongguInquiryManage">
-		SELECT g.gongguProductName, i.content, i.regDate, (CASE WHEN i.answer IS NOT NULL THEN 1 ELSE 0 END) AS status, m2.name AS userName, m1.userId, m1.userLevel, c.categoryId,
-	 		 c.categoryName, i.gongguInquiryId, i.answerId, i.answer, i.answerDate
+		SELECT g.gongguProductName, i.title, i.content, i.regDate, (CASE WHEN i.answer IS NOT NULL THEN 1 ELSE 0 END) AS status, m2.name AS userName, m1.userId, m1.userLevel, c.categoryId,
+	 		 c.categoryName, i.gongguInquiryId, i.answerId, i.answer, i.answerDate, m2.name AS answerName
 	 	FROM gongguInquiry i
 	 	LEFT JOIN gongguProduct g ON i.gongguProductId = g.gongguProductId
 		LEFT JOIN member1 m1 ON i.memberId = m1.memberId
@@ -58,11 +58,12 @@
 	        </if>
 	    </where>
 	    ORDER BY i.regDate DESC
+	    OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 	
-	<update id="updateAnswer" parameterType="com.sp.app.admin.model.GongguReviewManage">
-		UPDATE gongguReview SET answer = #{answer}, answerDate = SYSDATE, answerId = #{answerId}
-		WHERE gongguOrderDetailId = #{gongguOrderDetailId}  
+	<update id="updateAnswer" parameterType="com.sp.app.admin.model.GongguInquiryManage">
+		UPDATE gongguInquiry SET answer = #{answer}, answerDate = SYSDATE, answerId = #{answerId}
+		WHERE gongguInquiryId = #{gongguInquiryId}  
 	</update>
 	
 	<select id="answerNameFindById" parameterType="Long" resultType="String">
@@ -79,6 +80,55 @@
 		DELETE FROM gongguReview WHERE gongguOrderDetailId = #{gongguOrderDetailId}
 	</delete>
 
+	<select id="dataCountReview" parameterType="Map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) count
+		FROM gongguReview gr
+		LEFT OUTER JOIN gongguProduct g ON gr.gongguProductId = g.gongguProductId
+		JOIN member1 m1 ON gr.memberId = m1.memberId
+		JOIN member2 m2 ON m1.memberId = m2.memberId
+		<where>
+	        <if test="gongguProductName != null and !gongguProductName.isEmpty()">
+	            AND g.gongguProductName LIKE '%' || #{gongguProductName} || '%'
+	        </if>
+	        <if test="kwd != null and !kwd.isEmpty()">
+	            AND (gr.content LIKE '%' || #{kwd} || '%' OR m2.name LIKE '%' || #{kwd} || '%')
+	        </if>
+	    </where>
+	</select>
 
+	<select id="dataCountInquiry" parameterType="Map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) count
+		FROM gongguInquiry gi
+		LEFT OUTER JOIN gongguProduct g ON gi.gongguProductId = g.gongguProductId
+		JOIN member1 m1 ON gi.memberId = m1.memberId
+		JOIN member2 m2 ON m1.memberId = m2.memberId
+		<where>
+	        <if test="productName != null and !productName.isEmpty()">
+	            AND g.gongguProductName LIKE '%' || #{gongguProductName} || '%'
+	        </if>
+	        <if test="kwd != null and !kwd.isEmpty()">
+	            AND (gi.content LIKE '%' || #{kwd} || '%' OR m2.name LIKE '%' || #{kwd} || '%')
+	        </if>
+	    </where>
+	</select>
+
+	<delete id="deleteInquiry" parameterType="Long">
+		DELETE FROM gongguInquiry WHERE gongguInquiryId = #{gongguInquiryId}
+	</delete>
+	
+	<update id="updateReviewAnswer" parameterType="com.sp.app.admin.model.GongguReviewManage">
+		UPDATE gongguReview SET answer = #{answer}, answerDate = SYSDATE, answerId = #{answerId}
+		WHERE gongguOrderDetailId = #{gongguOrderDetailId}
+	</update>
+	
+	<select id="reviewAnswerNameFindById" parameterType="Long" resultType="String">
+	    SELECT name
+	    FROM member2
+	    WHERE memberId = #{answerId}
+	</select>
+	
+	<update id="deleteReviewAnswer" parameterType="Long">
+		UPDATE gongguReview SET answerId = null, answer = null, answerDate = null WHERE gongguOrderDetailId = #{gongguOrderDetailId}
+	</update>
 	
 </mapper>

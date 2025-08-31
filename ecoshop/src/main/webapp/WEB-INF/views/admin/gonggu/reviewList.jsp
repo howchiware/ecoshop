@@ -4,6 +4,7 @@
 <%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
 
 <form name="reviewAnswerForm" method="post">
+	<p>총 ${dataCount}개의 리뷰 (${pageNo} / ${total_page} 페이지)</p>
 	<table class="table table-borderless board-list">
 		<thead>
 			<tr class="border-bottom">
