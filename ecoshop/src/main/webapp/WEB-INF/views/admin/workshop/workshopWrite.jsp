@@ -162,7 +162,7 @@
 					<div class="mb-3 row">
 						<label class="col-sm-2 col-form-label">워크샵 내용</label>
 						<div class="col-sm-8">
-							<textarea name="workshopContent" rows="5" class="form-control">${dto.workshopContent}</textarea>
+							<textarea name="workshopContent" rows="20" class="form-control">${dto.workshopContent}</textarea>
 						</div>
 					</div>
 

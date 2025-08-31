@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -15,6 +16,7 @@
 	type="text/css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/dist/cssWorkshop/workshopUser.css">
+
 <style type="text/css">
 </style>
 </head>
@@ -170,7 +172,7 @@
 		<div class="tab-content border border-top-0 p-3">
 			<div class="tab-pane fade show active" id="intro">
 				<div class="mb-3 mt-3">
-					<c:out value="${dto.workshopContent}" escapeXml="false" />
+					<pre style="white-space: pre-line;"> ${dto.workshopContent} </pre>
 				</div>
 				<div class="row g-3">
 					<c:forEach var="p" items="${photoList}" varStatus="st">
