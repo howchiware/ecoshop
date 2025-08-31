@@ -645,6 +645,11 @@ public class WorkshopManageController {
 			managerMap.put("size", 100);
 			List<Workshop> managerList = service.listManager(managerMap);
 
+			Map<String, Object> photoMap = new HashMap<>();
+	        photoMap.put("workshopId", num);
+	        List<Workshop> photoList = service.listWorkshopPhoto(photoMap);
+	        model.addAttribute("photoList", photoList);
+			
 			model.addAttribute("programList", programList);
 			model.addAttribute("managerList", managerList);
 			model.addAttribute("dto", dto);
@@ -661,18 +666,43 @@ public class WorkshopManageController {
 
 	@PostMapping("/update")
 	public String updateSubmitWorkshop(Workshop dto, @RequestParam(name = "page", defaultValue = "1") String page,
-			@RequestParam(name = "thumbnail", required = false) MultipartFile newThumbnail) throws Exception {
+			@RequestParam(name = "thumbnail", required = false) MultipartFile newThumbnail,
+			@RequestParam(name = "photos", required = false) List<MultipartFile> newPhotos,
+			@RequestParam(name="deletePhotoIds", required=false) List<Long> deletePhotoIds) throws Exception {
 		try {
 			Workshop workshop = service.findWorkshopById(dto.getWorkshopId());
 
+			// 썸네일
 			if (newThumbnail != null && !newThumbnail.isEmpty()) {
 				String path = storageService.uploadFileToServer(newThumbnail, uploadPath);
 				dto.setThumbnailPath(path);
 			} else {
 				dto.setThumbnailPath(workshop.getThumbnailPath());
 			}
-
+			
 			service.updateWorkshop(dto);
+			
+			if (deletePhotoIds != null) {
+				for (Long photoId : deletePhotoIds) {
+					service.deleteWorkshopPhotoById(photoId, uploadPath);
+				}
+			}
+			
+			// 상세 사진
+			if (newPhotos != null) {
+	            for (MultipartFile photo : newPhotos) {
+	                if (photo != null && !photo.isEmpty()) {
+	                    String path = storageService.uploadFileToServer(photo, uploadPath);
+
+	                    Workshop p = new Workshop();
+	                    p.setWorkshopId(dto.getWorkshopId());
+	                    p.setWorkshopImagePath(path);
+	                    service.insertWorkshopPhoto(p);
+	                }
+	            }
+	        }
+			
+
 		} catch (Exception e) {
 			log.info("update Workshop : ", e);
 			throw e;

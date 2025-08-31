@@ -44,7 +44,7 @@ public interface WorkshopService {
 	public List<Workshop> listWorkshopMain(Map<String, Object> map);
 	
 	// 워크샵 사진
-	public void insertWorkshopPhoto(Workshop dto) throws Exception; // workshopImagePath로 수정
+	public void insertWorkshopPhoto(Workshop dto) throws Exception;
 	public List<Workshop> listWorkshopPhoto(Map<String, Object> map);
 	public Workshop findWorkshopPhotoById(long photoId);
 	public void deleteWorkshopPhotoById(long photoId, String uploadPath) throws Exception;

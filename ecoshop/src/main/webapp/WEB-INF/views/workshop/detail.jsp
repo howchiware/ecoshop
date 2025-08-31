@@ -34,8 +34,8 @@
 
 	<main class="container py-4">
 
-		<c:set var="rawMain"
-			value="${(not empty photoList and fn:length(photoList)>0) ? photoList[0].workshopImagePath : ''}" />
+		<c:set var="rawMain" value="${dto.thumbnailPath}" />
+
 		<c:choose>
 			<c:when test="${empty rawMain}">
 				<c:set var="mainImg"
@@ -50,6 +50,7 @@
 					value='${pageContext.request.contextPath}/uploads/workshop/${rawMain}' />
 			</c:otherwise>
 		</c:choose>
+
 
 		<div class="row g-1 mb-4">
 			<div class="col-md-6">
@@ -175,24 +176,22 @@
 					<pre style="white-space: pre-line;"> ${dto.workshopContent} </pre>
 				</div>
 				<div class="row g-3">
-					<c:forEach var="p" items="${photoList}" varStatus="st">
-						<c:if test="${st.index>0}">
-							<c:set var="rawPhoto" value='${p.workshopImagePath}' />
-							<c:choose>
-								<c:when
-									test="${fn:startsWith(rawPhoto,'http://') or fn:startsWith(rawPhoto,'https://') or fn:startsWith(rawPhoto,'/')}">
-									<c:set var="photoUrl" value='${rawPhoto}' />
-								</c:when>
-								<c:otherwise>
-									<c:set var="photoUrl"
-										value='${pageContext.request.contextPath}/uploads/workshop/${rawPhoto}' />
-								</c:otherwise>
-							</c:choose>
-							<div class="col-6 col-md-4">
-								<img src="${photoUrl}" class="img-fluid rounded"
-									onerror="if(this.src.indexOf('noimage.png')===-1)this.src='${pageContext.request.contextPath}/dist/images/noimage.png'">
-							</div>
-						</c:if>
+					<c:forEach var="p" items="${photoList}">
+						<c:set var="rawPhoto" value='${p.workshopImagePath}' />
+						<c:choose>
+							<c:when
+								test="${fn:startsWith(rawPhoto,'http://') or fn:startsWith(rawPhoto,'https://') or fn:startsWith(rawPhoto,'/')}">
+								<c:set var="photoUrl" value='${rawPhoto}' />
+							</c:when>
+							<c:otherwise>
+								<c:set var="photoUrl"
+									value='${pageContext.request.contextPath}/uploads/workshop/${rawPhoto}' />
+							</c:otherwise>
+						</c:choose>
+						<div class="col-6 col-md-4">
+							<img src="${photoUrl}" class="img-fluid rounded"
+								onerror="if(this.src.indexOf('noimage.png')===-1)this.src='${pageContext.request.contextPath}/dist/images/noimage.png'">
+						</div>
 					</c:forEach>
 				</div>
 			</div>

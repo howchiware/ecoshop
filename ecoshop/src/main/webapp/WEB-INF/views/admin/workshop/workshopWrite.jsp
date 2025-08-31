@@ -16,23 +16,27 @@
 	</c:otherwise>
 </c:choose>
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssWorkshop/workshop.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/dist/css/admin.css">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/dist/cssWorkshop/workshop.css">
 
 <style type="text/css">
 .section-title {
-  font-size: 1rem;
-  font-weight: 700;
-  margin: 48px 0 20px;      
-  padding-top: 14px;      
-  border-top: 1px solid #dee2e6;
+	font-size: 1rem;
+	font-weight: 700;
+	margin: 48px 0 20px;
+	padding-top: 14px;
+	border-top: 1px solid #dee2e6;
 }
 
 .outside .section-title:first-of-type {
-  border-top: none;
-  padding-top: 0;
-  margin-top: 0;
+	border-top: none;
+	padding-top: 0;
+	margin-top: 0;
 }
 
 .mb-3 {
@@ -51,8 +55,10 @@
 		<div class="container py-3">
 
 			<c:if test="${mode eq 'update'}">
-				<fmt:formatDate value="${dto.scheduleDate}" pattern="yyyy-MM-dd'T'HH:mm" var="formattedScheduleDate" />
-				<fmt:formatDate value="${dto.applyDeadline}" pattern="yyyy-MM-dd'T'HH:mm" var="formattedApplyDeadline" />
+				<fmt:formatDate value="${dto.scheduleDate}"
+					pattern="yyyy-MM-dd'T'HH:mm" var="formattedScheduleDate" />
+				<fmt:formatDate value="${dto.applyDeadline}"
+					pattern="yyyy-MM-dd'T'HH:mm" var="formattedApplyDeadline" />
 			</c:if>
 
 			<form id="workshopForm" method="post"
@@ -83,9 +89,9 @@
 							<select name="programId" class="form-select" required>
 								<option value="">프로그램 선택</option>
 								<c:forEach var="p" items="${programList}">
-									<option value="${p.programId}" <c:if test="${dto.programId == p.programId}">selected</c:if>>
-										${p.programTitle}
-									</option>
+									<option value="${p.programId}"
+										<c:if test="${dto.programId == p.programId}">selected</c:if>>
+										${p.programTitle}</option>
 								</c:forEach>
 							</select>
 						</div>
@@ -97,9 +103,9 @@
 							<select name="managerId" class="form-select" required>
 								<option value="">담당자 선택</option>
 								<c:forEach var="m" items="${managerList}">
-									<option value="${m.managerId}" <c:if test="${dto.managerId == m.managerId}">selected</c:if>>
-										${m.name} (${m.department})
-									</option>
+									<option value="${m.managerId}"
+										<c:if test="${dto.managerId == m.managerId}">selected</c:if>>
+										${m.name} (${m.department})</option>
 								</c:forEach>
 							</select>
 						</div>
@@ -135,9 +141,12 @@
 						<label class="col-sm-2 col-form-label">모집 상태</label>
 						<div class="col-sm-3">
 							<select name="workshopStatus" class="form-select">
-								<option value="1" <c:if test='${dto.workshopStatus == 1}'>selected</c:if>>모집</option>
-								<option value="0" <c:if test='${dto.workshopStatus == 0}'>selected</c:if>>마감</option>
-								<option value="2" <c:if test='${dto.workshopStatus == 2}'>selected</c:if>>취소</option>
+								<option value="1"
+									<c:if test='${dto.workshopStatus == 1}'>selected</c:if>>모집</option>
+								<option value="0"
+									<c:if test='${dto.workshopStatus == 0}'>selected</c:if>>마감</option>
+								<option value="2"
+									<c:if test='${dto.workshopStatus == 2}'>selected</c:if>>취소</option>
 							</select>
 						</div>
 						<label class="col-sm-2 col-form-label text-sm-end">마감 일시</label>
@@ -170,11 +179,28 @@
 						<label class="col-sm-2 col-form-label">상세 이미지</label>
 						<div class="col-sm-6">
 							<input type="file" name="photos" class="form-control" multiple>
-							<c:if test="${mode eq 'update' && not empty photoList}">
-								<small class="text-muted">현재 이미지 ${fn:length(photoList)}장 등록됨</small>
-							</c:if>
 						</div>
 					</div>
+
+					<c:if test="${mode eq 'update' && not empty photoList}">
+						<div class="mb-3 row">
+							<label class="col-sm-2 col-form-label">등록된 이미지</label>
+							<div class="col-sm-10 d-flex flex-wrap gap-3">
+								<c:forEach var="p" items="${photoList}">
+									<div class="border rounded p-2" style="width: 140px">
+										<img src="${p.workshopImagePath}" class="img-fluid rounded"
+											alt="photo">
+										<div class="form-check mt-2">
+											<input class="form-check-input" type="checkbox"
+												name="deletePhotoIds" value="${p.photoId}"
+												id="del-${p.photoId}"> <label
+												class="form-check-label small" for="del-${p.photoId}">삭제하기</label>
+										</div>
+									</div>
+								</c:forEach>
+							</div>
+						</div>
+					</c:if>
 
 					<div class="row">
 						<div class="col-sm-10 offset-sm-5">

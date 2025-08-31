@@ -303,17 +303,18 @@
 	<update id="updateWorkshop"
 		parameterType="com.sp.app.model.Workshop">
 		UPDATE workshop
-		SET workshopTitle = #{workshopTitle},
+		SET workshopTitle = #{workshopTitle, jdbcType=VARCHAR},
 		scheduleDate = #{scheduleDate, jdbcType=TIMESTAMP},
 		applyDeadline = #{applyDeadline, jdbcType=TIMESTAMP},
-		location = #{location},
-		workshopStatus = #{workshopStatus},
-		capacity = #{capacity},
-		thumbnailPath = #{thumbnailPath, jdbcType=VARCHAR}, 
-		workshopContent = #{workshopContent},
+		location = #{location, jdbcType=VARCHAR},
+		workshopStatus = #{workshopStatus, jdbcType=NUMERIC},
+		capacity = #{capacity, jdbcType=NUMERIC},
+		thumbnailPath = #{thumbnailPath, jdbcType=VARCHAR},
+		workshopContent = #{workshopContent, jdbcType=CLOB},
 		updDate = SYSDATE
-		WHERE workshopId = #{workshopId}
+		WHERE workshopId = #{workshopId, jdbcType=NUMERIC}
 	</update>
+
 
 
 	<delete id="deleteWorkshop" parameterType="Long">
