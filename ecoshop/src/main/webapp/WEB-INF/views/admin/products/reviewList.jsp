@@ -78,7 +78,7 @@
 															<p class="reviewDetailAnswerDate">${dto.answerDate}</p>
 														</div>
 														<div class="reviewDetailAnswerContent">
-															<p class="answerP" readonly>${dto.answer}</p>
+															<p class="answerP readonly">${dto.answer}</p>
 														</div>
 														<div>
 															<button type="button" class="small-btn reviewUpdateAnswer"

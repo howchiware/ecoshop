@@ -61,6 +61,7 @@
 						<button type="button" class="btn-default"
 							onclick="location.href='${pageContext.request.contextPath}/admin/gonggu/listProduct?${query}';">리스트</button>
 					</div>
+					<br><br>
 					<hr>
 					<div class="row packageList-container">
 						<div class="col-md-6">[  패키지 상품구성  ]  할인율 : ${dto.sale}% -> 총 패키지가격 : <span id="gongguPriceDisplay">${dto.gongguPrice}</span></div>

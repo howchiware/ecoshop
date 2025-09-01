@@ -71,3 +71,12 @@
 .modal {
 	z-index: 9999 !important;
 }
+
+.btn-default:hover {
+	border-color: #000;
+}
+
+.btn-default {
+	border-radius: 3px;
+	border-color: #000;
+}

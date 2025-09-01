@@ -1,0 +1,52 @@
+.right-PANEL .outside a {
+    color: #000;            
+    text-decoration: none;  
+}
+
+.right-PANEL .outside a:hover {
+    color: #000;             
+    text-decoration: none;   
+}
+
+.right-PANEL .outside a,
+.right-PANEL .outside a:link,
+.right-PANEL .outside a:visited {
+  color: #000;
+  text-decoration: none;
+}
+.right-PANEL .outside a:hover,
+.right-PANEL .outside a:focus {
+  color: #000;
+  text-decoration: none;
+}
+
+.right-PANEL .board-section .btn-accent.btn-md {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: #efeeee;
+  color: #000;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color .2s ease, color .2s ease;
+}
+.right-PANEL .board-section .btn-accent.btn-md:hover,
+.right-PANEL .board-section .btn-accent.btn-md:focus {
+  background-color: #bfbfbf;
+  border-color: #bfbfbf;
+  color: #000;
+}
+
+.right-PANEL .board-section .btn-default {
+  background-color: #fff;        
+  border: 1px solid #d9d9d9;
+  color: #000;
+  box-shadow: none;
+}
+.right-PANEL .board-section .btn-default:hover,
+.right-PANEL .board-section .btn-default:focus {
+  background-color: #efefef;
+  border-color: #d9d9d9;
+  color: #000;
+}

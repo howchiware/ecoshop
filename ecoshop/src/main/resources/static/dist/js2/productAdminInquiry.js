@@ -37,57 +37,20 @@ $(function(){
 
 // 답변 등록
 $(function(){
-	$('div#content-area').on('click', 'button.addAnswer', function(){
-		const f = document.inquiryAnswerForm;
-		
-		const answerEL = $(this).parent().children('textarea');
-		console.log(answerEL);
-		if(! answerEL.val() ) {
-			alert('답변을 입력하세요. ');
-			answerEL.focus();
-			return;
-		}
-		
-		// name 넣어주기
-		const inquiryId = $(this).attr('data-inquiryId');
-		const answerId = $(this).attr('data-managerId');
-		const answerName = $(this).attr('data-managerName');
-		console.log(inquiryId);
-		console.log(answerId);
-		console.log(answerName);
-		
-		let inputTag1 = document.createElement("input");
-				
-		inputTag1.classList.add('inquiryIdInput');
-		inputTag1.setAttribute('type', 'hidden');
-		inputTag1.setAttribute('name', 'inquiryId');
-		inputTag1.value = inquiryId;
-		
-		let inputTag2 = document.createElement("input");
-				
-		inputTag2.classList.add('answerIdInput');
-		inputTag2.setAttribute('type', 'hidden');
-		inputTag2.setAttribute('name', 'answerId');
-		inputTag2.value = answerId;
-		
-		let inputTag3 = document.createElement("input");
-				
-		inputTag3.classList.add('answerNameInput');
-		inputTag3.setAttribute('type', 'hidden');
-		inputTag3.setAttribute('name', 'answerName');
-		inputTag3.value = answerName;
-		
-		const inquireDetailAnswerAddEl = $(this).closest('div.inquireDetailAnswerAdd');
-		inquireDetailAnswerAddEl.append(inputTag1);
-		inquireDetailAnswerAddEl.append(inputTag2);
-		inquireDetailAnswerAddEl.append(inputTag3);
-		
-		answerEL.prop('name', 'answer');
-
-		// 등록
-		f.action = 'writeAnswer';
-		f.submit();
-	});
+    $('div#content-area').on('click', 'button.addAnswer', function(){
+        const f = $(this).closest('form').get(0);
+        
+        const answerEL = $(this).siblings('textarea');
+        if(! answerEL.val().trim() ) {
+            alert('답변을 입력하세요. ');
+            answerEL.focus();
+            return;
+        }
+        
+        // 폼을 제출합니다.
+        f.action = 'writeAnswer';
+        f.submit();
+    });
 });
 
 // 답변 수정 시작
