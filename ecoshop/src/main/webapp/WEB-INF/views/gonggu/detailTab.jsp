@@ -68,25 +68,36 @@
 	        </c:if>
 	    </div>
 	
-	    <div class="image-grid">
-	    	<c:forEach var="vo" items="${imgList}" varStatus="status" begin="0" end="4">
-	    		<c:if test="${status.index < 4}">
-			        <div class="img-div reviewImgView-div" data-gongguOrderDetailId="${vo.gongguOrderDetailId}">
-		                <img src="${pageContext.request.contextPath}/uploads/review/${vo.reviewImg}" class="image-photo" alt="" style="height: 210px;">
-			        </div>
-	    		</c:if>
-	    		<c:if test="${status.index == 4}">
-	    		<div class="item-box">
-				    <div class="image">
-				      <img src="${pageContext.request.contextPath}/uploads/review/${vo.reviewImg}" alt="" class="image-photo" style="height: 210px;">
-				    </div>
-				    <div class="img-div moreBtn" data-productCode="${dto.productCode}">
-				      <p>더보기</p>
-				    </div>
-				 </div>
-				</c:if>
-	    	</c:forEach>
-	    </div>
+	    <c:set var="ctx" value="${pageContext.request.contextPath}" />
+
+		<div class="image-grid">
+		  <c:forEach var="vo" items="${imgList}" varStatus="st">
+		    <c:if test="${st.index < 4 && not empty vo.reviewImg}">
+		      <div class="img-div reviewImgView-div" data-gongguOrderDetailId="${vo.gongguOrderDetailId}">
+		        <img src="${ctx}/uploads/review/${vo.reviewImg}"
+		             class="image-photo" alt="리뷰 이미지" style="height:210px"
+		             onerror="this.closest('.img-div').remove();">
+		      </div>
+		    </c:if>
+		  </c:forEach>
+
+  <c:if test="${fn:length(imgList) > 4}">
+    <c:set var="fifth" value="${imgList[4]}"/>
+    <c:if test="${not empty fifth.reviewImg}">
+      <div class="item-box">
+        <div class="image">
+          <img src="${ctx}/uploads/review/${fifth.reviewImg}"
+               class="image-photo" style="height:210px"
+               onerror="this.closest('.item-box').remove();">
+        </div>
+        <div class="img-div moreBtn" data-productCode="${dto.productCode}">
+          <p>더보기</p>
+        </div>
+      </div>
+    </c:if>
+  </c:if>
+</div>
+
 	    <div class="row mt-3 reviewSort-area">
 	        <div class="col onlyPhotoReview" id="onlyPhotoReview">
 	            <i class="bi bi-image"></i> <span>포토 구매평만 보기</span>

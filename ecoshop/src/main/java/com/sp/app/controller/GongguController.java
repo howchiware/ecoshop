@@ -140,7 +140,7 @@ public class GongguController {
 			dto.setDetailInfo(detailInfo);
 			
 			GongguProduct mainThumbnail = new GongguProduct();
-			mainThumbnail.setGongguThumbnail(dto.getGongguThumbnail());
+			mainThumbnail.setDetailPhoto(dto.getGongguThumbnail());
 			listPhoto.add(0, mainThumbnail);
 
 			GongguProductDeliveryRefundInfo deliveryRefundInfo = gongguService.listDeliveryRefundInfo();

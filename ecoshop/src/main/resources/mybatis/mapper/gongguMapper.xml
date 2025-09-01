@@ -185,12 +185,12 @@
 		#{memberId}
 	</select>
 
-	<select id="listAllProducts"
-		resultType="com.sp.app.model.GongguProduct">
-		SELECT gongguProductId, categoryId, gongguProductName, gongguPrice,
-		gongguThumbnail, sale, regDate,
-		productShow, updateDate, content, detailInfo
-		FROM gongguProduct
+	<select id="listAllProducts" resultType="com.sp.app.model.GongguProduct">
+		SELECT gongguProductId,categoryId,gongguProductName,
+         (originalPrice - (originalPrice * sale / 100)) AS gongguPrice,
+         gongguThumbnail, sale, regDate, productShow, updateDate,
+         content, detailInfo
+  		FROM gongguProduct
 	</select>
 
 	<select id="listFiveProducts"

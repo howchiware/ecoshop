@@ -211,24 +211,11 @@ $(function(){
 });
 
 $(function(){
-	// 공구 답변 삭제
-	$('div#content-area').on('click', 'button.removeAnswer', function(){
-		let gongguOrderDetailId = $(this).attr('data-gongguOrderDetailId');
-		
-		if(! confirm('해당 문의에 대한 답변을 삭제하시겠습니까 ?')){
-			return false;
-		}
-
-		location.href = 'deleteAnswer?gongguOrderDetailId=' + gongguOrderDetailId;
-	});
-})
-
-$(function(){
 	// 공구 리뷰 삭제
 	$('div#content-area').on('click', 'button.deleteReview', function(){
 		let gongguOrderDetailId = $(this).attr('data-gongguOrderDetailId');
 
-		if(! confirm('해당 문의를 삭제하시겠습니까 ?')){
+		if(! confirm('해당 리뷰를 삭제하시겠습니까 ?')){
 			return false;
 		}
 

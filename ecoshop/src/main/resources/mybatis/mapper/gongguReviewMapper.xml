@@ -237,10 +237,10 @@
 	</delete>
 	
 	<select id="imgList" parameterType="long" resultType="com.sp.app.model.GongguReview">
-		SELECT grd.gongguOrderDetailId, grd.reviewImg 
+		SELECT grd.reviewPhotoId, grd.gongguOrderDetailId, grd.reviewImg 
 		FROM gongguReviewDetail grd
 		JOIN gongguReview gr ON grd.gongguOrderDetailId = gr.gongguOrderDetailId
-		WHERE gongguProductId = #{gongguProductId}
+		WHERE gongguOrderDetailId = #{gongguOrderDetailId}
 	</select>
 	
 </mapper>
