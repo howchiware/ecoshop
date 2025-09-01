@@ -130,7 +130,7 @@ public class ProductManageServiceImpl implements ProductManageService {
 
 	@Transactional(rollbackFor = {Exception.class})
 	@Override
-	public void updateProduct(ProductManage dto, String uploadPath) throws Exception {
+	public void updateProduct(ProductManage dto, String uploadPath, String isBought) throws Exception {
 		try {
 			// 썸네일 이미지
 			String filename = storageService.uploadFileToServer(dto.getThumbnailFile(), uploadPath);
@@ -152,7 +152,9 @@ public class ProductManageServiceImpl implements ProductManageService {
 			}
 			
 			// 옵션 수정
-			updateProductOption(dto);
+			if(isBought.equals("0")) {
+				updateProductOption(dto);				
+			}
 		
 		} catch (Exception e) {
 			log.info("updateProduct : ", e);
@@ -327,13 +329,13 @@ public class ProductManageServiceImpl implements ProductManageService {
 	}
 
 	@Override
-	public void deleteProductPhoto(long productCode, String uploadPath) throws Exception {
+	public void deleteProductPhoto(long productPhotoNumLong, String uploadPath) throws Exception {
 		try {
 			if (uploadPath != null && ! uploadPath.isBlank()) {
 				storageService.deleteFile(uploadPath);
 			}
 
-			mapper.deleteProductPhoto(productCode);
+			mapper.deleteProductPhoto(productPhotoNumLong);
 		} catch (Exception e) {
 			log.info("deleteProductFile : ", e);
 			

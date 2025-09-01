@@ -257,10 +257,11 @@ public class ProductManageController {
 	@PostMapping("update")
 	public String updateSubmit(ProductManage dto,
 			@RequestParam(name = "page") String page,
+			@RequestParam(name = "isBought") String isBought,
 			Model model) {
 		
 		try {
-			service.updateProduct(dto, uploadPath);
+			service.updateProduct(dto, uploadPath, isBought);
 		} catch (Exception e) {
 			log.info("updateSubmit : ", e);
 		}
@@ -271,14 +272,16 @@ public class ProductManageController {
 	
 	@ResponseBody
 	@PostMapping("deleteFile")
-	public Map<String, ?> deleteFile(@RequestParam(name = "ProductPhotoNum") long ProductPhotoNum, 
-			@RequestParam(name = "PhotoName") String PhotoName) throws Exception {
+	public Map<String, ?> deleteFile(@RequestParam(name = "productPhotoNum") String productPhotoNum, 
+			@RequestParam(name = "photoName") String photoName) throws Exception {
 		Map<String, Object> model = new HashMap<>();
 
 		String state = "false";
 		try {
-			String pathString = uploadPath + File.separator + PhotoName;
-			service.deleteProductPhoto(ProductPhotoNum, pathString);
+			String pathString = uploadPath + File.separator + photoName;
+			
+			long productPhotoNumLong = Long.parseLong(productPhotoNum);
+			service.deleteProductPhoto(productPhotoNumLong, pathString);
 			
 			state = "true";
 		} catch (Exception e) {

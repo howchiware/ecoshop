@@ -237,7 +237,9 @@ button {
 	border-radius: 4px !important;
 	padding: 3px 10px;
 }
-
+.hidden {
+	visibility: hidden;
+}
 
 </style>
 </head>
@@ -323,7 +325,7 @@ button {
 													<!-- 수정일때 등록된 이미지 -->
 													<c:forEach var="vo" items="${listPhoto}">
 														<img class="image-uploaded" src="${pageContext.request.contextPath}/uploads/products/${vo.photoName}"
-															data-fileNum="${vo.productPhotoNum}" data-filename="${vo.photoName}">
+															data-productPhotoNum="${vo.productPhotoNum}" data-photoName="${vo.photoName}">
 													</c:forEach>
 												</div>
 											</div>
@@ -378,6 +380,9 @@ button {
 									<td>
 										<div class="row">
 											<div class="col-md-6">
+												<c:if test="${mode=='update'}">
+													<input type="hidden" name="optionCount" value="${dto.optionCount}">
+												</c:if>
 												<select name="optionCount" class="form-select" ${dto.userBought == 1 ? "disabled":""} ${dto.totalStock > 0 ? "disabled":""}>
 													<option value="2" ${dto.optionCount==2?"selected":""}>옵션 둘</option>
 													<option value="1" ${dto.optionCount==1?"selected":""}>옵션 하나</option>
@@ -393,29 +398,29 @@ button {
 									<th>옵션 1</th>
 									<td>
 										<div class="mb-2">
-											<input type="text" name="optionName" class="form-control" style="width: 250px;" placeholder="옵션명" value="${dto.optionName}">
+											<input type="text" name="optionName" class="form-control" style="width: 250px;" placeholder="옵션명" value="${dto.optionName}" ${dto.userBought == 1 ? "disabled":""}>
 											<c:if test="${mode=='update'}">
-												<input type="hidden" name="optionNum" value="${empty dto.optionNum ? 0 : dto.optionNum}">
+												<input type="hidden" name="optionNum" value="${empty dto.optionNum ? 0 : dto.optionNum}" ${dto.userBought == 1 ? "disabled":""}>
 											</c:if>
 										</div>
 										<div class="row option-area">
 											<div class="col-auto pe-0 d-flex flex-row optionValue-area">
 												<c:forEach var="vo" items="${listOptionDetail}">
 													<div class="input-group pe-1">
-														<input type="text" name="optionValues" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" value="${vo.optionValue}">
-														<input type="hidden" name="optionDetailNums" value="${vo.optionDetailNum}">
-														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus"></i>
+														<input type="text" name="optionValues" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" value="${vo.optionValue}" ${dto.userBought == 1 ? "disabled":""}>
+														<input type="hidden" name="optionDetailNums" value="${vo.optionDetailNum}" ${dto.userBought == 1 ? "disabled":""}>
+														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus ${dto.userBought == 1 ? 'hidden':''}"></i>
 													</div>
 												</c:forEach>
 												<c:if test="${empty listOptionDetail || listOptionDetail.size() < 1}">
 													<div class="input-group pe-1">
-														<input type="text" name="optionValues" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값">
-														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus"></i>
+														<input type="text" name="optionValues" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" ${dto.userBought == 1 ? "disabled":""}>
+														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus ${dto.userBought == 1 ? 'hidden':''}"></i>
 													</div>
 												</c:if>
 											</div>
 											<div class="col-auto">
-												<button type="button" class="btn-default btnOptionAdd">추가</button>
+												<button type="button" class="btn-default btnOptionAdd" ${dto.userBought == 1 ? "disabled":""}>추가</button>
 											</div>
 										</div>
 										<small class="form-control-plaintext help-block">판매 상품이 존재하면 옵션은 삭제 되지 않습니다.</small>
@@ -426,29 +431,29 @@ button {
 									<th>옵션 2</th>
 									<td>
 										<div class="mb-2">
-											<input type="text" name="optionName2" style="width: 250px;" class="form-control" placeholder="옵션명" value="${dto.optionName2}">
+											<input type="text" name="optionName2" style="width: 250px;" class="form-control" placeholder="옵션명" value="${dto.optionName2}" ${dto.userBought == 1 ? "disabled":""}>
 											<c:if test="${mode=='update'}">
-												<input type="hidden" name="optionNum2" value="${empty dto.optionNum2 ? 0 : dto.optionNum2}">
+												<input type="hidden" name="optionNum2" value="${empty dto.optionNum2 ? 0 : dto.optionNum2}" ${dto.userBought == 1 ? "disabled":""}>
 											</c:if>
 										</div>
 										<div class="row option-area2">
 											<div class="col-auto pe-0 d-flex flex-row optionValue-area2">
 												<c:forEach var="vo" items="${listOptionDetail2}">
 													<div class="input-group pe-1">
-														<input type="text" name="optionValues2" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" value="${vo.optionValue}">
-														<input type="hidden" name="optionDetailNum2" value="${vo.optionDetailNum}">
-														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus2"></i>
+														<input type="text" name="optionValues2" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" value="${vo.optionValue}" ${dto.userBought == 1 ? "disabled":""}>
+														<input type="hidden" name="optionDetailNums2" value="${vo.optionDetailNum}" ${dto.userBought == 1 ? "disabled":""}>
+														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus2 ${dto.userBought == 1 ? 'hidden':''}"></i>
 													</div>
 												</c:forEach>
 												<c:if test="${empty listOptionDetail2 || listOptionDetail2.size() < 1}">
 													<div class="input-group pe-1">
-														<input type="text" name="optionValues2" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값">
-														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus2"></i>
+														<input type="text" name="optionValues2" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" ${dto.userBought == 1 ? "disabled":""}>
+														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus2 ${dto.userBought == 1 ? 'hidden':''}"></i>
 													</div>
 												</c:if>
 											</div>
 											<div class="col-auto">
-												<button type="button" class="btn-default btnOptionAdd2">추가</button>
+												<button type="button" class="btn-default btnOptionAdd2" ${dto.userBought == 1 ? "disabled":""}>추가</button>
 											</div>
 										</div>
 										<small class="form-control-plaintext help-block">판매 상품이 존재하면 옵션은 삭제 되지 않습니다.</small>
@@ -504,6 +509,7 @@ button {
 								
 								<input type="hidden" name="prevOptionNum" value="${empty dto.optionNum ? 0 : dto.optionNum}">
 								<input type="hidden" name="prevOptionNum2" value="${empty dto.optionNum2 ? 0 : dto.optionNum2}">
+								<input type="hidden" name="isBought" value="${dto.userBought == 1 ? 1:0}">
 							</c:if>
 						</div>
 					</div>
@@ -901,12 +907,16 @@ window.addEventListener('DOMContentLoaded', evt => {
 			}
 				
 			let url = '${pageContext.request.contextPath}/admin/products/deleteFile';
-			// let fileNum = el.getAttribute('data-fileNum');
-			let fileNum = el.dataset.filenum;
-			let filename = el.dataset.filename;
+			let productPhotoNum = el.getAttribute('data-productPhotoNum');
+			let photoName = el.getAttribute('data-photoName');
+			// let productPhotoNum = el.dataset.productPhotoNum;
+			// let photoName = el.dataset.photoName;
+			
+			console.log(productPhotoNum);
+			console.log(photoName);
 
 			$.ajaxSetup({ beforeSend: function(e) { e.setRequestHeader('AJAX', true); } });
-			$.post(url, {fileNum:fileNum, filename:filename}, function(data){
+			$.post(url, {productPhotoNum:productPhotoNum, photoName:photoName}, function(data){
 				el.remove();
 			}, 'json').fail(function(xhr){
 				console.log(xhr.responseText);
@@ -947,7 +957,7 @@ window.addEventListener('DOMContentLoaded', evt => {
         	
 			let node = document.createElement('img');
 			node.classList.add('image-item');
-			node.setAttribute('data-filename', file.name);
+			node.setAttribute('data-photoName', file.name);
 
 			const reader = new FileReader();
 			reader.onload = e => {
@@ -967,10 +977,10 @@ window.addEventListener('DOMContentLoaded', evt => {
 				return false;
 			}
 			
-			let filename = e.target.getAttribute('data-filename');
+			let photoName = e.target.getAttribute('data-photoName');
 			
 			for(let i = 0; i < sel_files.length; i++) {
-				if(filename === sel_files[i].name){
+				if(photoName === sel_files[i].name){
 					sel_files.splice(i, 1);
 					break;
 				}

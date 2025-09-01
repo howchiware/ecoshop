@@ -240,7 +240,7 @@
 	
 	<delete id="deleteProductPhoto" parameterType="Long">
 		DELETE FROM productPhoto
-		WHERE productCode = #{productCode}
+		WHERE productPhotoNum = #{productPhotoNumLong}
 	</delete>
 	
 	<update id="updateProductOption" parameterType="com.sp.app.admin.model.ProductManage">
