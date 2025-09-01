@@ -10,6 +10,10 @@
     border: none !important;
   }
   
+  .btn-gongguBuy {background: #87A78D; color:#fff; padding: 10px; border: none; border-radius: 5px; font-size: 15px;}
+  .btn-gongguBuy:hover{background: #7b9580;}
+  .btn-gongguBuy:disabled {background: #bfd3c3}
+    .btn-gongguLike {border: 1px solid #E6E6E6; color: #000; padding: 8px; border-radius: 5px; font-size: 15px;}
   .myNavTab .linkBtn:hover {
     color: black !important;
     background: none;

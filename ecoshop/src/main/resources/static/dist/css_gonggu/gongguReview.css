@@ -143,3 +143,40 @@
     max-width: 100%;
     height: auto;
 }
+
+.small-btn {
+	transition: color 0.3s ease-in-out, border 0.3s ease-in-out;
+	border: 1px solid #000;
+	border-radius: 3px;
+	padding: 4px 8px 4px 8px;
+	background: #fff;
+}
+
+.deleteReview:hover, .reviewRemoveAnswer:hover, .deleteInquiry:hover, .removeAnswer:hover {
+	color: red !important;
+  	border: 1px solid red !important;
+}
+
+.reviewUpdateAnswer:hover {
+	color: #b3b4b5;
+  	border: 1px solid #b3b4b5 !important;
+}
+
+
+.reviewAddAnswer, .addAnswer {
+
+  background: #efeeee;
+  border: none;
+  transition: background 0.3s ease-in-out;
+
+}
+
+.reviewAddAnswer:hover, .addAnswer:hover {
+	background: #b3b4b5;
+}
+
+.reviewDetailAnswerAdd {
+	display: flex;
+	align-items: flex-start;
+	padding: 10px;
+}

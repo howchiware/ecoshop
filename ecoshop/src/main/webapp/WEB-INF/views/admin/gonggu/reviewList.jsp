@@ -61,7 +61,7 @@
 										</div>
 										<div class="">
 											<c:if test="${not empty dto.photoFileName}">
-										        <img src="${pageContext.request.contextPath}/uploads/gonggu/review/${dto.photoFileName}" alt="리뷰 사진">
+										        <img src="${pageContext.request.contextPath}/uploads/review/${dto.photoFileName}" alt="리뷰 사진">
 										    </c:if>
 									    </div>
 										<c:choose>
