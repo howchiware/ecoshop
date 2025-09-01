@@ -71,7 +71,7 @@
 	    <div class="image-grid">
 	    	<c:forEach var="vo" items="${imgList}" varStatus="status" begin="0" end="4">
 	    		<c:if test="${status.index < 4}">
-			        <div class="img-div reviewImgView-div" data-gongguOrDerDetailId="${vo.gongguOrDerDetailId}">
+			        <div class="img-div reviewImgView-div" data-gongguOrderDetailId="${vo.gongguOrderDetailId}">
 		                <img src="${pageContext.request.contextPath}/uploads/review/${vo.reviewImg}" class="image-photo" alt="" style="height: 210px;">
 			        </div>
 	    		</c:if>
