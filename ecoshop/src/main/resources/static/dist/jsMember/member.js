@@ -41,7 +41,7 @@ function memberOk() {
 		return;
 	}
 
-	p = /^[가-힣]{2,5}$/;
+	p = /^[가-힣a-zA-Z]{2,10}$/;
 	str = f.name.value;
 	if (!p.test(str)) {
 		alert('이름을 다시 입력하세요. ');
