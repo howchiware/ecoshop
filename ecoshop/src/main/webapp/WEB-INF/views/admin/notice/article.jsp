@@ -5,10 +5,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>분리배출 가이드</title>
+<title>관리자페이지</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssAdmin/member.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin_paginate.css">
 <style type="text/css">
 body {
   font-family: 'Pretendard-Regular', 'Noto Sans KR', sans-serif;
@@ -107,10 +109,8 @@ body {
 
 <main class="main-container">
   <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
-
   <div class="right-panel">
-    <div class="section p-5" data-aos="fade-up" data-aos-delay="200">
-      <div class="section-body p-5">
+<div class="board-container row">
 
         <!-- 상단 구분 타이틀 -->
         <div class="pb-3">
@@ -166,19 +166,15 @@ body {
         <!-- 버튼 -->
         <div class="row mt-4">
           <div class="col-md-6 align-self-center">
-            <span class="span-default" onclick="location.href='${pageContext.request.contextPath}/admin/notice/list?${query}';">
-              <i class="bi bi-arrow-left-short"></i> 목록
-            </span>
+              <button type="button" class="my-btn" onclick="location.href='${pageContext.request.contextPath}/admin/notice/list?${query}';">목록</button>
           </div>
           <div class="col-md-6 align-self-center text-end">
-            <button type="button" class="btn-default" onclick="location.href='${pageContext.request.contextPath}/admin/notice/update?noticeId=${dto.noticeId}&page=${page}';">수정</button>
-            <button type="button" class="btn-default" onclick="deleteOk();">삭제</button>
+            <button type="button" class="my-btn" onclick="location.href='${pageContext.request.contextPath}/admin/notice/update?noticeId=${dto.noticeId}&page=${page}';">수정</button>
+            <button type="button" class="my-btn" onclick="deleteOk();">삭제</button>
           </div>
         </div>
-
+		</div>
       </div>
-    </div>
-  </div>
 </main>
 
 <script type="text/javascript">

@@ -43,7 +43,7 @@
 	
 	<insert id="insertNotice" parameterType="com.sp.app.admin.model.NoticeManage">
 		INSERT INTO notice(noticeId, memberId, subject, content, notice, hitCount, showNotice, regDate, updateDate)
-		VALUES(#{noticeId}, #{memberId}, #{subject}, #{content}, #{notice}, 0, #{showNotice}, SYSDATE, SYSDATE)
+		VALUES(#{noticeId}, #{memberId}, #{subject}, #{content}, #{notice}, 0, 1, SYSDATE, SYSDATE)
 	</insert>
 	
 	<sql id="where-list">

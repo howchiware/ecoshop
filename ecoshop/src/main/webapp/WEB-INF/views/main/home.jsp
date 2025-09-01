@@ -190,10 +190,9 @@
 			  </div>
 			</c:forEach>
 
-
           <c:if test="${empty bannerList}">
             <div class="carousel-item active h-100">
-			    <a href="${pageContext.request.contextPath}/advertisement/list" title="광고">
+			    <a href="${pageContext.request.contextPath}/advertisement/write" title="광고">
 			        <img src="${pageContext.request.contextPath}/uploads/promotion/adversting.png"
 			             class="d-block w-1294 h-158" 
 			             style="object-fit: cover;" 

@@ -23,7 +23,6 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.05); /* 부드러운 그림자 */
 }
 
-/* --- 탭 스타일 --- */
 .nav-tabs {
     border-bottom: 1px solid #e0e0e0;
     margin-bottom: 15px;
@@ -44,6 +43,7 @@
     background-color: #fff;
     color: #007bff; 
     font-weight: 600;
+    		
 }
 
 .nav-tabs .nav-link:hover {
@@ -60,39 +60,58 @@
 
 
 
-.page-navigation a,
-.page-navigation span {
-  padding: 6px 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  background: #fff;
-  color: #555;
-  font-size: 0.95rem;
-  text-decoration: none;
-  transition: all 0.2s ease;
+/* 페이징 */
+.page-navigation {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 6px;
+   flex-wrap: wrap;
 }
 
-
-.page-navigation span.current {
-  background: #007bff;
-  color: #fff;
-  border-color: #007bff;
-  font-weight: 600;
+.page-navigation a, .page-navigation strong, .page-navigation span {
+   background: #fff;
+   border-radius: 4px;
+   padding: 3px 10px;
+   color: #363636;
+   font-weight: 500;
+   text-decoration: none;
+   cursor: pointer;
+   transition: all 0.2s ease;
 }
 
 .page-navigation a:hover {
-  background: #f2f2f2;
-  border-color: #bbb;
-  color: #000;
+   background: #e0e0e0;
+   border-color: #999;
+}
+
+.page-navigation .disabled {
+   background: #f8f8f8;
+   border-color: #ddd;
+   color: #aaa;
+   cursor: not-allowed;
+}
+
+.page-navigation strong, .page-navigation span {
+   background: #ccc;
+   border-color: #999;
+   color: #333;
 }
 
 .right{
 	padding: 30px !important;
 }
 
+.btn-success {
+  color: white
+}
 
-.modal-backdrop { z-index: 9998 !important; }
-.modal { z-index: 9999 !important; }
+.modal-backdrop {
+ z-index: 9998 !important; 
+ }
+.modal {
+ z-index: 9999 !important; 
+ }
 body.modal-open { overflow: hidden; padding-right: 0 !important; }
 </style>
 
@@ -139,7 +158,7 @@ body.modal-open { overflow: hidden; padding-right: 0 !important; }
     </div>
   </div>
  </main>
-  <!-- 신청 목록 모달 -->
+ 
 <div class="modal fade" id="myDialogModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="myDialogModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -147,12 +166,11 @@ body.modal-open { overflow: hidden; padding-right: 0 !important; }
         <h5 class="modal-title" id="myDialogModalLabel">신청 목록</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body p-2"></div>
+      <div class="modal-body p-2 pb-4"></div>
     </div>
   </div> 	
 </div>
 
-<!-- 상태 변경 이력 모달 -->
 <div class="modal fade" id="statusModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -160,7 +178,7 @@ body.modal-open { overflow: hidden; padding-right: 0 !important; }
         <h5 class="modal-title" id="statusModalLabel">상태 변경 이력</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body p-2"></div>
+      <div class="modal-body p-2 pb-4"></div>
     </div>
   </div>
 </div>

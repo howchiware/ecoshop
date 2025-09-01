@@ -26,7 +26,7 @@
 		  <th>번호</th>
 		  <th>이름</th>
           <th>제목</th>
-          <th>가입일자</th>
+          <th>게시일자</th>
           <th>문의유형</th>
           <c:if test="${role != 2}">
           	<th>게시여부</th>
@@ -40,7 +40,7 @@
             <td>${dataCount - (page) - status.index}</td>
             <td>${dto.username}</td>
             <td>${dto.subject}</td>
-            <td>${dto.regDate}</td>
+            <td>${dto.adverStart}&nbsp;~&nbsp;${dto.adverEnd}</td>
             <td>
 			    <c:choose>
 			        <c:when test="${dto.inquiryType == 1}">

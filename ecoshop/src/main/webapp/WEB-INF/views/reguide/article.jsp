@@ -11,7 +11,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/free.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/dairyArticle.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssmagazine/magazineArticle.css" type="text/css">
 <style>
     .card-header h3 { font-weight: 700; }
     .card-body img { max-width: 50%; border-radius: 8px; margin-bottom: 1rem; }
@@ -73,11 +73,11 @@
         </div>
     </div>
     
-    <div class="row button-group">
-        <div class="col-md-6">
+    <div class="article-actions">
+		   <div class="actions-left">
             <c:if test="${sessionScope.member.memberId == dto.memberId}">
-                <button type="button" class="btn btn-default" onclick="location.href='${pageContext.request.contextPath}/reguide/update?guidId=${dto.guidId}&${query}';">수정</button>
-                <button type="button" class="btn btn-outline-danger" onclick="deleteOk();">삭제</button>
+                <button type="button" class="btn-action" onclick="location.href='${pageContext.request.contextPath}/reguide/update?guidId=${dto.guidId}&${query}';">수정</button>
+                <button type="button" class="btn-action delete" onclick="deleteOk();">삭제</button>
             </c:if>
         </div>
         <div class="col-md-6 text-end">

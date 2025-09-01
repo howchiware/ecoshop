@@ -7,11 +7,18 @@
   cursor: pointer;
 }
 
+.my-btn {
+   background: #fff;
+   border: 1px solid black !important;
+   border-radius: 4px;
+   padding: 3px 10px
+}
+
 </style>
 
 <!-- 신청 목록 -->
 <span class="dataCount">${dataCount}개(${pageNo}/${total_page} 페이지)</span>
-	<div class="col-md-3 text-end">&nbsp;</div>
+	<div class="col-md-5 text-end">&nbsp;</div>
 
 <table class="table board-list">
 	  <thead class="table-light" style="text-align: center;">
@@ -21,6 +28,7 @@
 	      <th>제목</th>
 	      <th>가입일자</th>
 	      <th>문의유형</th>
+	      <th>게시 기간</th>
 	      <th>처리</th>
 	    </tr>
 	  </thead>
@@ -48,10 +56,11 @@
 			        </c:otherwise>
 			    </c:choose>
 			</td>
+			<td>${dto.adverStart}&nbsp;~&nbsp;${dto.adverEnd}</td>
 	        <td>
-	          <button type="button" class="btn btn-success btn-sm"
+	          <button type="button" class="btn my-btn"
 	                  onclick="event.stopPropagation(); updateStatus('${dto.advertisingId}', 5)">승인</button>
-	          <button type="button" class="btn btn-danger btn-sm"
+	          <button type="button" class="btn my-btn"
 	                  onclick="event.stopPropagation(); updateStatus('${dto.advertisingId}', 4)">반려</button>
 	        </td>
 	      </tr>

@@ -120,7 +120,7 @@ import lombok.extern.slf4j.Slf4j;
 	
 	            List<AdvertisementManage> list = service.listAdvertisement(map);
 	
-	            String paging = paginateUtil.pagingMethod(current_page, total_page, "listPage");
+	            String paging = paginateUtil.pagingFunc(current_page, total_page, "listPage");
 	
 	            model.addAttribute("list", list);
 	            model.addAttribute("pageNo", current_page);
@@ -177,7 +177,7 @@ import lombok.extern.slf4j.Slf4j;
 	
 	            List<AdvertisementManage> list = service.listAdvertisement(map);
 	
-	            String paging = paginateUtil.pagingMethod(current_page, total_page, "listPage");
+	            String paging = paginateUtil.pagingFunc(current_page, total_page, "listPage");
 	
 	            model.addAttribute("list", list);
 	            model.addAttribute("pageNo", current_page);
@@ -317,7 +317,7 @@ import lombok.extern.slf4j.Slf4j;
 		            
 		            List<AdvertisementManage> listStatus = service.listStatus(map);
 		            
-		            String paging = paginateUtil.pagingMethod(current_page, total_page, "listStatusPage");
+		            String paging = paginateUtil.pagingFunc(current_page, total_page, "listStatusPage");
     
 		            model.addAttribute("listStatus",listStatus);
 		            model.addAttribute("pageNo", current_page);

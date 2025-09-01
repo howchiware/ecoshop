@@ -145,7 +145,7 @@
 		</div>
 		<div class="footer-legal">
 			<a href="#">이용약관</a> <a
-				href="${pageContext.request.contextPath}/advertisement/list">광고
+				href="${pageContext.request.contextPath}/advertisement/write">광고
 				문의</a> <a href="#"><strong>개인정보처리방침</strong></a>
 
 		</div>

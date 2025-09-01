@@ -8,8 +8,8 @@
                placeholder="카테고리명을 입력하세요." required />
     </div>
     <div class="text-center">
-        <button type="button" class="btn-accent btn-md" onclick="CsendOk()">등록</button>
-        <button type="button" class="btn-default btn-md" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-accent btn-md" onclick="CsendOk()">등록</button>
+        <button type="button" class="btn btn-default btn-md" data-bs-dismiss="modal">취소</button>
     </div>
 </form>
 
@@ -19,7 +19,7 @@
         <thead class="table-light">
             <tr>
                 <th style="width:70%">카테고리명</th>
-                <th style="width:30%">관리</th>
+                <th style="width:30%">삭제여부</th>
             </tr>
         </thead>
         <tbody>
@@ -27,7 +27,7 @@
                 <tr id="cat-${cat.categoryCode}">
                     <td>${cat.categoryName}</td>
                     <td>
-                        <button type="button" class="btn btn-sm btn-danger"
+                        <button type="button" class="btn btn-outline-danger"
                                 onclick="deleteCategory(${cat.categoryCode})">삭제</button>
                     </td>
                 </tr>

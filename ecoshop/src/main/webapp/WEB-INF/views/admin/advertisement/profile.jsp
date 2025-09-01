@@ -32,7 +32,7 @@ table.member-info td:first-child {
 
 .btn-row {
     display: flex;
-    justify-content: space-between; /* 양쪽 끝으로 배치 */
+    justify-content: space-between; 
     align-items: center;
     margin-top: 10px;
 }
@@ -59,9 +59,16 @@ table.member-info td:first-child {
     color: #333;
     width: 120px;
 }
+
+.my-btn {
+   background: #fff;
+   border: 1px solid black !important;
+   border-radius: 4px;
+   padding: 3px 10px
+}
 </style>
 
-<!-- 광고 상세보기 -->
+
 <table class="table member-info">
   <tr>
     <td>광고번호</td>
@@ -76,7 +83,7 @@ table.member-info td:first-child {
     <td>${dto.subject}</td>
   </tr>
   <tr class="date-row">
-    <td>작성일</td>
+    <td>신청일</td>
     <td>${dto.regDate}</td>
   </tr>
   <tr>
@@ -94,6 +101,10 @@ table.member-info td:first-child {
             </c:otherwise>
         </c:choose>
     </td>
+  </tr>
+  <tr>
+  <td>게시 기간</td>
+  <td>${dto.adverStart}&nbsp;~&nbsp;${dto.adverEnd}</td>
   </tr>
   <tr>
     <td>전화번호</td>
@@ -129,7 +140,7 @@ table.member-info td:first-child {
 <div class="btn-row">
   <div class="right-btns">
     <c:if test="${dto.status == 5}">
-      <button type="button" class="btn-default" onclick="updateAdvertisement();">
+      <button type="button" class="btn my-btn" onclick="updateAdvertisement();">
         수정
       </button>
     </c:if>

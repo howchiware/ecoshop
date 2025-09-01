@@ -30,7 +30,7 @@
 	<form name="dairyForm" class="write-form" method="post" enctype="multipart/form-data">
 		<div class="mb-3">
 			<label for="subject" class="form-label">제목</label>
-			<input type="text" id="subject" name="subject" class="form-control" placeholder="제목을 입력해주세요." value="${dto.subject}" maxlength="50">
+			<input type="text" id="subject" name="subject" class="form-control" placeholder="제목을 입력해주세요." value="${dto.subject}" maxlength="50" required>
 		</div>
 		
 		<div class="mb-3">
@@ -139,7 +139,7 @@ function sendOk() {
 		f.subject.focus();
 		return;
 	}
-    
+    	
 	const htmlViewEL = document.querySelector('textarea#html-view');
 	let htmlContent = htmlViewEL ? htmlViewEL.value : quill.root.innerHTML;
 	if(! hasContent(htmlContent)) {

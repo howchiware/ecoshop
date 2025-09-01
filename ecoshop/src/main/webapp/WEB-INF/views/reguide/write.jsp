@@ -10,15 +10,19 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
-<%-- <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/free.css" type="text/css"> --%>
-<%-- <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/dairyWrite.css" type="text/css"> --%>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/free.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssFree/dairyWrite.css" type="text/css">
 <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/quill-resize-module@2.0.4/dist/resize.css" rel="stylesheet">
- <link rel="icon" href="data:;base64,iVBORw0KGgo=">
- <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/board.css" type="text/css">
- <style type="text/css">
-
- </style>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/board.css" type="text/css">
+<style type="text/css">
+.my-btn {
+   background: #fff;
+   border: 1px solid black !important;
+   border-radius: 4px;
+   padding: 3px 10px
+}
+</style>
 </head>
 <body>
     <header>
@@ -55,7 +59,7 @@
 				</select>
 		    </div>
 		    <div>
-		        <button type="button" class="btn-accent" onclick="writeForm()">카테고리추가</button>
+		        <button type="button" class="my-btn" onclick="writeForm()">카테고리추가</button>
 		    </div>
 		</div>
 		
@@ -73,8 +77,8 @@
 			</div>
 		</div>
 		<div class="text-center">
-			<button type="button" class="btn-accent btn-md" onclick="sendOk();">${mode=='update'?'수정완료':'등록완료'}</button>
-			<button type="button" class="btn-default btn-md" onclick="location.href='${pageContext.request.contextPath}/reguide/list?size=${size}';">${mode=='update'?'수정취소':'등록취소'}</button>
+			<button type="button" class="btn btn-accent btn-md" onclick="sendOk();">${mode=='update'?'수정완료':'등록완료'}</button>
+			<button type="button" class="btn btn-default btn-md" onclick="location.href='${pageContext.request.contextPath}/reguide/list?size=${size}';">${mode=='update'?'수정취소':'등록취소'}</button>
 			<c:if test="${mode=='update'}">
 				<input type="hidden" name="guidId" value="${dto.guidId}">
 				<input type="hidden" name="page" value="${page}">
