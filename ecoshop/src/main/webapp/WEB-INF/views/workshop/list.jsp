@@ -117,8 +117,8 @@
 
 	<header class="border-bottom">
 		<div class="container py-3">
-			<h4 class="m-0" style="font-size: 22px;">워크샵</h4>
-			<!-- <p class="page-subtitle mb-0">지속 가능한 일상을 위한 로컬 체험·라이프스타일 클래스를 한곳에 모아, 누구나 간편하게 신청하고 참여할 수 있어요.</p> -->
+			<h4 class="m-0" style="font-size: 22px;">에코 워크샵</h4>
+			<p class="page-subtitle mb-0">작은 실천으로 만드는 큰 변화, 함께하는 친환경 워크샵</p>
 		</div>
 	</header>
 
