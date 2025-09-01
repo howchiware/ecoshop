@@ -1,17 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+
 <style>
-table.member-info {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: 'Noto Sans KR', sans-serif;
-    margin-bottom: 20px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    overflow: hidden;
-}
 
 table.member-info td {
     padding: 12px 14px;
@@ -33,19 +24,6 @@ table.member-info td:first-child {
     background-color: #fafafa;
 }
 
-/* 버튼 스타일 */
-.btn-default {
-    background-color: #fff;
-    color: #007bff;
-    border: 2px solid #007bff;
-    padding: 6px 16px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 14px;
-    transition: 0.3s;
-    cursor: pointer;
-    margin-right: 6px;
-}
 
 .btn-default:hover {
     background-color: #007bff;
@@ -59,12 +37,6 @@ table.member-info td:first-child {
     margin-top: 10px;
 }
 
-/* 모달 스타일 */
-.modal-content {
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-    border: none;
-}
 
 .modal-header {
     border-bottom: 1px solid #eee;
@@ -87,14 +59,10 @@ table.member-info td:first-child {
     color: #333;
     width: 120px;
 }
-
-
-
-
 </style>
 
 <!-- 광고 상세보기 -->
-<table class="member-info">
+<table class="table member-info">
   <tr>
     <td>광고번호</td>
     <td>${dto.advertisingId }</td>

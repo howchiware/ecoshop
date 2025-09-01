@@ -1,5 +1,6 @@
 package com.sp.app.controller;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -156,23 +157,23 @@ public class ChallengeController {
             if (dto == null) return "redirect:/challenge/list";
 
             model.addAttribute("dto", dto);
+            
+            SessionInfo info = (SessionInfo) session.getAttribute("member");
+            boolean isLogin = (info != null);
+            model.addAttribute("isLogin", isLogin);
+            
 
-            java.time.LocalDate today = java.time.LocalDate.now();
+            LocalDate today = LocalDate.now();
 
             if ("SPECIAL".equals(dto.getChallengeType())) {
-                java.time.LocalDate start = java.time.LocalDate.parse(dto.getStartDate());
-                java.time.LocalDate end = java.time.LocalDate.parse(dto.getEndDate());
+                LocalDate start = LocalDate.parse(dto.getStartDate());
+                LocalDate end = LocalDate.parse(dto.getEndDate());
                 String status = today.isBefore(start) ? "UPCOMING" : (today.isAfter(end) ? "CLOSED" : "OPEN");
                 model.addAttribute("status", status);
 
-                SessionInfo info = (SessionInfo) session.getAttribute("member");
-                if (info != null) {
+                if (isLogin) {
                     Integer nextDay = service.getNextSpecialDay(challengeId, info.getMemberId());
                     model.addAttribute("nextDay", nextDay);
-
-                   
-                    boolean canJoinToday = service.canJoinSpecialToday(challengeId, info.getMemberId());
-                    model.addAttribute("canJoinToday", canJoinToday);
                 }
             } else { 
                 int idx0to6 = today.getDayOfWeek().getValue() % 7;

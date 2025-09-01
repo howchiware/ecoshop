@@ -210,42 +210,52 @@ main { padding: clamp(16px, 2vw, 32px) 0 60px; }
       </div>
 
      
-      <div class="d-flex justify-content-between align-items-center cta-bar">
-        <a href="${cp}/challenge/list" class="btn btn-outline"><i class="bi bi-arrow-left"></i> 목록</a>
+		<div class="d-flex justify-content-between align-items-center cta-bar">
+		  <a href="${cp}/challenge/list" class="btn btn-outline">
+		    <i class="bi bi-arrow-left"></i> 목록
+		  </a>
 
-        <c:choose>
-          <c:when test="${dto.challengeType=='DAILY'}">
-            <c:choose>
-              <c:when test="${dailyPlayable}"><a class="btn-grad" href="${cp}/challenge/join/daily/${dto.challengeId}">챌린지 참여하기</a></c:when>
-              <c:otherwise><button class="btn-grad" disabled>해당 요일에만 참여 가능</button></c:otherwise>
-            </c:choose>
-          </c:when>
-
-			<c:otherwise>
-			  <c:choose>
-			    <c:when test="${status=='OPEN'}">
-			      <c:choose>
-			        <c:when test="${empty nextDay}">
-			          <button class="btn-grad" disabled>모든 일차 인증 완료</button>
-			        </c:when>
-			        <c:when test="${not empty canJoinToday and !canJoinToday}">
-			          <button class="btn-grad" disabled>
-			            스페셜 챌린지 <c:out value="${nextDay}"/>일차 참여하기 (오늘은 불가)
-			          </button>
-			        </c:when>
-			        <c:otherwise>
-			          <a class="btn-grad" href="${cp}/challenge/join/special/${dto.challengeId}?day=${nextDay}">
-			            스페셜 챌린지 <c:out value="${nextDay}"/>일차 참여하기
-			          </a>
-			        </c:otherwise>
-			      </c:choose>
-			    </c:when>
-			    <c:when test="${status=='UPCOMING'}"><button class="btn-grad" disabled>시작 전입니다</button></c:when>
-			    <c:otherwise><button class="btn-grad" disabled>종료된 챌린지</button></c:otherwise>
-			  </c:choose>
-			</c:otherwise>
-        </c:choose>
-      </div>
+		  <c:choose>
+		    <c:when test="${dto.challengeType=='DAILY'}">
+		      <c:choose>
+		        <c:when test="${not isLogin}">
+		          <a class="btn-grad" href="${cp}/member/login?returnURL=${pageContext.request.requestURI}">
+		            로그인 후 참여
+		          </a>
+		        </c:when>
+		        <c:when test="${dailyPlayable}">
+		          <a class="btn-grad" href="${cp}/challenge/join/daily/${dto.challengeId}">
+		            챌린지 참여하기
+		          </a>
+		        </c:when>
+		        <c:otherwise>
+		          <button class="btn-grad" disabled>해당 요일에만 참여 가능</button>
+		        </c:otherwise>
+		      </c:choose>
+		    </c:when>
+		
+		    <c:otherwise>
+		      <c:choose>
+		        <c:when test="${not isLogin}">
+		          <a class="btn-grad" href="${cp}/member/login?returnURL=${pageContext.request.requestURI}">
+		            로그인 후 참여
+		          </a>
+		        </c:when>
+		        <c:when test="${status=='OPEN'}">
+		          <a class="btn-grad" href="${cp}/challenge/join/special/${dto.challengeId}?day=${empty nextDay ? 1 : nextDay}">
+		            스페셜 챌린지 <c:out value="${empty nextDay ? 1 : nextDay}"/>일차 참여하기
+		          </a>
+		        </c:when>
+		        <c:when test="${status=='UPCOMING'}">
+		          <button class="btn-grad" disabled>시작 전입니다</button>
+		        </c:when>
+		        <c:otherwise>
+		          <button class="btn-grad" disabled>종료된 챌린지</button>
+		        </c:otherwise>
+		      </c:choose>
+		    </c:otherwise>
+		  </c:choose>
+		</div>
     </section>
 
    

@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
     <!-- 회원 목록 -->
     
+ <div class="row-md-6 text-end">   
     <div class="form-search">
         <select id="searchType" name="schType">
             <option value="username"  ${schType=="username" ? "selected":""}>이름</option>
@@ -14,17 +15,14 @@
             <i class="bi bi-search"></i> 
         </button>
     </div>
-
-		
-	<span class="dataCount">${dataCount}개(${pageNo}/${total_page} 페이지)</span>
-		<div class="col-md-3 text-end">
-			&nbsp;
-		</div>
+</div>
+<span class="dataCount">총 ${dataCount}명(${pageNo}/${total_page} 페이지)</span>
+<div class="col-md-3 text-end">&nbsp;</div>
 		
 		
     <table class="table table-hover board-list">
       <thead class="table-light">
-        <tr style="text-align: center;">
+        <tr>
 		  <th>번호</th>
 		  <th>이름</th>
           <th>제목</th>
@@ -38,7 +36,7 @@
       
       <tbody>
         <c:forEach var="dto" items="${list}" varStatus="status">
-          <tr class="hover-cursor" onclick="profile('${dto.advertisingId}', '${page}');" style="text-align: center;"> 
+          <tr class="hover-cursor" onclick="profile('${dto.advertisingId}', '${page}');"> 
             <td>${dataCount - (page) - status.index}</td>
             <td>${dto.username}</td>
             <td>${dto.subject}</td>
@@ -75,7 +73,11 @@
         </c:forEach>
       </tbody>
     </table>
-
+    <div class="form-search">
+			<button type="button" class="btn btn-outline-secondary btn-sm" onclick="openStatusModal()">상태이력 보기</button>
+	        <button id="btnApplication" type="button" class="btn btn-outline-secondary btn-sm" onclick="applicationForm()">신청목록</button>
+	</div>
+	       
     <!-- 페이징 -->
     <div class="page-navigation">
       ${dataCount == 0 ? "등록된 자료가 없습니다." : paging}
