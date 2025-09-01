@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <c:if test="${mode=='account'}">
-                            <small id="userIdHelp" class="help-block text-muted">아이디는 5~10자 이내이며, 첫글자는 영문자로 시작해야 합니다.</small>
+                            <small id="userIdHelp" class="help-block text-muted">아이디는 5~10자 이내이며, 첫글자는 영문자로 시작해야합니다.</small>
                         </c:if>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                     <div class="col-md-6">
                         <label for="password" class="form-label">패스워드</label>
                         <input class="form-control" type="password" id="password" name="password" autocomplete="off">
-                        <small class="help-block text-muted">패스워드는 5~10자이며 하나 이상의 숫자나 특수문자를 포함 합니다.</small>
+                        <small class="help-block text-muted">패스워드는 5~10자이며 하나 이상의 숫자나 특수문자를 포함합니다.</small>
                     </div>
                     <div class="col-md-6">
                         <label for="password2" class="form-label">패스워드 확인</label>

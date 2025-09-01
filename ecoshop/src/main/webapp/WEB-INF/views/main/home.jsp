@@ -48,7 +48,7 @@
 								src="${pageContext.request.contextPath}/uploads/products/${dto.thumbnail}" />
 							<div class="card-body">
 								<h5 class="card-title">${dto.productName}</h5>
-								<p class="card-text">${dto.content}</p>
+								<p class="card-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${dto.content}</p>
 							</div>
 						</div>
 					</div>

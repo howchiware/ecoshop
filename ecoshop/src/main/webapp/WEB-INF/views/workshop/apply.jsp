@@ -31,7 +31,7 @@
 	font-weight: 700;
 	font-size: 1.25rem;
 	margin-top: 30px;
-	margin-bottom: 30px;
+	margin-bottom: 20px;
 }
 
 .text-muted {
@@ -82,10 +82,11 @@
 }
 
 .kv.row.gy-1 {
-  row-gap: 2px !important; /* gy-1의 4px 대신 2px */
-  margin-bottom: 0 !important; /* 필요시 dd 아래 여백 제거 */
+	row-gap: 2px !important;
+	margin-bottom: 0 !important;
+	padding-top: 1rem;
+	border-top: 1px solid #f1f3f5;
 }
-
 </style>
 </head>
 <body class="page-wrap">
@@ -114,7 +115,8 @@
 		<div class="row g-4">
 			<div class="col-lg-7">
 				<div class="section-card p-4 mb-3">
-					<div class="d-flex justify-content-between align-items-center" style="line-height:1.2;">
+					<div class="d-flex justify-content-between align-items-center"
+						style="line-height: 1.2;">
 						<div>
 							<div class="text-muted">워크샵 정보</div>
 							<div class="section-title">

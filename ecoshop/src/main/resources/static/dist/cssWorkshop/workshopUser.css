@@ -31,22 +31,20 @@ body {
 }
 
 .review-item {
-  padding-top: 2px;   
-  padding-right: 0;  
-  padding-bottom: 0;
-  padding-left: 0;
+	padding-top: 2px;
+	padding-right: 0;
+	padding-bottom: 0;
+	padding-left: 0;
 }
 
 .review-item .content.text-body {
 	margin-top: 1rem;
-   margin-bottom: 2rem;   
+	margin-bottom: 2rem;
 }
-
 
 .form-floating {
 	margin-bottom: 3px;
 }
-
 
 #reviews .review-item {
 	color: #212529;
@@ -56,73 +54,76 @@ body {
 	white-space: pre-wrap;
 }
 
-.accordion-custom .accordion-item {
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  margin-bottom: 0.5rem;
-  overflow: hidden;
+.accordion-item {
+	margin-bottom: 6px;
+	border-radius: 8px;
+	overflow: hidden;
+	border: 1px solid #ddd;
 }
 
 .accordion-custom .accordion-button {
-  background-color: #f8f9fa;
-  color: #212529;
-  font-weight: 600;
-  border-bottom: 1px solid #e9ecef;
-  transition: background-color 0.3s;
+	background-color: #f8f9fa;
+	color: #212529;
+	font-weight: 600;
+	border-bottom: 1px solid #e9ecef;
+	transition: background-color 0.3s;
 }
 
 .accordion-custom .accordion-button:not(.collapsed) {
-  background-color: #e9ecef;
-  color: #198754;
+	background-color: #e9ecef;
+	color: #198754;
 }
 
 .accordion-custom .accordion-button:focus {
-  box-shadow: none;
+	box-shadow: none;
 }
 
 .accordion-collapse {
-  transition: all 0.3s ease;
+	transition: all 0.3s ease;
 }
 
 .accordion-button:focus {
-    box-shadow: none;   
-    outline: none;     
+	box-shadow: none;
+	outline: none;
 }
 
 .accordion-button:not(.collapsed) {
-    background-color: #f8f9fa; 
-    color: #212529;           
+	background-color: #e9ecef;
+	color: #212529;
 }
 
 .accordion-button:focus {
-    box-shadow: none;
-    outline: none;
+	box-shadow: none;
+	outline: none;
 }
 
 .accordion-button {
-    background-color: #f8f9fa;  
-    color: #212529;  
+	background-color: #fff;
+	color: #212529;
 }
 
 #faq .mark-q {
-	color: #212529;
-    font-weight: 700;
-    margin-right: 0.5rem;
+	color: #315e4e;
+	font-weight: 700;
+	margin-right: 0.5rem;
 	margin-right: .5rem;
 }
 
 #faq .mark-a {
-	color: #212529;
-    font-weight: 600;
-    margin-right: 0.5rem;
+	color: #495057;
+	font-weight: 600;
+	margin-right: 0.5rem;
+}
+
+.accordion-pane {
+	background-color: #fff;
 }
 
 .accordion .accordion-body .text-body {
-	background-color: f8f9fa;
-    color: #212529;
-    line-height: 1.5;
+	background-color: f7f6f3;
+	color: #212529;
+	line-height: 1.5;
 }
-
 
 .btn {
 	display: flex;
@@ -136,11 +137,12 @@ body {
 }
 
 .simple-title {
-	border-top: 1px solid rgb(222, 226, 230);
+	border-bottom: 1px solid #e9ecef;
 	padding-top: 2rem;
 	font-size: 1.4rem;
 	font-weight: 800;
 	margin-bottom: 2rem;
+	padding-bottom: 1rem;
 }
 
 .simple-hero {
@@ -195,61 +197,73 @@ body {
 }
 
 .btn-apply {
-    background-color: #315e4e; 
-    border-color: #315e4e;    
-    color: #fff;             
+	background-color: #315e4e;
+	border-color: #315e4e;
+	color: #fff;
 }
 
 .btn-apply:hover {
-    background-color: #27473a;
-    border-color: #27473a;
+	background-color: #27473a;
+	border-color: #27473a;
 }
-
 
 .form-select {
 	height: 48px;
 	margin-top: .75rem;
 }
 
-/* 하얀 카드 래퍼 */
-.detail-card{
-  background:#fff;
-  border:1px solid #e9ecef;
-  border-radius:16px;
-  padding:20px 20px 16px;
-  box-shadow:0 8px 24px rgba(0,0,0,.06);
+.detail-card {
+	background: #fff;
+	border: 1px solid #e9ecef;
+	border-radius: 16px;
+	padding: 20px 20px 16px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, .06);
 }
 
-/* 데스크톱에서 상단 고정(원하면 top 값 조정) */
-@media (min-width: 992px){
-  .detail-card{ top:88px; }
+@media ( min-width : 992px) {
+	.detail-card {
+		top: 88px;
+	}
 }
 
-
-/* 패널 자체 좌측 패딩/폭 정리(카드가 패딩을 갖게) */
-.detail-card .simple-panel{
-  width:auto;
-  max-width:none;
-  padding-left:0;
-  margin-left:0;
+.detail-card .simple-panel {
+	width: auto;
+	max-width: none;
+	padding-left: 0;
+	margin-left: 0;
 }
 
-/* 카드 안 타이틀/액션 리듬 보정 */
-.detail-card .simple-title{ border-top:0; padding-top:0; margin:0 0 1.5rem; }
-.detail-card .simple-actions{
-  margin-top:1.5rem;
-  padding-top:1rem;
-  border-top:1px solid #e9ecef;
+.detail-card .simple-title {
+	border-top: 0;
+	padding-top: 0;
+	margin: 0 0 1.5rem;
 }
 
-/* 버튼 위로 뜨던 마진/색 충돌 정리 */
-.simple-actions .btn{ margin-top:0; height:48px; font-weight:700; }
-.simple-actions .btn.btn-dark{
-  background:#315e4e !important; border-color:#111 !important; color:#fff !important;
+.detail-card .simple-actions {
+	margin-top: 1.5rem;
+	padding-top: 1rem;
+	border-top: 1px solid #e9ecef;
 }
-.simple-actions .btn.btn-secondary{
-  background:#adb5bd !important; border-color:#adb5bd !important; color:#fff !important;
+
+.simple-actions .btn {
+	margin-top: 0;
+	height: 48px;
+	font-weight: 700;
 }
-.simple-actions .btn:disabled{ opacity:1; cursor:default; }
 
+.simple-actions .btn.btn-dark {
+	background: #315e4e !important;
+	border-color: #111 !important;
+	color: #fff !important;
+}
 
+.simple-actions .btn.btn-secondary {
+	background: #adb5bd !important;
+	border-color: #adb5bd !important;
+	color: #fff !important;
+}
+
+.simple-actions .btn:disabled {
+	opacity: 1;
+	cursor: default;
+}
