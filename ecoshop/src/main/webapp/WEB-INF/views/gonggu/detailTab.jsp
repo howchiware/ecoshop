@@ -90,7 +90,7 @@
                class="image-photo" style="height:210px"
                onerror="this.closest('.item-box').remove();">
         </div>
-        <div class="img-div moreBtn" data-productCode="${dto.productCode}">
+        <div class="img-div moreBtn" data-gongguProductId="${dto.gongguProductId}">
           <p>더보기</p>
         </div>
       </div>

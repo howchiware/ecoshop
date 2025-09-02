@@ -17,7 +17,7 @@
 						<div class="d-flex justify-content-between align-items-center">
 							<h5 class="card-name">${dto.gongguProductName}</h5>
 							<c:if test="${dto.userWish == 1}">
-								<i class="bi bi-heart-fill heart-icon-filled heart-icon"></i>
+								<i class="bi bi-heart-fill text-danger heart-icon-filled heart-icon"></i>
 							</c:if>
 							<c:if test="${dto.userWish == 0}">
 								<i class="bi bi-heart heart-icon-empty heart-icon"></i>

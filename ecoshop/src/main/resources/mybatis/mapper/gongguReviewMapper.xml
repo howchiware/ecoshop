@@ -237,10 +237,13 @@
 	</delete>
 	
 	<select id="imgList" parameterType="long" resultType="com.sp.app.model.GongguReview">
-		SELECT grd.reviewPhotoId, grd.gongguOrderDetailId, grd.reviewImg 
-		FROM gongguReviewDetail grd
-		JOIN gongguReview gr ON grd.gongguOrderDetailId = gr.gongguOrderDetailId
-		WHERE gongguOrderDetailId = #{gongguOrderDetailId}
-	</select>
+  		SELECT grd.reviewPhotoId, gr.gongguOrderDetailId, grd.reviewImg
+  		FROM gongguReviewDetail grd
+  		JOIN gongguReview gr
+   	 	ON gr.gongguOrderDetailId = grd.gongguOrderDetailId
+  		WHERE gr.gongguProductId = #{gongguProductId}
+    	AND NVL(gr.showReview, 1) = 1
+  		ORDER BY gr.regDate DESC, grd.reviewPhotoId DESC
+</select>
 	
 </mapper>
