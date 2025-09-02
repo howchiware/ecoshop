@@ -7,6 +7,12 @@
 		FROM productCategory
 		ORDER BY orderNo ASC
 	</select>
+	<select id="listEnabledCategory" parameterType="com.sp.app.admin.model.CategoryManage">
+		SELECT categoryId, categoryName, enabled, orderNo
+		FROM productCategory
+		WHERE enabled = 1
+		ORDER BY orderNo ASC
+	</select>
 
 	<insert id="insertCategory" parameterType="com.sp.app.admin.model.CategoryManage">
 		INSERT INTO productCategory(categoryId, categoryName, enabled, orderNo)

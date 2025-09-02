@@ -281,7 +281,7 @@ public class ProductManageController {
 			String pathString = uploadPath + File.separator + photoName;
 			
 			long productPhotoNumLong = Long.parseLong(productPhotoNum);
-			service.deleteProductPhoto(productPhotoNumLong, pathString);
+			service.deleteProductPhotoFile(productPhotoNumLong, pathString);
 			
 			state = "true";
 		} catch (Exception e) {

@@ -577,9 +577,12 @@ $(function(){
 $(function(){
    $('.btn-cancel-order').on('click', function(){
       let orderId = '${order.orderId}';
+      let itemId = '${itemId}';
       
       if(confirm('모든 구매내역을 판매 취소 하시겠습니까 ? ')) {
-         
+    	  let params = 'orderId=' + orderId + '&itemId=' + itemId + '&page=1';
+
+          location.href = '${pageContext.request.contextPath}/admin/order/cancelOrder?' + params;
       }
    });
 });

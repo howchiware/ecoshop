@@ -331,15 +331,30 @@ public class ProductManageServiceImpl implements ProductManageService {
 	}
 
 	@Override
-	public void deleteProductPhoto(long productPhotoNumLong, String uploadPath) throws Exception {
+	public void deleteProductPhoto(long productCode, String uploadPath) throws Exception {
 		try {
 			if (uploadPath != null && ! uploadPath.isBlank()) {
 				storageService.deleteFile(uploadPath);
 			}
 
-			mapper.deleteProductPhoto(productPhotoNumLong);
+			mapper.deleteProductPhoto(productCode);
 		} catch (Exception e) {
-			log.info("deleteProductFile : ", e);
+			log.info("deleteProductPhoto : ", e);
+			
+			throw e;
+		}
+	}
+	
+	@Override
+	public void deleteProductPhotoFile(long productPhotoNumLong, String uploadPath) throws Exception {
+		try {
+			if (uploadPath != null && ! uploadPath.isBlank()) {
+				storageService.deleteFile(uploadPath);
+			}
+			
+			mapper.deleteProductPhotoFile(productPhotoNumLong);
+		} catch (Exception e) {
+			log.info("deleteProductPhotoFile : ", e);
 			
 			throw e;
 		}

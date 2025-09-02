@@ -285,7 +285,7 @@ function sendOk() {
 	
 	// 결제 API로 결제 진행
 	var IMP = window.IMP;
-	IMP.init("서비스 키"); // 결제연동 > 연동정보 > 식별코드 - 고객사 식별코드
+	IMP.init("imp11114066"); // 결제연동 > 연동정보 > 식별코드 - 고객사 식별코드
 	
     IMP.request_pay({
         pg : 'html5_inicis.INIpayTest', // 테스트 시 html5_inicis.INIpayTest 기재 
