@@ -19,6 +19,10 @@
 <style type="text/css">
   .md-img { width: 80px; height: 80px; }
   .original-price { text-decoration: line-through; color: #999; font-size: 0.9em; }
+  .btn-lg { background: #AEBFA2; border-radius: 10px; padding: 4px; 0 4px 0; color: #ffffff; border: 1px solid #ffffff;}
+  .product-totalAmount{ color:#7b9580;}
+  .selected-defaultDest{ color:#7b9580; }
+  .btnUpdateDelivery { border-radius: 6px; border: 1px solid #ffffff; color: #5C5C5C;}
 </style>
 </head>
 <body>
@@ -107,7 +111,7 @@
 											${destination.recipientName}(${destination.addressName})
 										</c:if>
 									</label>
-									<label class="text-primary selected-defaultDest">${destination.defaultDest == 1 ? "기본배송지" : ""}</label>
+									<label class="selected-defaultDest">${destination.defaultDest == 1 ? "기본배송지" : ""}</label>
 								</div>
 								<div class="col-auto">
 									<button type="button" class="btn-default btnUpdateDelivery"> 배송지변경 </button>
@@ -133,7 +137,7 @@
 						<div class="pt-3">
 							<div class="text-end">
 								<label class="fs-6 fw-semibold">총 결제금액 : </label>
-								<label class="product-totalAmount fs-4 fw-bold text-primary">
+								<label class="product-totalAmount fs-4 fw-bold">
 									<fmt:formatNumber value="${totalPayment}"/>원
 								</label>
 							</div>

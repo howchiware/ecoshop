@@ -119,8 +119,7 @@
 								
 								<div class="row mt-2 mb-2">
 									<div class="col pe-1">
-										<button type="button" class="btn-default btn-lg w-100 btn-gongguLike" data-gongguProductId="${dto.gongguProductId}" 
-												${empty sessionScope.member.memberId ? "disabled" : ""}>
+										<button type="button" class="btn-default btn-lg w-100 btn-gongguLike" data-gongguProductId="${dto.gongguProductId}">
 												찜하기&nbsp;&nbsp;<i class="bi ${dto.userWish==1 ? 'bi-heart-fill text-danger':'bi-heart'}"></i>
 										</button>
 									</div>
@@ -128,9 +127,7 @@
 										<input type="hidden" name="mode" value="buy">
 										<input type="hidden" name="gongguOrderDetailId" value="${dto.gongguOrderDetailId}">
 											<button type="button" class="btn-accent btn-lg w-100 btn-gongguBuy" onclick="requestGongguPayment();" 
-											${remainCount < 1 ? 'disabled':''} 
-											${empty sessionScope.member ? 'disabled' : ''}>
-											예약 결제하기
+											${remainCount < 1 ? 'disabled':''}>예약 결제하기
 									</button>
 									</div>
 								</div>
