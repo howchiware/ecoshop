@@ -140,7 +140,7 @@ text-align: center;
 									<tr>
 										<td class="table-light" width="140">상품명</td>
 										<td colspan="5">
-											${dto.gongguproductName}
+											${dto.gongguProductName}
 										</td>
 									</tr>
 				
@@ -345,7 +345,6 @@ text-align: center;
 							<input type="hidden" name="payment" value="${dto.payment}">
 							<input type="hidden" name="memberId" value="${dto.memberId}">
 							<input type="hidden" name="orderDate" value="${dto.orderDate}">
-							<input type="hidden" name="qty" value="${dto.qty}">
 							<input type="hidden" name="productMoney" value="${dto.productMoney}">
 							<input type="hidden" name="cancelAmount" value="${dto.cancelAmount}">
 							

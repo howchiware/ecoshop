@@ -59,9 +59,9 @@
 										<div class="reviewDetailContent">
 											<p class="content">${dto.content}</p>
 										</div>
-										<div class="">
+										<div>
 											<c:if test="${not empty dto.photoFileName}">
-										        <img src="${pageContext.request.contextPath}/uploads/review/${dto.photoFileName}" alt="리뷰 사진">
+										        <img src="${pageContext.request.contextPath}/uploads/review/${dto.photoFileName}" alt="리뷰 사진" class="review-image">
 										    </c:if>
 									    </div>
 										<c:choose>

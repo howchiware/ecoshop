@@ -16,6 +16,9 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/tabs.css" type="text/css">
+<style type="text/css">
+.btn-accent {padding: 2px 0 2px 0; border: 1px solid #eee; border-radius: 6px; background: #87A78D; color: #ffffff;}
+</style>
 </head>
 <body>
 
