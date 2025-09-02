@@ -19,6 +19,13 @@
 	href="${pageContext.request.contextPath}/dist/css/home.css"
 	type="text/css">
 <style>
+.hero-overlay {
+  background-image: url('/uploads/products/2150966132.jpg');
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 80vh;
+}
 </style>
 </head>
 <body>

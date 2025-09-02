@@ -333,7 +333,7 @@ table.search-list {
 											<td style="border-bottom: hidden;">${dto.categoryName}</td>
 											<td style="border-bottom: hidden;">${dto.reg_date}</td>
 											<td rowspan="2">${dto.price} 원</td>
-											<td rowspan="2">2</td>
+											<td rowspan="2">${dto.totalStock}</td>
 											<td rowspan="2">
 												<c:if test="${dto.productShow == 1}">
 													표시

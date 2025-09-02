@@ -36,6 +36,8 @@ public class ProductManageServiceImpl implements ProductManageService {
 			// 썸네일 이미지
 			String filename = storageService.uploadFileToServer(dto.getThumbnailFile(), uploadPath);
 			dto.setThumbnail(filename);
+			System.out.println(new File("uploads/products", filename).getAbsolutePath());
+
 			
 			long productId = mapper.productSeq();
 			
@@ -66,7 +68,7 @@ public class ProductManageServiceImpl implements ProductManageService {
 			try {
 				String saveFilename = Objects.requireNonNull(storageService.uploadFileToServer(mf, uploadPath));
 				dto.setPhotoName(saveFilename);
-				
+				System.out.println(new File("uploads/products", saveFilename).getAbsolutePath());
 				mapper.insertProductPhoto(dto);
 			} catch (NullPointerException e) {
 			} catch (StorageException e) {
