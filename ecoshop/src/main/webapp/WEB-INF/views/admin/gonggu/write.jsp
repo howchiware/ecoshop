@@ -339,9 +339,9 @@
 			return;
 		}
 
-		if( (mode === 'write') && (! f.selectFile.value) ) {
+		if( (mode === 'write') && (! f.gongguThumbnailFile.value) ) {
 			alert('이미지 파일을 추가 하세요. ');
-			f.selectFile.focus();
+			f.gongguThumbnailFile.focus();
 			return;
 		}	
 		
