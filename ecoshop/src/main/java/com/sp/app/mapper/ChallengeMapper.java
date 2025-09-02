@@ -110,7 +110,12 @@ public interface ChallengeMapper {
     public int countTodaySpecialPost(long participationId);
     public Map<String, Object> selectLastPostInfo(long participationId); 
     
-    
+    public Long findPrevPostId(@Param("participationId") long participationId,
+            @Param("dayNumber") int dayNumber);
+    public	Long findNextPostId(@Param("participationId") long participationId,
+            @Param("dayNumber") int dayNumber);
+
+    public Challenge findChallengeSummary(@Param("challengeId") long challengeId);
 }
 	
 

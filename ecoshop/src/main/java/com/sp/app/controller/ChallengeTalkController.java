@@ -74,14 +74,26 @@ public class ChallengeTalkController {
 		// 공개된 인증글만 조회 (승인 1, 공개Y, 스페셜)
 		Challenge post = service.findPublicSpecialPost(postId);
 		if (post == null)
-			//return "redirect:/free/challengeList";(기존 챌린지 리스트형일때)
+			
 			return "redirect:/free/challengeBundles"; // 없는 글이면 번들로
 		
 		List<String> photos = service.listPostPhotos(postId);
-		model.addAttribute("post", post);
-		model.addAttribute("photos", photos);
-		model.addAttribute("src", src); // 번들형으로 바꿀 때 추가된 부분
-		return "free/challengeArticle";
+		
+		// prev/next
+	    Long prevPostId = service.getPrevPostId(post.getParticipationId(), post.getDayNumber());
+	    Long nextPostId = service.getNextPostId(post.getParticipationId(), post.getDayNumber());
+
+	    // 요약 불러오기
+	    Challenge summary = service.getChallengeSummary(post.getChallengeId());
+		
+	    model.addAttribute("post", post);
+	    model.addAttribute("photos", photos);
+	    model.addAttribute("prevPostId", prevPostId);
+	    model.addAttribute("nextPostId", nextPostId);
+	    model.addAttribute("challengeSummary", summary); // ← 통일
+	    model.addAttribute("src", src);
+
+	    return "free/challengeArticle";
 	}
 
 	@GetMapping("/challengeBundles")
