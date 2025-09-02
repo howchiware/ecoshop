@@ -100,6 +100,22 @@
 	border-radius: 10px;
 	cursor: pointer;
 }
+
+.btn-default {
+	border: 1px solid #000;
+	border-radius: 3px;
+	background: #ffffff;
+	padding: 3px 0 3px 0;
+}
+
+.btn-default:hover {
+	background: #e6e6e6;
+}
+
+.payment-dropdown {
+	padding: 1px 3px 1px 3px;
+}
+
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/dist/vendor/jquery/js/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -119,18 +135,6 @@
 				<div class="contentsArea container">
 					<h3 class="pb-2 mb-4 border-bottom sub-title">공동구매 주문 내역</h3>
 					<div class="col-md-10 bg-white box-shadow my-4 p-5 pt-2">
-						<ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
-							<li class="nav-item" role="presentation">
-								<button class="nav-link active" id="tab-1" data-bs-toggle="tab"
-									data-bs-target="#tab-pane-1" type="button" role="tab"
-									aria-controls="1" aria-selected="true">주문 내역</button>
-							</li>
-							<li class="nav-item" role="presentation">
-								<button class="nav-link" id="tab-2" data-bs-toggle="tab"
-									data-bs-target="#tab-pane-2" type="button" role="tab"
-									aria-controls="2" aria-selected="false">취소/반품 내역</button>
-							</li>
-						</ul>
 
 						<div class="tab-content pt-2" id="myTabContent">
 							<div class="tab-pane fade show active" id="tab-pane-1"

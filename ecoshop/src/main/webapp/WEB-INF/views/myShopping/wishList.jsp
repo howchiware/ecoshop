@@ -35,6 +35,8 @@
   .product-price .discounted-price { color: #dc3545; font-weight: bold; font-size: 1.05rem; }
   .product-actions { margin-top: 10px; }
   .product-actions .btn { margin-right: 8px; }
+  .btn-default {border: 1px solid #000; border-radius: 3px; background: #ffffff;}
+  .btn-default:hover {background: #eeeeee; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease;}
 </style>
 </head>
 <body>
