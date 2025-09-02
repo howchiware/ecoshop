@@ -75,7 +75,7 @@ select.form-select {
 
 		<div class="container py-4">
 			<div class="d-flex align-items-center justify-content-between mb-3">
-				<h3 class="m-0">프로그램 목록</h3>
+				<h3 class="m-0">프로그램 등록</h3>
 			</div>
 
 			<hr>
