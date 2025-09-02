@@ -7,7 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>상품 등록/수정</title>
+<title>ECOMORE</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <!-- Favicons -->
 <link href="${pageContext.request.contextPath}/dist/images/h.png" rel="icon">

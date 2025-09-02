@@ -772,7 +772,7 @@ public class WorkshopManageController {
 			@RequestParam(name = "programId", required = false) Long programId, 
 			HttpServletRequest req, Model model) {
 		try {
-			int size = 10;
+			int size = 15;
 			int total_page = 0;
 			int offset = (Math.max(current_page, 1) - 1) * size;
 
