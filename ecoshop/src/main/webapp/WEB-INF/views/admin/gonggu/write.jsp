@@ -360,10 +360,11 @@
 	            }
 
 	            let url = '${pageContext.request.contextPath}/admin/gonggu/deleteFile';
-	            let fileNum = el.dataset.filenum;
+	            let fileNum = el.getAttribute('data-fileNum');
+	            let filename = el.getAttribute('data-filename'); 
 
 	            $.ajaxSetup({ beforeSend: function(e) { e.setRequestHeader('AJAX', true); } });
-	            $.post(url, {fileNum:fileNum}, function(data){
+	            $.post(url, {fileNum:fileNum, filename:filename}, function(data){
 	                el.remove();
 	            }, 'json').fail(function(xhr){
 	                console.log(xhr.responseText);

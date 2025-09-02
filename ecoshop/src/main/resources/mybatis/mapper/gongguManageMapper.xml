@@ -67,7 +67,7 @@
 		resultType="com.sp.app.admin.model.GongguManage">
 		SELECT gongguProductDetailId, gongguProductId, detailPhoto
 		FROM gongguProductDetail
-		WHERE gongguProductId = #{gongguProductId}
+		WHERE gongguProductDetailId = #{gongguProductDetailId}
 	</select>
 
 	<delete id="deleteGongguProductPhoto" parameterType="Long">
@@ -76,7 +76,7 @@
 	</delete>
 	
 	<select id="findByProductDetailId" parameterType="Long" resultType="com.sp.app.admin.model.GongguManage">
-        SELECT gongguProductDetailId, detailPhoto
+        SELECT gongguProductDetailId, detailPhoto,gongguProductId
         FROM gongguProductDetail
         WHERE gongguProductDetailId = #{gongguProductDetailId}
     </select>

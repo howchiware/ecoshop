@@ -482,23 +482,5 @@ public class GongguManageServiceImpl implements GongguManageService {
 	    }
 	    return dto;
 	}
-
-	@Override
-	public int isBoughtByGongguProductId(long gongguProductId) {
-		int b = 0;
-		try {
-			List<GongguManage> list = gongguManageMapper.isBoughtByGongguProductId(gongguProductId);
-			
-			if(list.size() != 0) {
-				b = 1;
-				
-			}
-		} catch (Exception e) {
-			log.info("isBoughtByProductCode : ", e);
-			
-			throw e;
-		}
-		return b;
-	};
-
+	
 }
