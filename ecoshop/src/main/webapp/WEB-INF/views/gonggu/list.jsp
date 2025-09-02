@@ -49,7 +49,7 @@
 				</div>
 			</div>
 			<div class="filter-border">
-				<select name="filter" class="filter-style">
+				<select name="filter" id="gongguSortBy" class="filter-style productsSortBy" onchange="changeSortSelect();">
 					<option value="0">등록순</option>
 					<option value="1">인기순</option>
 					<option value="2">높은가격순</option>
@@ -76,41 +76,41 @@
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>	
 	<script type="text/javascript" src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 	<script>
-	$(document).ready(function() {
-	    var owl = $('.owl-carousel');
-	    owl.owlCarousel({
-	        loop: true,
-	        margin: 10,
-	        nav: true,
-	        center: true,
-	        autoplay: true,
-	        autoplayTimeout: 4000,
-	        autoplayHoverPause: true,
-	        responsive: {
-	            0: {
-	                items: 1
-	            },
-	            1000: {
-	                items: 3
-	            }
-	        }
-	    });
+$(document).ready(function() {
+  var owl = $('.owl-carousel');
+  owl.owlCarousel({
+    loop: true,
+    margin: 10,
+    nav: true,
+    center: true,
+    autoplay: true,
+    autoplayTimeout: 4000,
+    autoplayHoverPause: true,
+    responsive: { 0: { items: 1 }, 1000: { items: 3 } }
+  });
 
+  window.showCategoryTab = function(clickButton) {
+    const url = clickButton.getAttribute('data-url');
 
-		function showCategoryTab(clickButton) {
-			const url = clickButton.getAttribute('data-url');
-			document.querySelectorAll('.category-container .nav-tab').forEach(div => {
-				div.classList.remove('active');
-			});
-			clickButton.classList.add('active');
+    document.querySelectorAll('.category-container .nav-tab').forEach(div => {
+      div.classList.remove('active');
+    });
+    clickButton.classList.add('active');
 
-			sendAjaxRequest(url, 'GET', null, 'html', function(data) {
-				const listContainer = document.querySelector('.list-container');
-				if (listContainer) {
-					listContainer.innerHTML = data;
-				}
-			}, {'X-Requested-With': 'XMLHttpRequest'});
-		}
-	</script>
+    sendAjaxRequest(
+      url,
+      'GET',
+      null,
+      'html',
+      function(data) {
+        const listContainer = document.querySelector('.list-container');
+        if (listContainer) listContainer.innerHTML = data;
+      },
+      { 'X-Requested-With': 'XMLHttpRequest' }
+    );
+  };
+});
+</script>
+
 </body>
 </html>

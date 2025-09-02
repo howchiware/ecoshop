@@ -34,10 +34,11 @@
 		cm.categoryName
 		ORDER BY
 		<choose>
-			<when test="sortBy == 1">likeCount DESC</when>
-			<when test="sortBy == 2">reviewCount DESC</when>
-			<when test="sortBy == 3">endDate ASC</when>
-			<otherwise>g.regDate DESC</otherwise>
+			 <when test="sortBy == 1">likeCount DESC</when>
+  			<when test="sortBy == 2">gongguPrice DESC</when>
+  			<when test="sortBy == 3">gongguPrice ASC</when>
+  			<when test="sortBy == 4">reviewCount DESC</when>
+  			<otherwise>g.regDate DESC</otherwise>
 		</choose>
 		<if test="offset != null and size != null">
 			OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
@@ -233,20 +234,6 @@
     OFFSET 0 ROWS FETCH FIRST 3 ROWS ONLY
 </select>
 
-	<!-- <select id="findById" parameterType="Long" resultType="com.sp.app.model.GongguProduct"> 
-		SELECT p.gongguProductId, p.categoryId, p.productShow, categoryName, gongguProductName, 
-		gongguPrice, gongguThumbnail, p.content, p.detailInfo, p.regDate, NVL(rate, 
-		0) rate, NVL(gongguReviewCount, 0) gongguReviewCount, NVL(gongguInquiryCount, 
-		0) gongguInquiryCount FROM gongguProduct p JOIN productCategory c ON p.categoryId 
-		= c.categoryId LEFT OUTER JOIN ( SELECT gongguProductId, ROUND(AVG(rate), 
-		1) rate, COUNT(*) gongguReviewCount FROM gongguReview WHERE showReview = 
-		1 GROUP BY gongguProductId ) t ON p.gongguProductId = t.gongguProductId LEFT 
-		OUTER JOIN ( SELECT gongguProductId, COUNT(*) gongguInquiryCount FROM gongguInquiry 
-		WHERE showQuestion = 1 GROUP BY gongguProductId ) q ON p.gongguProductId 
-		= q.gongguProductId LEFT OUTER JOIN ( SELECT gongguProductId, COUNT(*) gongguSaleCount 
-		FROM gongguOrderDetail GROUP BY gongguProductId ) pc ON p.gongguProductId 
-		= pc.gongguProductId WHERE p.productShow = 1 AND p.gongguProductId = #{gongguProductId} 
-		FETCH FIRST 1 ROWS ONLY </select> -->
 	<!-- 카테고리 -->
 	<select id="findByCategoryId" parameterType="Long"
 		resultType="com.sp.app.model.GongguProduct">

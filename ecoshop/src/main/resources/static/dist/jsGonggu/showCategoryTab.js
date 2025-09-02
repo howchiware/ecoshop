@@ -38,3 +38,43 @@ $('.owl-carousel').owlCarousel({
 		}
 	}
 });
+
+$(function(){
+	$('.list-container').on('click', '.card-img', function(){
+		let productIdStr = $(this).attr('data-gongguProductId');
+
+		let gongguProductId = Number(productIdStr);
+		
+		location.href = gongguProductId;
+	});
+});
+
+function changeSortSelect(){
+	let sortBy = $("#gongguSortBy option:selected").val();
+	listProducts(1);
+}
+
+function listProducts(page) {
+	let categoryId = '';
+	document.querySelectorAll('.category-container .nav-tab').forEach(div => {
+		if(div.classList.contains('active')){
+			categoryId = div.getAttribute('data-cat-id');
+		}
+	});
+	let sortBy = $("#gongguSortBy option:selected").val();
+
+	if(! sortBy){
+		sortBy = 0;
+	}
+	console.log(categoryId);
+	
+	let url = '/gonggu/list';
+	let requestParams = {categoryId:categoryId, page:page, sortBy:sortBy};
+	let selector = 'div.list-container';
+	
+	const fn = function(data) {
+		$(selector).html(data);
+	};
+
+	sendAjaxRequest(url, 'get', requestParams, 'text', fn);
+}
