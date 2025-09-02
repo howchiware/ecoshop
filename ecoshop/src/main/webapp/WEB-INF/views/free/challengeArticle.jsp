@@ -53,7 +53,7 @@
 		<jsp:include page="/WEB-INF/views/layout/freeHeader.jsp" />
 
 
- <div class="row g-4 align-items-start"><!-- ★ 내려앉음 방지 -->
+ <div class="row g-4 align-items-start">
     <!-- 왼쪽: 본문 -->
     <div class="col-lg-8">
       <div class="card shadow-sm">
@@ -98,7 +98,7 @@
       </div>
     </div>
 
-    <!-- 오른쪽: 정보 패널 (좋아요/신고 제거 버전) -->
+  
     <div class="col-lg-4">
       <div class="sticky-lg-top">
         <div class="card mb-3 shadow-sm">
@@ -118,7 +118,7 @@
 			    <c:out value="${challengeSummary.requireDays}"/>일</li>
 			</ul>
 			
-			<!-- 디버깅 문구도 이름 맞추기 -->
+			
 			<c:if test="${empty challengeSummary}">
 			  <div class="text-danger small">※ challengeSummary 요약이 비어있음</div>
 			</c:if>
@@ -169,7 +169,7 @@
           </div>
         </div>
 
-        <!-- 필요 시 “전체 인증 모아보기” 링크만 유지 -->
+        
         <a class="btn btn-outline-primary w-100"
            href="${pageContext.request.contextPath}/free/challengeBundles">전체 인증 모아보기</a>
       </div>

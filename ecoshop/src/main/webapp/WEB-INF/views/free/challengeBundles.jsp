@@ -157,7 +157,6 @@
             var img = p.photoUrl ? (ctx + '/uploads/challenge/' + p.photoUrl)
                                  : (ctx + '/dist/images/noimage.png');
             var badge = (p.approvalStatus==1 ? 'bg-success' : (p.approvalStatus==0 ? 'bg-secondary' : 'bg-danger'));
-            // var link = ctx + '/free/challengeList/' + p.postId; // 단건 보기(기존 리스트형 목록으로 가기)
             var link = ctx + '/free/challengeList/' + p.postId + '?src=bundles'; // 번들용 리스트
             html += '<div class="day-card mb-3">';
             html += '  <div class="d-flex justify-content-between align-items-center">';

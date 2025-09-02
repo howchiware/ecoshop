@@ -18,7 +18,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <style>
-/*  공통  */
+
 .section {
 	padding: 36px 0;
 }
@@ -67,7 +67,7 @@
 	border-color: #12131a;
 }
 
-/*  데일리 카드  */
+
 .daily-card {
 	border: 1px solid #e9eef6;
 	border-radius: 16px;
