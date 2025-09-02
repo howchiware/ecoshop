@@ -201,7 +201,7 @@
 
 	window.addEventListener('DOMContentLoaded', evt => {
 		const imageViewer = document.querySelector('form .image-viewer');
-		const inputEL = document.querySelector('form input[name=selectFile]');
+		const inputEL = document.querySelector('form input[name=gongguThumnailFile]');
 		
 		let uploadImage = '${dto.gongguThumbnail}';
 		let img;
@@ -374,6 +374,7 @@
 	    }
 	});
 
+	// 다중 이미지 추가 
 	window.addEventListener('DOMContentLoaded', evt => {
 		var sel_files = [];
 		

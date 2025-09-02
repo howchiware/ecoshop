@@ -50,7 +50,7 @@ public class GongguManageServiceImpl implements GongguManageService {
 	        dto.setEndDate(dto.getEday() + " " + dto.getEtime() + ":00");
 	        dto.setCategoryId(dto.getCategoryId());
 	        dto.setLimitCount(dto.getLimitCount());
-	        String filename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
+	        String filename = storageService.uploadFileToServer(dto.getGongguThumbnailFile(), uploadPath);
 	        dto.setGongguThumbnail(filename);
 	        dto.setContent(dto.getContent());
 	        dto.setDetailInfo(dto.getDetailInfo());

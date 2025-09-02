@@ -67,7 +67,7 @@
 		resultType="com.sp.app.admin.model.GongguManage">
 		SELECT gongguProductDetailId, gongguProductId, detailPhoto
 		FROM gongguProductDetail
-		WHERE gongguProductDetailId = #{gongguProductDetailId}
+		WHERE gongguProductId = #{gongguProductId}
 	</select>
 
 	<delete id="deleteGongguProductPhoto" parameterType="Long">
@@ -269,9 +269,5 @@
 			VALUES(gongguProductDetail_seq.NEXTVAL, #{gongguProductId}, #{detailPhoto}) 
 	</insert>
 	
-	<select id="isBoughtByGongguProductId" parameterType="long" resultType="com.sp.app.admin.model.GongguManage">
-	    SELECT *
-	    FROM gongguOrderDetail
-	    WHERE gongguProductId = #{gongguProductId}
-	</select>
+
 </mapper>
