@@ -35,7 +35,7 @@
 </div>
 <div class="row">
 	<div class="page-navigation">
-		${dataCount==0 ? "등록된 내용이 없습니다." : paging}
+		${dataCount==0 ? "" : paging}
 	</div>
 				
 			<div id="product-template">

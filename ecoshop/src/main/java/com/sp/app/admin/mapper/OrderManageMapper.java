@@ -42,4 +42,8 @@ public interface OrderManageMapper {
 	
 	public OrderManage findByDeliveryId(String orderNum);
 	public Map<String, Object> findByPayDetail(String orderNum);
+	
+	public void updateProductOrder(long orderId) throws SQLException;
+	public void updateOrderDetail(long orderId) throws SQLException;
+	public List<Long> findOrderDetails(long orderId) throws SQLException;
 }

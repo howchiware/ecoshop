@@ -22,8 +22,6 @@
 				<li><a href="${pageContext.request.contextPath}/challenge/mypage/list" data-view="challenges">챌린지</a></li>
 				<li><a href="${pageContext.request.contextPath}/workshop/mypage" data-view="workshops">워크샵</a></li>
 				<li><a href="${pageContext.request.contextPath}/member/inquiry" data-view="inquiries">1:1 문의내역</a></li>
-				<li><a href="${pageContext.request.contextPath}/" data-view="reviews">리뷰</a></li>
-				<li><a href="${pageContext.request.contextPath}/" data-view="qna">상품Q&amp;A 내역</a></li>
 				<li><a href="${pageContext.request.contextPath}/member/myEvent" data-view="events">이벤트 참여 현황</a></li>
 			</ul>
 
@@ -31,8 +29,6 @@
 			<ul class="list-unstyled">
 				<li><a href="${pageContext.request.contextPath}/member/pwd" data-view="myProfile">회원정보 수정</a></li>
 				<li><a href="${pageContext.request.contextPath}/myShopping/myPoint" data-view="points">포인트</a></li>
-				<li><a href="${pageContext.request.contextPath}/" data-view="shipping">배송지/환불계좌</a></li>
-				<li><a href="${pageContext.request.contextPath}/member/leave" data-view="withdraw">회원탈퇴</a></li>
 			</ul>
 		</nav>
 	</aside>

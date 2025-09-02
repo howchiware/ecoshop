@@ -12,7 +12,8 @@ public interface ProductManageService {
 	public void insertProduct(ProductManage dto, String uploadPath) throws Exception;
 	public void updateProduct(ProductManage dto, String uploadPath, String isBought) throws Exception;
 	public void deleteProduct(List<Long> productId, String uploadPath) throws Exception;
-	public void deleteProductPhoto(long productPhotoNum, String uploadPath) throws Exception;
+	public void deleteProductPhoto(long productCode, String uploadPath) throws Exception;
+	public void deleteProductPhotoFile(long productPhotoNum, String uploadPath) throws Exception;
 	public void deleteOptionDetail(long optionDetailNum) throws Exception;
 	
 	public int dataCount(Map<String, Object> map);

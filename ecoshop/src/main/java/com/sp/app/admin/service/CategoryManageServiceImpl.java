@@ -27,6 +27,18 @@ public class CategoryManageServiceImpl implements CategoryManageService{
 			throw e;
 		}
 	}
+	
+	@Override
+	public List<CategoryManage> listEnabledCategory() throws Exception {
+		try {
+			List<CategoryManage> listCategory = mapper.listEnabledCategory();
+			
+			return listCategory;
+		} catch (Exception e) {
+			log.info("listCategory : ", e);
+			throw e;
+		}
+	}
 
 	@Override
 	public void insertCategory(CategoryManage dto) throws Exception{

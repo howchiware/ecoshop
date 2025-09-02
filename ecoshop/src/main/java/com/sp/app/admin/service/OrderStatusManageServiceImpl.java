@@ -1,6 +1,7 @@
 package com.sp.app.admin.service;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -369,5 +370,28 @@ public class OrderStatusManageServiceImpl implements OrderStatusManageService {
 		}
 		
 		return map;
+	}
+
+	@Override
+	public void cancelOrder(long orderId, long memberId) throws Exception {
+		try {
+			mapper.updateProductOrder(orderId);
+			mapper.updateOrderDetail(orderId);
+			
+			List<Long> list = mapper.findOrderDetails(orderId);
+			for(long orderDetailId : list) {
+				Map<String, Object> map = new HashMap<>();
+				
+				map.put("orderDetailId", orderDetailId);
+				map.put("memberId", memberId);
+				map.put("detailState", 3);
+				map.put("stateMemo", "판매취소");
+				
+				mapper.insertDetailStateInfo(map);
+			}
+			
+		} catch (Exception e) {
+			log.info("cancelOrder : ", e);
+		}
 	}
 }

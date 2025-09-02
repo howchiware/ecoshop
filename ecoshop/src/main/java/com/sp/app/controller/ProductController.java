@@ -51,7 +51,7 @@ public class ProductController {
 			HttpServletRequest req, HttpSession session) throws Exception {
 		
 		try {
-			List<CategoryManage> listCategory = categoryManageService.listCategory();
+			List<CategoryManage> listCategory = categoryManageService.listEnabledCategory();
 			model.addAttribute("listCategory", listCategory);
 			
 			if (! listCategory.isEmpty()) {

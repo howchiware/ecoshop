@@ -366,5 +366,20 @@
 		WHERE orderId = #{orderId}
 	</select>
 
+	<update id="updateProductOrder" parameterType="long">
+		UPDATE productOrder SET orderState = 6, orderStateDate = SYSDATE
+		WHERE orderId = #{orderId}
+	</update>
+
+	<update id="updateOrderDetail" parameterType="long">
+		UPDATE orderDetail SET detailState = 3
+		WHERE orderId = #{orderId}
+	</update>
+
+	<select id="findOrderDetails" parameterType="long">
+		SELECT orderDetailId 
+		FROM orderDetail
+		WHERE orderId = #{orderId}
+	</select>
 </mapper>
 	

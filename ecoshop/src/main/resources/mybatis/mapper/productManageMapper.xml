@@ -240,6 +240,11 @@
 	
 	<delete id="deleteProductPhoto" parameterType="Long">
 		DELETE FROM productPhoto
+		WHERE productCode = #{productCode}
+	</delete>
+	
+	<delete id="deleteProductPhotoFile" parameterType="Long">
+		DELETE FROM productPhoto
 		WHERE productPhotoNum = #{productPhotoNumLong}
 	</delete>
 	

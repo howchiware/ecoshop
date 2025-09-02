@@ -10,6 +10,7 @@ import com.sp.app.admin.model.CategoryManage;
 @Mapper
 public interface CategoryManageMapper {
 	public List<CategoryManage> listCategory() throws SQLException;
+	public List<CategoryManage> listEnabledCategory() throws SQLException;
 	public void insertCategory(CategoryManage dto) throws SQLException;
 	public void updateCategory(CategoryManage dto) throws SQLException;
 	public void deleteCategory(long categoryId) throws SQLException;

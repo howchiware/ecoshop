@@ -26,4 +26,6 @@ public interface OrderStatusManageService {
 	
 	public OrderManage findByDeliveryId(String orderNum);
 	public Map<String, Object> findByPayDetail(String orderNum);
+
+	public void cancelOrder(long orderId, long memberId) throws Exception;
 }

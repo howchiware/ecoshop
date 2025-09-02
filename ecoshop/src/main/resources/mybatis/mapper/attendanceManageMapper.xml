@@ -20,6 +20,7 @@
 		LEFT OUTER JOIN member2 m2 ON m1.memberId = m2.memberId
 		LEFT OUTER JOIN attendanceBoard atb ON atb.memberId = m2.memberId
 		<where>
+			m1.enabled = 1
 			<if test="kwd != null and kwd != '' ">
 				<include refid="where-list"/>
 			</if>
@@ -35,6 +36,7 @@
 			    AND TRUNC(atb.regDate) BETWEEN #{start} AND #{end}
 			</if>
 	    <where>
+	    	m1.enabled = 1
 	        <if test="kwd != null and kwd != ''">
 	            <include refid="where-list" />
 	        </if>
@@ -49,6 +51,7 @@
 	    FROM member1 m1
 	    LEFT JOIN member2 m2 ON m1.memberId = m2.memberId
 	    <where>
+	   		m1.enabled = 1
 	        <if test="kwd != null and kwd != ''">
 	            <include refid="where-list"/>
 	        </if>

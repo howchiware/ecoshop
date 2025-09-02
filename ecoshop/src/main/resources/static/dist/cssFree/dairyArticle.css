@@ -524,3 +524,8 @@ main.container {
     background-color: #dc3545;
     color: #fff;
 }
+
+.my-txt {
+	min-height: 39px;
+	resize: none;
+}

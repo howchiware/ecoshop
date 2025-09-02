@@ -35,7 +35,8 @@ public interface ProductManageMapper {
 	
 	public void updateProduct(ProductManage dto) throws SQLException;
 	public void deleteProduct(long productId) throws SQLException;
-	public void deleteProductPhoto(long productPhotoNum) throws SQLException;
+	public void deleteProductPhoto(long productCode) throws SQLException;
+	public void deleteProductPhotoFile(long productPhotoNum) throws SQLException;
 	public void updateProductOption(ProductManage dto) throws SQLException;
 	public void deleteProductOption(long optionNum) throws SQLException;
 	public void updateOptionDetail(ProductManage dto) throws SQLException;

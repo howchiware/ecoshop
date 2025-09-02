@@ -26,7 +26,7 @@
 						</select>
 					</div>
 					<div class="row reply-form m-1">
-						<textarea name="reasonDetail" class="form-control" style="height: 130px;" placeholder="상세한 신고 내용을 입력해주세요"></textarea>
+						<textarea name="reasonDetail" class="form-control my-txt" style="height: 130px;" placeholder="상세한 신고 내용을 입력해주세요"></textarea>
 						<input type="hidden" name="target" value="">
 						<input type="hidden" name="targetNum" value="">
 						<input type="hidden" name="contentType" value="">
@@ -36,8 +36,8 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn-accent" onclick="sendReports();"> 등록 </button>
-				<button type="button" class="btn-default" data-bs-dismiss="modal"> 취소 </button>
+				<button type="button" class="btn-accent btn-action" onclick="sendReports();"> 등록 </button>
+				<button type="button" class="btn-default btn-action" data-bs-dismiss="modal"> 취소 </button>
 			</div>			
 		</div>
 	</div>

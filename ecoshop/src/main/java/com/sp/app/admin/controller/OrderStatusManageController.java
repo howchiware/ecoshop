@@ -381,4 +381,20 @@ public class OrderStatusManageController {
 		return "redirect:/admin/order/detailManage/" + itemId + "?" + query;
 	}
 	
+	@GetMapping("cancelOrder")
+	public String cancelOrder(@RequestParam(name = "orderId") long orderId,
+			@RequestParam(name = "itemId") int itemId,
+			HttpSession session) {
+		
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			long memberId = info.getMemberId();
+			service.cancelOrder(orderId, memberId);
+		} catch (Exception e) {
+			log.info("cancelOrder : ", e);
+		}
+		
+		return "redirect:/admin/order/orderManage/" + itemId + "/" + orderId + "?page=1";
+	}
+	
 }
