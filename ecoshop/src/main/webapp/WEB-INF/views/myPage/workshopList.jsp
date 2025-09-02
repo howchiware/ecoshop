@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -227,12 +228,12 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	padding: 6px 10px; /* .state와 동일한 패딩 */
-	border-radius: 999px; /* pill */
+	padding: 6px 10px; 
+	border-radius: 999px; 
 	font-size: 12px;
-	font-weight: 700; /* .state와 동일 굵기/크기 */
+	font-weight: 700; 
 	color: #111;
-	background: #fff; /* 모노톤 */
+	background: #fff;
 	border: 1px solid #111;
 	line-height: 1;
 	cursor: pointer;
@@ -323,8 +324,8 @@
 										<div class="ws-item">
 											<c:choose>
 												<c:when test="${not empty row.thumbnailPath}">
-													<img class="ws-thumb" src="${ctx}${row.thumbnailPath}"
-														alt="워크샵 썸네일">
+													<img class="ws-thumb" src="<c:url value='${row.thumbnailPath}'/>"
+														alt="워크샵 썸네일" onerror="this.src='${pageContext.request.contextPath}/dist/images/ecoimg.png'">
 												</c:when>
 												<c:otherwise>
 													<div class="ws-thumb d-inline-block"></div>

@@ -201,7 +201,7 @@
 
 	window.addEventListener('DOMContentLoaded', evt => {
 		const imageViewer = document.querySelector('form .image-viewer');
-		const inputEL = document.querySelector('form input[name=selectFile]');
+		const inputEL = document.querySelector('form input[name=gongguThumnailFile]');
 		
 		let uploadImage = '${dto.gongguThumbnail}';
 		let img;
@@ -339,9 +339,9 @@
 			return;
 		}
 
-		if( (mode === 'write') && (! f.selectFile.value) ) {
+		if( (mode === 'write') && (! f.gongguThumbnailFile.value) ) {
 			alert('이미지 파일을 추가 하세요. ');
-			f.selectFile.focus();
+			f.gongguThumbnailFile.focus();
 			return;
 		}	
 		
@@ -360,10 +360,11 @@
 	            }
 
 	            let url = '${pageContext.request.contextPath}/admin/gonggu/deleteFile';
-	            let fileNum = el.dataset.filenum;
+	            let fileNum = el.getAttribute('data-fileNum');
+	            let filename = el.getAttribute('data-filename'); 
 
 	            $.ajaxSetup({ beforeSend: function(e) { e.setRequestHeader('AJAX', true); } });
-	            $.post(url, {fileNum:fileNum}, function(data){
+	            $.post(url, {fileNum:fileNum, filename:filename}, function(data){
 	                el.remove();
 	            }, 'json').fail(function(xhr){
 	                console.log(xhr.responseText);
@@ -373,6 +374,7 @@
 	    }
 	});
 
+	// 다중 이미지 추가 
 	window.addEventListener('DOMContentLoaded', evt => {
 		var sel_files = [];
 		

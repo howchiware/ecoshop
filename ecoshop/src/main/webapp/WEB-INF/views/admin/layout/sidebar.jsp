@@ -102,7 +102,7 @@
       <a href="#"> 프로그램 관리 > </a>
       <ul class="submenu">
       	<li><a href="/admin/workshop/category/manage"> 카테고리 관리 </a></li>
-      	<li><a href="/admin/workshop/program/list"> 프로그램 등록 </a></li>
+      	<li><a href="/admin/workshop/program/list"> 프로그램 목록 </a></li>
       </ul>
     </li>
     <li>

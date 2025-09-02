@@ -7,7 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>hShop</title>
+<title>ECOMORE</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/home.css" type="text/css">
@@ -209,6 +209,8 @@
 	</div>
 </main>
 
+<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+
 <script type="text/javascript">
 $(function(){
 	$('.btn-usedPoint').click(function(){
@@ -265,18 +267,9 @@ function sendOk() {
 	let p = Number(f.payment.value) - usedPoint;
 	f.payment.value = p;
 	
-	// 결제 API에서 응답 받을 파라미터
-	let imp_uid = 'ID-1234';
-	let pay_method = '카드결제'; // 결제유형
-	let card_name = 'BC 카드';  // 카드 이름
-	let card_number = '1234567890'; // 카드번호
-	let apply_num = '1234567890'; // 승인번호
-	let apply_date = ''; // 승인 날짜
-	// toISOString() : 'YYYY-MM-DDTHH:mm:ss.sssZ' 형식
-	apply_date = new Date().toISOString().replace('T', ' ').slice(0, -5); // YYYY-MM-DD HH:mm:ss
-
 	// 결제 API에 요청할 파라미터
-	let payment = f.payment.value; // 결제할 금액
+	// let payment = f.payment.value; // 결제할 금액
+	let payment = 100;
 	let merchant_uid = '${productOrderNumber}';  // 고유 주문번호
 	let productName = '${productOrderName}';  // 주문상품명
 	let buyer_email = '${orderUser.email}';  // 구매자 이메일
@@ -286,18 +279,55 @@ function sendOk() {
 	buyer_addr = buyer_addr.trim();
 	let buyer_postcode = '${orderUser.zip}'; // 구매자 우편번호
 	
-	// 결제가 성공한 경우 ------------------------
+	// 결제 API로 결제 진행
+	var IMP = window.IMP;
+	IMP.init("imp11114066"); // 결제연동 > 연동정보 > 식별코드 - 고객사 식별코드
 	
-	// 결제 방식, 카드번호, 승인번호, 결제 날짜
-    f.imp_uid.value = imp_uid;
-    f.payMethod.value = pay_method;
-    f.cardName.value = card_name || '';
-    f.cardNumber.value = card_number;
-    f.applyNum.value = apply_num;
-    f.applyDate.value = apply_date;
-	
-	f.action = '${pageContext.request.contextPath}/productsOrder/paymentOk';
-	f.submit();
+    IMP.request_pay({
+        pg : 'html5_inicis.INIpayTest', // 테스트 시 html5_inicis.INIpayTest 기재 
+        pay_method : 'card',
+        merchant_uid: merchant_uid, // 상점에서 생성한 고유 주문번호
+        name : productName,
+        amount : payment,    // 금액
+        buyer_email : buyer_email,
+        buyer_name : buyer_name,
+        buyer_tel : buyer_tel,   // 필수 파라미터
+        buyer_addr : buyer_addr,
+        buyer_postcode : buyer_postcode,
+    }, function(resp) { // callback
+        if(resp.success) {
+           console.log(resp);
+           
+           let status = resp.status; // paid(결제완료), failed(신용카드 한도 초과, 체크카드 잔액 부족 등), ready(브라우저 창 이탈 등)
+		   
+           // 결제가 성공한 경우 ------------------------
+           if(status === 'paid') {
+               let imp_uid = resp.imp_uid; // 포트원 거래 고유 ID
+
+               let pay_method = resp.pay_method || '페이결제'; // 결제방법(결제유형)
+               let card_name = resp.card_name || '간편결제'; // 카드이름
+               let card_number = resp.card_number; // 카드번호
+               let apply_num = resp.apply_num; // 승인번호
+               // let apply_date = resp.new Date(resp.paid_at * 1000).toISOString().replace('T', ' ').slice(0, -5) // YYYY-MM-DD HH:mm:ss
+               let apply_date = new Date().toISOString().replace('T', ' ').slice(0, -5);
+            
+               // 결제 방식, 카드번호, 승인번호, 결제 날짜
+               f.imp_uid.value = imp_uid;
+               f.payMethod.value = pay_method;
+               f.cardName.value = card_name;
+               f.cardNumber.value = card_number;
+               f.applyNum.value = apply_num;
+               f.applyDate.value = apply_date;
+               
+               f.action = '${pageContext.request.contextPath}/productsOrder/paymentOk';
+               f.submit();
+           }
+           
+        } else {
+           alert('결제가 실패 했습니다.');
+           console.log(resp);
+       }
+   });
 }
 </script>
 

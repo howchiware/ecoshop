@@ -230,9 +230,6 @@ public class GongguManageController {
 			GongguManage dto = Objects.requireNonNull(gongguManageService.findById(gongguProductId));
 			List<GongguManage> listFile = gongguManageService.listGongguProductPhoto(gongguProductId);
 			
-			int b = gongguManageService.isBoughtByGongguProductId(dto.getProductId());
-			dto.setUserBought(b);
-			
 			model.addAttribute("dto", dto);
 			model.addAttribute("page", page);	
 			model.addAttribute("mode", "update");
@@ -299,14 +296,15 @@ public class GongguManageController {
     
 	@PostMapping("deleteFile")
 	@ResponseBody
-	public Map<String, Object> deleteFile(@RequestParam(name = "ProductPhotoNum") long ProductPhotoNum, 
-			@RequestParam(name = "PhotoName") String PhotoName) throws Exception {
+	public Map<String, Object> deleteFile(@RequestParam(name = "fileNum") long fileNum, 
+			@RequestParam(name = "filename") String filename) throws Exception {
 			Map<String, Object> model = new HashMap<>();
 	    String state = "true";
 
 	    try {
-	    	String pathString = uploadPath + File.separator + PhotoName;
-			gongguManageService.deleteGongguProductPhoto(ProductPhotoNum, pathString);
+	    	System.out.println(fileNum + ", " + filename);
+	    	String pathString = uploadPath + File.separator + filename;
+			gongguManageService.deleteGongguProductPhoto(fileNum, pathString);
 			
 			state = "true";
 	    } catch (Exception e) {

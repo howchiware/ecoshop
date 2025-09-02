@@ -13,7 +13,7 @@ public interface GongguManageService {
 	// 공동구매 상품등록
 	public void insertGongguProduct(GongguManage dto, String uploadPath) throws Exception;
 	public void updateGongguProduct(GongguManage dto, String uploadPath) throws Exception;
-	public void deleteGongguProduct(List<Long> productId, String uploadPath) throws Exception;
+	public void deleteGongguProduct(List<Long> gongguProductId, String uploadPath) throws Exception;
 	public boolean deleteUploadFile(String uploadPath, String filename);
 	
 	public int dataCountGongguProduct(Map<String, Object> map);
@@ -47,5 +47,4 @@ public interface GongguManageService {
 	public void updateGongguDeliveryRefundInfo(GongguProductDeliveryRefundInfoManage dto);
 	public void deleteGongguDeliveryFee();
 	
-	public int isBoughtByGongguProductId(long gongguProductId);
 }

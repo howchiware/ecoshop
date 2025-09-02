@@ -112,7 +112,7 @@
 								<input class="form-control" type="text" name="zip" id="zip" value="${dto.zip}" readonly tabindex="-1">
 							</td>
 							<td>
-								<button type="button" class="btn my-btn" id="btn-zip" onclick="daumPostcode();">주소 검색</button>
+								<button type="button" class="btn my-btn" id="btn-zip" onclick="daumPostcode();">주소검색</button>
 							</td>
 						</tr>
 						<tr>

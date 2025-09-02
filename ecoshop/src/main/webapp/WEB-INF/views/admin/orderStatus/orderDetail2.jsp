@@ -7,7 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>hShop</title>
+<title>ECOMORE</title>
 <jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp"/>
 <style type="text/css">
   .orderStatus-update, .orderDetailStatus-update { cursor: pointer;  }

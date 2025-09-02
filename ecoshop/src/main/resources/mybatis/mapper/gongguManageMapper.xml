@@ -72,11 +72,11 @@
 
 	<delete id="deleteGongguProductPhoto" parameterType="Long">
 		DELETE FROM gongguProductDetail
-		WHERE gongguProductId = #{gongguProductId}
+		WHERE gongguProductDetailId = #{gongguProductDetailId}
 	</delete>
 	
 	<select id="findByProductDetailId" parameterType="Long" resultType="com.sp.app.admin.model.GongguManage">
-        SELECT gongguProductDetailId, detailPhoto
+        SELECT gongguProductDetailId, detailPhoto,gongguProductId
         FROM gongguProductDetail
         WHERE gongguProductDetailId = #{gongguProductDetailId}
     </select>
@@ -269,9 +269,5 @@
 			VALUES(gongguProductDetail_seq.NEXTVAL, #{gongguProductId}, #{detailPhoto}) 
 	</insert>
 	
-	<select id="isBoughtByGongguProductId" parameterType="long" resultType="com.sp.app.admin.model.GongguManage">
-	    SELECT *
-	    FROM gongguOrderDetail
-	    WHERE gongguProductId = #{gongguProductId}
-	</select>
+
 </mapper>

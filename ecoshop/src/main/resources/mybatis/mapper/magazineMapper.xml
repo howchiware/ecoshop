@@ -151,7 +151,7 @@
 	</delete>
 	
 	<select id="listReplyAnswer" parameterType="map" resultType="com.sp.app.model.Magazine">
-		SELECT mr.magazineReplyNum, mr.magazineId, m2.memberId, m2.nickname, mr.content, mr.regDate, parentNum, mr.report
+		SELECT mr.magazineReplyNum, mr.magazineId, name, m2.name, m2.memberId, m2.nickname, mr.content, mr.regDate, parentNum, mr.report
 		FROM magazineReply mr
 		JOIN member2 m2 ON mr.memberId = m2.memberId
 		WHERE parentNum = #{parentNum}

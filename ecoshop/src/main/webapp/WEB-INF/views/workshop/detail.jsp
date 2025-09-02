@@ -210,7 +210,7 @@
 							</c:choose>
 						</small>
 						<button id="reviewSubmitBtn" type="button"
-							class="btn btn-dark btn-sm">등록</button>
+							class="btn btn-sm" style="background-color: #315e4e; color: #fff;">등록</button>
 					</div>
 					<input type="hidden" id="participantId" value="${participantId}" />
 					<hr class="my-3">

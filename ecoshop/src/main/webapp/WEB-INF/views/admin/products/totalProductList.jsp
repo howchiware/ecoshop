@@ -7,7 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>전체상품리스트</title>
+<title>ECOMORE</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -333,7 +333,7 @@ table.search-list {
 											<td style="border-bottom: hidden;">${dto.categoryName}</td>
 											<td style="border-bottom: hidden;">${dto.reg_date}</td>
 											<td rowspan="2">${dto.price} 원</td>
-											<td rowspan="2">2</td>
+											<td rowspan="2">${dto.totalStock}</td>
 											<td rowspan="2">
 												<c:if test="${dto.productShow == 1}">
 													표시

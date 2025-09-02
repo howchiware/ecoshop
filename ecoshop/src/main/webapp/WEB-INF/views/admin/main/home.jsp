@@ -16,6 +16,9 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <link href="//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css" rel="stylesheet" type="text/css">	
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/cssAdmin/member.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/admin_paginate.css">
  
 <style type="text/css">
 body {
@@ -46,9 +49,10 @@ body {
   <jsp:include page="/WEB-INF/views/admin/layout/sidebar.jsp" />
 	<div class="right-panel">
 	    <div class="title">
-	        <h3>판매 현황</h3>
+	        <h3>대시보드</h3>
 	    </div>
-
+	    <hr>
+	<div class="board-container row">
 		<div class="section p-5" data-aos="fade-up" data-aos-delay="200">
 			<div class="section-body p-5">
 				<div class="row gy-4 m-0">
@@ -120,6 +124,7 @@ body {
 						</div>
 					</div>
 				</div>
+			</div>
 			</div>
 		</div>
 	</div>
