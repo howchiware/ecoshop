@@ -9,7 +9,7 @@
 				<img src="${pageContext.request.contextPath}/dist/images/person.png" class="avatar-icon">
 				<div class="writer-info">
 					<span class="name">${vo.name}</span>
-					<span class="date">${vo.regDate}</span>
+					<span class="date d-block" style="font-size: 10px;">${vo.regDate}</span>
 				</div>
 			</div>
 			<div class="reply-dropdown">

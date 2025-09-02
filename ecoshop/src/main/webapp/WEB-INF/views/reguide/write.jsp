@@ -38,7 +38,7 @@
 	<form name="tipForm" class="write-form" method="post" enctype="multipart/form-data">
 		<div class="mb-3">
 			<label for="subject" class="form-label">제목</label>
-			<input type="text" id="subject" name="subject" class="form-control" placeholder="제목을 입력해주세요." value="${dto.subject}" maxlength="50">
+			<input type="text" id="subject" name="subject" class="form-control" placeholder="제목을 입력해주세요." value="${dto.subject}" >
 		</div>
 		
 		<div class="mb-3">

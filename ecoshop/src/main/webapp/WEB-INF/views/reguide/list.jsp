@@ -61,48 +61,65 @@
     font-size: 0.85rem;
     color: #666;
 }
-.page-navigation {
+.page-navigation .pagination .page-link {
+    color: #555;
+    border-radius: 6px;
+    margin: 0 3px;
+    border: 1px solid #dee2e6;
+    transition: all 0.2s ease;
+}
+
+.page-navigation .pagination .page-link:hover {
+    background-color: #e9ecef;
+    color: #315e4e;
+}
+
+.page-navigation .pagination .page-item.active .page-link {
+    background-color: #315e4e;
+    border-color: #315e4e;
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(49, 94, 78, 0.3);
+}
+
+.paginate {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    align-items: center;
+    width: 100%;
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+    gap: 4px;
+    font-size: 0.9rem;
 }
 
-/* 페이징 */
-.page-navigation {
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   gap: 6px;
-   flex-wrap: wrap;
+.paginate a,
+.paginate span {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #d2e4d9;
+    border-radius: 40%;
+    background-color: #ffffff;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
-.page-navigation a, .page-navigation strong, .page-navigation span {
-   background: #fff;
-   border-radius: 4px;
-   padding: 3px 10px;
-   color: #363636;
-   font-weight: 500;
-   text-decoration: none;
-   cursor: pointer;
-   transition: all 0.2s ease;
+.paginate a:hover {
+    background-color: #f1f8f3;
+    border-color: #28a745;
+    color: #28a745;
 }
 
-.page-navigation a:hover {
-   background: #e0e0e0;
-   border-color: #999;
-}
-
-.page-navigation .disabled {
-   background: #f8f8f8;
-   border-color: #ddd;
-   color: #aaa;
-   cursor: not-allowed;
-}
-
-.page-navigation strong, .page-navigation span {
-   background: #ccc;
-   border-color: #999;
-   color: #333;
+.paginate span {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: default;
 }
 
 .search-form {
