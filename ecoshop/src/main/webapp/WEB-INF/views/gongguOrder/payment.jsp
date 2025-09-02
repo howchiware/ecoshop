@@ -168,37 +168,69 @@
 	</div>
 </main>
 
+
+
+<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+
 <script type="text/javascript">
 function sendOk() {
-	const f = document.paymentForm;
-	
-	if(! f.recipientName.value) {
-		alert('먼저 배송지를 등록하세요.');
-		return;
-	}
-	
-	// 결제 API에서 응답 받을 파라미터
-	let imp_uid = 'ID-1234';
-	let pay_method = '카드결제';
-	let card_name = 'BC 카드';
-	let card_number = '1234567890';
-	let apply_num = '1234567890';
-	let apply_date = '';
-	apply_date = new Date().toISOString().replace('T', ' ').slice(0, -5);
+  const f = document.paymentForm;
 
-	// 결제 성공 시 폼 데이터 설정
-    f.imp_uid.value = imp_uid;
-    f.payMethod.value = pay_method;
-    f.cardName.value = card_name || '';
-    f.cardNumber.value = card_number;
-    f.applyNum.value = apply_num;
-    f.applyDate.value = apply_date;
-	
-	f.action = '${pageContext.request.contextPath}/gongguOrder/paymentOk';
-	f.submit();
-}
-function goBack() {
-    history.back();
+  if (!f.recipientName.value) {
+    alert('먼저 배송지를 등록하세요.');
+    return;
+  }
+
+  // 1) 결제 파라미터
+  const merchant_uid = "${gongguOrderNumber}";
+  const productName = "${gongguOrderName}";
+  const buyer_email = "<c:out value='${orderUser.email}' default='' />";
+  const buyer_name = "<c:out value='${orderUser.name}' default='' />";
+  const buyer_tel = "<c:out value='${orderUser.tel}' default='' />";
+  const addr1 = "<c:out value='${orderUser.addr1}' default='' />";
+  const addr2 = "<c:out value='${orderUser.addr2}' default='' />";
+  const buyer_addr = (addr1 + ' ' + addr2).trim();
+  const buyer_postcode = "<c:out value='${orderUser.zip}' default='' />";
+
+
+  // 3) 결제 금액 세팅
+  const payment = Number(f.payment.value) || 0;
+  f.payment.value = payment;
+
+  // 4) 포트원 결제 호출
+  const IMP = window.IMP;
+  IMP.init(""); // 실제 가맹점 식별코드 입력
+
+  IMP.request_pay({
+    pg: 'html5_inicis.INIpayTest',      // 테스트용
+    pay_method: 'card',
+    merchant_uid: merchant_uid,         // 고유 주문번호
+    name: productName,                  // 상품명
+    amount: payment,                    // 금액
+    buyer_email: buyer_email,
+    buyer_name: buyer_name,
+    buyer_tel: buyer_tel,
+    buyer_addr: buyer_addr,
+    buyer_postcode: buyer_postcode
+  }, function(resp) {
+    if (resp.success) {
+      const status = resp.status; // paid / failed / ready
+      if (status === 'paid') {
+        f.imp_uid.value   = resp.imp_uid;
+        f.payMethod.value = resp.pay_method || '페이결제';
+        f.cardName.value  = resp.card_name || '간편결제';
+        f.cardNumber.value= resp.card_number || '';
+        f.applyNum.value  = resp.apply_num || '';
+        f.applyDate.value = new Date().toISOString().replace('T',' ').slice(0,-5);
+
+        f.action = '${pageContext.request.contextPath}/gongguOrder/paymentOk';
+        f.submit();
+      }
+    } else {
+      alert('결제가 실패 했습니다.');
+      console.log(resp);
+    }
+  });
 }
 </script>
 

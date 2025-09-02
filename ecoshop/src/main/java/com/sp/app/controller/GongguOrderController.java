@@ -49,7 +49,7 @@ public class GongguOrderController {
 	private final GongguProductReviewService gongguProductReviewService;
 	private String uploadPath;
 	
-	@RequestMapping(name = "payment", method = {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="payment", method={RequestMethod.GET, RequestMethod.POST})
 	public String paymentForm(
 			@RequestParam(name = "gongguProductId") long gongguProductId, 
 			Model model,
