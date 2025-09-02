@@ -64,7 +64,7 @@
 
 .carousel-container {
 	align-content: center;
-	min-height: 300px; 
+	min-height: 350px; 
 }
 
 .category-container {
@@ -164,4 +164,5 @@ table.board-list thead th {
 span.textgp {
 	color: #9DB492;
 }
+
 
