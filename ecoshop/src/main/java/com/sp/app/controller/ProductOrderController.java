@@ -170,7 +170,7 @@ public class ProductOrderController {
 			StringBuilder sb = new StringBuilder();
 			sb.append(info.getName() + "님 상품을 구매해 주셔서 감사 합니다.<br>");
 			sb.append("구매 하신 상품의 결제가 정상적으로 처리되었습니다.<br>");
-			sb.append("결제 금액 : <label class='fs-5 fw-bold text-primary'>" +  p + "</label>원");
+			sb.append("결제 금액 : <label class='fs-5 fw-bold'>" +  p + "</label>원");
 
 			reAttr.addFlashAttribute("title", "상품 결제 완료");
 			reAttr.addFlashAttribute("message", sb.toString());

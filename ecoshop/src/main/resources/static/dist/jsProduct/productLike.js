@@ -250,14 +250,14 @@ $(function(){
 														<div class="total-div">
 															<div class="col-auto fw-semibold pt-1 total">총상품금액 (<span class="product-totalQty">0</span>개)</div>
 															<div class="col text-end">
-																<label><span class="product-totalAmount fs-5 fw-semibold text-primary">0</span><span class="fw-semibold fs-6 text-primary">원</span></label>
+																<label><span class="product-totalAmount fs-5 fw-semibold">0</span><span class="fw-semibold fs-6">원</span></label>
 															</div>
 														</div>
 													</div>
 													
 								
 													<div class="mt-2">
-														<button type="button" class="btn-default btn-lg w-100 btn-productCart" onclick="sendOk('cart');" ${disabled}>장바구니&nbsp;&nbsp;<i class="bi bi-cart-plus"></i></button>
+														<button type="button" class="btn-default btn-lg w-100 btn-productCart" onclick="sendOk('cart');" ${disabled}>장바구니&nbsp;&nbsp;<i class="bi bi-cart-plus" style="color: #fff;"></i></button>
 													</div>
 				
 												</form>

@@ -165,3 +165,15 @@ table.board-list thead th {
 .product-item-cart:hover {cursor: pointer;}
 
 .bestItems:hover {cursor: pointer;}
+
+.productsSortBy{
+	padding: 3px 5px;
+}
+
+.total-div .product-totalAmount {
+	color: #7b9580;
+}
+
+.btn-productCart {
+	background: #AEBFA2; border-radius: 10px; padding: 7px 0 7px 0; color: #ffffff; border: 1px solid #ffffff;
+}

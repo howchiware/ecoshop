@@ -16,6 +16,13 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/dist/js/util-jquery.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/tabs.css" type="text/css">
+<style type="text/css">
+.message label {
+	color: #7b9580;
+}
+
+.btn-lg { background: #AEBFA2; border-radius: 10px; padding: 7px 0 7px 0; color: #ffffff; border: 1px solid #ffffff;}
+</style>
 </head>
 <body>
 
@@ -35,7 +42,7 @@
 						
 						<div class="my-5">
 							<div class="text-center">
-								<p class="text-center">${message}</p>
+								<p class="text-center message">${message}</p>
 							</div>
 						</div>
 	                    
