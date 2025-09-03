@@ -146,9 +146,9 @@
 								<td class="col-md-2 bg-light">대표이미지</td>
 								<td>
 									<div class="preview-session">
-										<label for="selectFile" class="me-2" tabindex="0"
+										<label for="gongguThumbnailFile" class="me-2" tabindex="0"
 											title="사진 업로드"> <span class="image-viewer"></span> <input
-											type="file" name="selectFile" id="selectFile" hidden=""
+											type="file" name="gongguThumbnailFile" id="gongguThumbnailFile" hidden=""
 											accept="image/png, image/jpeg">
 										</label>
 									</div>
@@ -201,7 +201,7 @@
 
 	window.addEventListener('DOMContentLoaded', evt => {
 		const imageViewer = document.querySelector('form .image-viewer');
-		const inputEL = document.querySelector('form input[name=gongguThumnailFile]');
+		const inputEL = document.querySelector('form input[name=gongguThumbnailFile]');
 		
 		let uploadImage = '${dto.gongguThumbnail}';
 		let img;
