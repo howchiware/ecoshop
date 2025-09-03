@@ -46,7 +46,7 @@
 									<input type="hidden" class="saved-accessInfo" value="${vo.accessInfo}">
 									<input type="hidden" class="saved-passcode" value="${vo.passcode}">
 									
-									<button type="button" class="btn-default btnSelectDeliveryAddress">선택</button>
+									<button type="button" class="btn-default btnSelectDeliveryAddress" style="background: #eeeeee; border-style: none; padding: 2px 3px 2px 3px; border-radius: 2px;">선택</button>
 								</div>
 								
 								<div class="col-md-12">
@@ -103,7 +103,7 @@
 											<input type="text" name="zip" id="zip" class="form-control" readonly tabindex="-1">
 										</div>
 										<div class="col-auto px-1">
-											<button type="button" class="btn-default" id="btn-zip" onclick="daumPostcode();">주소찾기</button>
+											<button type="button" class="btn-default" id="btn-zip" onclick="daumPostcode();" style="background: #eeeeee; border-style: none; padding: 2px 2px 2px 2px; border-radius: 2px;">주소찾기</button>
 										</div>
 									</div>
 								</div>
