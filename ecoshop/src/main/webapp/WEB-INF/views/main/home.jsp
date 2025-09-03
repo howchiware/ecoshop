@@ -20,7 +20,7 @@
 	type="text/css">
 <style>
 .hero-overlay {
-  background-image: url('/uploads/products/2150966132.jpg');
+  background-image: url('/uploads/products/c.jpg');
   background-size: cover;
   background-position: center;
   width: 100%;
