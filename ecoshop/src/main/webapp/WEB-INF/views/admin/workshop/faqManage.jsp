@@ -53,7 +53,7 @@
 					<div class="d-flex align-items-center mb-3">
 						<select name="programId" class="form-select w-auto"
 							onchange="this.form.submit()">
-							<option value="">워크샵 선택</option>
+							<option value="">프로그램 선택</option>
 							<c:forEach var="p" items="${programList}">
 								<option value="${p.programId}"
 									<c:if test="${p.programId == programId}">selected</c:if>>
@@ -151,7 +151,7 @@
 					<div class="modal-body">
 						<input type="hidden" name="faqId" id="faqId">
 						<div class="mb-3">
-							<label class="form-label">워크샵 선택</label> <select
+							<label class="form-label">프로그램 선택</label> <select
 								class="form-select" name="programId" id="programId" required>
 								<c:forEach var="p" items="${programList}">
 									<option value="${p.programId}"><c:out

@@ -16,7 +16,7 @@
 	type="text/css">
 <jsp:useBean id="now" class="java.util.Date" />
 
-<style>
+<style> 
 .workshop-card {
 	border: 1px solid #e9ecef;
 	border-radius: 16px;
