@@ -398,29 +398,29 @@ button {
 									<th>옵션 1</th>
 									<td>
 										<div class="mb-2">
-											<input type="text" name="optionName" class="form-control" style="width: 250px;" placeholder="옵션명" value="${dto.optionName}" ${dto.userBought == 1 ? "disabled":""}>
+											<input type="text" name="optionName" class="form-control" style="width: 250px;" placeholder="옵션명" value="${dto.optionName}" ${dto.userBought == 1 || dto.totalStock > 0 ? "disabled":""}>
 											<c:if test="${mode=='update'}">
-												<input type="hidden" name="optionNum" value="${empty dto.optionNum ? 0 : dto.optionNum}" ${dto.userBought == 1 ? "disabled":""}>
+												<input type="hidden" name="optionNum" value="${empty dto.optionNum ? 0 : dto.optionNum}" ${dto.userBought == 1 || dto.totalStock > 0 ? "disabled":""}>
 											</c:if>
 										</div>
 										<div class="row option-area">
 											<div class="col-auto pe-0 d-flex flex-row optionValue-area">
 												<c:forEach var="vo" items="${listOptionDetail}">
 													<div class="input-group pe-1">
-														<input type="text" name="optionValues" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" value="${vo.optionValue}" ${dto.userBought == 1 ? "disabled":""}>
-														<input type="hidden" name="optionDetailNums" value="${vo.optionDetailNum}" ${dto.userBought == 1 ? "disabled":""}>
-														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus ${dto.userBought == 1 ? 'hidden':''}"></i>
+														<input type="text" name="optionValues" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" value="${vo.optionValue}" ${dto.userBought == 1 || dto.totalStock > 0 ? "disabled":""}>
+														<input type="hidden" name="optionDetailNums" value="${vo.optionDetailNum}" ${dto.userBought == 1 || dto.totalStock > 0 ? "disabled":""}>
+														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus ${dto.userBought == 1 || dto.totalStock > 0 ? 'hidden':''}"></i>
 													</div>
 												</c:forEach>
 												<c:if test="${empty listOptionDetail || listOptionDetail.size() < 1}">
 													<div class="input-group pe-1">
-														<input type="text" name="optionValues" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" ${dto.userBought == 1 ? "disabled":""}>
-														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus ${dto.userBought == 1 ? 'hidden':''}"></i>
+														<input type="text" name="optionValues" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" ${dto.userBought == 1 || dto.totalStock > 0 ? "disabled":""}>
+														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus ${dto.userBought == 1 || dto.totalStock > 0 ? 'hidden':''}"></i>
 													</div>
 												</c:if>
 											</div>
 											<div class="col-auto">
-												<button type="button" class="btn-default btnOptionAdd" ${dto.userBought == 1 ? "disabled":""}>추가</button>
+												<button type="button" class="btn-default btnOptionAdd" ${dto.userBought == 1 || dto.totalStock > 0 ? "disabled":""}>추가</button>
 											</div>
 										</div>
 										<small class="form-control-plaintext help-block">판매 상품이 존재하면 옵션은 삭제 되지 않습니다.</small>
@@ -431,29 +431,29 @@ button {
 									<th>옵션 2</th>
 									<td>
 										<div class="mb-2">
-											<input type="text" name="optionName2" style="width: 250px;" class="form-control" placeholder="옵션명" value="${dto.optionName2}" ${dto.userBought == 1 ? "disabled":""}>
+											<input type="text" name="optionName2" style="width: 250px;" class="form-control" placeholder="옵션명" value="${dto.optionName2}" ${dto.userBought == 1 || dto.totalStock > 0 ? "disabled":""}>
 											<c:if test="${mode=='update'}">
-												<input type="hidden" name="optionNum2" value="${empty dto.optionNum2 ? 0 : dto.optionNum2}" ${dto.userBought == 1 ? "disabled":""}>
+												<input type="hidden" name="optionNum2" value="${empty dto.optionNum2 ? 0 : dto.optionNum2}" ${dto.userBought == 1 || dto.totalStock > 0 ? "disabled":""}>
 											</c:if>
 										</div>
 										<div class="row option-area2">
 											<div class="col-auto pe-0 d-flex flex-row optionValue-area2">
 												<c:forEach var="vo" items="${listOptionDetail2}">
 													<div class="input-group pe-1">
-														<input type="text" name="optionValues2" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" value="${vo.optionValue}" ${dto.userBought == 1 ? "disabled":""}>
-														<input type="hidden" name="optionDetailNums2" value="${vo.optionDetailNum}" ${dto.userBought == 1 ? "disabled":""}>
-														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus2 ${dto.userBought == 1 ? 'hidden':''}"></i>
+														<input type="text" name="optionValues2" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" value="${vo.optionValue}" ${dto.userBought == 1 || dto.totalStock > 0 ? "disabled":""}>
+														<input type="hidden" name="optionDetailNums2" value="${vo.optionDetailNum}" ${dto.userBought == 1 || dto.totalStock > 0 ? "disabled":""}>
+														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus2 ${dto.userBought == 1 || dto.totalStock > 0 ? 'hidden':''}"></i>
 													</div>
 												</c:forEach>
 												<c:if test="${empty listOptionDetail2 || listOptionDetail2.size() < 1}">
 													<div class="input-group pe-1">
-														<input type="text" name="optionValues2" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" ${dto.userBought == 1 ? "disabled":""}>
-														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus2 ${dto.userBought == 1 ? 'hidden':''}"></i>
+														<input type="text" name="optionValues2" class="form-control" style="flex:none; width: 90px;" placeholder="옵션값" ${dto.userBought == 1 || dto.totalStock > 0 ? "disabled":""}>
+														<i class="bi bi-dash input-group-text ps-2 pe-2 bg-white option-minus2 ${dto.userBought == 1 || dto.totalStock > 0 ? 'hidden':''}"></i>
 													</div>
 												</c:if>
 											</div>
 											<div class="col-auto">
-												<button type="button" class="btn-default btnOptionAdd2" ${dto.userBought == 1 ? "disabled":""}>추가</button>
+												<button type="button" class="btn-default btnOptionAdd2" ${dto.userBought == 1 || dto.totalStock > 0 ? "disabled":""}>추가</button>
 											</div>
 										</div>
 										<small class="form-control-plaintext help-block">판매 상품이 존재하면 옵션은 삭제 되지 않습니다.</small>
@@ -510,6 +510,7 @@ button {
 								<input type="hidden" name="prevOptionNum" value="${empty dto.optionNum ? 0 : dto.optionNum}">
 								<input type="hidden" name="prevOptionNum2" value="${empty dto.optionNum2 ? 0 : dto.optionNum2}">
 								<input type="hidden" name="isBought" value="${dto.userBought == 1 ? 1:0}">
+								<input type="hidden" name="totalStock" value="${dto.totalStock > 0 ? 1:0}">
 							</c:if>
 						</div>
 					</div>

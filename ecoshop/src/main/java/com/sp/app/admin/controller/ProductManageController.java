@@ -258,10 +258,11 @@ public class ProductManageController {
 	public String updateSubmit(ProductManage dto,
 			@RequestParam(name = "page") String page,
 			@RequestParam(name = "isBought") String isBought,
+			@RequestParam(name = "totalStock") String totalStock,
 			Model model) {
 		
 		try {
-			service.updateProduct(dto, uploadPath, isBought);
+			service.updateProduct(dto, uploadPath, isBought, totalStock);
 		} catch (Exception e) {
 			log.info("updateSubmit : ", e);
 		}

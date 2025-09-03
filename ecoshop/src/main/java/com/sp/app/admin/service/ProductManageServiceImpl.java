@@ -132,7 +132,7 @@ public class ProductManageServiceImpl implements ProductManageService {
 
 	@Transactional(rollbackFor = {Exception.class})
 	@Override
-	public void updateProduct(ProductManage dto, String uploadPath, String isBought) throws Exception {
+	public void updateProduct(ProductManage dto, String uploadPath, String isBought, String totalStock) throws Exception {
 		try {
 			// 썸네일 이미지
 			String filename = storageService.uploadFileToServer(dto.getThumbnailFile(), uploadPath);
@@ -154,7 +154,7 @@ public class ProductManageServiceImpl implements ProductManageService {
 			}
 			
 			// 옵션 수정
-			if(isBought.equals("0")) {
+			if(isBought.equals("0") && totalStock.equals("0")) {
 				updateProductOption(dto);				
 			}
 		

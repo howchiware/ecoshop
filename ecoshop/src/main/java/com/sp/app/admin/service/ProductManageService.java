@@ -10,7 +10,7 @@ import com.sp.app.admin.model.ProductStockManage;
 
 public interface ProductManageService {
 	public void insertProduct(ProductManage dto, String uploadPath) throws Exception;
-	public void updateProduct(ProductManage dto, String uploadPath, String isBought) throws Exception;
+	public void updateProduct(ProductManage dto, String uploadPath, String isBought, String totalStock) throws Exception;
 	public void deleteProduct(List<Long> productId, String uploadPath) throws Exception;
 	public void deleteProductPhoto(long productCode, String uploadPath) throws Exception;
 	public void deleteProductPhotoFile(long productPhotoNum, String uploadPath) throws Exception;
