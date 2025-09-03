@@ -190,10 +190,8 @@
         <div class="carousel-inner h-100">
           <c:forEach var="vo" items="${bannerList}" varStatus="status">
 			  <div class="carousel-item ${status.index == 0 ? 'active' : '' } h-100">
-			    <a href="${pageContext.request.contextPath}/admin/advertisement/list?page=1"> 
 			      <img src="${pageContext.request.contextPath}/uploads/advertisement/${vo.imageFilename}"
 			           class="d-block w-100 h-100" style="object-fit: cover;" alt="${vo.subject}">
-			     </a>
 			  </div>
 			</c:forEach>
 

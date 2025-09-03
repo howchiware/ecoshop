@@ -581,7 +581,42 @@
 	    AND dayNumber IS NOT NULL
 	</select>
   
-  
+	  <!-- 같은 participation 내에서 이전 일차 -->
+	<select id="findPrevPostId" parameterType="map" resultType="long">
+	  SELECT postId
+	  FROM certificationPost
+	  WHERE participationId = #{participationId}
+	    AND dayNumber IS NOT NULL AND isPublic='Y' AND approvalStatus=1
+	    AND dayNumber &lt; #{dayNumber}
+	  ORDER BY dayNumber DESC, regDate DESC
+	  FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<!-- 같은 participation 내에서 다음 일차 -->
+	<select id="findNextPostId" parameterType="map" resultType="long">
+	  SELECT postId
+	  FROM certificationPost
+	  WHERE participationId = #{participationId}
+	    AND dayNumber IS NOT NULL AND isPublic='Y' AND approvalStatus=1
+	    AND dayNumber &gt; #{dayNumber}
+	  ORDER BY dayNumber ASC, regDate ASC
+	  FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<!-- 우측 패널 최소 요약 -->
+	<select id="findChallengeSummary" parameterType="long" resultType="com.sp.app.model.Challenge">
+	  SELECT
+	    c.challengeId,
+	    c.title,
+	    c.rewardPoints AS rewardPoints,
+	    TO_CHAR(s.startDate,'YYYY-MM-DD') AS startDate,
+	    TO_CHAR(s.endDate,'YYYY-MM-DD')   AS endDate,
+	    s.requireDays
+	  FROM challenge c
+	  JOIN specialChallenge s ON s.challengeId = c.challengeId
+	  WHERE c.challengeId = #{challengeId}
+	</select>
+  	
   
   	
   

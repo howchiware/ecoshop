@@ -303,16 +303,21 @@
 	<update id="updateWorkshop"
 		parameterType="com.sp.app.model.Workshop">
 		UPDATE workshop
-		SET workshopTitle = #{workshopTitle, jdbcType=VARCHAR},
+		SET workshopTitle = #{workshopTitle,
+		jdbcType=VARCHAR},
 		scheduleDate = #{scheduleDate, jdbcType=TIMESTAMP},
 		applyDeadline = #{applyDeadline, jdbcType=TIMESTAMP},
-		location = #{location, jdbcType=VARCHAR},
-		workshopStatus = #{workshopStatus, jdbcType=NUMERIC},
+		location =
+		#{location, jdbcType=VARCHAR},
+		workshopStatus = #{workshopStatus,
+		jdbcType=NUMERIC},
 		capacity = #{capacity, jdbcType=NUMERIC},
 		thumbnailPath = #{thumbnailPath, jdbcType=VARCHAR},
-		workshopContent = #{workshopContent, jdbcType=CLOB},
+		workshopContent =
+		#{workshopContent, jdbcType=CLOB},
 		updDate = SYSDATE
-		WHERE workshopId = #{workshopId, jdbcType=NUMERIC}
+		WHERE workshopId =
+		#{workshopId, jdbcType=NUMERIC}
 	</update>
 
 
@@ -393,9 +398,8 @@
 		w.workshopStatus, w.capacity, w.thumbnailPath,
 		pc.categoryName
 		FROM workshop w
-		JOIN program p ON w.programId =
-		p.programId
-		JOIN programCategory pc ON p.categoryId = pc.categoryId
+		LEFT JOIN program p ON w.programId = p.programId
+		LEFT JOIN programCategory pc ON p.categoryId = pc.categoryId
 		<where>
 			<if test="activeCategory != null">
 				AND pc.is_active = 1

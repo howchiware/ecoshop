@@ -66,4 +66,7 @@ public interface ChallengeService {
 
     public boolean canJoinSpecialToday(long challengeId, long memberId); 
     
+    public Long getPrevPostId(long participationId, int dayNumber);
+    public Long getNextPostId(long participationId, int dayNumber);
+    public Challenge getChallengeSummary(long challengeId);
 }

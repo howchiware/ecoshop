@@ -216,7 +216,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 			Long postId = mapper.nextPostId();
 			dto.setPostId(postId);
 
-			// 데일리 챌린지는 dayNumber가 NULL
+			
 			dto.setDayNumber(null);
 			dto.setApprovalStatus(3); // 3: 자동승인
 			dto.setIsPublic("Y");
@@ -229,7 +229,6 @@ public class ChallengeServiceImpl implements ChallengeService {
 				dto.setPhotoId(photoId);
 				mapper.insertCertificationPhoto(dto);
 			}
-
 			// 5. 포인트 지급
 			Challenge challengeInfo = mapper.findDailyDetail(dto.getChallengeId());
 			if (challengeInfo != null && challengeInfo.getRewardPoints() > 0) {
@@ -239,7 +238,6 @@ public class ChallengeServiceImpl implements ChallengeService {
 				p.setClassify(1);
 				p.setPoints(challengeInfo.getRewardPoints());
 				p.setPostId(postId);
-
 				log.info("reward points={}, memberId={}, postId={}", challengeInfo.getRewardPoints(), dto.getMemberId(),
 						postId);
 
@@ -249,7 +247,6 @@ public class ChallengeServiceImpl implements ChallengeService {
 					throw new IllegalStateException("포인트 적립 실패");
 				}
 			}
-
 			// 6. 참여 상태 업데이트
 			dto.setParticipationStatus(4); // 4: 자동승인
 			int upd = mapper.updateParticipation(dto);
@@ -586,4 +583,23 @@ public class ChallengeServiceImpl implements ChallengeService {
 	        return false;
 	    }
 }
+
+		@Override
+		public Long getPrevPostId(long participationId, int dayNumber) {
+		    try { return mapper.findPrevPostId(participationId, dayNumber); }
+		    catch(Exception e){ log.error("getPrevPostId", e); return null; }
+		}
+	
+		@Override
+		public Long getNextPostId(long participationId, int dayNumber) {
+		    try { return mapper.findNextPostId(participationId, dayNumber); }
+		    catch(Exception e){ log.error("getNextPostId", e); return null; }
+		}
+	
+		@Override
+		public Challenge getChallengeSummary(long challengeId) {
+		    try { return mapper.findChallengeSummary(challengeId); }
+		    catch(Exception e){ log.error("getChallengeSummary", e); return null; }
+		}
+
 }

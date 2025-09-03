@@ -14,9 +14,9 @@
   <link rel="stylesheet" href="<c:out value='${pageContext.request.contextPath}'/>/dist/cssFree/dairyList.css" type="text/css">
 
   <style>
-    .card-img-top{ object-fit:cover; height:180px; }
+    .card-img-top{ object-fit:cover; height:320px; }
     .badge-progress{ background:#111; color:#fff; }
-    .modal-body .day-card img{ width:100%; max-height:320px; object-fit:cover; border-radius:10px; }
+ /*   .modal-body .day-card img{ width:100%; max-height:320px; object-fit:cover; border-radius:10px; } */
     .text-truncate-2{
       display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
     }
@@ -56,7 +56,7 @@
         <h5 id="threadTitle" class="modal-title">3일치 인증</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <div id="threadBody" class="modal-body"><!-- JS가 렌더링 --></div>
+      <div id="threadBody" class="modal-body"></div>
     </div>
   </div>
 </div>
@@ -82,7 +82,7 @@
 
   function tplBundleCard(d){
     var img = d.photoUrl ? (ctx + '/uploads/challenge/' + d.photoUrl)
-                         : (ctx + '/dist/img/noimage.png');
+                         : (ctx + '/dist/images/noimage.png');
     var progress = ((d.approvedDays||0) + '/3');
     var dateTxt = d.postRegDate || '';
     var name = d.memberName || '';
@@ -155,9 +155,8 @@
         if(Array.isArray(rows) && rows.length){
           rows.forEach(function(p){
             var img = p.photoUrl ? (ctx + '/uploads/challenge/' + p.photoUrl)
-                                 : (ctx + '/dist/img/noimage.png');
+                                 : (ctx + '/dist/images/noimage.png');
             var badge = (p.approvalStatus==1 ? 'bg-success' : (p.approvalStatus==0 ? 'bg-secondary' : 'bg-danger'));
-            // var link = ctx + '/free/challengeList/' + p.postId; // 단건 보기(기존 리스트형 목록으로 가기)
             var link = ctx + '/free/challengeList/' + p.postId + '?src=bundles'; // 번들용 리스트
             html += '<div class="day-card mb-3">';
             html += '  <div class="d-flex justify-content-between align-items-center">';
@@ -167,7 +166,9 @@
             html += '      <a class="btn btn-sm btn-outline-secondary js-view-one" href="' + link + '" target="_self">단건 보기</a>';
             html += '    </div>';
             html += '  </div>';
-            html += '  <img src="' + img + '" alt="day photo" class="my-2">';
+            html += '  <div class="ratio ratio-4x3 rounded-3 overflow-hidden my-2">';
+            html += '    <img src="' + img + '" alt="day photo" class="w-100 h-100 object-fit-cover">'
+            html += '  </div>'; 
             html += '  <div class="small">' + esc(p.content||'') + '</div>';
             html += '  <div class="text-muted small mt-1">' + esc(p.postRegDate||'') + '</div>';
             html += '</div>';
@@ -176,7 +177,7 @@
           html = '<div class="text-muted">공개된 인증이 없습니다.</div>';
         }
         $('#threadBody').html(html);
-        new bootstrap.Modal('#threadModal').show(); // 모달 오픈
+        new bootstrap.Modal('#threadModal').show(); 
       })
       .catch(function(err){
         console.error('thread load failed:', err);
