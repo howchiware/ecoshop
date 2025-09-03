@@ -88,8 +88,7 @@
     <!-- 상태 변경 -->
 	<update id="updateStatus" parameterType="map">
 	    UPDATE advertising
-	    SET status = #{status},
-	        postingStatus = #{postingStatus, jdbcType=VARCHAR} 
+	    SET status = #{status}
 	    WHERE advertisingId = #{advertisingId}
 	</update>
 	

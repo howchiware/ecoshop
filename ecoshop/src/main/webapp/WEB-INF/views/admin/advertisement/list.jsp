@@ -160,7 +160,7 @@ body.modal-open { overflow: hidden; padding-right: 0 !important; }
  </main>
  
 <div class="modal fade" id="myDialogModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="myDialogModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="myDialogModalLabel">신청 목록</h5>
@@ -172,7 +172,7 @@ body.modal-open { overflow: hidden; padding-right: 0 !important; }
 </div>
 
 <div class="modal fade" id="statusModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="statusModalLabel">상태 변경 이력</h5>
