@@ -28,6 +28,17 @@
   .select-count-label { color: #777; font-size: 12px; }
   .cart-list > thead tr:first-child { border-top: 2px solid #212529; }
   .cart-list td { padding: 3px; }
+  .btn-main {     
+    background: #7b9580;
+    border-radius: 5px;
+    padding: 3px 7px 3px 7px;
+    color: #ffffff;
+    border: 1px solid #ffffff;}
+    
+  .btnMinus, .btnPlus, .cart-delete {border: none;}
+  .form-check-input:checked {
+  	background-color: #c7ddcb !important;
+    border-color: #c7ddcb !important;}
 </style>
 </head>
 <body>
@@ -39,14 +50,14 @@
 <main>
 	<!-- Page Title -->
 	<div class="page-title">
-		<div class="container align-items-center" data-aos="fade-up">
-			<h1>장바구니</h1>
+		<div class="container align-items-center" data-aos="fade-up" style="padding-top: 40px;">
+			<h2 style="text-align: center;">장바구니</h2>
 			<div class="page-title-underline-accent"></div>
 		</div>
 	</div>
     
 	<!-- Page Content -->    
-	<div class="section">
+	<div class="section" style="padding-top: 20px;">
 		<div class="container" data-aos="fade-up" data-aos-delay="100">
 		
 			<div class="row justify-content-center">
@@ -54,7 +65,7 @@
 
 					<form name="cartForm" method="post">
 						<div style="padding: 15px 0 5px;">
-							<button type="button" class="btn-default cart-deleteCheck" onclick="deleteCartSelect()();">선택삭제</button>
+							<button type="button" class="btn-default cart-deleteCheck btn-main" onclick="deleteCartSelect()();">선택삭제</button>
 						</div>
 						<table class="table cart-list">
 							<thead>
@@ -130,8 +141,8 @@
 							<c:otherwise>
 								<div class="mt-3 p-3 text-end">
 									<input type="hidden" name="mode" value="cart">
-									<button type="button" class="btn-accent" style="width: 200px;" onclick="sendOk();"> 선택상품 구매하기 </button>
-									<button type="button" class="btn-default" onclick="deleteCartAll();"> 장바구니 모두 비우기 </button>
+									<button type="button" class="btn-accent btn-main" style="width: 200px;" onclick="sendOk();"> 선택상품 구매하기 </button>
+									<button type="button" class="btn-default btn-main" onclick="deleteCartAll();"> 장바구니 모두 비우기 </button>
 								</div>
 							</c:otherwise>
 						</c:choose>

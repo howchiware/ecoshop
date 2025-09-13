@@ -177,3 +177,8 @@ table.board-list thead th {
 .btn-productCart {
 	background: #AEBFA2; border-radius: 10px; padding: 7px 0 7px 0; color: #ffffff; border: 1px solid #ffffff;
 }
+
+.carousel-container {
+   align-content: center;
+   min-height: 400px; 
+}
